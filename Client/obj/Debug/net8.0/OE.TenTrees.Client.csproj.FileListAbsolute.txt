@@ -1,0 +1,7 @@
+/home/runner/work/TenTrees/TenTrees/Client/obj/Debug/net8.0/OE.TenTrees.Client.csproj.AssemblyReference.cache
+/home/runner/work/TenTrees/TenTrees/Client/obj/Debug/net8.0/OE.TenTrees.Client.GeneratedMSBuildEditorConfig.editorconfig
+/home/runner/work/TenTrees/TenTrees/Client/obj/Debug/net8.0/OE.TenTrees.Client.AssemblyInfoInputs.cache
+/home/runner/work/TenTrees/TenTrees/Client/obj/Debug/net8.0/OE.TenTrees.Client.AssemblyInfo.cs
+/home/runner/work/TenTrees/TenTrees/Client/obj/Debug/net8.0/OE.TenTrees.Client.csproj.CoreCompileInputs.cache
+/home/runner/work/TenTrees/TenTrees/Client/obj/Debug/net8.0/OE.TenTrees.Client.Oqtane.MvcApplicationPartsAssemblyInfo.cache
+/home/runner/work/TenTrees/TenTrees/Client/obj/Debug/net8.0/OE.TenTrees.Client.sourcelink.json

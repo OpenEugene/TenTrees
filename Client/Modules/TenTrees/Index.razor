@@ -1,0 +1,159 @@
+@using OE.TenTrees.Models
+@using OE.TenTrees.Services
+@inherits ModuleBase
+@inject ITreeService TreeService
+@inject IPlantingEventService PlantingEventService
+@inject NavigationManager NavigationManager
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h2>Ten Trees Dashboard</h2>
+            <p>Managing tree planting and conservation efforts in our community.</p>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h3 class="card-title">@totalTrees</h3>
+                    <p class="card-text">Total Trees</p>
+                    <button class="btn btn-primary" @onclick="ViewTrees">View All Trees</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h3 class="card-title">@totalPlantingEvents</h3>
+                    <p class="card-text">Planting Events</p>
+                    <button class="btn btn-success" @onclick="ViewPlantingEvents">View Events</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h3 class="card-title">@healthyTrees</h3>
+                    <p class="card-text">Healthy Trees</p>
+                    <button class="btn btn-info" @onclick="ViewMonitoring">Monitor Trees</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (UserSecurity.IsAuthorized(User, PermissionNames.Edit, ModuleState.ModuleId))
+    {
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <ActionLink Action="Edit" Text="Add New Tree" ResourceKey="AddTree" />
+            </div>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-12">
+            <h4>Recent Trees</h4>
+            @if (trees != null && trees.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Species</th>
+                                <th>Common Name</th>
+                                <th>Location</th>
+                                <th>Planted Date</th>
+                                <th>Status</th>
+                                @if (UserSecurity.IsAuthorized(User, PermissionNames.Edit, ModuleState.ModuleId))
+                                {
+                                    <th>Actions</th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var tree in trees.Take(10))
+                            {
+                                <tr>
+                                    <td>@tree.Species</td>
+                                    <td>@tree.CommonName</td>
+                                    <td>@tree.Location</td>
+                                    <td>@tree.PlantedDate.ToString("MM/dd/yyyy")</td>
+                                    <td>
+                                        <span class="badge @GetStatusBadgeClass(tree.Status)">@tree.Status</span>
+                                    </td>
+                                    @if (UserSecurity.IsAuthorized(User, PermissionNames.Edit, ModuleState.ModuleId))
+                                    {
+                                        <td>
+                                            <ActionLink Action="Edit" Parameters="@($"id={tree.TreeId}")" Text="Edit" ResourceKey="EditTree" />
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <p>No trees have been planted yet. <ActionLink Action="Edit" Text="Plant your first tree!" ResourceKey="AddFirstTree" /></p>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<Tree>? trees;
+    private int totalTrees = 0;
+    private int totalPlantingEvents = 0;
+    private int healthyTrees = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        try
+        {
+            trees = await TreeService.GetTreesAsync(ModuleState.ModuleId);
+            var plantingEvents = await PlantingEventService.GetPlantingEventsAsync(ModuleState.ModuleId);
+            
+            totalTrees = trees?.Count ?? 0;
+            totalPlantingEvents = plantingEvents?.Count ?? 0;
+            healthyTrees = trees?.Count(t => t.Status.Equals("Healthy", StringComparison.OrdinalIgnoreCase)) ?? 0;
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error loading Ten Trees data");
+        }
+    }
+
+    private void ViewTrees()
+    {
+        NavigationManager.NavigateTo(NavigateUrl("trees"));
+    }
+
+    private void ViewPlantingEvents()
+    {
+        NavigationManager.NavigateTo(NavigateUrl("events"));
+    }
+
+    private void ViewMonitoring()
+    {
+        NavigationManager.NavigateTo(NavigateUrl("monitoring"));
+    }
+
+    private string GetStatusBadgeClass(string status)
+    {
+        return status?.ToLower() switch
+        {
+            "healthy" => "badge-success",
+            "needs attention" => "badge-warning",
+            "dead" => "badge-danger",
+            _ => "badge-secondary"
+        };
+    }
+}

@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "dgSpecHash": "fQym9phPGt2qu7v60Lehqigd+VTaxk8JnI6KcF9oA4vJCWU52hQrm1+Exa9kWXRwR1byPmF/1jB9SxEcTUmQhQ==",
+  "success": true,
+  "projectFilePath": "/home/runner/work/TenTrees/TenTrees/Shared/OE.TenTrees.Shared.csproj",
+  "expectedPackageFiles": [
+    "/home/runner/.nuget/packages/oqtane.shared/5.2.4/oqtane.shared.5.2.4.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1901",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Oqtane.Shared' 5.2.4 has a known low severity vulnerability, https://github.com/advisories/GHSA-2hr5-cvwp-jr5w",
+      "libraryId": "Oqtane.Shared",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    }
+  ]
+}

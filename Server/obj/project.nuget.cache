@@ -1,0 +1,43 @@
+{
+  "version": 2,
+  "dgSpecHash": "9o05GEPSkfkxbRo/zwSvMpbYGJ9UxXX21BMBWjG3nGqDdLu6vy0AJj/od4+AiIZSKN2pnCFnuQ/H8XH6OZ+oNg==",
+  "success": true,
+  "projectFilePath": "/home/runner/work/TenTrees/TenTrees/Server/OE.TenTrees.Server.csproj",
+  "expectedPackageFiles": [
+    "/home/runner/.nuget/packages/oqtane.client/5.2.4/oqtane.client.5.2.4.nupkg.sha512",
+    "/home/runner/.nuget/packages/oqtane.server/5.2.4/oqtane.server.5.2.4.nupkg.sha512",
+    "/home/runner/.nuget/packages/oqtane.shared/5.2.4/oqtane.shared.5.2.4.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1901",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Oqtane.Server' 5.2.4 has a known low severity vulnerability, https://github.com/advisories/GHSA-2hr5-cvwp-jr5w",
+      "libraryId": "Oqtane.Server",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    },
+    {
+      "code": "NU1903",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Oqtane.Server' 5.2.4 has a known high severity vulnerability, https://github.com/advisories/GHSA-995c-qww8-64fj",
+      "libraryId": "Oqtane.Server",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    },
+    {
+      "code": "NU1902",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Oqtane.Server' 5.2.4 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-hhcw-wwxv-g95c",
+      "libraryId": "Oqtane.Server",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    }
+  ]
+}

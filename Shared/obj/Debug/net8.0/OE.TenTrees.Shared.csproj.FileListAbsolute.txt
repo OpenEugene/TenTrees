@@ -1,0 +1,13 @@
+/home/runner/work/TenTrees/TenTrees/Shared/obj/Debug/net8.0/OE.TenTrees.Shared.GeneratedMSBuildEditorConfig.editorconfig
+/home/runner/work/TenTrees/TenTrees/Shared/obj/Debug/net8.0/OE.TenTrees.Shared.AssemblyInfoInputs.cache
+/home/runner/work/TenTrees/TenTrees/Shared/obj/Debug/net8.0/OE.TenTrees.Shared.AssemblyInfo.cs
+/home/runner/work/TenTrees/TenTrees/Shared/obj/Debug/net8.0/OE.TenTrees.Shared.csproj.CoreCompileInputs.cache
+/home/runner/work/TenTrees/TenTrees/Shared/obj/Debug/net8.0/OE.TenTrees.Shared.sourcelink.json
+/home/runner/work/TenTrees/TenTrees/Shared/bin/Debug/net8.0/OE.TenTrees.Shared.Oqtane.deps.json
+/home/runner/work/TenTrees/TenTrees/Shared/bin/Debug/net8.0/OE.TenTrees.Shared.Oqtane.dll
+/home/runner/work/TenTrees/TenTrees/Shared/bin/Debug/net8.0/OE.TenTrees.Shared.Oqtane.pdb
+/home/runner/work/TenTrees/TenTrees/Shared/obj/Debug/net8.0/OE.TenTrees.Shared.csproj.AssemblyReference.cache
+/home/runner/work/TenTrees/TenTrees/Shared/obj/Debug/net8.0/OE.TenTrees.Shared.Oqtane.dll
+/home/runner/work/TenTrees/TenTrees/Shared/obj/Debug/net8.0/refint/OE.TenTrees.Shared.Oqtane.dll
+/home/runner/work/TenTrees/TenTrees/Shared/obj/Debug/net8.0/OE.TenTrees.Shared.Oqtane.pdb
+/home/runner/work/TenTrees/TenTrees/Shared/obj/Debug/net8.0/ref/OE.TenTrees.Shared.Oqtane.dll

@@ -1,0 +1,170 @@
+@using OE.TenTrees.Models
+@using OE.TenTrees.Services
+@inherits ModuleBase
+@inject ITreeService TreeService
+@inject NavigationManager NavigationManager
+
+<form @onsubmit="SaveTree" @onsubmit:preventDefault="true">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h2>@(tree.TreeId == 0 ? "Add New Tree" : "Edit Tree")</h2>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label for="species" class="form-label">Species *</label>
+                    <input type="text" class="form-control" id="species" @bind="tree.Species" required maxlength="100" />
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="commonName" class="form-label">Common Name</label>
+                    <input type="text" class="form-control" id="commonName" @bind="tree.CommonName" maxlength="100" />
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="location" class="form-label">Location Description</label>
+                    <input type="text" class="form-control" id="location" @bind="tree.Location" maxlength="200" />
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="plantedDate" class="form-label">Planted Date *</label>
+                    <input type="date" class="form-control" id="plantedDate" @bind="tree.PlantedDate" required />
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="plantedBy" class="form-label">Planted By</label>
+                    <input type="text" class="form-control" id="plantedBy" @bind="tree.PlantedBy" maxlength="100" />
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label for="latitude" class="form-label">Latitude *</label>
+                    <input type="number" step="0.000001" class="form-control" id="latitude" @bind="tree.Latitude" required />
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="longitude" class="form-label">Longitude *</label>
+                    <input type="number" step="0.000001" class="form-control" id="longitude" @bind="tree.Longitude" required />
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="height" class="form-label">Height (meters)</label>
+                    <input type="number" step="0.1" class="form-control" id="height" @bind="tree.Height" />
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="diameter" class="form-label">Diameter (cm)</label>
+                    <input type="number" step="0.1" class="form-control" id="diameter" @bind="tree.Diameter" />
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="status" class="form-label">Status</label>
+                    <select class="form-control" id="status" @bind="tree.Status">
+                        <option value="Healthy">Healthy</option>
+                        <option value="Needs Attention">Needs Attention</option>
+                        <option value="Dead">Dead</option>
+                        <option value="Removed">Removed</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group mb-3">
+                    <label for="notes" class="form-label">Notes</label>
+                    <textarea class="form-control" id="notes" @bind="tree.Notes" rows="3" maxlength="500"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <button type="submit" class="btn btn-primary me-2">Save Tree</button>
+                <ActionLink Action="Index" Text="Cancel" Class="btn btn-secondary" />
+                @if (tree.TreeId > 0 && UserSecurity.IsAuthorized(User, PermissionNames.Edit, ModuleState.ModuleId))
+                {
+                    <button type="button" class="btn btn-danger ms-2" @onclick="DeleteTree">Delete Tree</button>
+                }
+            </div>
+        </div>
+    </div>
+</form>
+
+@code {
+    private Tree tree = new Tree();
+
+    [Parameter]
+    public string? Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!UserSecurity.IsAuthorized(User, PermissionNames.Edit, ModuleState.ModuleId))
+        {
+            NavigationManager.NavigateTo(NavigateUrl());
+            return;
+        }
+
+        tree.ModuleId = ModuleState.ModuleId;
+        tree.PlantedDate = DateTime.Today;
+
+        if (!string.IsNullOrEmpty(Id) && int.TryParse(Id, out int treeId))
+        {
+            try
+            {
+                tree = await TreeService.GetTreeAsync(treeId, ModuleState.ModuleId) ?? new Tree();
+                if (tree.TreeId == 0)
+                {
+                    await logger.LogError("Tree not found with ID: {TreeId}", treeId);
+                    NavigationManager.NavigateTo(NavigateUrl());
+                }
+            }
+            catch (Exception ex)
+            {
+                await logger.LogError(ex, "Error loading tree with ID: {TreeId}", treeId);
+                NavigationManager.NavigateTo(NavigateUrl());
+            }
+        }
+    }
+
+    private async Task SaveTree()
+    {
+        try
+        {
+            if (tree.TreeId == 0)
+            {
+                tree = await TreeService.AddTreeAsync(tree);
+                await logger.LogInformation("Tree added successfully: {Species}", tree.Species);
+            }
+            else
+            {
+                tree = await TreeService.UpdateTreeAsync(tree);
+                await logger.LogInformation("Tree updated successfully: {Species}", tree.Species);
+            }
+
+            NavigationManager.NavigateTo(NavigateUrl());
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error saving tree: {Species}", tree.Species);
+        }
+    }
+
+    private async Task DeleteTree()
+    {
+        try
+        {
+            await TreeService.DeleteTreeAsync(tree.TreeId, ModuleState.ModuleId);
+            await logger.LogInformation("Tree deleted successfully: {Species}", tree.Species);
+            NavigationManager.NavigateTo(NavigateUrl());
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error deleting tree: {Species}", tree.Species);
+        }
+    }
+}

@@ -1,0 +1,41 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "OE.TenTrees.Shared.Oqtane/1.0.0": {
+        "dependencies": {
+          "Oqtane.Shared": "5.2.4"
+        },
+        "runtime": {
+          "OE.TenTrees.Shared.Oqtane.dll": {}
+        }
+      },
+      "Oqtane.Shared/5.2.4": {
+        "runtime": {
+          "lib/net8.0/Oqtane.Shared.dll": {
+            "assemblyVersion": "5.2.4.0",
+            "fileVersion": "5.2.4.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "OE.TenTrees.Shared.Oqtane/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Oqtane.Shared/5.2.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-lczEoyrGnVvTTeIoH/8EMb4CSbIqPhkT4SLQ/0uwCwgtgdBYp46fyJ4vColzcO4Yb2VY4YsWnmNkVYDV7oOXGg==",
+      "path": "oqtane.shared/5.2.4",
+      "hashPath": "oqtane.shared.5.2.4.nupkg.sha512"
+    }
+  }
+}
