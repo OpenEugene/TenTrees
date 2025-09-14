@@ -1,0 +1,231 @@
+@using Oqtane.Modules.Controls
+@using OE.TenTrees.Services
+@using OE.TenTrees.Models
+
+@namespace OE.TenTrees.TenTrees
+@inherits ModuleBase
+@inject ITreeService TreeService
+@inject NavigationManager NavigationManager
+@inject IStringLocalizer<Edit> Localizer
+
+<form @ref="form" class="@(validated ? " was-validated" : "needs-validation" )" novalidate>
+    <div class="container">
+        <div class="row mb-1 align-items-center">
+            <Label Class="col-sm-3" For="species" HelpText="@Localizer["SpeciesHelp"]" ResourceKey="Species">@Localizer["Species"]: </Label>
+            <div class="col-sm-9">
+                <input id="species" class="form-control" @bind="@_species" required maxlength="100" />
+            </div>
+        </div>
+
+        <div class="row mb-1 align-items-center">
+            <Label Class="col-sm-3" For="commonName" HelpText="@Localizer["CommonNameHelp"]" ResourceKey="CommonName">@Localizer["CommonName"]: </Label>
+            <div class="col-sm-9">
+                <input id="commonName" class="form-control" @bind="@_commonName" maxlength="100" />
+            </div>
+        </div>
+
+        <div class="row mb-1 align-items-center">
+            <Label Class="col-sm-3" For="location" HelpText="@Localizer["LocationHelp"]" ResourceKey="Location">@Localizer["Location"]: </Label>
+            <div class="col-sm-9">
+                <input id="location" class="form-control" @bind="@_location" maxlength="200" />
+            </div>
+        </div>
+
+        <div class="row mb-1 align-items-center">
+            <Label Class="col-sm-3" For="latitude" HelpText="@Localizer["LatitudeHelp"]" ResourceKey="Latitude">@Localizer["Latitude"]: </Label>
+            <div class="col-sm-9">
+                <input id="latitude" type="number" step="0.000001" class="form-control" @bind="@_latitude" required />
+            </div>
+        </div>
+
+        <div class="row mb-1 align-items-center">
+            <Label Class="col-sm-3" For="longitude" HelpText="@Localizer["LongitudeHelp"]" ResourceKey="Longitude">@Localizer["Longitude"]: </Label>
+            <div class="col-sm-9">
+                <input id="longitude" type="number" step="0.000001" class="form-control" @bind="@_longitude" required />
+            </div>
+        </div>
+
+        <div class="row mb-1 align-items-center">
+            <Label Class="col-sm-3" For="plantedDate" HelpText="@Localizer["PlantedDateHelp"]" ResourceKey="PlantedDate">@Localizer["PlantedDate"]: </Label>
+            <div class="col-sm-9">
+                <input id="plantedDate" type="date" class="form-control" @bind="@_plantedDate" required />
+            </div>
+        </div>
+
+        <div class="row mb-1 align-items-center">
+            <Label Class="col-sm-3" For="status" HelpText="@Localizer["StatusHelp"]" ResourceKey="Status">@Localizer["Status"]: </Label>
+            <div class="col-sm-9">
+                <select id="status" class="form-control" @bind="@_status">
+                    <option value="Healthy">@Localizer["Healthy"]</option>
+                    <option value="Needs Attention">@Localizer["NeedsAttention"]</option>
+                    <option value="Dead">@Localizer["Dead"]</option>
+                    <option value="Removed">@Localizer["Removed"]</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row mb-1 align-items-center">
+            <Label Class="col-sm-3" For="height" HelpText="@Localizer["HeightHelp"]" ResourceKey="Height">@Localizer["Height"]: </Label>
+            <div class="col-sm-9">
+                <input id="height" type="number" step="0.1" class="form-control" @bind="@_height" />
+            </div>
+        </div>
+
+        <div class="row mb-1 align-items-center">
+            <Label Class="col-sm-3" For="diameter" HelpText="@Localizer["DiameterHelp"]" ResourceKey="Diameter">@Localizer["Diameter"]: </Label>
+            <div class="col-sm-9">
+                <input id="diameter" type="number" step="0.1" class="form-control" @bind="@_diameter" />
+            </div>
+        </div>
+
+        <div class="row mb-1 align-items-center">
+            <Label Class="col-sm-3" For="plantedBy" HelpText="@Localizer["PlantedByHelp"]" ResourceKey="PlantedBy">@Localizer["PlantedBy"]: </Label>
+            <div class="col-sm-9">
+                <input id="plantedBy" class="form-control" @bind="@_plantedBy" maxlength="100" />
+            </div>
+        </div>
+
+        <div class="row mb-1 align-items-center">
+            <Label Class="col-sm-3" For="notes" HelpText="@Localizer["NotesHelp"]" ResourceKey="Notes">@Localizer["Notes"]: </Label>
+            <div class="col-sm-9">
+                <textarea id="notes" class="form-control" @bind="@_notes" rows="3" maxlength="500"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <button type="button" class="btn btn-success" @onclick="Save">@Localizer["Save"]</button>
+    <NavLink class="btn btn-secondary" href="@NavigateUrl()">@Localizer["Cancel"]</NavLink>
+    <br /><br />
+    @if (PageState.Action == "Edit")
+    {
+        <AuditInfo CreatedBy="@_createdby" CreatedOn="@_createdon" ModifiedBy="@_modifiedby" ModifiedOn="@_modifiedon"></AuditInfo>
+    }
+</form>
+
+@code {
+    public override SecurityAccessLevel SecurityAccessLevel => SecurityAccessLevel.Edit;
+
+    public override string Actions => "Add,Edit";
+
+    public override string Title => "Manage Tree";
+
+    public override List<Resource> Resources => new List<Resource>()
+    {
+        new Stylesheet(ModulePath() + "Module.css")
+    };
+
+    private ElementReference form;
+    private bool validated = false;
+
+    private int _id;
+    private string _species = string.Empty;
+    private string _commonName = string.Empty;
+    private string _location = string.Empty;
+    private double _latitude = 0;
+    private double _longitude = 0;
+    private DateTime _plantedDate = DateTime.Today;
+    private string _status = "Healthy";
+    private double? _height;
+    private double? _diameter;
+    private string _plantedBy = string.Empty;
+    private string _notes = string.Empty;
+    private string _createdby = string.Empty;
+    private DateTime _createdon;
+    private string _modifiedby = string.Empty;
+    private DateTime _modifiedon;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            if (PageState.Action == "Edit")
+            {
+                _id = Int32.Parse(PageState.QueryString["id"]);
+                Tree tree = await TreeService.GetTreeAsync(_id, ModuleState.ModuleId);
+                if (tree != null)
+                {
+                    _species = tree.Species;
+                    _commonName = tree.CommonName ?? string.Empty;
+                    _location = tree.Location ?? string.Empty;
+                    _latitude = tree.Latitude;
+                    _longitude = tree.Longitude;
+                    _plantedDate = tree.PlantedDate;
+                    _status = tree.Status;
+                    _height = tree.Height;
+                    _diameter = tree.Diameter;
+                    _plantedBy = tree.PlantedBy ?? string.Empty;
+                    _notes = tree.Notes ?? string.Empty;
+                    _createdby = tree.CreatedBy;
+                    _createdon = tree.CreatedOn;
+                    _modifiedby = tree.ModifiedBy;
+                    _modifiedon = tree.ModifiedOn;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Loading Tree {TreeId} {Error}", _id, ex.Message);
+            AddModuleMessage(Localizer["LoadError"], MessageType.Error);
+        }
+    }
+
+    private async Task Save()
+    {
+        try
+        {
+            validated = true;
+            var interop = new Oqtane.UI.Interop(JSRuntime);
+            if (await interop.FormValid(form))
+            {
+                if (PageState.Action == "Add")
+                {
+                    Tree tree = new Tree();
+                    tree.ModuleId = ModuleState.ModuleId;
+                    tree.Species = _species;
+                    tree.CommonName = _commonName;
+                    tree.Location = _location;
+                    tree.Latitude = _latitude;
+                    tree.Longitude = _longitude;
+                    tree.PlantedDate = _plantedDate;
+                    tree.Status = _status;
+                    tree.Height = _height;
+                    tree.Diameter = _diameter;
+                    tree.PlantedBy = _plantedBy;
+                    tree.Notes = _notes;
+                    tree = await TreeService.AddTreeAsync(tree);
+                    await logger.LogInformation("Tree Added {Tree}", tree);
+                }
+                else
+                {
+                    Tree tree = await TreeService.GetTreeAsync(_id, ModuleState.ModuleId);
+                    if (tree != null)
+                    {
+                        tree.Species = _species;
+                        tree.CommonName = _commonName;
+                        tree.Location = _location;
+                        tree.Latitude = _latitude;
+                        tree.Longitude = _longitude;
+                        tree.PlantedDate = _plantedDate;
+                        tree.Status = _status;
+                        tree.Height = _height;
+                        tree.Diameter = _diameter;
+                        tree.PlantedBy = _plantedBy;
+                        tree.Notes = _notes;
+                        await TreeService.UpdateTreeAsync(tree);
+                        await logger.LogInformation("Tree Updated {Tree}", tree);
+                    }
+                }
+                NavigationManager.NavigateTo(NavigateUrl());
+            }
+            else
+            {
+                AddModuleMessage(Localizer["SaveValidation"], MessageType.Warning);
+            }
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Saving Tree {Error}", ex.Message);
+            AddModuleMessage(Localizer["SaveError"], MessageType.Error);
+        }
+    }
+}

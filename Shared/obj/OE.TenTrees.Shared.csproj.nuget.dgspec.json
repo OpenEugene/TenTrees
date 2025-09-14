@@ -1,0 +1,67 @@
+{
+  "format": 1,
+  "restore": {
+    "/home/runner/work/TenTrees/TenTrees/Shared/OE.TenTrees.Shared.csproj": {}
+  },
+  "projects": {
+    "/home/runner/work/TenTrees/TenTrees/Shared/OE.TenTrees.Shared.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/runner/work/TenTrees/TenTrees/Shared/OE.TenTrees.Shared.csproj",
+        "projectName": "OE.TenTrees.Shared.Oqtane",
+        "projectPath": "/home/runner/work/TenTrees/TenTrees/Shared/OE.TenTrees.Shared.csproj",
+        "packagesPath": "/home/runner/.nuget/packages/",
+        "outputPath": "/home/runner/work/TenTrees/TenTrees/Shared/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/runner/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Oqtane.Shared": {
+              "target": "Package",
+              "version": "[5.2.4, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.119/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,91 @@
+@namespace OE.TenTrees.TenTrees
+@inherits ModuleBase
+@inject ISettingService SettingService
+@inject IStringLocalizer<Settings> Localizer
+
+<div class="container">
+    <div class="row mb-1 align-items-center">
+        <Label Class="col-sm-3" For="defaultLocation" HelpText="@Localizer["DefaultLocationHelp"]" ResourceKey="DefaultLocation" ResourceType="@resourceType">@Localizer["DefaultLocation"]: </Label>
+        <div class="col-sm-9">
+            <input id="defaultLocation" type="text" class="form-control" @bind="@_defaultLocation" />
+        </div>
+    </div>
+
+    <div class="row mb-1 align-items-center">
+        <Label Class="col-sm-3" For="defaultLatitude" HelpText="@Localizer["DefaultLatitudeHelp"]" ResourceKey="DefaultLatitude" ResourceType="@resourceType">@Localizer["DefaultLatitude"]: </Label>
+        <div class="col-sm-9">
+            <input id="defaultLatitude" type="number" step="0.000001" class="form-control" @bind="@_defaultLatitude" />
+        </div>
+    </div>
+
+    <div class="row mb-1 align-items-center">
+        <Label Class="col-sm-3" For="defaultLongitude" HelpText="@Localizer["DefaultLongitudeHelp"]" ResourceKey="DefaultLongitude" ResourceType="@resourceType">@Localizer["DefaultLongitude"]: </Label>
+        <div class="col-sm-9">
+            <input id="defaultLongitude" type="number" step="0.000001" class="form-control" @bind="@_defaultLongitude" />
+        </div>
+    </div>
+
+    <div class="row mb-1 align-items-center">
+        <Label Class="col-sm-3" For="enableNotifications" HelpText="@Localizer["EnableNotificationsHelp"]" ResourceKey="EnableNotifications" ResourceType="@resourceType">@Localizer["EnableNotifications"]: </Label>
+        <div class="col-sm-9">
+            <input id="enableNotifications" type="checkbox" class="form-check-input" @bind="@_enableNotifications" />
+        </div>
+    </div>
+
+    <div class="row mb-1 align-items-center">
+        <Label Class="col-sm-3" For="organizationName" HelpText="@Localizer["OrganizationNameHelp"]" ResourceKey="OrganizationName" ResourceType="@resourceType">@Localizer["OrganizationName"]: </Label>
+        <div class="col-sm-9">
+            <input id="organizationName" type="text" class="form-control" @bind="@_organizationName" />
+        </div>
+    </div>
+</div>
+
+@code {
+    private string resourceType = "OE.TenTrees.Settings, OE.TenTrees.Client.Oqtane"; // for localization
+    public override string Title => "TenTrees Settings";
+
+    string _defaultLocation = string.Empty;
+    double _defaultLatitude = 0.0;
+    double _defaultLongitude = 0.0;
+    bool _enableNotifications = true;
+    string _organizationName = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            Dictionary<string, string> settings = await SettingService.GetModuleSettingsAsync(ModuleState.ModuleId);
+            _defaultLocation = SettingService.GetSetting(settings, "DefaultLocation", "");
+            _defaultLatitude = SettingService.GetSetting(settings, "DefaultLatitude", 0.0);
+            _defaultLongitude = SettingService.GetSetting(settings, "DefaultLongitude", 0.0);
+            _enableNotifications = SettingService.GetSetting(settings, "EnableNotifications", true);
+            _organizationName = SettingService.GetSetting(settings, "OrganizationName", "");
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Loading TenTrees Settings {Error}", ex.Message);
+            AddModuleMessage(Localizer["LoadError"], MessageType.Error);
+        }
+    }
+
+    public async Task UpdateSettings()
+    {
+        try
+        {
+            Dictionary<string, string> settings = await SettingService.GetModuleSettingsAsync(ModuleState.ModuleId);
+            SettingService.SetSetting(settings, "DefaultLocation", _defaultLocation);
+            SettingService.SetSetting(settings, "DefaultLatitude", _defaultLatitude);
+            SettingService.SetSetting(settings, "DefaultLongitude", _defaultLongitude);
+            SettingService.SetSetting(settings, "EnableNotifications", _enableNotifications);
+            SettingService.SetSetting(settings, "OrganizationName", _organizationName);
+            await SettingService.UpdateModuleSettingsAsync(settings, ModuleState.ModuleId);
+            await logger.LogInformation("TenTrees Settings Updated Successfully");
+            AddModuleMessage(Localizer["SettingsSaved"], MessageType.Success);
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Saving TenTrees Settings {Error}", ex.Message);
+            AddModuleMessage(Localizer["SaveError"], MessageType.Error);
+        }
+    }
+}

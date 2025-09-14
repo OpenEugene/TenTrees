@@ -1,0 +1,241 @@
+{
+  "version": 3,
+  "targets": {
+    "net8.0": {
+      "Oqtane.Client/5.2.4": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0/Oqtane.Client.dll": {
+            "related": ".pdb"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Oqtane.Client.dll": {
+            "related": ".pdb"
+          }
+        }
+      },
+      "Oqtane.Server/5.2.4": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0/Oqtane.Server.dll": {
+            "related": ".pdb"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Oqtane.Server.dll": {
+            "related": ".pdb"
+          }
+        }
+      },
+      "Oqtane.Shared/5.2.4": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0/Oqtane.Shared.dll": {
+            "related": ".pdb"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Oqtane.Shared.dll": {
+            "related": ".pdb"
+          }
+        }
+      },
+      "OE.TenTrees.Client.Oqtane/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "dependencies": {
+          "OE.TenTrees.Shared.Oqtane": "1.0.0",
+          "Oqtane.Client": "5.2.4"
+        },
+        "compile": {
+          "bin/placeholder/OE.TenTrees.Client.Oqtane.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/OE.TenTrees.Client.Oqtane.dll": {}
+        }
+      },
+      "OE.TenTrees.Shared.Oqtane/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "dependencies": {
+          "Oqtane.Shared": "5.2.4"
+        },
+        "compile": {
+          "bin/placeholder/OE.TenTrees.Shared.Oqtane.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/OE.TenTrees.Shared.Oqtane.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Oqtane.Client/5.2.4": {
+      "sha512": "5McfrfhrXJZ7ReG8XSz0YEBTNqb7awX8CpIixqrXFkfHZdEcaHVcborx7LY1epUXP7BUUYcR4zsVLR0s7mu+Dw==",
+      "type": "package",
+      "path": "oqtane.client/5.2.4",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "icon.png",
+        "lib/net8.0/Oqtane.Client.dll",
+        "lib/net8.0/Oqtane.Client.pdb",
+        "oqtane.client.5.2.4.nupkg.sha512",
+        "oqtane.client.nuspec",
+        "readme.md"
+      ]
+    },
+    "Oqtane.Server/5.2.4": {
+      "sha512": "fu0j+vmgnQRnwl4LdTG0It6Iv5/plIeZuPGMHZyZCjmgJ+caoGC7R+147soUpqIzIjXe2qTxlLhEzUFjRdUOxA==",
+      "type": "package",
+      "path": "oqtane.server/5.2.4",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "icon.png",
+        "lib/net8.0/Oqtane.Server.dll",
+        "lib/net8.0/Oqtane.Server.pdb",
+        "oqtane.server.5.2.4.nupkg.sha512",
+        "oqtane.server.nuspec",
+        "readme.md"
+      ]
+    },
+    "Oqtane.Shared/5.2.4": {
+      "sha512": "lczEoyrGnVvTTeIoH/8EMb4CSbIqPhkT4SLQ/0uwCwgtgdBYp46fyJ4vColzcO4Yb2VY4YsWnmNkVYDV7oOXGg==",
+      "type": "package",
+      "path": "oqtane.shared/5.2.4",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "icon.png",
+        "lib/net8.0/Oqtane.Shared.dll",
+        "lib/net8.0/Oqtane.Shared.pdb",
+        "oqtane.shared.5.2.4.nupkg.sha512",
+        "oqtane.shared.nuspec",
+        "readme.md"
+      ]
+    },
+    "OE.TenTrees.Client.Oqtane/1.0.0": {
+      "type": "project",
+      "path": "../Client/OE.TenTrees.Client.csproj",
+      "msbuildProject": "../Client/OE.TenTrees.Client.csproj"
+    },
+    "OE.TenTrees.Shared.Oqtane/1.0.0": {
+      "type": "project",
+      "path": "../Shared/OE.TenTrees.Shared.csproj",
+      "msbuildProject": "../Shared/OE.TenTrees.Shared.csproj"
+    }
+  },
+  "projectFileDependencyGroups": {
+    "net8.0": [
+      "OE.TenTrees.Client.Oqtane >= 1.0.0",
+      "OE.TenTrees.Shared.Oqtane >= 1.0.0",
+      "Oqtane.Server >= 5.2.4"
+    ]
+  },
+  "packageFolders": {
+    "/home/runner/.nuget/packages/": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "/home/runner/work/TenTrees/TenTrees/Server/OE.TenTrees.Server.csproj",
+      "projectName": "OE.TenTrees.Server.Oqtane",
+      "projectPath": "/home/runner/work/TenTrees/TenTrees/Server/OE.TenTrees.Server.csproj",
+      "packagesPath": "/home/runner/.nuget/packages/",
+      "outputPath": "/home/runner/work/TenTrees/TenTrees/Server/obj/",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "/home/runner/.nuget/NuGet/NuGet.Config"
+      ],
+      "originalTargetFrameworks": [
+        "net8.0"
+      ],
+      "sources": {
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "projectReferences": {
+            "/home/runner/work/TenTrees/TenTrees/Client/OE.TenTrees.Client.csproj": {
+              "projectPath": "/home/runner/work/TenTrees/TenTrees/Client/OE.TenTrees.Client.csproj"
+            },
+            "/home/runner/work/TenTrees/TenTrees/Shared/OE.TenTrees.Shared.csproj": {
+              "projectPath": "/home/runner/work/TenTrees/TenTrees/Shared/OE.TenTrees.Shared.csproj"
+            }
+          }
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      }
+    },
+    "frameworks": {
+      "net8.0": {
+        "targetAlias": "net8.0",
+        "dependencies": {
+          "Oqtane.Server": {
+            "target": "Package",
+            "version": "[5.2.4, )"
+          }
+        },
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48",
+          "net481"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "Microsoft.AspNetCore.App": {
+            "privateAssets": "none"
+          },
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          }
+        },
+        "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.119/PortableRuntimeIdentifierGraph.json"
+      }
+    }
+  },
+  "logs": [
+    {
+      "code": "NU1901",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Oqtane.Server' 5.2.4 has a known low severity vulnerability, https://github.com/advisories/GHSA-2hr5-cvwp-jr5w",
+      "libraryId": "Oqtane.Server",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    },
+    {
+      "code": "NU1903",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Oqtane.Server' 5.2.4 has a known high severity vulnerability, https://github.com/advisories/GHSA-995c-qww8-64fj",
+      "libraryId": "Oqtane.Server",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    },
+    {
+      "code": "NU1902",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Oqtane.Server' 5.2.4 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-hhcw-wwxv-g95c",
+      "libraryId": "Oqtane.Server",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    }
+  ]
+}

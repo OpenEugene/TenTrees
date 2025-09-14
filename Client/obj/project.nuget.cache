@@ -1,0 +1,26 @@
+{
+  "version": 2,
+  "dgSpecHash": "bSz4+PBf6tjyzYbSySU4hP4HPt4Yt12sw1uiEdRfuWtQTtMM0kozu4vZBToY8aJcId7JqcegBD3/nJujS99oXQ==",
+  "success": true,
+  "projectFilePath": "/home/runner/work/TenTrees/TenTrees/Client/OE.TenTrees.Client.csproj",
+  "expectedPackageFiles": [
+    "/home/runner/.nuget/packages/microsoft.net.illink.tasks/8.0.19/microsoft.net.illink.tasks.8.0.19.nupkg.sha512",
+    "/home/runner/.nuget/packages/microsoft.net.sdk.webassembly.pack/8.0.19/microsoft.net.sdk.webassembly.pack.8.0.19.nupkg.sha512",
+    "/home/runner/.nuget/packages/oqtane.client/5.2.4/oqtane.client.5.2.4.nupkg.sha512",
+    "/home/runner/.nuget/packages/oqtane.shared/5.2.4/oqtane.shared.5.2.4.nupkg.sha512",
+    "/home/runner/.nuget/packages/microsoft.netcore.app.runtime.mono.browser-wasm/8.0.19/microsoft.netcore.app.runtime.mono.browser-wasm.8.0.19.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1901",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Oqtane.Client' 5.2.4 has a known low severity vulnerability, https://github.com/advisories/GHSA-2hr5-cvwp-jr5w",
+      "libraryId": "Oqtane.Client",
+      "targetGraphs": [
+        "net8.0",
+        "net8.0/browser-wasm"
+      ]
+    }
+  ]
+}

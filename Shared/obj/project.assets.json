@@ -1,0 +1,116 @@
+{
+  "version": 3,
+  "targets": {
+    "net8.0": {
+      "Oqtane.Shared/5.2.4": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0/Oqtane.Shared.dll": {
+            "related": ".pdb"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Oqtane.Shared.dll": {
+            "related": ".pdb"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Oqtane.Shared/5.2.4": {
+      "sha512": "lczEoyrGnVvTTeIoH/8EMb4CSbIqPhkT4SLQ/0uwCwgtgdBYp46fyJ4vColzcO4Yb2VY4YsWnmNkVYDV7oOXGg==",
+      "type": "package",
+      "path": "oqtane.shared/5.2.4",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "icon.png",
+        "lib/net8.0/Oqtane.Shared.dll",
+        "lib/net8.0/Oqtane.Shared.pdb",
+        "oqtane.shared.5.2.4.nupkg.sha512",
+        "oqtane.shared.nuspec",
+        "readme.md"
+      ]
+    }
+  },
+  "projectFileDependencyGroups": {
+    "net8.0": [
+      "Oqtane.Shared >= 5.2.4"
+    ]
+  },
+  "packageFolders": {
+    "/home/runner/.nuget/packages/": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "/home/runner/work/TenTrees/TenTrees/Shared/OE.TenTrees.Shared.csproj",
+      "projectName": "OE.TenTrees.Shared.Oqtane",
+      "projectPath": "/home/runner/work/TenTrees/TenTrees/Shared/OE.TenTrees.Shared.csproj",
+      "packagesPath": "/home/runner/.nuget/packages/",
+      "outputPath": "/home/runner/work/TenTrees/TenTrees/Shared/obj/",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "/home/runner/.nuget/NuGet/NuGet.Config"
+      ],
+      "originalTargetFrameworks": [
+        "net8.0"
+      ],
+      "sources": {
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "projectReferences": {}
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      }
+    },
+    "frameworks": {
+      "net8.0": {
+        "targetAlias": "net8.0",
+        "dependencies": {
+          "Oqtane.Shared": {
+            "target": "Package",
+            "version": "[5.2.4, )"
+          }
+        },
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48",
+          "net481"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          }
+        },
+        "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.119/PortableRuntimeIdentifierGraph.json"
+      }
+    }
+  },
+  "logs": [
+    {
+      "code": "NU1901",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Oqtane.Shared' 5.2.4 has a known low severity vulnerability, https://github.com/advisories/GHSA-2hr5-cvwp-jr5w",
+      "libraryId": "Oqtane.Shared",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    }
+  ]
+}
