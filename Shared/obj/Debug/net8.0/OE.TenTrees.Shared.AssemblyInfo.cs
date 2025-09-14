@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("OE.TenTrees.Shared.Oqtane")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a66260ebfb0f90a692f368ac72008a7378c27bfc")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d4cd3fc9c5c09a1849179819dbe99d6700234433")]
 [assembly: System.Reflection.AssemblyProductAttribute("OE.TenTrees.Shared.Oqtane")]
 [assembly: System.Reflection.AssemblyTitleAttribute("OE.TenTrees.Shared.Oqtane")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

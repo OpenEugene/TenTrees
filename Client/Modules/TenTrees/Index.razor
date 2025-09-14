@@ -1,109 +1,103 @@
-@using OE.TenTrees.Models
 @using OE.TenTrees.Services
+@using OE.TenTrees.Models
+
+@namespace OE.TenTrees.TenTrees
 @inherits ModuleBase
 @inject ITreeService TreeService
 @inject IPlantingEventService PlantingEventService
 @inject NavigationManager NavigationManager
+@inject IStringLocalizer<Index> Localizer
 
-<div class="container-fluid">
-    <div class="row mb-4">
-        <div class="col-md-12">
-            <h2>Ten Trees Dashboard</h2>
-            <p>Managing tree planting and conservation efforts in our community.</p>
-        </div>
-    </div>
-
-    <div class="row mb-4">
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body text-center">
-                    <h3 class="card-title">@totalTrees</h3>
-                    <p class="card-text">Total Trees</p>
-                    <button class="btn btn-primary" @onclick="ViewTrees">View All Trees</button>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body text-center">
-                    <h3 class="card-title">@totalPlantingEvents</h3>
-                    <p class="card-text">Planting Events</p>
-                    <button class="btn btn-success" @onclick="ViewPlantingEvents">View Events</button>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body text-center">
-                    <h3 class="card-title">@healthyTrees</h3>
-                    <p class="card-text">Healthy Trees</p>
-                    <button class="btn btn-info" @onclick="ViewMonitoring">Monitor Trees</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    @if (UserSecurity.IsAuthorized(User, PermissionNames.Edit, ModuleState.ModuleId))
-    {
-        <div class="row mb-3">
+@if (trees == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="container-fluid">
+        <div class="row mb-4">
             <div class="col-md-12">
-                <ActionLink Action="Edit" Text="Add New Tree" ResourceKey="AddTree" />
+                <h2>@Localizer["Title"]</h2>
+                <p>@Localizer["Description"]</p>
             </div>
         </div>
-    }
 
-    <div class="row">
-        <div class="col-md-12">
-            <h4>Recent Trees</h4>
-            @if (trees != null && trees.Any())
-            {
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Species</th>
-                                <th>Common Name</th>
-                                <th>Location</th>
-                                <th>Planted Date</th>
-                                <th>Status</th>
-                                @if (UserSecurity.IsAuthorized(User, PermissionNames.Edit, ModuleState.ModuleId))
-                                {
-                                    <th>Actions</th>
-                                }
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var tree in trees.Take(10))
-                            {
-                                <tr>
-                                    <td>@tree.Species</td>
-                                    <td>@tree.CommonName</td>
-                                    <td>@tree.Location</td>
-                                    <td>@tree.PlantedDate.ToString("MM/dd/yyyy")</td>
-                                    <td>
-                                        <span class="badge @GetStatusBadgeClass(tree.Status)">@tree.Status</span>
-                                    </td>
-                                    @if (UserSecurity.IsAuthorized(User, PermissionNames.Edit, ModuleState.ModuleId))
-                                    {
-                                        <td>
-                                            <ActionLink Action="Edit" Parameters="@($"id={tree.TreeId}")" Text="Edit" ResourceKey="EditTree" />
-                                        </td>
-                                    }
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h3 class="card-title">@totalTrees</h3>
+                        <p class="card-text">@Localizer["TotalTrees"]</p>
+                        <button class="btn btn-primary" @onclick="ViewTrees">@Localizer["ViewAllTrees"]</button>
+                    </div>
                 </div>
-            }
-            else
-            {
-                <p>No trees have been planted yet. <ActionLink Action="Edit" Text="Plant your first tree!" ResourceKey="AddFirstTree" /></p>
-            }
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h3 class="card-title">@totalPlantingEvents</h3>
+                        <p class="card-text">@Localizer["PlantingEvents"]</p>
+                        <button class="btn btn-success" @onclick="ViewPlantingEvents">@Localizer["ViewEvents"]</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h3 class="card-title">@healthyTrees</h3>
+                        <p class="card-text">@Localizer["HealthyTrees"]</p>
+                        <button class="btn btn-info" @onclick="ViewMonitoring">@Localizer["MonitorTrees"]</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <ActionLink Action="Add" Security="SecurityAccessLevel.Edit" Text="@Localizer["AddTree"]" ResourceKey="Add" />
+        <br />
+        <br />
+
+        <div class="row">
+            <div class="col-md-12">
+                <h4>@Localizer["RecentTrees"]</h4>
+                @if (trees.Count > 0)
+                {
+                    <Pager Items="@trees">
+                        <Header>
+                            <th style="width: 1px;">&nbsp;</th>
+                            <th>@Localizer["Species"]</th>
+                            <th>@Localizer["CommonName"]</th>
+                            <th>@Localizer["Location"]</th>
+                            <th>@Localizer["PlantedDate"]</th>
+                            <th>@Localizer["Status"]</th>
+                        </Header>
+                        <Row>
+                            <td><ActionLink Action="Edit" Parameters="@($"id=" + context.TreeId.ToString())" ResourceKey="Edit" /></td>
+                            <td>@context.Species</td>
+                            <td>@context.CommonName</td>
+                            <td>@context.Location</td>
+                            <td>@context.PlantedDate.ToString("MM/dd/yyyy")</td>
+                            <td>
+                                <span class="badge @GetStatusBadgeClass(context.Status)">@context.Status</span>
+                            </td>
+                        </Row>
+                    </Pager>
+                }
+                else
+                {
+                    <p>@Localizer["NoTrees"]</p>
+                }
+            </div>
         </div>
     </div>
-</div>
+}
 
 @code {
+    public override List<Resource> Resources => new List<Resource>()
+    {
+        new Stylesheet(ModulePath() + "Module.css"),
+        new Script(ModulePath() + "Module.js")
+    };
+
     private List<Tree>? trees;
     private int totalTrees = 0;
     private int totalPlantingEvents = 0;
@@ -111,24 +105,25 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await LoadData();
+        try
+        {
+            await LoadData();
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Loading TenTrees Data {Error}", ex.Message);
+            AddModuleMessage(Localizer["LoadError"], MessageType.Error);
+        }
     }
 
     private async Task LoadData()
     {
-        try
-        {
-            trees = await TreeService.GetTreesAsync(ModuleState.ModuleId);
-            var plantingEvents = await PlantingEventService.GetPlantingEventsAsync(ModuleState.ModuleId);
-            
-            totalTrees = trees?.Count ?? 0;
-            totalPlantingEvents = plantingEvents?.Count ?? 0;
-            healthyTrees = trees?.Count(t => t.Status.Equals("Healthy", StringComparison.OrdinalIgnoreCase)) ?? 0;
-        }
-        catch (Exception ex)
-        {
-            await logger.LogError(ex, "Error loading Ten Trees data");
-        }
+        trees = await TreeService.GetTreesAsync(ModuleState.ModuleId);
+        var plantingEvents = await PlantingEventService.GetPlantingEventsAsync(ModuleState.ModuleId);
+        
+        totalTrees = trees?.Count ?? 0;
+        totalPlantingEvents = plantingEvents?.Count ?? 0;
+        healthyTrees = trees?.Count(t => t.Status.Equals("Healthy", StringComparison.OrdinalIgnoreCase)) ?? 0;
     }
 
     private void ViewTrees()
