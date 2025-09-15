@@ -1,0 +1,485 @@
+@using Oqtane.Modules.Controls
+@using OE.TenTrees.Services
+@using OE.TenTrees.Models
+
+@namespace OE.TenTrees.Application
+@inherits ModuleBase
+@inject IApplicationService ApplicationService
+@inject NavigationManager NavigationManager
+@inject IStringLocalizer<Review> Localizer
+
+@if (_application == null)
+{
+    <p><em>Loading application...</em></p>
+}
+else
+{
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h4>Application Review - @_application.BeneficiaryName</h4>
+                        <span class="badge @GetStatusBadgeClass(_application.Status) fs-6">@_application.Status</span>
+                    </div>
+                    <div class="card-body">
+                        <!-- Application Details -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <strong>Evaluator:</strong> @_application.EvaluatorName
+                            </div>
+                            <div class="col-md-6">
+                                <strong>Beneficiary:</strong> @_application.BeneficiaryName
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <strong>Village:</strong> @_application.Village
+                            </div>
+                            <div class="col-md-6">
+                                <strong>Household ID:</strong> @_application.HouseholdIdentifier
+                            </div>
+                        </div>
+
+                        @if (_application.HouseholdSize.HasValue)
+                        {
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <strong>Household Size:</strong> @_application.HouseholdSize people
+                                </div>
+                                <div class="col-md-6">
+                                    <strong>Submission Date:</strong> @(_application.SubmissionDate?.ToString("MM/dd/yyyy") ?? "Not submitted")
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Criteria Review -->
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h5>Preferred Criteria Assessment</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="criteria-checklist">
+                                    <div class="form-check d-flex justify-content-between align-items-center mb-2">
+                                        <div>
+                                            <input class="form-check-input me-2" type="checkbox" disabled checked="@_application.HasExistingGardenInterest" />
+                                            <label class="form-check-label">Shows interest in gardening</label>
+                                        </div>
+                                        <span class="badge @(_application.HasExistingGardenInterest ? "bg-success" : "bg-secondary")">
+                                            @(_application.HasExistingGardenInterest ? "Yes" : "No")
+                                        </span>
+                                    </div>
+
+                                    <div class="form-check d-flex justify-content-between align-items-center mb-2">
+                                        <div>
+                                            <input class="form-check-input me-2" type="checkbox" disabled checked="@_application.GardenCurrentlyTended" />
+                                            <label class="form-check-label">Garden currently planted and tended</label>
+                                        </div>
+                                        <span class="badge @(_application.GardenCurrentlyTended ? "bg-success" : "bg-secondary")">
+                                            @(_application.GardenCurrentlyTended ? "Yes" : "No")
+                                        </span>
+                                    </div>
+
+                                    <div class="form-check d-flex justify-content-between align-items-center mb-2">
+                                        <div>
+                                            <input class="form-check-input me-2" type="checkbox" disabled checked="@_application.ChildHeadedHousehold" />
+                                            <label class="form-check-label">Child headed household</label>
+                                        </div>
+                                        <span class="badge @(_application.ChildHeadedHousehold ? "bg-success" : "bg-secondary")">
+                                            @(_application.ChildHeadedHousehold ? "Yes" : "No")
+                                        </span>
+                                    </div>
+
+                                    <div class="form-check d-flex justify-content-between align-items-center mb-2">
+                                        <div>
+                                            <input class="form-check-input me-2" type="checkbox" disabled checked="@_application.WomanHeadedHousehold" />
+                                            <label class="form-check-label">Woman headed household</label>
+                                        </div>
+                                        <span class="badge @(_application.WomanHeadedHousehold ? "bg-success" : "bg-secondary")">
+                                            @(_application.WomanHeadedHousehold ? "Yes" : "No")
+                                        </span>
+                                    </div>
+
+                                    <div class="form-check d-flex justify-content-between align-items-center mb-2">
+                                        <div>
+                                            <input class="form-check-input me-2" type="checkbox" disabled checked="@_application.EmptyOrNearlyEmptyYard" />
+                                            <label class="form-check-label">Empty or nearly empty yard</label>
+                                        </div>
+                                        <span class="badge @(_application.EmptyOrNearlyEmptyYard ? "bg-success" : "bg-secondary")">
+                                            @(_application.EmptyOrNearlyEmptyYard ? "Yes" : "No")
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="mt-3 p-3 bg-light rounded">
+                                    <strong>Criteria Score:</strong> @GetCriteriaScore() out of 5 criteria met
+                                    <div class="progress mt-2">
+                                        <div class="progress-bar @GetCriteriaProgressClass()" style="width: @(GetCriteriaScore() * 20)%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Commitments Review -->
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h5>Commitment Assessment</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="criteria-checklist">
+                                    <div class="form-check d-flex justify-content-between align-items-center mb-2">
+                                        <div>
+                                            <input class="form-check-input me-2" type="checkbox" disabled checked="@_application.CommitNoChemicals" />
+                                            <label class="form-check-label">Committed to not using chemicals/pesticides</label>
+                                        </div>
+                                        <span class="badge @(_application.CommitNoChemicals ? "bg-success" : "bg-danger")">
+                                            @(_application.CommitNoChemicals ? "Yes" : "No")
+                                        </span>
+                                    </div>
+
+                                    <div class="form-check d-flex justify-content-between align-items-center mb-2">
+                                        <div>
+                                            <input class="form-check-input me-2" type="checkbox" disabled checked="@_application.CommitAttendTraining" />
+                                            <label class="form-check-label">Committed to attend permaculture training</label>
+                                        </div>
+                                        <span class="badge @(_application.CommitAttendTraining ? "bg-success" : "bg-danger")">
+                                            @(_application.CommitAttendTraining ? "Yes" : "No")
+                                        </span>
+                                    </div>
+
+                                    <div class="form-check d-flex justify-content-between align-items-center mb-2">
+                                        <div>
+                                            <input class="form-check-input me-2" type="checkbox" disabled checked="@_application.CommitNotCutTrees" />
+                                            <label class="form-check-label">Committed to not cut trees</label>
+                                        </div>
+                                        <span class="badge @(_application.CommitNotCutTrees ? "bg-success" : "bg-danger")">
+                                            @(_application.CommitNotCutTrees ? "Yes" : "No")
+                                        </span>
+                                    </div>
+
+                                    <div class="form-check d-flex justify-content-between align-items-center mb-2">
+                                        <div>
+                                            <input class="form-check-input me-2" type="checkbox" disabled checked="@_application.CommitStandAgainstAbuse" />
+                                            <label class="form-check-label">Committed to standing against abuse</label>
+                                        </div>
+                                        <span class="badge @(_application.CommitStandAgainstAbuse ? "bg-success" : "bg-danger")">
+                                            @(_application.CommitStandAgainstAbuse ? "Yes" : "No")
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="mt-3 p-3 bg-light rounded">
+                                    <strong>Commitment Score:</strong> @GetCommitmentScore() out of 4 commitments confirmed
+                                    <div class="progress mt-2">
+                                        <div class="progress-bar @GetCommitmentProgressClass()" style="width: @(GetCommitmentScore() * 25)%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @if (!string.IsNullOrEmpty(_application.Notes))
+                {
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h5>Additional Notes</h5>
+                        </div>
+                        <div class="card-body">
+                            <p>@_application.Notes</p>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- Review Actions Sidebar -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Review Actions</h5>
+                    </div>
+                    <div class="card-body">
+                        @if (_application.Status == ApplicationStatus.PendingReview)
+                        {
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle"></i> This application is awaiting review.
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="reviewComments" class="form-label">Review Comments (Optional):</label>
+                                <textarea id="reviewComments" class="form-control" rows="3" @bind="@_reviewComments" placeholder="Add any comments about this review..."></textarea>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="button" class="btn btn-success btn-lg" @onclick="ApproveApplication" disabled="@(!MeetsMinimumRequirements())">
+                                    <i class="fas fa-check"></i> Approve Application
+                                </button>
+                                <button type="button" class="btn btn-danger btn-lg" @onclick="ShowRejectDialog">
+                                    <i class="fas fa-times"></i> Reject Application
+                                </button>
+                            </div>
+
+                            @if (!MeetsMinimumRequirements())
+                            {
+                                <div class="alert alert-warning mt-3">
+                                    <i class="fas fa-exclamation-triangle"></i> 
+                                    <strong>Note:</strong> This application does not meet all minimum requirements (all commitments must be confirmed).
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="alert @GetStatusAlertClass(_application.Status)">
+                                <strong>Status:</strong> @_application.Status
+                                @if (!string.IsNullOrEmpty(_application.RejectionReason))
+                                {
+                                    <hr />
+                                    <strong>Rejection Reason:</strong><br />
+                                    @_application.RejectionReason
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Application Summary -->
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h6>Application Summary</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="summary-stats">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Criteria Met:</span>
+                                <span class="fw-bold">@GetCriteriaScore() / 5</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Commitments:</span>
+                                <span class="fw-bold">@GetCommitmentScore() / 4</span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span>Overall Score:</span>
+                                <span class="fw-bold">@GetOverallScore()%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-3">
+                    <NavLink class="btn btn-secondary w-100" href="@NavigateUrl()">
+                        <i class="fas fa-arrow-left"></i> Back to Applications
+                    </NavLink>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Rejection Dialog -->
+@if (_showRejectDialog)
+{
+    <div class="modal fade show" style="display: block;" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Reject Application</h5>
+                    <button type="button" class="btn-close" @onclick="HideRejectDialog"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to reject this application for <strong>@_application?.BeneficiaryName</strong>?</p>
+                    <div class="mb-3">
+                        <label for="rejectionReason" class="form-label">Rejection Reason <span class="text-danger">*</span>:</label>
+                        <textarea id="rejectionReason" class="form-control" rows="3" @bind="@_rejectionReason" placeholder="Please provide a reason for rejection..." required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="HideRejectDialog">Cancel</button>
+                    <button type="button" class="btn btn-danger" @onclick="RejectApplication" disabled="@string.IsNullOrWhiteSpace(_rejectionReason)">
+                        <i class="fas fa-times"></i> Reject Application
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade show"></div>
+}
+
+@code {
+    public override SecurityAccessLevel SecurityAccessLevel => SecurityAccessLevel.Edit;
+    public override string Actions => "Review";
+    public override string Title => "Review Application";
+
+    public override List<Resource> Resources => new List<Resource>()
+    {
+        new Stylesheet(ModulePath() + "Module.css")
+    };
+
+    TreePlantingApplication _application;
+    string _reviewComments = "";
+    string _rejectionReason = "";
+    bool _showRejectDialog = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var applicationId = Int32.Parse(PageState.QueryString["id"]);
+            _application = await ApplicationService.GetApplicationAsync(applicationId, ModuleState.ModuleId);
+            
+            if (_application == null)
+            {
+                AddModuleMessage("Application not found", MessageType.Error);
+                NavigationManager.NavigateTo(NavigateUrl());
+            }
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Loading Application for Review {Error}", ex.Message);
+            AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
+        }
+    }
+
+    private int GetCriteriaScore()
+    {
+        if (_application == null) return 0;
+        
+        int score = 0;
+        if (_application.HasExistingGardenInterest) score++;
+        if (_application.GardenCurrentlyTended) score++;
+        if (_application.ChildHeadedHousehold) score++;
+        if (_application.WomanHeadedHousehold) score++;
+        if (_application.EmptyOrNearlyEmptyYard) score++;
+        
+        return score;
+    }
+
+    private int GetCommitmentScore()
+    {
+        if (_application == null) return 0;
+        
+        int score = 0;
+        if (_application.CommitNoChemicals) score++;
+        if (_application.CommitAttendTraining) score++;
+        if (_application.CommitNotCutTrees) score++;
+        if (_application.CommitStandAgainstAbuse) score++;
+        
+        return score;
+    }
+
+    private int GetOverallScore()
+    {
+        var totalPossible = 9; // 5 criteria + 4 commitments
+        var totalScore = GetCriteriaScore() + GetCommitmentScore();
+        return (int)Math.Round((double)totalScore / totalPossible * 100);
+    }
+
+    private bool MeetsMinimumRequirements()
+    {
+        // All commitments must be confirmed for approval
+        return GetCommitmentScore() == 4;
+    }
+
+    private string GetCriteriaProgressClass()
+    {
+        var score = GetCriteriaScore();
+        return score switch
+        {
+            >= 4 => "bg-success",
+            >= 2 => "bg-warning",
+            _ => "bg-danger"
+        };
+    }
+
+    private string GetCommitmentProgressClass()
+    {
+        var score = GetCommitmentScore();
+        return score == 4 ? "bg-success" : "bg-danger";
+    }
+
+    private string GetStatusBadgeClass(ApplicationStatus status) => status switch
+    {
+        ApplicationStatus.Draft => "bg-secondary",
+        ApplicationStatus.PendingReview => "bg-warning text-dark",
+        ApplicationStatus.UnderReview => "bg-info",
+        ApplicationStatus.Approved => "bg-success",
+        ApplicationStatus.Rejected => "bg-danger",
+        ApplicationStatus.Withdrawn => "bg-dark",
+        _ => "bg-secondary"
+    };
+
+    private string GetStatusAlertClass(ApplicationStatus status) => status switch
+    {
+        ApplicationStatus.Approved => "alert-success",
+        ApplicationStatus.Rejected => "alert-danger",
+        ApplicationStatus.UnderReview => "alert-info",
+        _ => "alert-secondary"
+    };
+
+    private async Task ApproveApplication()
+    {
+        try
+        {
+            await ApplicationService.ApproveApplicationAsync(_application.ApplicationId, ModuleState.ModuleId, _reviewComments);
+            await logger.LogInformation("Application Approved {ApplicationId}", _application.ApplicationId);
+            AddModuleMessage("Application approved successfully", MessageType.Success);
+            
+            // Reload application to get updated status
+            _application = await ApplicationService.GetApplicationAsync(_application.ApplicationId, ModuleState.ModuleId);
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Approving Application {ApplicationId} {Error}", _application.ApplicationId, ex.Message);
+            AddModuleMessage("Error approving application", MessageType.Error);
+        }
+    }
+
+    private void ShowRejectDialog()
+    {
+        _rejectionReason = "";
+        _showRejectDialog = true;
+        StateHasChanged();
+    }
+
+    private void HideRejectDialog()
+    {
+        _showRejectDialog = false;
+        StateHasChanged();
+    }
+
+    private async Task RejectApplication()
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(_rejectionReason))
+            {
+                AddModuleMessage("Rejection reason is required", MessageType.Warning);
+                return;
+            }
+
+            await ApplicationService.RejectApplicationAsync(_application.ApplicationId, ModuleState.ModuleId, _rejectionReason);
+            await logger.LogInformation("Application Rejected {ApplicationId}", _application.ApplicationId);
+            AddModuleMessage("Application rejected", MessageType.Success);
+            
+            _showRejectDialog = false;
+            
+            // Reload application to get updated status
+            _application = await ApplicationService.GetApplicationAsync(_application.ApplicationId, ModuleState.ModuleId);
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Rejecting Application {ApplicationId} {Error}", _application.ApplicationId, ex.Message);
+            AddModuleMessage("Error rejecting application", MessageType.Error);
+        }
+    }
+}

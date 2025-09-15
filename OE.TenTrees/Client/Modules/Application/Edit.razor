@@ -1,0 +1,524 @@
+@using Oqtane.Modules.Controls
+@using OE.TenTrees.Services
+@using OE.TenTrees.Models
+
+@namespace OE.TenTrees.Application
+@inherits ModuleBase
+@inject IApplicationService ApplicationService
+@inject NavigationManager NavigationManager
+@inject IStringLocalizer<Edit> Localizer
+
+<form @ref="form" class="@(validated ? " was-validated" : "needs-validation") application-form" novalidate>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>@(PageState.Action == "Add" ? "New Application" : "Edit Application")</h4>
+                    </div>
+                    <div class="card-body">
+                        <!-- Evaluator Information -->
+                        <div class="row mb-3">
+                            <div class="col-sm-12 col-md-3">
+                                <Label For="evaluatorName" HelpText="Enter evaluator name" ResourceKey="EvaluatorName">Evaluator Name: </Label>
+                            </div>
+                            <div class="col-sm-12 col-md-9">
+                                <input id="evaluatorName" class="form-control" @bind="@_evaluatorName" required />
+                            </div>
+                        </div>
+
+                        <!-- Beneficiary Information -->
+                        <div class="row mb-3">
+                            <div class="col-sm-12 col-md-3">
+                                <Label For="beneficiaryName" HelpText="Enter beneficiary name" ResourceKey="BeneficiaryName">Beneficiary Name: </Label>
+                            </div>
+                            <div class="col-sm-12 col-md-9">
+                                <input id="beneficiaryName" class="form-control" @bind="@_beneficiaryName" required />
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-sm-12 col-md-3">
+                                <Label For="householdId" HelpText="Enter house number or ID/birthdate" ResourceKey="HouseholdId">House Number/ID: </Label>
+                            </div>
+                            <div class="col-sm-12 col-md-9">
+                                <input id="householdId" class="form-control" @bind="@_householdIdentifier" />
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-sm-12 col-md-3">
+                                <Label For="village" HelpText="Enter village name" ResourceKey="Village">Village: </Label>
+                            </div>
+                            <div class="col-sm-12 col-md-9">
+                                <input id="village" class="form-control" @bind="@_village" />
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-sm-12 col-md-3">
+                                <Label For="householdSize" HelpText="Number of people in household" ResourceKey="HouseholdSize">Household Size: </Label>
+                            </div>
+                            <div class="col-sm-12 col-md-9">
+                                <input id="householdSize" type="number" class="form-control" @bind="@_householdSize" min="1" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Preferred Criteria Section -->
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h5>Preferred Criteria</h5>
+                        <small class="text-muted">Check all that apply</small>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="gardenInterest" @bind="@_hasExistingGardenInterest" />
+                            <label class="form-check-label" for="gardenInterest">
+                                Do they show signs of interest in gardening by having something they are growing?
+                            </label>
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="gardenTended" @bind="@_gardenCurrentlyTended" />
+                            <label class="form-check-label" for="gardenTended">
+                                If so, is their garden planted and tended?
+                            </label>
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="childHeaded" @bind="@_childHeadedHousehold" />
+                            <label class="form-check-label" for="childHeaded">
+                                Child headed household?
+                            </label>
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="womanHeaded" @bind="@_womanHeadedHousehold" />
+                            <label class="form-check-label" for="womanHeaded">
+                                Woman headed household?
+                            </label>
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="emptyYard" @bind="@_emptyOrNearlyEmptyYard" />
+                            <label class="form-check-label" for="emptyYard">
+                                Empty or nearly empty yard?
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Commitments Section -->
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h5>Commitments</h5>
+                        <small class="text-muted">All commitments are required</small>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="noChemicals" @bind="@_commitNoChemicals" />
+                            <label class="form-check-label" for="noChemicals">
+                                Are you committed to not using chemicals or pesticides?
+                            </label>
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="attendTraining" @bind="@_commitAttendTraining" />
+                            <label class="form-check-label" for="attendTraining">
+                                Are you committed to attend five permaculture training classes?
+                            </label>
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="notCutTrees" @bind="@_commitNotCutTrees" />
+                            <label class="form-check-label" for="notCutTrees">
+                                Are you committed to not cut trees?
+                            </label>
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="standAgainstAbuse" @bind="@_commitStandAgainstAbuse" />
+                            <label class="form-check-label" for="standAgainstAbuse">
+                                Are you committed to standing for women and children with no abuse?
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notes Section -->
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h5>Additional Notes</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <textarea id="notes" class="form-control" rows="4" @bind="@_notes" placeholder="Additional notes or comments..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Status and Actions Sidebar -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Application Status</h5>
+                    </div>
+                    <div class="card-body">
+                        @if (PageState.Action == "Edit")
+                        {
+                            <p><strong>Current Status:</strong> <span class="badge @GetStatusBadgeClass(_status)">@_status</span></p>
+                            
+                            @if (_status == ApplicationStatus.PendingReview && UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin))
+                            {
+                                <hr />
+                                <h6>Review Actions</h6>
+                                <div class="d-grid gap-2">
+                                    <button type="button" class="btn btn-success" @onclick="ApproveApplication">
+                                        <i class="fas fa-check"></i> Approve
+                                    </button>
+                                    <button type="button" class="btn btn-danger" @onclick="ShowRejectDialog">
+                                        <i class="fas fa-times"></i> Reject
+                                    </button>
+                                </div>
+                            }
+
+                            @if (!string.IsNullOrEmpty(_rejectionReason))
+                            {
+                                <div class="alert alert-danger mt-3">
+                                    <strong>Rejection Reason:</strong><br />
+                                    @_rejectionReason
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+
+                @if (PageState.Action == "Edit")
+                {
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h6>Audit Information</h6>
+                        </div>
+                        <div class="card-body">
+                            <AuditInfo CreatedBy="@_createdby" CreatedOn="@_createdon" ModifiedBy="@_modifiedby" ModifiedOn="@_modifiedon"></AuditInfo>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="d-flex gap-2 justify-content-center">
+                    @if (PageState.Action == "Add" || _status == ApplicationStatus.Draft)
+                    {
+                        <button type="button" class="btn btn-primary" @onclick="SaveDraft">
+                            <i class="fas fa-save"></i> Save Draft
+                        </button>
+                        <button type="button" class="btn btn-success" @onclick="SubmitApplication">
+                            <i class="fas fa-paper-plane"></i> Submit Application
+                        </button>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-primary" @onclick="SaveChanges">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                    }
+                    
+                    <NavLink class="btn btn-secondary" href="@NavigateUrl()">
+                        <i class="fas fa-arrow-left"></i> @Localizer["Cancel"]
+                    </NavLink>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<!-- Rejection Dialog -->
+@if (_showRejectDialog)
+{
+    <div class="modal fade show" style="display: block;" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Reject Application</h5>
+                    <button type="button" class="btn-close" @onclick="HideRejectDialog"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="rejectionReason" class="form-label">Rejection Reason:</label>
+                        <textarea id="rejectionReason" class="form-control" rows="3" @bind="@_tempRejectionReason" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="HideRejectDialog">Cancel</button>
+                    <button type="button" class="btn btn-danger" @onclick="RejectApplication">Reject Application</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade show"></div>
+}
+
+@code {
+    public override SecurityAccessLevel SecurityAccessLevel => SecurityAccessLevel.Edit;
+    public override string Actions => "Add,Edit";
+    public override string Title => "Tree Planting Application";
+
+    public override List<Resource> Resources => new List<Resource>()
+    {
+        new Stylesheet(ModulePath() + "Module.css")
+    };
+
+    private ElementReference form;
+    private bool validated = false;
+
+    // Form fields
+    private int _applicationId;
+    private string _evaluatorName = "";
+    private string _beneficiaryName = "";
+    private string _householdIdentifier = "";
+    private string _village = "";
+    private int? _householdSize;
+    private string _notes = "";
+
+    // Criteria
+    private bool _hasExistingGardenInterest;
+    private bool _gardenCurrentlyTended;
+    private bool _childHeadedHousehold;
+    private bool _womanHeadedHousehold;
+    private bool _emptyOrNearlyEmptyYard;
+
+    // Commitments
+    private bool _commitNoChemicals;
+    private bool _commitAttendTraining;
+    private bool _commitNotCutTrees;
+    private bool _commitStandAgainstAbuse;
+
+    // Status and audit
+    private ApplicationStatus _status = ApplicationStatus.Draft;
+    private string _rejectionReason = "";
+    private string _createdby = "";
+    private DateTime _createdon;
+    private string _modifiedby = "";
+    private DateTime _modifiedon;
+
+    // UI state
+    private bool _showRejectDialog = false;
+    private string _tempRejectionReason = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            if (PageState.Action == "Edit")
+            {
+                _applicationId = Int32.Parse(PageState.QueryString["id"]);
+                var application = await ApplicationService.GetApplicationAsync(_applicationId, ModuleState.ModuleId);
+                if (application != null)
+                {
+                    LoadApplicationData(application);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Loading Application {ApplicationId} {Error}", _applicationId, ex.Message);
+            AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
+        }
+    }
+
+    private void LoadApplicationData(TreePlantingApplication application)
+    {
+        _evaluatorName = application.EvaluatorName ?? "";
+        _beneficiaryName = application.BeneficiaryName ?? "";
+        _householdIdentifier = application.HouseholdIdentifier ?? "";
+        _village = application.Village ?? "";
+        _householdSize = application.HouseholdSize;
+        _notes = application.Notes ?? "";
+
+        _hasExistingGardenInterest = application.HasExistingGardenInterest;
+        _gardenCurrentlyTended = application.GardenCurrentlyTended;
+        _childHeadedHousehold = application.ChildHeadedHousehold;
+        _womanHeadedHousehold = application.WomanHeadedHousehold;
+        _emptyOrNearlyEmptyYard = application.EmptyOrNearlyEmptyYard;
+
+        _commitNoChemicals = application.CommitNoChemicals;
+        _commitAttendTraining = application.CommitAttendTraining;
+        _commitNotCutTrees = application.CommitNotCutTrees;
+        _commitStandAgainstAbuse = application.CommitStandAgainstAbuse;
+
+        _status = application.Status;
+        _rejectionReason = application.RejectionReason ?? "";
+        _createdby = application.CreatedBy ?? "";
+        _createdon = application.CreatedOn;
+        _modifiedby = application.ModifiedBy ?? "";
+        _modifiedon = application.ModifiedOn;
+    }
+
+    private TreePlantingApplication CreateApplicationFromForm()
+    {
+        return new TreePlantingApplication
+        {
+            ApplicationId = _applicationId,
+            ModuleId = ModuleState.ModuleId,
+            EvaluatorName = _evaluatorName,
+            BeneficiaryName = _beneficiaryName,
+            HouseholdIdentifier = _householdIdentifier,
+            Village = _village,
+            HouseholdSize = _householdSize,
+            Notes = _notes,
+
+            HasExistingGardenInterest = _hasExistingGardenInterest,
+            GardenCurrentlyTended = _gardenCurrentlyTended,
+            ChildHeadedHousehold = _childHeadedHousehold,
+            WomanHeadedHousehold = _womanHeadedHousehold,
+            EmptyOrNearlyEmptyYard = _emptyOrNearlyEmptyYard,
+
+            CommitNoChemicals = _commitNoChemicals,
+            CommitAttendTraining = _commitAttendTraining,
+            CommitNotCutTrees = _commitNotCutTrees,
+            CommitStandAgainstAbuse = _commitStandAgainstAbuse,
+
+            Status = _status
+        };
+    }
+
+    private async Task SaveDraft()
+    {
+        await SaveApplication(ApplicationStatus.Draft);
+    }
+
+    private async Task SubmitApplication()
+    {
+        await SaveApplication(ApplicationStatus.PendingReview);
+    }
+
+    private async Task SaveChanges()
+    {
+        await SaveApplication(_status); // Keep current status
+    }
+
+    private async Task SaveApplication(ApplicationStatus status)
+    {
+        try
+        {
+            validated = true;
+            var interop = new Oqtane.UI.Interop(JSRuntime);
+            
+            // Basic validation for required fields
+            if (string.IsNullOrWhiteSpace(_beneficiaryName))
+            {
+                AddModuleMessage("Beneficiary name is required", MessageType.Warning);
+                return;
+            }
+
+            var application = CreateApplicationFromForm();
+            application.Status = status;
+            
+            if (status == ApplicationStatus.PendingReview)
+            {
+                application.SubmissionDate = DateTime.UtcNow;
+            }
+
+            if (PageState.Action == "Add")
+            {
+                application = await ApplicationService.AddApplicationAsync(application);
+                await logger.LogInformation("Application Added {Application}", application);
+                AddModuleMessage("Application saved successfully", MessageType.Success);
+            }
+            else
+            {
+                application = await ApplicationService.UpdateApplicationAsync(application);
+                await logger.LogInformation("Application Updated {Application}", application);
+                AddModuleMessage("Application updated successfully", MessageType.Success);
+            }
+
+            NavigationManager.NavigateTo(NavigateUrl());
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Saving Application {Error}", ex.Message);
+            AddModuleMessage(Localizer["Message.SaveError"], MessageType.Error);
+        }
+    }
+
+    private async Task ApproveApplication()
+    {
+        try
+        {
+            await ApplicationService.ApproveApplicationAsync(_applicationId, ModuleState.ModuleId);
+            await logger.LogInformation("Application Approved {ApplicationId}", _applicationId);
+            AddModuleMessage("Application approved successfully", MessageType.Success);
+            
+            // Reload the application to get updated status
+            var application = await ApplicationService.GetApplicationAsync(_applicationId, ModuleState.ModuleId);
+            LoadApplicationData(application);
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Approving Application {ApplicationId} {Error}", _applicationId, ex.Message);
+            AddModuleMessage("Error approving application", MessageType.Error);
+        }
+    }
+
+    private void ShowRejectDialog()
+    {
+        _tempRejectionReason = "";
+        _showRejectDialog = true;
+        StateHasChanged();
+    }
+
+    private void HideRejectDialog()
+    {
+        _showRejectDialog = false;
+        StateHasChanged();
+    }
+
+    private async Task RejectApplication()
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(_tempRejectionReason))
+            {
+                AddModuleMessage("Rejection reason is required", MessageType.Warning);
+                return;
+            }
+
+            await ApplicationService.RejectApplicationAsync(_applicationId, ModuleState.ModuleId, _tempRejectionReason);
+            await logger.LogInformation("Application Rejected {ApplicationId}", _applicationId);
+            AddModuleMessage("Application rejected", MessageType.Success);
+            
+            _showRejectDialog = false;
+            
+            // Reload the application to get updated status
+            var application = await ApplicationService.GetApplicationAsync(_applicationId, ModuleState.ModuleId);
+            LoadApplicationData(application);
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Rejecting Application {ApplicationId} {Error}", _applicationId, ex.Message);
+            AddModuleMessage("Error rejecting application", MessageType.Error);
+        }
+    }
+
+    private string GetStatusBadgeClass(ApplicationStatus status) => status switch
+    {
+        ApplicationStatus.Draft => "bg-secondary",
+        ApplicationStatus.PendingReview => "bg-warning text-dark",
+        ApplicationStatus.UnderReview => "bg-info",
+        ApplicationStatus.Approved => "bg-success",
+        ApplicationStatus.Rejected => "bg-danger",
+        ApplicationStatus.Withdrawn => "bg-dark",
+        _ => "bg-secondary"
+    };
+}

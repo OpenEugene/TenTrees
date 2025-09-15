@@ -1,0 +1,187 @@
+@using OE.TenTrees.Services
+@using OE.TenTrees.Models
+
+@namespace OE.TenTrees.Application
+@inherits ModuleBase
+@inject IApplicationService ApplicationService
+@inject NavigationManager NavigationManager
+@inject IStringLocalizer<Index> Localizer
+
+@if (_applications == null)
+{
+    <p><em>Loading applications...</em></p>
+}
+else
+{
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>Tree Planting Applications</h3>
+        <ActionLink Action="Add" Security="SecurityAccessLevel.Edit" Text="New Application" ResourceKey="Add" Class="btn btn-primary" />
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <label>Filter by Status:</label>
+            <select class="form-select" @onchange="OnStatusFilterChanged">
+                <option value="">All Applications</option>
+                <option value="@ApplicationStatus.Draft">Draft</option>
+                <option value="@ApplicationStatus.PendingReview">Pending Review</option>
+                <option value="@ApplicationStatus.UnderReview">Under Review</option>
+                <option value="@ApplicationStatus.Approved">Approved</option>
+                <option value="@ApplicationStatus.Rejected">Rejected</option>
+            </select>
+        </div>
+    </div>
+
+    @if (_filteredApplications.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Actions</th>
+                        <th>Beneficiary</th>
+                        <th class="mobile-hide">Evaluator</th>
+                        <th>Status</th>
+                        <th class="mobile-hide">Submission Date</th>
+                        <th class="mobile-hide">Village</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var application in _filteredApplications)
+                    {
+                        <tr>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <ActionLink Action="Edit" Parameters="@($"id={application.ApplicationId}")" 
+                                               Text="View/Edit" ResourceKey="Edit" Class="btn btn-sm btn-outline-primary" />
+                                    
+                                    @if (application.Status == ApplicationStatus.PendingReview)
+                                    {
+                                        <ActionLink Action="Review" Parameters="@($"id={application.ApplicationId}")" 
+                                                   Text="Review" ResourceKey="Review" Class="btn btn-sm btn-outline-info" />
+                                    }
+                                    
+                                    <ActionDialog Header="Delete Application" 
+                                                Message="Are you sure you wish to delete this application?" 
+                                                Action="Delete" Security="SecurityAccessLevel.Edit" 
+                                                Class="btn btn-sm btn-outline-danger" 
+                                                OnClick="@(async () => await Delete(application))" 
+                                                ResourceKey="Delete" />
+                                </div>
+                            </td>
+                            <td>
+                                <div>
+                                    <strong>@application.BeneficiaryName</strong>
+                                    <div class="d-md-none small text-muted">
+                                        @if (!string.IsNullOrEmpty(application.Village))
+                                        {
+                                            <div>?? @application.Village</div>
+                                        }
+                                        @if (application.SubmissionDate.HasValue)
+                                        {
+                                            <div>?? @application.SubmissionDate?.ToString("MM/dd/yyyy")</div>
+                                        }
+                                        @if (!string.IsNullOrEmpty(application.EvaluatorName))
+                                        {
+                                            <div>?? @application.EvaluatorName</div>
+                                        }
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="mobile-hide">@application.EvaluatorName</td>
+                            <td>
+                                <span class="badge @GetStatusBadgeClass(application.Status)">
+                                    @application.Status
+                                </span>
+                            </td>
+                            <td class="mobile-hide">@(application.SubmissionDate?.ToString("MM/dd/yyyy") ?? "Not submitted")</td>
+                            <td class="mobile-hide">@application.Village</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i> No applications found matching the current filter.
+        </div>
+    }
+}
+
+@code {
+    public override List<Resource> Resources => new List<Resource>()
+    {
+        new Stylesheet(ModulePath() + "Module.css"),
+        new Script(ModulePath() + "Module.js")
+    };
+
+    List<TreePlantingApplication> _applications;
+    List<TreePlantingApplication> _filteredApplications = new();
+    string _statusFilter = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _applications = await ApplicationService.GetApplicationsAsync(ModuleState.ModuleId);
+            _filteredApplications = _applications;
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Loading Applications {Error}", ex.Message);
+            AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
+        }
+    }
+
+    private async Task Delete(TreePlantingApplication application)
+    {
+        try
+        {
+            await ApplicationService.DeleteApplicationAsync(application.ApplicationId, ModuleState.ModuleId);
+            await logger.LogInformation("Application Deleted {Application}", application);
+            _applications = await ApplicationService.GetApplicationsAsync(ModuleState.ModuleId);
+            ApplyStatusFilter();
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Deleting Application {Application} {Error}", application, ex.Message);
+            AddModuleMessage(Localizer["Message.DeleteError"], MessageType.Error);
+        }
+    }
+
+    private void OnStatusFilterChanged(ChangeEventArgs e)
+    {
+        _statusFilter = e.Value?.ToString() ?? "";
+        ApplyStatusFilter();
+    }
+
+    private void ApplyStatusFilter()
+    {
+        if (string.IsNullOrEmpty(_statusFilter))
+        {
+            _filteredApplications = _applications;
+        }
+        else
+        {
+            if (Enum.TryParse<ApplicationStatus>(_statusFilter, out var status))
+            {
+                _filteredApplications = _applications.Where(a => a.Status == status).ToList();
+            }
+        }
+        StateHasChanged();
+    }
+
+    private string GetStatusBadgeClass(ApplicationStatus status) => status switch
+    {
+        ApplicationStatus.Draft => "bg-secondary",
+        ApplicationStatus.PendingReview => "bg-warning text-dark",
+        ApplicationStatus.UnderReview => "bg-info",
+        ApplicationStatus.Approved => "bg-success",
+        ApplicationStatus.Rejected => "bg-danger",
+        ApplicationStatus.Withdrawn => "bg-dark",
+        _ => "bg-secondary"
+    };
+}

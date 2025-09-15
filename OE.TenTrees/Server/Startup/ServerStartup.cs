@@ -22,6 +22,8 @@ namespace OE.TenTrees.Startup
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<IMyModuleService, ServerMyModuleService>();
+            services.AddTransient<IApplicationService, ServerApplicationService>();
+            services.AddTransient<IApplicationRepository, ApplicationRepository>();
             services.AddDbContextFactory<Context>(opt => { }, ServiceLifetime.Transient);
         }
     }
