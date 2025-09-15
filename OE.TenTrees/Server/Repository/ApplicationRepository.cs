@@ -2,14 +2,17 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using OE.TenTrees.Models;
+using OE.TenTrees.Repository.Extensions;
 using Oqtane.Modules;
+using Microsoft.AspNetCore.Http;
 
 namespace OE.TenTrees.Repository
 {
     public interface IApplicationRepository
     {
-        IEnumerable<TreePlantingApplication> GetApplications(int ModuleId);
+        IEnumerable<TreePlantingApplication> GetApplications();
         TreePlantingApplication GetApplication(int ApplicationId);
+        TreePlantingApplication GetApplication(int ApplicationId, bool tracking);
         TreePlantingApplication AddApplication(TreePlantingApplication Application);
         TreePlantingApplication UpdateApplication(TreePlantingApplication Application);
         void DeleteApplication(int ApplicationId);
@@ -29,121 +32,156 @@ namespace OE.TenTrees.Repository
 
     public class ApplicationRepository : IApplicationRepository, ITransientService
     {
-        private readonly Context _db;
+        private readonly IDbContextFactory<Context> _factory;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public ApplicationRepository(Context context)
+        public ApplicationRepository(IDbContextFactory<Context> factory, IHttpContextAccessor httpContextAccessor)
         {
-            _db = context;
+            _factory = factory;
+            _httpContextAccessor = httpContextAccessor;
         }
 
-        public IEnumerable<TreePlantingApplication> GetApplications(int ModuleId)
+        public IEnumerable<TreePlantingApplication> GetApplications()
         {
-            return _db.TreePlantingApplication
-                .Where(item => item.ModuleId == ModuleId)
+            using var db = _factory.CreateDbContext();
+            return db.TreePlantingApplication
                 .Include(a => a.Documents)
                 .Include(a => a.History)
-                .OrderByDescending(item => item.CreatedOn);
+                .OrderByDescending(item => item.CreatedOn)
+                .ToList();
         }
 
         public TreePlantingApplication GetApplication(int ApplicationId)
         {
-            return _db.TreePlantingApplication
-                .Include(a => a.Documents)
-                .Include(a => a.History)
-                .SingleOrDefault(item => item.ApplicationId == ApplicationId);
+            return GetApplication(ApplicationId, true);
+        }
+
+        public TreePlantingApplication GetApplication(int ApplicationId, bool tracking)
+        {
+            using var db = _factory.CreateDbContext();
+            if (tracking)
+            {
+                return db.TreePlantingApplication
+                    .Include(a => a.Documents)
+                    .Include(a => a.History)
+                    .SingleOrDefault(item => item.ApplicationId == ApplicationId);
+            }
+            else
+            {
+                return db.TreePlantingApplication
+                    .AsNoTracking()
+                    .Include(a => a.Documents)
+                    .Include(a => a.History)
+                    .SingleOrDefault(item => item.ApplicationId == ApplicationId);
+            }
         }
 
         public TreePlantingApplication AddApplication(TreePlantingApplication Application)
         {
-            _db.TreePlantingApplication.Add(Application);
-            _db.SaveChanges();
+            using var db = _factory.CreateDbContext();
+            db.TreePlantingApplication.Add(Application);
+            db.SaveChangesWithAudit(_httpContextAccessor);
             return Application;
         }
 
         public TreePlantingApplication UpdateApplication(TreePlantingApplication Application)
         {
-            _db.Entry(Application).State = EntityState.Modified;
-            _db.SaveChanges();
+            using var db = _factory.CreateDbContext();
+            db.Entry(Application).State = EntityState.Modified;
+            db.SaveChangesWithAudit(_httpContextAccessor);
             return Application;
         }
 
         public void DeleteApplication(int ApplicationId)
         {
-            TreePlantingApplication Application = _db.TreePlantingApplication.Find(ApplicationId);
+            using var db = _factory.CreateDbContext();
+            TreePlantingApplication Application = db.TreePlantingApplication.Find(ApplicationId);
             if (Application != null)
             {
-                _db.TreePlantingApplication.Remove(Application);
-                _db.SaveChanges();
+                db.TreePlantingApplication.Remove(Application);
+                db.SaveChanges(); // No audit needed for deletion
             }
         }
 
         public IEnumerable<ApplicationReview> GetApplicationReviews(int ApplicationId)
         {
-            return _db.ApplicationReview
+            using var db = _factory.CreateDbContext();
+            return db.ApplicationReview
                 .Where(r => r.ApplicationId == ApplicationId)
                 .Include(r => r.Checklist)
-                .OrderByDescending(r => r.ReviewDate);
+                .OrderByDescending(r => r.ReviewDate)
+                .ToList();
         }
 
         public ApplicationReview AddApplicationReview(ApplicationReview Review)
         {
-            _db.ApplicationReview.Add(Review);
-            _db.SaveChanges();
+            using var db = _factory.CreateDbContext();
+            db.ApplicationReview.Add(Review);
+            db.SaveChangesWithAudit(_httpContextAccessor);
             return Review;
         }
 
         public ApplicationReview UpdateApplicationReview(ApplicationReview Review)
         {
-            _db.Entry(Review).State = EntityState.Modified;
-            _db.SaveChanges();
+            using var db = _factory.CreateDbContext();
+            db.Entry(Review).State = EntityState.Modified;
+            db.SaveChangesWithAudit(_httpContextAccessor);
             return Review;
         }
 
         public void DeleteApplicationReview(int ReviewId)
         {
-            ApplicationReview Review = _db.ApplicationReview.Find(ReviewId);
+            using var db = _factory.CreateDbContext();
+            ApplicationReview Review = db.ApplicationReview.Find(ReviewId);
             if (Review != null)
             {
-                _db.ApplicationReview.Remove(Review);
-                _db.SaveChanges();
+                db.ApplicationReview.Remove(Review);
+                db.SaveChanges(); // No audit needed for deletion
             }
         }
 
         public IEnumerable<ApplicationDocument> GetApplicationDocuments(int ApplicationId)
         {
-            return _db.ApplicationDocument
+            using var db = _factory.CreateDbContext();
+            return db.ApplicationDocument
                 .Where(d => d.ApplicationId == ApplicationId)
-                .OrderBy(d => d.CreatedOn);
+                .OrderBy(d => d.CreatedOn)
+                .ToList();
         }
 
         public ApplicationDocument AddApplicationDocument(ApplicationDocument Document)
         {
-            _db.ApplicationDocument.Add(Document);
-            _db.SaveChanges();
+            using var db = _factory.CreateDbContext();
+            db.ApplicationDocument.Add(Document);
+            db.SaveChangesWithAudit(_httpContextAccessor);
             return Document;
         }
 
         public void DeleteApplicationDocument(int DocumentId)
         {
-            ApplicationDocument Document = _db.ApplicationDocument.Find(DocumentId);
+            using var db = _factory.CreateDbContext();
+            ApplicationDocument Document = db.ApplicationDocument.Find(DocumentId);
             if (Document != null)
             {
-                _db.ApplicationDocument.Remove(Document);
-                _db.SaveChanges();
+                db.ApplicationDocument.Remove(Document);
+                db.SaveChanges(); // No audit needed for deletion
             }
         }
 
         public void AddApplicationStatusHistory(ApplicationStatusHistory History)
         {
-            _db.ApplicationStatusHistory.Add(History);
-            _db.SaveChanges();
+            using var db = _factory.CreateDbContext();
+            db.ApplicationStatusHistory.Add(History);
+            db.SaveChangesWithAudit(_httpContextAccessor);
         }
 
         public IEnumerable<ApplicationStatusHistory> GetApplicationStatusHistory(int ApplicationId)
         {
-            return _db.ApplicationStatusHistory
+            using var db = _factory.CreateDbContext();
+            return db.ApplicationStatusHistory
                 .Where(h => h.ApplicationId == ApplicationId)
-                .OrderBy(h => h.CreatedOn);
+                .OrderBy(h => h.CreatedOn)
+                .ToList();
         }
     }
 }

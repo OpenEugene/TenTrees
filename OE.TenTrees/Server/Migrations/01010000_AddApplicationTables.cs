@@ -8,7 +8,7 @@ using OE.TenTrees.Repository;
 namespace OE.TenTrees.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("01.01.00.AddApplicationTables")]
+    [Migration("OE.TenTrees.01.01.00.00")]
     public class AddApplicationTables : MultiDatabaseMigration
     {
         public AddApplicationTables(IDatabase database) : base(database)

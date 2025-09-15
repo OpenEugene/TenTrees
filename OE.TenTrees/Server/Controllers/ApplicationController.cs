@@ -23,154 +23,100 @@ namespace OE.TenTrees.Controllers
             _applicationService = applicationService;
         }
 
-        // GET: api/<controller>?moduleid=x
+        // GET: api/<controller>
         [HttpGet]
-        [Authorize(Policy = PolicyNames.ViewModule)]
-        public async Task<IEnumerable<TreePlantingApplication>> Get(string moduleid)
+        [Authorize(Roles = RoleNames.Registered)]
+        public async Task<IEnumerable<TreePlantingApplication>> Get()
         {
-            int ModuleId;
-            if (int.TryParse(moduleid, out ModuleId) && IsAuthorizedEntityId(EntityNames.Module, ModuleId))
-            {
-                return await _applicationService.GetApplicationsAsync(ModuleId);
-            }
-            else
-            {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Application Get Attempt {ModuleId}", moduleid);
-                HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                return null;
-            }
+            return await _applicationService.GetApplicationsAsync();
         }
 
-        // GET api/<controller>/5/1
-        [HttpGet("{id}/{moduleid}")]
-        [Authorize(Policy = PolicyNames.ViewModule)]
-        public async Task<TreePlantingApplication> Get(int id, int moduleid)
+        // GET api/<controller>/5
+        [HttpGet("{id}")]
+        [Authorize(Roles = RoleNames.Registered)]
+        public async Task<TreePlantingApplication> Get(int id)
         {
-            TreePlantingApplication application = await _applicationService.GetApplicationAsync(id, moduleid);
-            if (application != null && IsAuthorizedEntityId(EntityNames.Module, application.ModuleId))
-            {
-                return application;
-            }
-            else
-            { 
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Application Get Attempt {ApplicationId} {ModuleId}", id, moduleid);
-                HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                return null;
-            }
+            return await _applicationService.GetApplicationAsync(id);
         }
 
         // POST api/<controller>
         [HttpPost]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize(Roles = RoleNames.Registered)]
         public async Task<TreePlantingApplication> Post([FromBody] TreePlantingApplication application)
         {
-            if (ModelState.IsValid && IsAuthorizedEntityId(EntityNames.Module, application.ModuleId))
+            if (ModelState.IsValid)
             {
-                application = await _applicationService.AddApplicationAsync(application);
+                return await _applicationService.AddApplicationAsync(application);
             }
             else
             {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Application Post Attempt {Application}", application);
-                HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                application = null;
+                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Invalid Application Post Attempt {Application}", application);
+                HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return null;
             }
-            return application;
         }
 
         // PUT api/<controller>/5
         [HttpPut("{id}")]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize(Roles = RoleNames.Registered)]
         public async Task<TreePlantingApplication> Put(int id, [FromBody] TreePlantingApplication application)
         {
-            if (ModelState.IsValid && application.ApplicationId == id && IsAuthorizedEntityId(EntityNames.Module, application.ModuleId))
+            if (ModelState.IsValid && application.ApplicationId == id)
             {
-                application = await _applicationService.UpdateApplicationAsync(application);
+                return await _applicationService.UpdateApplicationAsync(application);
             }
             else
             {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Application Put Attempt {Application}", application);
-                HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                application = null;
+                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Invalid Application Put Attempt {Application}", application);
+                HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return null;
             }
-            return application;
         }
 
-        // DELETE api/<controller>/5/1
-        [HttpDelete("{id}/{moduleid}")]
-        [Authorize(Policy = PolicyNames.EditModule)]
-        public async Task Delete(int id, int moduleid)
+        // DELETE api/<controller>/5
+        [HttpDelete("{id}")]
+        [Authorize(Roles = RoleNames.Registered)]
+        public async Task Delete(int id)
         {
-            TreePlantingApplication application = await _applicationService.GetApplicationAsync(id, moduleid);
-            if (application != null && IsAuthorizedEntityId(EntityNames.Module, application.ModuleId))
-            {
-                await _applicationService.DeleteApplicationAsync(id, application.ModuleId);
-            }
-            else
-            {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Application Delete Attempt {ApplicationId} {ModuleId}", id, moduleid);
-                HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-            }
+            await _applicationService.DeleteApplicationAsync(id);
         }
 
         // POST api/<controller>/approve/5
         [HttpPost("approve/{id}")]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize(Roles = RoleNames.Registered)]
         public async Task<TreePlantingApplication> Approve(int id, [FromBody] ApproveApplicationRequest request)
         {
-            TreePlantingApplication application = await _applicationService.GetApplicationAsync(id, 0); // We'll get the module ID from the application
-            if (application != null && IsAuthorizedEntityId(EntityNames.Module, application.ModuleId))
-            {
-                application = await _applicationService.ApproveApplicationAsync(id, application.ModuleId, request.Comments);
-                return application;
-            }
-            else
-            {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Application Approve Attempt {ApplicationId}", id);
-                HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                return null;
-            }
+            return await _applicationService.ApproveApplicationAsync(id, request.Comments);
         }
 
         // POST api/<controller>/reject/5
         [HttpPost("reject/{id}")]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize(Roles = RoleNames.Registered)]
         public async Task<TreePlantingApplication> Reject(int id, [FromBody] RejectApplicationRequest request)
         {
-            TreePlantingApplication application = await _applicationService.GetApplicationAsync(id, 0); // We'll get the module ID from the application
-            if (application != null && IsAuthorizedEntityId(EntityNames.Module, application.ModuleId))
-            {
-                application = await _applicationService.RejectApplicationAsync(id, application.ModuleId, request.RejectionReason);
-                return application;
-            }
-            else
-            {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Application Reject Attempt {ApplicationId}", id);
-                HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                return null;
-            }
+            return await _applicationService.RejectApplicationAsync(id, request.RejectionReason);
         }
 
         // POST api/<controller>/review
         [HttpPost("review")]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize(Roles = RoleNames.Registered)]
         public async Task<ApplicationReview> PostReview([FromBody] ApplicationReview review)
         {
             if (ModelState.IsValid)
             {
-                review = await _applicationService.AddReviewAsync(review);
+                return await _applicationService.AddReviewAsync(review);
             }
             else
             {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Application Review Post Attempt {Review}", review);
-                HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                review = null;
+                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Invalid Application Review Post Attempt {Review}", review);
+                HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return null;
             }
-            return review;
         }
 
         // GET api/<controller>/reviews/5
         [HttpGet("reviews/{applicationId}")]
-        [Authorize(Policy = PolicyNames.ViewModule)]
+        [Authorize(Roles = RoleNames.Registered)]
         public async Task<IEnumerable<ApplicationReview>> GetReviews(int applicationId)
         {
             return await _applicationService.GetApplicationReviewsAsync(applicationId);

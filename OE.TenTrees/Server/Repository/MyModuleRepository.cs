@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Collections.Generic;
+using OE.TenTrees.Repository.Extensions;
 using Oqtane.Modules;
+using Microsoft.AspNetCore.Http;
 
 namespace OE.TenTrees.Repository
 {
@@ -18,10 +20,12 @@ namespace OE.TenTrees.Repository
     public class MyModuleRepository : IMyModuleRepository, ITransientService
     {
         private readonly IDbContextFactory<Context> _factory;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public MyModuleRepository(IDbContextFactory<Context> factory)
+        public MyModuleRepository(IDbContextFactory<Context> factory, IHttpContextAccessor httpContextAccessor)
         {
             _factory = factory;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public IEnumerable<Models.MyModule> GetMyModules(int ModuleId)
@@ -52,7 +56,7 @@ namespace OE.TenTrees.Repository
         {
             using var db = _factory.CreateDbContext();
             db.MyModule.Add(MyModule);
-            db.SaveChanges();
+            db.SaveChangesWithAudit(_httpContextAccessor);
             return MyModule;
         }
 
@@ -60,7 +64,7 @@ namespace OE.TenTrees.Repository
         {
             using var db = _factory.CreateDbContext();
             db.Entry(MyModule).State = EntityState.Modified;
-            db.SaveChanges();
+            db.SaveChangesWithAudit(_httpContextAccessor);
             return MyModule;
         }
 
@@ -68,8 +72,11 @@ namespace OE.TenTrees.Repository
         {
             using var db = _factory.CreateDbContext();
             Models.MyModule MyModule = db.MyModule.Find(MyModuleId);
-            db.MyModule.Remove(MyModule);
-            db.SaveChanges();
+            if (MyModule != null)
+            {
+                db.MyModule.Remove(MyModule);
+                db.SaveChanges(); // No audit needed for deletion
+            }
         }
     }
 }

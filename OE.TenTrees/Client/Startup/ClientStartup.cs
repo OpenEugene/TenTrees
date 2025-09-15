@@ -18,6 +18,11 @@ namespace OE.TenTrees.Startup
             {
                 services.AddScoped<IApplicationService, ApplicationService>();
             }
+            
+            if (!services.Any(s => s.ServiceType == typeof(IMonitoringService)))
+            {
+                services.AddScoped<IMonitoringService, MonitoringService>();
+            }
         }
     }
 }

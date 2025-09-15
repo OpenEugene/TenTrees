@@ -321,7 +321,7 @@
             if (PageState.Action == "Edit")
             {
                 _applicationId = Int32.Parse(PageState.QueryString["id"]);
-                var application = await ApplicationService.GetApplicationAsync(_applicationId, ModuleState.ModuleId);
+                var application = await ApplicationService.GetApplicationAsync(_applicationId);
                 if (application != null)
                 {
                     LoadApplicationData(application);
@@ -454,12 +454,12 @@
     {
         try
         {
-            await ApplicationService.ApproveApplicationAsync(_applicationId, ModuleState.ModuleId);
+            await ApplicationService.ApproveApplicationAsync(_applicationId);
             await logger.LogInformation("Application Approved {ApplicationId}", _applicationId);
             AddModuleMessage("Application approved successfully", MessageType.Success);
             
             // Reload the application to get updated status
-            var application = await ApplicationService.GetApplicationAsync(_applicationId, ModuleState.ModuleId);
+            var application = await ApplicationService.GetApplicationAsync(_applicationId);
             LoadApplicationData(application);
             StateHasChanged();
         }
@@ -493,14 +493,14 @@
                 return;
             }
 
-            await ApplicationService.RejectApplicationAsync(_applicationId, ModuleState.ModuleId, _tempRejectionReason);
+            await ApplicationService.RejectApplicationAsync(_applicationId, _tempRejectionReason);
             await logger.LogInformation("Application Rejected {ApplicationId}", _applicationId);
             AddModuleMessage("Application rejected", MessageType.Success);
             
             _showRejectDialog = false;
             
             // Reload the application to get updated status
-            var application = await ApplicationService.GetApplicationAsync(_applicationId, ModuleState.ModuleId);
+            var application = await ApplicationService.GetApplicationAsync(_applicationId);
             LoadApplicationData(application);
             StateHasChanged();
         }

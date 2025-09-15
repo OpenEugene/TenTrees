@@ -125,7 +125,7 @@ else
     {
         try
         {
-            _applications = await ApplicationService.GetApplicationsAsync(ModuleState.ModuleId);
+            _applications = await ApplicationService.GetApplicationsAsync();
             _filteredApplications = _applications;
         }
         catch (Exception ex)
@@ -139,9 +139,9 @@ else
     {
         try
         {
-            await ApplicationService.DeleteApplicationAsync(application.ApplicationId, ModuleState.ModuleId);
+            await ApplicationService.DeleteApplicationAsync(application.ApplicationId);
             await logger.LogInformation("Application Deleted {Application}", application);
-            _applications = await ApplicationService.GetApplicationsAsync(ModuleState.ModuleId);
+            _applications = await ApplicationService.GetApplicationsAsync();
             ApplyStatusFilter();
             StateHasChanged();
         }

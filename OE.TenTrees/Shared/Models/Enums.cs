@@ -35,7 +35,14 @@ namespace OE.TenTrees.Models
         GrowthHeight = 1,
         SoilMoisture = 2,
         PestIncidence = 3,
-        CanopyCover = 4
+        CanopyCover = 4,
+        TreesPlanted = 5,
+        TreesAlive = 6,
+        TreeHealth = 7,
+        WaterAvailability = 8,
+        CompostUsage = 9,
+        MulchingStatus = 10,
+        ChemicalUsage = 11
     }
 
     public enum DocumentType

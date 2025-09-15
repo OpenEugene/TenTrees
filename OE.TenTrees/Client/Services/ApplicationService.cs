@@ -10,13 +10,13 @@ namespace OE.TenTrees.Services
 {
     public interface IApplicationService
     {
-        Task<List<TreePlantingApplication>> GetApplicationsAsync(int ModuleId);
-        Task<TreePlantingApplication> GetApplicationAsync(int ApplicationId, int ModuleId);
+        Task<List<TreePlantingApplication>> GetApplicationsAsync();
+        Task<TreePlantingApplication> GetApplicationAsync(int ApplicationId);
         Task<TreePlantingApplication> AddApplicationAsync(TreePlantingApplication Application);
         Task<TreePlantingApplication> UpdateApplicationAsync(TreePlantingApplication Application);
-        Task DeleteApplicationAsync(int ApplicationId, int ModuleId);
-        Task<TreePlantingApplication> ApproveApplicationAsync(int ApplicationId, int ModuleId, string Comments = null);
-        Task<TreePlantingApplication> RejectApplicationAsync(int ApplicationId, int ModuleId, string RejectionReason);
+        Task DeleteApplicationAsync(int ApplicationId);
+        Task<TreePlantingApplication> ApproveApplicationAsync(int ApplicationId, string Comments = null);
+        Task<TreePlantingApplication> RejectApplicationAsync(int ApplicationId, string RejectionReason);
         Task<ApplicationReview> AddReviewAsync(ApplicationReview Review);
         Task<List<ApplicationReview>> GetApplicationReviewsAsync(int ApplicationId);
     }
@@ -27,61 +27,55 @@ namespace OE.TenTrees.Services
 
         private string ApiUrl => CreateApiUrl("Application");
 
-        public async Task<List<TreePlantingApplication>> GetApplicationsAsync(int ModuleId)
+        public async Task<List<TreePlantingApplication>> GetApplicationsAsync()
         {
             var applications = await GetJsonAsync<List<TreePlantingApplication>>(
-                CreateAuthorizationPolicyUrl($"{ApiUrl}?moduleid={ModuleId}", EntityNames.Module, ModuleId), 
+                $"{ApiUrl}", 
                 new List<TreePlantingApplication>());
             return applications.OrderByDescending(item => item.CreatedOn).ToList();
         }
 
-        public async Task<TreePlantingApplication> GetApplicationAsync(int ApplicationId, int ModuleId)
+        public async Task<TreePlantingApplication> GetApplicationAsync(int ApplicationId)
         {
-            return await GetJsonAsync<TreePlantingApplication>(
-                CreateAuthorizationPolicyUrl($"{ApiUrl}/{ApplicationId}/{ModuleId}", EntityNames.Module, ModuleId));
+            return await GetJsonAsync<TreePlantingApplication>($"{ApiUrl}/{ApplicationId}");
         }
 
         public async Task<TreePlantingApplication> AddApplicationAsync(TreePlantingApplication Application)
         {
-            return await PostJsonAsync<TreePlantingApplication>(
-                CreateAuthorizationPolicyUrl($"{ApiUrl}", EntityNames.Module, Application.ModuleId), Application);
+            return await PostJsonAsync<TreePlantingApplication>($"{ApiUrl}", Application);
         }
 
         public async Task<TreePlantingApplication> UpdateApplicationAsync(TreePlantingApplication Application)
         {
-            return await PutJsonAsync<TreePlantingApplication>(
-                CreateAuthorizationPolicyUrl($"{ApiUrl}/{Application.ApplicationId}", EntityNames.Module, Application.ModuleId), Application);
+            return await PutJsonAsync<TreePlantingApplication>($"{ApiUrl}/{Application.ApplicationId}", Application);
         }
 
-        public async Task DeleteApplicationAsync(int ApplicationId, int ModuleId)
+        public async Task DeleteApplicationAsync(int ApplicationId)
         {
-            await DeleteAsync(CreateAuthorizationPolicyUrl($"{ApiUrl}/{ApplicationId}/{ModuleId}", EntityNames.Module, ModuleId));
+            await DeleteAsync($"{ApiUrl}/{ApplicationId}");
         }
 
-        public async Task<TreePlantingApplication> ApproveApplicationAsync(int ApplicationId, int ModuleId, string Comments = null)
+        public async Task<TreePlantingApplication> ApproveApplicationAsync(int ApplicationId, string Comments = null)
         {
             var request = new { ApplicationId, Comments };
-            return await PostJsonAsync<object, TreePlantingApplication>(
-                CreateAuthorizationPolicyUrl($"{ApiUrl}/approve/{ApplicationId}", EntityNames.Module, ModuleId), request);
+            return await PostJsonAsync<object, TreePlantingApplication>($"{ApiUrl}/approve/{ApplicationId}", request);
         }
 
-        public async Task<TreePlantingApplication> RejectApplicationAsync(int ApplicationId, int ModuleId, string RejectionReason)
+        public async Task<TreePlantingApplication> RejectApplicationAsync(int ApplicationId, string RejectionReason)
         {
             var request = new { ApplicationId, RejectionReason };
-            return await PostJsonAsync<object, TreePlantingApplication>(
-                CreateAuthorizationPolicyUrl($"{ApiUrl}/reject/{ApplicationId}", EntityNames.Module, ModuleId), request);
+            return await PostJsonAsync<object, TreePlantingApplication>($"{ApiUrl}/reject/{ApplicationId}", request);
         }
 
         public async Task<ApplicationReview> AddReviewAsync(ApplicationReview Review)
         {
-            return await PostJsonAsync<ApplicationReview>(
-                CreateAuthorizationPolicyUrl($"{ApiUrl}/review", EntityNames.Module, Review.ApplicationId), Review);
+            return await PostJsonAsync<ApplicationReview>($"{ApiUrl}/review", Review);
         }
 
         public async Task<List<ApplicationReview>> GetApplicationReviewsAsync(int ApplicationId)
         {
             return await GetJsonAsync<List<ApplicationReview>>(
-                CreateAuthorizationPolicyUrl($"{ApiUrl}/reviews/{ApplicationId}", EntityNames.Module, ApplicationId), 
+                $"{ApiUrl}/reviews/{ApplicationId}", 
                 new List<ApplicationReview>());
         }
     }

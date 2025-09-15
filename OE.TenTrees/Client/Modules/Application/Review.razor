@@ -333,7 +333,7 @@ else
         try
         {
             var applicationId = Int32.Parse(PageState.QueryString["id"]);
-            _application = await ApplicationService.GetApplicationAsync(applicationId, ModuleState.ModuleId);
+            _application = await ApplicationService.GetApplicationAsync(applicationId);
             
             if (_application == null)
             {
@@ -428,12 +428,12 @@ else
     {
         try
         {
-            await ApplicationService.ApproveApplicationAsync(_application.ApplicationId, ModuleState.ModuleId, _reviewComments);
+            await ApplicationService.ApproveApplicationAsync(_application.ApplicationId, _reviewComments);
             await logger.LogInformation("Application Approved {ApplicationId}", _application.ApplicationId);
             AddModuleMessage("Application approved successfully", MessageType.Success);
             
             // Reload application to get updated status
-            _application = await ApplicationService.GetApplicationAsync(_application.ApplicationId, ModuleState.ModuleId);
+            _application = await ApplicationService.GetApplicationAsync(_application.ApplicationId);
             StateHasChanged();
         }
         catch (Exception ex)
@@ -466,14 +466,14 @@ else
                 return;
             }
 
-            await ApplicationService.RejectApplicationAsync(_application.ApplicationId, ModuleState.ModuleId, _rejectionReason);
+            await ApplicationService.RejectApplicationAsync(_application.ApplicationId, _rejectionReason);
             await logger.LogInformation("Application Rejected {ApplicationId}", _application.ApplicationId);
             AddModuleMessage("Application rejected", MessageType.Success);
             
             _showRejectDialog = false;
             
             // Reload application to get updated status
-            _application = await ApplicationService.GetApplicationAsync(_application.ApplicationId, ModuleState.ModuleId);
+            _application = await ApplicationService.GetApplicationAsync(_application.ApplicationId);
             StateHasChanged();
         }
         catch (Exception ex)

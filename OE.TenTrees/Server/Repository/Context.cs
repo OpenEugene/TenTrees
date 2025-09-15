@@ -89,23 +89,7 @@ namespace OE.TenTrees.Repository
                 .HasForeignKey(p => p.AssessmentId)
                 .OnDelete(DeleteBehavior.Cascade);
                 
-            builder.Entity<Models.MonitoringSession>()
-                .HasOne<Models.TreePlantingApplication>()
-                .WithMany()
-                .HasForeignKey(m => m.ApplicationId)
-                .OnDelete(DeleteBehavior.Cascade);
-                
-            builder.Entity<Models.MonitoringMetric>()
-                .HasOne<Models.MonitoringSession>()
-                .WithMany(s => s.Metrics)
-                .HasForeignKey(m => m.MonitoringSessionId)
-                .OnDelete(DeleteBehavior.Cascade);
-                
-            builder.Entity<Models.MonitoringPhoto>()
-                .HasOne<Models.MonitoringSession>()
-                .WithMany(s => s.Photos)
-                .HasForeignKey(p => p.MonitoringSessionId)
-                .OnDelete(DeleteBehavior.Cascade);
+            // Monitoring tables - no EF relationship configuration, just foreign key constraints in database
         }
     }
 }

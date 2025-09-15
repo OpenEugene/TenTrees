@@ -37,7 +37,7 @@ namespace OE.TenTrees.Manager
         public string ExportModule(Module module)
         {
             string content = "";
-            List<Models.TreePlantingApplication> applications = _applicationRepository.GetApplications(module.ModuleId).ToList();
+            List<Models.TreePlantingApplication> applications = _applicationRepository.GetApplications().ToList();
             if (applications != null)
             {
                 content = JsonSerializer.Serialize(applications);
@@ -66,7 +66,7 @@ namespace OE.TenTrees.Manager
         {
             var searchContentList = new List<SearchContent>();
 
-            foreach (var application in _applicationRepository.GetApplications(pageModule.ModuleId))
+            foreach (var application in _applicationRepository.GetApplications())
             {
                 if (application.ModifiedOn >= lastIndexedOn)
                 {
