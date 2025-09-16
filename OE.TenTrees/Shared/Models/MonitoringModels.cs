@@ -54,11 +54,7 @@ namespace OE.TenTrees.Models
         public string ModifiedBy { get; set; }
         public DateTime ModifiedOn { get; set; }
 
-        // Navigation properties
-        public TreePlantingApplication Application { get; set; }
-        public GardenSite GardenSite { get; set; } // Updated to use GardenSite
-        public ICollection<MonitoringMetric> Metrics { get; set; }
-        public ICollection<MonitoringPhoto> Photos { get; set; }
+        // No navigation properties - use LINQ joins instead
     }
 
     public class MonitoringMetric : IAuditable
@@ -76,8 +72,7 @@ namespace OE.TenTrees.Models
         public string ModifiedBy { get; set; }
         public DateTime ModifiedOn { get; set; }
 
-        // Navigation
-        public MonitoringSession MonitoringSession { get; set; }
+        // No navigation properties - use LINQ joins instead
     }
 
     public class MonitoringPhoto : IAuditable
@@ -96,8 +91,7 @@ namespace OE.TenTrees.Models
         public string ModifiedBy { get; set; }
         public DateTime ModifiedOn { get; set; }
 
-        // Navigation
-        public MonitoringSession MonitoringSession { get; set; }
+        // No navigation properties - use LINQ joins instead
     }
 
     // View Models

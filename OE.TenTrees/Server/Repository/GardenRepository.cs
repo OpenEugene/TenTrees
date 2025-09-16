@@ -30,6 +30,7 @@ namespace OE.TenTrees.Repository
         
         GardenStatistics GetGardenStatistics(int GardenSiteId);
         IEnumerable<GardenListItemVm> GetGardenListItems();
+        GardenDetailVm GetGardenDetailView(int GardenSiteId);
         GardenSite CreateGardenFromApplication(CreateGardenFromApplicationRequest request);
     }
 
@@ -48,8 +49,6 @@ namespace OE.TenTrees.Repository
         {
             using var db = _factory.CreateDbContext();
             return db.GardenSite
-                .Include(g => g.Application)
-                .Include(g => g.TreePlantings)
                 .OrderByDescending(item => item.CreatedOn)
                 .ToList();
         }
@@ -65,18 +64,12 @@ namespace OE.TenTrees.Repository
             if (tracking)
             {
                 return db.GardenSite
-                    .Include(g => g.Application)
-                    .Include(g => g.TreePlantings)
-                    .Include(g => g.Photos)
                     .SingleOrDefault(item => item.GardenSiteId == GardenSiteId);
             }
             else
             {
                 return db.GardenSite
                     .AsNoTracking()
-                    .Include(g => g.Application)
-                    .Include(g => g.TreePlantings)
-                    .Include(g => g.Photos)
                     .SingleOrDefault(item => item.GardenSiteId == GardenSiteId);
             }
         }
@@ -85,9 +78,50 @@ namespace OE.TenTrees.Repository
         {
             using var db = _factory.CreateDbContext();
             return db.GardenSite
-                .Include(g => g.Application)
-                .Include(g => g.TreePlantings)
                 .FirstOrDefault(g => g.ApplicationId == ApplicationId);
+        }
+
+        public GardenDetailVm GetGardenDetailView(int GardenSiteId)
+        {
+            using var db = _factory.CreateDbContext();
+            
+            var gardenQuery = from garden in db.GardenSite
+                             join application in db.TreePlantingApplication on garden.ApplicationId equals application.ApplicationId
+                             where garden.GardenSiteId == GardenSiteId
+                             select new
+                             {
+                                 Garden = garden,
+                                 Application = application
+                             };
+
+            var gardenData = gardenQuery.FirstOrDefault();
+            if (gardenData == null) return null;
+
+            var treePlantings = db.TreePlanting
+                .Where(tp => tp.GardenSiteId == GardenSiteId)
+                .ToList();
+
+            var monitoringSessions = db.MonitoringSession
+                .Where(ms => ms.GardenSiteId == GardenSiteId)
+                .OrderByDescending(ms => ms.SessionDate)
+                .ToList();
+
+            var photos = db.GardenPhoto
+                .Where(p => p.GardenSiteId == GardenSiteId)
+                .OrderBy(p => p.PhotoDate)
+                .ToList();
+
+            var statistics = GetGardenStatistics(GardenSiteId);
+
+            return new GardenDetailVm
+            {
+                GardenSite = gardenData.Garden,
+                Application = gardenData.Application,
+                TreePlantings = treePlantings,
+                MonitoringSessions = monitoringSessions,
+                Photos = photos,
+                Statistics = statistics
+            };
         }
 
         public GardenSite AddGarden(GardenSite gardenSite)
@@ -185,28 +219,39 @@ namespace OE.TenTrees.Repository
         {
             using var db = _factory.CreateDbContext();
             
-            var gardenSite = db.GardenSite
-                .Include(g => g.TreePlantings)
-                .Include(g => g.MonitoringSessions)
-                .FirstOrDefault(g => g.GardenSiteId == GardenSiteId);
+            // Get tree planting statistics using separate queries
+            var totalTreesPlanted = db.TreePlanting
+                .Where(tp => tp.GardenSiteId == GardenSiteId)
+                .Sum(tp => (int?)tp.Quantity) ?? 0;
 
-            if (gardenSite == null) return new GardenStatistics();
+            var treeSpeciesCount = db.TreePlanting
+                .Where(tp => tp.GardenSiteId == GardenSiteId)
+                .Select(tp => tp.TreeSpecies)
+                .Distinct()
+                .Count();
 
-            var totalTreesPlanted = gardenSite.TreePlantings?.Sum(tp => tp.Quantity) ?? 0;
-            var treeSpeciesCount = gardenSite.TreePlantings?.Select(tp => tp.TreeSpecies).Distinct().Count() ?? 0;
-            var monitoringSessionCount = gardenSite.MonitoringSessions?.Count() ?? 0;
-            var lastMonitoringDate = gardenSite.MonitoringSessions?.Max(ms => ms.SessionDate);
+            // Get monitoring session statistics
+            var monitoringSessionCount = db.MonitoringSession
+                .Where(ms => ms.GardenSiteId == GardenSiteId)
+                .Count();
+
+            var lastMonitoringDate = db.MonitoringSession
+                .Where(ms => ms.GardenSiteId == GardenSiteId)
+                .Max(ms => (DateTime?)ms.SessionDate);
 
             // Calculate average survival rate from monitoring sessions
-            var sessionsWithSurvivalData = gardenSite.MonitoringSessions?
-                .Where(ms => ms.TreesPlanted.HasValue && ms.TreesPlanted > 0 && ms.TreesAlive.HasValue)
+            var sessionsWithSurvivalData = db.MonitoringSession
+                .Where(ms => ms.GardenSiteId == GardenSiteId && 
+                           ms.TreesPlanted.HasValue && ms.TreesPlanted > 0 && 
+                           ms.TreesAlive.HasValue)
+                .Select(ms => new { TreesPlanted = ms.TreesPlanted.Value, TreesAlive = ms.TreesAlive.Value })
                 .ToList();
 
             double? averageSurvivalRate = null;
-            if (sessionsWithSurvivalData?.Any() == true)
+            if (sessionsWithSurvivalData.Any())
             {
                 averageSurvivalRate = sessionsWithSurvivalData
-                    .Average(ms => (double)ms.TreesAlive.Value / ms.TreesPlanted.Value * 100);
+                    .Average(ms => (double)ms.TreesAlive / ms.TreesPlanted * 100);
             }
 
             // Determine if intervention is required
@@ -240,22 +285,41 @@ namespace OE.TenTrees.Repository
         {
             using var db = _factory.CreateDbContext();
             
-            var query = from gardenSite in db.GardenSite
-                       join application in db.TreePlantingApplication on gardenSite.ApplicationId equals application.ApplicationId
-                       select new
-                       {
-                           gardenSite.GardenSiteId,
-                           gardenSite.BeneficiaryName,
-                           gardenSite.EvaluatorName,
-                           application.Village,
-                           gardenSite.Status,
-                           gardenSite.PlantingDate,
-                           gardenSite.LastMonitoringDate,
-                           MonitoringSessions = gardenSite.MonitoringSessions,
-                           TreePlantings = gardenSite.TreePlantings
-                       };
+            // Main query with joins but no navigation properties
+            var gardenQuery = from gardenSite in db.GardenSite
+                             join application in db.TreePlantingApplication on gardenSite.ApplicationId equals application.ApplicationId
+                             select new
+                             {
+                                 gardenSite.GardenSiteId,
+                                 gardenSite.BeneficiaryName,
+                                 gardenSite.EvaluatorName,
+                                 application.Village,
+                                 gardenSite.Status,
+                                 gardenSite.PlantingDate,
+                                 gardenSite.LastMonitoringDate
+                             };
 
-            return query.ToList().Select(g => new GardenListItemVm
+            var gardens = gardenQuery.ToList();
+
+            // Get monitoring session counts separately
+            var monitoringCounts = db.MonitoringSession
+                .Where(ms => ms.GardenSiteId.HasValue)
+                .GroupBy(ms => ms.GardenSiteId.Value)
+                .Select(g => new { GardenSiteId = g.Key, Count = g.Count() })
+                .ToDictionary(x => x.GardenSiteId, x => x.Count);
+
+            // Get tree planting statistics separately
+            var treePlantingStats = db.TreePlanting
+                .GroupBy(tp => tp.GardenSiteId)
+                .Select(g => new
+                {
+                    GardenSiteId = g.Key,
+                    SpeciesCount = g.Select(tp => tp.TreeSpecies).Distinct().Count(),
+                    TotalTrees = g.Sum(tp => tp.Quantity)
+                })
+                .ToDictionary(x => x.GardenSiteId, x => new { x.SpeciesCount, x.TotalTrees });
+
+            return gardens.Select(g => new GardenListItemVm
             {
                 GardenSiteId = g.GardenSiteId,
                 BeneficiaryName = g.BeneficiaryName,
@@ -264,9 +328,9 @@ namespace OE.TenTrees.Repository
                 Status = g.Status,
                 PlantingDate = g.PlantingDate,
                 LastMonitoringDate = g.LastMonitoringDate,
-                MonitoringSessionCount = g.MonitoringSessions?.Count() ?? 0,
-                TreeSpeciesCount = g.TreePlantings?.Select(tp => tp.TreeSpecies).Distinct().Count() ?? 0,
-                TotalTreesPlanted = g.TreePlantings?.Sum(tp => tp.Quantity) ?? 0,
+                MonitoringSessionCount = monitoringCounts.GetValueOrDefault(g.GardenSiteId, 0),
+                TreeSpeciesCount = treePlantingStats.ContainsKey(g.GardenSiteId) ? treePlantingStats[g.GardenSiteId].SpeciesCount : 0,
+                TotalTreesPlanted = treePlantingStats.ContainsKey(g.GardenSiteId) ? treePlantingStats[g.GardenSiteId].TotalTrees : 0,
                 RequiresAttention = (g.LastMonitoringDate.HasValue && g.LastMonitoringDate < DateTime.Now.AddMonths(-2)) ||
                                    g.Status == GardenStatus.RequiresIntervention
             }).OrderByDescending(g => g.PlantingDate ?? g.LastMonitoringDate ?? DateTime.MinValue).ToList();
@@ -276,7 +340,7 @@ namespace OE.TenTrees.Repository
         {
             using var db = _factory.CreateDbContext();
             
-            // Get the approved application
+            // Get the approved application without navigation properties
             var application = db.TreePlantingApplication.Find(request.ApplicationId);
             if (application == null || application.Status != ApplicationStatus.Approved)
             {

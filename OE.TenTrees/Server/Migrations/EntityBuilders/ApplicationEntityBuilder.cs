@@ -96,7 +96,7 @@ namespace OE.TenTrees.Migrations.EntityBuilders
             DocumentType = AddIntegerColumn(table, "DocumentType");
             FileName = AddStringColumn(table, "FileName", 255);
             ContentType = AddStringColumn(table, "ContentType", 100, true);
-            FileSize = AddIntegerColumn(table, "FileSize"); // Use integer instead of long
+            FileSize = AddIntegerColumn(table, "FileSize"); // Using integer for now - can be changed to BIGINT in SQL
             Url = AddStringColumn(table, "Url", 500, true);
             Caption = AddStringColumn(table, "Caption", 500, true);
             AddAuditableColumns(table);
@@ -210,5 +210,79 @@ namespace OE.TenTrees.Migrations.EntityBuilders
         public OperationBuilder<AddColumnOperation> Item { get; set; }
         public OperationBuilder<AddColumnOperation> IsComplete { get; set; }
         public OperationBuilder<AddColumnOperation> Notes { get; set; }
+    }
+
+    public class SiteAssessmentEntityBuilder : AuditableBaseEntityBuilder<SiteAssessmentEntityBuilder>
+    {
+        private const string _entityTableName = "SiteAssessment";
+        private readonly PrimaryKey<SiteAssessmentEntityBuilder> _primaryKey = new("PK_SiteAssessment", x => x.AssessmentId);
+        private readonly ForeignKey<SiteAssessmentEntityBuilder> _applicationForeignKey = new("FK_SiteAssessment_Application", x => x.ApplicationId, "TreePlantingApplication", "ApplicationId", ReferentialAction.Cascade);
+
+        public SiteAssessmentEntityBuilder(MigrationBuilder migrationBuilder, IDatabase database) : base(migrationBuilder, database)
+        {
+            EntityTableName = _entityTableName;
+            PrimaryKey = _primaryKey;
+            ForeignKeys.Add(_applicationForeignKey);
+        }
+
+        protected override SiteAssessmentEntityBuilder BuildTable(ColumnsBuilder table)
+        {
+            AssessmentId = AddAutoIncrementColumn(table, "AssessmentId");
+            ApplicationId = AddIntegerColumn(table, "ApplicationId");
+            AssessmentDate = AddDateTimeColumn(table, "AssessmentDate");
+            AssessorUserId = AddStringColumn(table, "AssessorUserId", 256, true);
+            Outcome = AddIntegerColumn(table, "Outcome");
+            SoilDescription = AddStringColumn(table, "SoilDescription", 1000, true);
+            SunExposure = AddStringColumn(table, "SunExposure", 500, true);
+            WaterAvailability = AddStringColumn(table, "WaterAvailability", 500, true);
+            Constraints = AddStringColumn(table, "Constraints", 1000, true);
+            RecommendedSpecies = AddStringColumn(table, "RecommendedSpecies", 1000, true);
+            RecommendedTreeCount = AddIntegerColumn(table, "RecommendedTreeCount");
+            Notes = AddStringColumn(table, "Notes", 2000, true);
+            AddAuditableColumns(table);
+            return this;
+        }
+
+        public OperationBuilder<AddColumnOperation> AssessmentId { get; set; }
+        public OperationBuilder<AddColumnOperation> ApplicationId { get; set; }
+        public OperationBuilder<AddColumnOperation> AssessmentDate { get; set; }
+        public OperationBuilder<AddColumnOperation> AssessorUserId { get; set; }
+        public OperationBuilder<AddColumnOperation> Outcome { get; set; }
+        public OperationBuilder<AddColumnOperation> SoilDescription { get; set; }
+        public OperationBuilder<AddColumnOperation> SunExposure { get; set; }
+        public OperationBuilder<AddColumnOperation> WaterAvailability { get; set; }
+        public OperationBuilder<AddColumnOperation> Constraints { get; set; }
+        public OperationBuilder<AddColumnOperation> RecommendedSpecies { get; set; }
+        public OperationBuilder<AddColumnOperation> RecommendedTreeCount { get; set; }
+        public OperationBuilder<AddColumnOperation> Notes { get; set; }
+    }
+
+    public class AssessmentPhotoEntityBuilder : AuditableBaseEntityBuilder<AssessmentPhotoEntityBuilder>
+    {
+        private const string _entityTableName = "AssessmentPhoto";
+        private readonly PrimaryKey<AssessmentPhotoEntityBuilder> _primaryKey = new("PK_AssessmentPhoto", x => x.AssessmentPhotoId);
+        private readonly ForeignKey<AssessmentPhotoEntityBuilder> _assessmentForeignKey = new("FK_AssessmentPhoto_Assessment", x => x.AssessmentId, "SiteAssessment", "AssessmentId", ReferentialAction.Cascade);
+
+        public AssessmentPhotoEntityBuilder(MigrationBuilder migrationBuilder, IDatabase database) : base(migrationBuilder, database)
+        {
+            EntityTableName = _entityTableName;
+            PrimaryKey = _primaryKey;
+            ForeignKeys.Add(_assessmentForeignKey);
+        }
+
+        protected override AssessmentPhotoEntityBuilder BuildTable(ColumnsBuilder table)
+        {
+            AssessmentPhotoId = AddAutoIncrementColumn(table, "AssessmentPhotoId");
+            AssessmentId = AddIntegerColumn(table, "AssessmentId");
+            Url = AddStringColumn(table, "Url", 500, true);
+            Caption = AddStringColumn(table, "Caption", 500, true);
+            AddAuditableColumns(table);
+            return this;
+        }
+
+        public OperationBuilder<AddColumnOperation> AssessmentPhotoId { get; set; }
+        public OperationBuilder<AddColumnOperation> AssessmentId { get; set; }
+        public OperationBuilder<AddColumnOperation> Url { get; set; }
+        public OperationBuilder<AddColumnOperation> Caption { get; set; }
     }
 }

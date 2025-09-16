@@ -28,6 +28,10 @@ namespace OE.TenTrees.Repository
         
         void AddApplicationStatusHistory(ApplicationStatusHistory History);
         IEnumerable<ApplicationStatusHistory> GetApplicationStatusHistory(int ApplicationId);
+        
+        IEnumerable<ApplicationListItemVm> GetApplicationListItems();
+        ApplicationDetailVm GetApplicationDetailView(int ApplicationId);
+        IEnumerable<ReviewDetailVm> GetApplicationReviewDetails(int ApplicationId);
     }
 
     public class ApplicationRepository : IApplicationRepository, ITransientService
@@ -45,8 +49,6 @@ namespace OE.TenTrees.Repository
         {
             using var db = _factory.CreateDbContext();
             return db.TreePlantingApplication
-                .Include(a => a.Documents)
-                .Include(a => a.History)
                 .OrderByDescending(item => item.CreatedOn)
                 .ToList();
         }
@@ -62,18 +64,71 @@ namespace OE.TenTrees.Repository
             if (tracking)
             {
                 return db.TreePlantingApplication
-                    .Include(a => a.Documents)
-                    .Include(a => a.History)
                     .SingleOrDefault(item => item.ApplicationId == ApplicationId);
             }
             else
             {
                 return db.TreePlantingApplication
                     .AsNoTracking()
-                    .Include(a => a.Documents)
-                    .Include(a => a.History)
                     .SingleOrDefault(item => item.ApplicationId == ApplicationId);
             }
+        }
+
+        public IEnumerable<ApplicationListItemVm> GetApplicationListItems()
+        {
+            using var db = _factory.CreateDbContext();
+            
+            return db.TreePlantingApplication
+                .Select(a => new ApplicationListItemVm
+                {
+                    ApplicationId = a.ApplicationId,
+                    BeneficiaryName = a.BeneficiaryName,
+                    EvaluatorName = a.EvaluatorName,
+                    Status = a.Status,
+                    CreatedOn = a.CreatedOn,
+                    SubmissionDate = a.SubmissionDate
+                })
+                .OrderByDescending(a => a.CreatedOn)
+                .ToList();
+        }
+
+        public ApplicationDetailVm GetApplicationDetailView(int ApplicationId)
+        {
+            using var db = _factory.CreateDbContext();
+            
+            var application = db.TreePlantingApplication
+                .FirstOrDefault(a => a.ApplicationId == ApplicationId);
+                
+            if (application == null) return null;
+
+            var documents = db.ApplicationDocument
+                .Where(d => d.ApplicationId == ApplicationId)
+                .OrderBy(d => d.CreatedOn)
+                .ToList();
+
+            var history = db.ApplicationStatusHistory
+                .Where(h => h.ApplicationId == ApplicationId)
+                .OrderBy(h => h.CreatedOn)
+                .ToList();
+
+            var assessments = db.SiteAssessment
+                .Where(a => a.ApplicationId == ApplicationId)
+                .OrderByDescending(a => a.AssessmentDate)
+                .ToList();
+
+            var monitoring = db.MonitoringSession
+                .Where(m => m.ApplicationId == ApplicationId)
+                .OrderByDescending(m => m.SessionDate)
+                .ToList();
+
+            return new ApplicationDetailVm
+            {
+                Application = application,
+                Documents = documents,
+                History = history,
+                Assessments = assessments,
+                Monitoring = monitoring
+            };
         }
 
         public TreePlantingApplication AddApplication(TreePlantingApplication Application)
@@ -108,9 +163,40 @@ namespace OE.TenTrees.Repository
             using var db = _factory.CreateDbContext();
             return db.ApplicationReview
                 .Where(r => r.ApplicationId == ApplicationId)
-                .Include(r => r.Checklist)
                 .OrderByDescending(r => r.ReviewDate)
                 .ToList();
+        }
+
+        public IEnumerable<ReviewDetailVm> GetApplicationReviewDetails(int ApplicationId)
+        {
+            using var db = _factory.CreateDbContext();
+            
+            var reviews = db.ApplicationReview
+                .Where(r => r.ApplicationId == ApplicationId)
+                .OrderByDescending(r => r.ReviewDate)
+                .ToList();
+
+            var reviewDetails = new List<ReviewDetailVm>();
+            
+            foreach (var review in reviews)
+            {
+                var checklist = db.ReviewChecklistItem
+                    .Where(c => c.ReviewId == review.ReviewId)
+                    .ToList();
+
+                var relatedDocuments = db.ApplicationDocument
+                    .Where(d => d.ApplicationId == ApplicationId)
+                    .ToList();
+
+                reviewDetails.Add(new ReviewDetailVm
+                {
+                    Review = review,
+                    Checklist = checklist,
+                    RelatedDocuments = relatedDocuments
+                });
+            }
+
+            return reviewDetails;
         }
 
         public ApplicationReview AddApplicationReview(ApplicationReview Review)

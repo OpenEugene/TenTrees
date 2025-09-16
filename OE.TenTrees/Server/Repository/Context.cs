@@ -5,11 +5,10 @@ using Oqtane.Modules;
 using Oqtane.Repository;
 using Oqtane.Infrastructure;
 using OE.TenTrees.Models;
-using Oqtane.Repository.Databases.Interfaces;
 
 namespace OE.TenTrees.Repository
 {
-    public class Context : DBContextBase, ITransientService, IMultiDatabase
+    public class Context : DBContextBase, ITransientService
     {
         public virtual DbSet<Models.MyModule> MyModule { get; set; }
         public virtual DbSet<TreePlantingApplication> TreePlantingApplication { get; set; }
@@ -36,77 +35,88 @@ namespace OE.TenTrees.Repository
         {
             base.OnModelCreating(builder);
 
-            // Configure Application relationships
-            builder.Entity<TreePlantingApplication>()
-                .HasMany(a => a.Documents)
-                .WithOne()
+            // Configure Application relationships - foreign keys only, no navigation properties
+            builder.Entity<ApplicationDocument>()
+                .HasOne<TreePlantingApplication>()
+                .WithMany()
                 .HasForeignKey(d => d.ApplicationId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<TreePlantingApplication>()
-                .HasMany(a => a.History)
-                .WithOne()
+            builder.Entity<ApplicationStatusHistory>()
+                .HasOne<TreePlantingApplication>()
+                .WithMany()
                 .HasForeignKey(h => h.ApplicationId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             // Configure Review relationships
             builder.Entity<ApplicationReview>()
-                .HasMany(r => r.Checklist)
-                .WithOne()
+                .HasOne<TreePlantingApplication>()
+                .WithMany()
+                .HasForeignKey(r => r.ApplicationId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<ReviewChecklistItem>()
+                .HasOne<ApplicationReview>()
+                .WithMany()
                 .HasForeignKey(c => c.ReviewId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             // Configure Assessment relationships
             builder.Entity<SiteAssessment>()
-                .HasMany(a => a.Photos)
-                .WithOne()
+                .HasOne<TreePlantingApplication>()
+                .WithMany()
+                .HasForeignKey(a => a.ApplicationId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<AssessmentPhoto>()
+                .HasOne<SiteAssessment>()
+                .WithMany()
                 .HasForeignKey(p => p.AssessmentId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             // Configure Monitoring relationships
             builder.Entity<MonitoringSession>()
-                .HasMany(ms => ms.Metrics)
-                .WithOne()
+                .HasOne<TreePlantingApplication>()
+                .WithMany()
+                .HasForeignKey(ms => ms.ApplicationId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<MonitoringSession>()
+                .HasOne<GardenSite>()
+                .WithMany()
+                .HasForeignKey(ms => ms.GardenSiteId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            builder.Entity<MonitoringMetric>()
+                .HasOne<MonitoringSession>()
+                .WithMany()
                 .HasForeignKey(m => m.MonitoringSessionId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<MonitoringSession>()
-                .HasMany(ms => ms.Photos)
-                .WithOne()
+            builder.Entity<MonitoringPhoto>()
+                .HasOne<MonitoringSession>()
+                .WithMany()
                 .HasForeignKey(p => p.MonitoringSessionId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             // Configure GardenSite relationships
             builder.Entity<GardenSite>()
-                .HasOne(g => g.Application)
+                .HasOne<TreePlantingApplication>()
                 .WithMany()
                 .HasForeignKey(g => g.ApplicationId)
-                .OnDelete(DeleteBehavior.Restrict); // Don't delete application when garden site is deleted
+                .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<GardenSite>()
-                .HasMany(g => g.TreePlantings)
-                .WithOne(tp => tp.GardenSite)
+            builder.Entity<TreePlanting>()
+                .HasOne<GardenSite>()
+                .WithMany()
                 .HasForeignKey(tp => tp.GardenSiteId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<GardenSite>()
-                .HasMany(g => g.Photos)
-                .WithOne(p => p.GardenSite)
+            builder.Entity<GardenPhoto>()
+                .HasOne<GardenSite>()
+                .WithMany()
                 .HasForeignKey(p => p.GardenSiteId)
                 .OnDelete(DeleteBehavior.Cascade);
-
-            builder.Entity<GardenSite>()
-                .HasMany(g => g.MonitoringSessions)
-                .WithOne(ms => ms.GardenSite)
-                .HasForeignKey(ms => ms.GardenSiteId)
-                .OnDelete(DeleteBehavior.SetNull); // Keep monitoring sessions even if garden site is deleted
-
-            // Configure MonitoringSession to support both Application and GardenSite relationships
-            builder.Entity<MonitoringSession>()
-                .HasOne<TreePlantingApplication>()
-                .WithMany()
-                .HasForeignKey(ms => ms.ApplicationId)
-                .OnDelete(DeleteBehavior.Restrict);
 
             // Configure decimal precision for coordinates
             builder.Entity<GardenSite>()

@@ -43,8 +43,7 @@ namespace OE.TenTrees.Models
         public string ModifiedBy { get; set; }
         public DateTime ModifiedOn { get; set; }
 
-        public ICollection<ApplicationDocument> Documents { get; set; }
-        public ICollection<ApplicationStatusHistory> History { get; set; }
+        // No navigation properties - use LINQ joins instead
     }
 
     public class ApplicationDocument : IAuditable
@@ -63,6 +62,8 @@ namespace OE.TenTrees.Models
         public DateTime CreatedOn { get; set; }
         public string ModifiedBy { get; set; }
         public DateTime ModifiedOn { get; set; }
+        
+        // No navigation properties - use LINQ joins instead
     }
 
     public class ApplicationStatusHistory : IAuditable
@@ -78,6 +79,8 @@ namespace OE.TenTrees.Models
         public DateTime CreatedOn { get; set; }
         public string ModifiedBy { get; set; }
         public DateTime ModifiedOn { get; set; }
+        
+        // No navigation properties - use LINQ joins instead
     }
 
     // View Models

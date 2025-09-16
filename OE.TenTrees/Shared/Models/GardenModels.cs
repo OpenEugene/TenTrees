@@ -55,11 +55,7 @@ namespace OE.TenTrees.Models
         public string ModifiedBy { get; set; }
         public DateTime ModifiedOn { get; set; }
 
-        // Navigation properties
-        public TreePlantingApplication Application { get; set; }
-        public ICollection<MonitoringSession> MonitoringSessions { get; set; }
-        public ICollection<GardenPhoto> Photos { get; set; }
-        public ICollection<TreePlanting> TreePlantings { get; set; }
+        // No navigation properties - use LINQ joins instead
     }
 
     // Track individual tree plantings in a garden site
@@ -82,8 +78,7 @@ namespace OE.TenTrees.Models
         public string ModifiedBy { get; set; }
         public DateTime ModifiedOn { get; set; }
 
-        // Navigation
-        public GardenSite GardenSite { get; set; }
+        // No navigation properties - use LINQ joins instead
     }
 
     // Garden-specific photos
@@ -106,8 +101,7 @@ namespace OE.TenTrees.Models
         public string ModifiedBy { get; set; }
         public DateTime ModifiedOn { get; set; }
 
-        // Navigation
-        public GardenSite GardenSite { get; set; }
+        // No navigation properties - use LINQ joins instead
     }
 
     // View Models

@@ -7,14 +7,14 @@ using Oqtane.Migrations.EntityBuilders;
 
 namespace OE.TenTrees.Migrations.EntityBuilders
 {
-    public class GardenEntityBuilder : AuditableBaseEntityBuilder<GardenEntityBuilder>
+    public class GardenSiteEntityBuilder : AuditableBaseEntityBuilder<GardenSiteEntityBuilder>
     {
-        private const string _entityTableName = "Garden";
-        private readonly PrimaryKey<GardenEntityBuilder> _primaryKey = new("PK_Garden", x => x.GardenId);
-        private readonly ForeignKey<GardenEntityBuilder> _applicationForeignKey = new("FK_Garden_Application", x => x.ApplicationId, "TreePlantingApplication", "ApplicationId", ReferentialAction.Restrict);
-        private readonly ForeignKey<GardenEntityBuilder> _moduleForeignKey = new("FK_Garden_Module", x => x.ModuleId, "Module", "ModuleId", ReferentialAction.Cascade);
+        private const string _entityTableName = "GardenSite";
+        private readonly PrimaryKey<GardenSiteEntityBuilder> _primaryKey = new("PK_GardenSite", x => x.GardenSiteId);
+        private readonly ForeignKey<GardenSiteEntityBuilder> _applicationForeignKey = new("FK_GardenSite_Application", x => x.ApplicationId, "TreePlantingApplication", "ApplicationId", ReferentialAction.Restrict);
+        private readonly ForeignKey<GardenSiteEntityBuilder> _moduleForeignKey = new("FK_GardenSite_Module", x => x.ModuleId, "Module", "ModuleId", ReferentialAction.Cascade);
 
-        public GardenEntityBuilder(MigrationBuilder migrationBuilder, IDatabase database) : base(migrationBuilder, database)
+        public GardenSiteEntityBuilder(MigrationBuilder migrationBuilder, IDatabase database) : base(migrationBuilder, database)
         {
             EntityTableName = _entityTableName;
             PrimaryKey = _primaryKey;
@@ -22,9 +22,9 @@ namespace OE.TenTrees.Migrations.EntityBuilders
             ForeignKeys.Add(_moduleForeignKey);
         }
 
-        protected override GardenEntityBuilder BuildTable(ColumnsBuilder table)
+        protected override GardenSiteEntityBuilder BuildTable(ColumnsBuilder table)
         {
-            GardenId = AddAutoIncrementColumn(table, "GardenId");
+            GardenSiteId = AddAutoIncrementColumn(table, "GardenSiteId");
             ApplicationId = AddIntegerColumn(table, "ApplicationId");
             ModuleId = AddIntegerColumn(table, "ModuleId");
             
@@ -59,7 +59,7 @@ namespace OE.TenTrees.Migrations.EntityBuilders
             return this;
         }
 
-        public OperationBuilder<AddColumnOperation> GardenId { get; set; }
+        public OperationBuilder<AddColumnOperation> GardenSiteId { get; set; }
         public OperationBuilder<AddColumnOperation> ApplicationId { get; set; }
         public OperationBuilder<AddColumnOperation> ModuleId { get; set; }
         public OperationBuilder<AddColumnOperation> EvaluatorName { get; set; }
@@ -90,19 +90,19 @@ namespace OE.TenTrees.Migrations.EntityBuilders
     {
         private const string _entityTableName = "TreePlanting";
         private readonly PrimaryKey<TreePlantingEntityBuilder> _primaryKey = new("PK_TreePlanting", x => x.TreePlantingId);
-        private readonly ForeignKey<TreePlantingEntityBuilder> _gardenForeignKey = new("FK_TreePlanting_Garden", x => x.GardenId, "Garden", "GardenId", ReferentialAction.Cascade);
+        private readonly ForeignKey<TreePlantingEntityBuilder> _gardenSiteForeignKey = new("FK_TreePlanting_GardenSite", x => x.GardenSiteId, "GardenSite", "GardenSiteId", ReferentialAction.Cascade);
 
         public TreePlantingEntityBuilder(MigrationBuilder migrationBuilder, IDatabase database) : base(migrationBuilder, database)
         {
             EntityTableName = _entityTableName;
             PrimaryKey = _primaryKey;
-            ForeignKeys.Add(_gardenForeignKey);
+            ForeignKeys.Add(_gardenSiteForeignKey);
         }
 
         protected override TreePlantingEntityBuilder BuildTable(ColumnsBuilder table)
         {
             TreePlantingId = AddAutoIncrementColumn(table, "TreePlantingId");
-            GardenId = AddIntegerColumn(table, "GardenId");
+            GardenSiteId = AddIntegerColumn(table, "GardenSiteId");
             TreeSpecies = AddStringColumn(table, "TreeSpecies", 200, true);
             TreeVariety = AddStringColumn(table, "TreeVariety", 200, true);
             Quantity = AddIntegerColumn(table, "Quantity");
@@ -116,7 +116,7 @@ namespace OE.TenTrees.Migrations.EntityBuilders
         }
 
         public OperationBuilder<AddColumnOperation> TreePlantingId { get; set; }
-        public OperationBuilder<AddColumnOperation> GardenId { get; set; }
+        public OperationBuilder<AddColumnOperation> GardenSiteId { get; set; }
         public OperationBuilder<AddColumnOperation> TreeSpecies { get; set; }
         public OperationBuilder<AddColumnOperation> TreeVariety { get; set; }
         public OperationBuilder<AddColumnOperation> Quantity { get; set; }
@@ -130,19 +130,19 @@ namespace OE.TenTrees.Migrations.EntityBuilders
     {
         private const string _entityTableName = "GardenPhoto";
         private readonly PrimaryKey<GardenPhotoEntityBuilder> _primaryKey = new("PK_GardenPhoto", x => x.GardenPhotoId);
-        private readonly ForeignKey<GardenPhotoEntityBuilder> _gardenForeignKey = new("FK_GardenPhoto_Garden", x => x.GardenId, "Garden", "GardenId", ReferentialAction.Cascade);
+        private readonly ForeignKey<GardenPhotoEntityBuilder> _gardenSiteForeignKey = new("FK_GardenPhoto_GardenSite", x => x.GardenSiteId, "GardenSite", "GardenSiteId", ReferentialAction.Cascade);
 
         public GardenPhotoEntityBuilder(MigrationBuilder migrationBuilder, IDatabase database) : base(migrationBuilder, database)
         {
             EntityTableName = _entityTableName;
             PrimaryKey = _primaryKey;
-            ForeignKeys.Add(_gardenForeignKey);
+            ForeignKeys.Add(_gardenSiteForeignKey);
         }
 
         protected override GardenPhotoEntityBuilder BuildTable(ColumnsBuilder table)
         {
             GardenPhotoId = AddAutoIncrementColumn(table, "GardenPhotoId");
-            GardenId = AddIntegerColumn(table, "GardenId");
+            GardenSiteId = AddIntegerColumn(table, "GardenSiteId");
             Url = AddStringColumn(table, "Url", 500, true);
             Caption = AddStringColumn(table, "Caption", 500, true);
             FileName = AddStringColumn(table, "FileName", 255, true);
@@ -156,7 +156,7 @@ namespace OE.TenTrees.Migrations.EntityBuilders
         }
 
         public OperationBuilder<AddColumnOperation> GardenPhotoId { get; set; }
-        public OperationBuilder<AddColumnOperation> GardenId { get; set; }
+        public OperationBuilder<AddColumnOperation> GardenSiteId { get; set; }
         public OperationBuilder<AddColumnOperation> Url { get; set; }
         public OperationBuilder<AddColumnOperation> Caption { get; set; }
         public OperationBuilder<AddColumnOperation> FileName { get; set; }

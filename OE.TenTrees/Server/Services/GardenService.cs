@@ -144,20 +144,11 @@ namespace OE.TenTrees.Services
             return Task.FromResult(_gardenRepository.GetGardenListItems().ToList());
         }
 
-        public async Task<GardenDetailVm> GetGardenDetailAsync(int GardenSiteId)
+        public Task<GardenDetailVm> GetGardenDetailAsync(int GardenSiteId)
         {
-            var gardenSite = _gardenRepository.GetGarden(GardenSiteId);
-            if (gardenSite == null) return null;
-
-            return new GardenDetailVm
-            {
-                GardenSite = gardenSite,
-                Application = gardenSite.Application,
-                TreePlantings = _gardenRepository.GetTreePlantings(GardenSiteId),
-                MonitoringSessions = gardenSite.MonitoringSessions ?? new List<MonitoringSession>(),
-                Photos = _gardenRepository.GetGardenPhotos(GardenSiteId),
-                Statistics = _gardenRepository.GetGardenStatistics(GardenSiteId)
-            };
+            // Use the new repository method that handles all the joins
+            var detailView = _gardenRepository.GetGardenDetailView(GardenSiteId);
+            return Task.FromResult(detailView);
         }
 
         public Task<GardenSite> CreateGardenFromApplicationAsync(CreateGardenFromApplicationRequest request)

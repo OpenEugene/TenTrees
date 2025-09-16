@@ -101,8 +101,14 @@
     <Build Include="dbo\Tables\ApplicationDocument.sql" />
     <Build Include="dbo\Tables\Alias.sql" />
     <Build Include="dbo\Tables\__EFMigrationsHistory.sql" />
+    <Build Include="dbo\Tables\AssessmentPhoto.sql" />
+    <Build Include="dbo\Tables\GardenSite.sql" />
+    <Build Include="dbo\Tables\GardenPhoto.sql" />
+    <Build Include="dbo\Tables\SiteAssessment.sql" />
+    <Build Include="dbo\Tables\TreePlanting.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SqlSchemaCompare2.scmp" />
+    <None Include="dbo\Tables\Script1.sql" />
   </ItemGroup>
 </Project>

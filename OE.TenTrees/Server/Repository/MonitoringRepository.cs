@@ -14,6 +14,7 @@ namespace OE.TenTrees.Repository
     {
         IEnumerable<MonitoringSession> GetMonitoringSessions();
         IEnumerable<MonitoringSession> GetMonitoringSessionsByApplication(int ApplicationId);
+        IEnumerable<MonitoringSession> GetMonitoringSessionsByGarden(int GardenSiteId);
         MonitoringSession GetMonitoringSession(int MonitoringSessionId);
         MonitoringSession GetMonitoringSession(int MonitoringSessionId, bool tracking);
         MonitoringSession AddMonitoringSession(MonitoringSession Session);
@@ -102,6 +103,23 @@ namespace OE.TenTrees.Repository
                 using var db = _factory.CreateDbContext();
                 return db.MonitoringSession
                     .Where(item => item.ApplicationId == ApplicationId)
+                    .OrderByDescending(item => item.SessionDate)
+                    .ToList();
+            }
+            catch (SqlException ex) when (ex.Message.Contains("Invalid object name 'MonitoringSession'"))
+            {
+                // Migration hasn't run yet, return empty list
+                return new List<MonitoringSession>();
+            }
+        }
+
+        public IEnumerable<MonitoringSession> GetMonitoringSessionsByGarden(int GardenSiteId)
+        {
+            try
+            {
+                using var db = _factory.CreateDbContext();
+                return db.MonitoringSession
+                    .Where(item => item.GardenSiteId == GardenSiteId)
                     .OrderByDescending(item => item.SessionDate)
                     .ToList();
             }
@@ -299,21 +317,33 @@ namespace OE.TenTrees.Repository
         {
             try
             {
+                using var db = _factory.CreateDbContext();
+                
                 var session = GetMonitoringSession(MonitoringSessionId);
                 if (session == null) return null;
 
-                // Get application using LINQ join
-                using var db = _factory.CreateDbContext();
+                // Get application data separately
                 var application = db.TreePlantingApplication
-                    .Where(a => a.ApplicationId == session.ApplicationId)
-                    .FirstOrDefault();
+                    .FirstOrDefault(a => a.ApplicationId == session.ApplicationId);
+
+                // Get garden site data separately if available
+                GardenSite gardenSite = null;
+                if (session.GardenSiteId.HasValue)
+                {
+                    gardenSite = db.GardenSite
+                        .FirstOrDefault(g => g.GardenSiteId == session.GardenSiteId.Value);
+                }
+
+                var metrics = GetMonitoringMetrics(MonitoringSessionId);
+                var photos = GetMonitoringPhotos(MonitoringSessionId);
 
                 return new MonitoringSessionVm
                 {
                     Session = session,
-                    Metrics = GetMonitoringMetrics(MonitoringSessionId),
-                    Photos = GetMonitoringPhotos(MonitoringSessionId),
-                    Application = application
+                    Metrics = metrics,
+                    Photos = photos,
+                    Application = application,
+                    GardenSite = gardenSite
                 };
             }
             catch (SqlException ex) when (ex.Message.Contains("Invalid object name"))

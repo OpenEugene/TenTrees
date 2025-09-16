@@ -10,6 +10,6 @@
     [CreatedOn]           DATETIME2 (7)  NOT NULL,
     [ModifiedBy]          NVARCHAR (256) NULL,
     [ModifiedOn]          DATETIME2 (7)  NOT NULL,
-    CONSTRAINT [PK_MonitoringPhoto] PRIMARY KEY CLUSTERED ([MonitoringPhotoId] ASC),
+    CONSTRAINT [PK_MonitoringPhoto] PRIMARY KEY CLUSTERED ([MonitoringPhotoId] ASC)
 );
 

@@ -11,19 +11,22 @@ namespace OE.TenTrees.Migrations.EntityBuilders
     {
         private const string _entityTableName = "MonitoringSession";
         private readonly PrimaryKey<MonitoringSessionEntityBuilder> _primaryKey = new("PK_MonitoringSession", x => x.MonitoringSessionId);
-        private readonly ForeignKey<MonitoringSessionEntityBuilder> _applicationForeignKey = new("FK_MonitoringSession_Application", x => x.ApplicationId, "TreePlantingApplication", "ApplicationId", ReferentialAction.Cascade);
+        private readonly ForeignKey<MonitoringSessionEntityBuilder> _applicationForeignKey = new("FK_MonitoringSession_Application", x => x.ApplicationId, "TreePlantingApplication", "ApplicationId", ReferentialAction.Restrict);
+        private readonly ForeignKey<MonitoringSessionEntityBuilder> _gardenSiteForeignKey = new("FK_MonitoringSession_GardenSite", x => x.GardenSiteId, "GardenSite", "GardenSiteId", ReferentialAction.SetNull);
 
         public MonitoringSessionEntityBuilder(MigrationBuilder migrationBuilder, IDatabase database) : base(migrationBuilder, database)
         {
             EntityTableName = _entityTableName;
             PrimaryKey = _primaryKey;
             ForeignKeys.Add(_applicationForeignKey);
+            ForeignKeys.Add(_gardenSiteForeignKey);
         }
 
         protected override MonitoringSessionEntityBuilder BuildTable(ColumnsBuilder table)
         {
             MonitoringSessionId = AddAutoIncrementColumn(table, "MonitoringSessionId");
             ApplicationId = AddIntegerColumn(table, "ApplicationId");
+            GardenSiteId = AddIntegerColumn(table, "GardenSiteId", true); // New field for garden site reference
             ModuleId = AddIntegerColumn(table, "ModuleId");
             SessionDate = AddDateTimeColumn(table, "SessionDate");
             ObserverUserId = AddStringColumn(table, "ObserverUserId", 256, true);
@@ -70,6 +73,7 @@ namespace OE.TenTrees.Migrations.EntityBuilders
 
         public OperationBuilder<AddColumnOperation> MonitoringSessionId { get; set; }
         public OperationBuilder<AddColumnOperation> ApplicationId { get; set; }
+        public OperationBuilder<AddColumnOperation> GardenSiteId { get; set; }
         public OperationBuilder<AddColumnOperation> ModuleId { get; set; }
         public OperationBuilder<AddColumnOperation> SessionDate { get; set; }
         public OperationBuilder<AddColumnOperation> ObserverUserId { get; set; }
@@ -155,7 +159,7 @@ namespace OE.TenTrees.Migrations.EntityBuilders
             Caption = AddStringColumn(table, "Caption", 500, true);
             FileName = AddStringColumn(table, "FileName", 255, true);
             ContentType = AddStringColumn(table, "ContentType", 100, true);
-            FileSize = AddIntegerColumn(table, "FileSize", true); // Use integer instead of long for compatibility
+            FileSize = AddIntegerColumn(table, "FileSize", true);
             AddAuditableColumns(table);
             return this;
         }

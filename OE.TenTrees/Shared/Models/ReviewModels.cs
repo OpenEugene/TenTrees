@@ -22,7 +22,7 @@ namespace OE.TenTrees.Models
         public string ModifiedBy { get; set; }
         public DateTime ModifiedOn { get; set; }
 
-        public ICollection<ReviewChecklistItem> Checklist { get; set; }
+        // No navigation properties - use LINQ joins instead
     }
 
     public class ReviewChecklistItem : IAuditable
@@ -38,6 +38,8 @@ namespace OE.TenTrees.Models
         public DateTime CreatedOn { get; set; }
         public string ModifiedBy { get; set; }
         public DateTime ModifiedOn { get; set; }
+        
+        // No navigation properties - use LINQ joins instead
     }
 
     // View Models

@@ -35,6 +35,6 @@
     [CreatedOn]                  DATETIME2 (7)   NOT NULL,
     [ModifiedBy]                 NVARCHAR (256)  NULL,
     [ModifiedOn]                 DATETIME2 (7)   NOT NULL,
-    CONSTRAINT [PK_MonitoringSession] PRIMARY KEY CLUSTERED ([MonitoringSessionId] ASC),
+    CONSTRAINT [PK_MonitoringSession] PRIMARY KEY CLUSTERED ([MonitoringSessionId] ASC)
 );
 
