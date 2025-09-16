@@ -1,163 +1,185 @@
-@using OE.TenTrees.Services
+﻿@using OE.TenTrees.Services
 @using OE.TenTrees.Models
 
 @namespace OE.TenTrees.Garden
 @inherits ModuleBase
-@inject IMonitoringService MonitoringService
+@inject IGardenService GardenService
 @inject IApplicationService ApplicationService
 @inject NavigationManager NavigationManager
 @inject IStringLocalizer<Index> Localizer
 
-@if (_monitoringSessions == null)
+@if (_gardens == null)
 {
-    <p><em>Loading monitoring sessions...</em></p>
+    <p><em>Loading gardens...</em></p>
 }
 else
 {
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h3>Garden Monitoring</h3>
-        <ActionLink Action="Add" Security="SecurityAccessLevel.Edit" Text="New Monitoring Visit" ResourceKey="Add" Class="btn btn-success" />
+        <h3>Garden Management</h3>
+        <div class="btn-group">
+            <ActionLink Action="Create" Security="SecurityAccessLevel.Edit" Text="Create Garden from Application" ResourceKey="Create" Class="btn btn-primary" />
+            <ActionLink Action="Add" Security="SecurityAccessLevel.Edit" Text="New Garden" ResourceKey="Add" Class="btn btn-secondary" />
+        </div>
     </div>
 
     <div class="row mb-3">
-        <div class="col-md-4">
-            <label>Filter by Application:</label>
-            <select class="form-select" @onchange="OnApplicationFilterChanged">
+        <div class="col-md-3">
+            <label>Filter by Status:</label>
+            <select class="form-select" @onchange="OnStatusFilterChanged">
                 <option value="">All Gardens</option>
-                @if (_applications != null)
+                <option value="@GardenStatus.Active">Active</option>
+                <option value="@GardenStatus.Planted">Planted</option>
+                <option value="@GardenStatus.UnderMonitoring">Under Monitoring</option>
+                <option value="@GardenStatus.RequiresIntervention">Requires Intervention</option>
+                <option value="@GardenStatus.Successful">Successful</option>
+                <option value="@GardenStatus.Failed">Failed</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label>Filter by Village:</label>
+            <select class="form-select" @onchange="OnVillageFilterChanged">
+                <option value="">All Villages</option>
+                @foreach (var village in _villages)
                 {
-                    @foreach (var app in _applications)
-                    {
-                        <option value="@app.ApplicationId">@app.BeneficiaryName (@app.Village)</option>
-                    }
+                    <option value="@village">@village</option>
                 }
             </select>
         </div>
-        <div class="col-md-4">
-            <label>Show Only Problems:</label>
-            <select class="form-select" @onchange="OnProblemFilterChanged">
-                <option value="">All Sessions</option>
-                <option value="true">Intervention Needed</option>
-                <option value="false">No Problems</option>
-            </select>
+        <div class="col-md-3">
+            <label>Show Only:</label>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="requiresAttention" @bind="@_showOnlyRequiresAttention" @onclick="ApplyFilters" />
+                <label class="form-check-label" for="requiresAttention">
+                    Requires Attention
+                </label>
+            </div>
         </div>
     </div>
 
-    @if (_filteredSessions.Any())
+    @if (_filteredGardens.Any())
     {
-        <div class="row">
-            @foreach (var session in _filteredSessions)
-            {
-                <div class="col-lg-6 col-xl-4 mb-4">
-                    <div class="card h-100 @(GetSessionCardClass(session))">
-                        <div class="card-header d-flex justify-content-between align-items-center">
-                            <h6 class="mb-0">@session.BeneficiaryName</h6>
-                            <small class="text-muted">@session.SessionDate.ToString("MM/dd/yyyy")</small>
-                        </div>
-                        <div class="card-body">
-                            <div class="row mb-2">
-                                <div class="col-6">
-                                    <strong>Evaluator:</strong><br />
-                                    <small>@session.EvaluatorName</small>
-                                </div>
-                                <div class="col-6">
-                                    <strong>Trees Status:</strong><br />
-                                    <small>@session.TreesAlive/@session.TreesPlanted alive</small>
-                                </div>
-                            </div>
-                            
-                            @if (session.MortalityRate > 0)
-                            {
-                                <div class="alert alert-sm @(session.MortalityRate > 30 ? "alert-danger" : "alert-warning") py-1 px-2 mb-2">
-                                    <small><strong>Mortality Rate:</strong> @session.MortalityRate.ToString("F1")%</small>
-                                </div>
-                            }
-
-                            @if (session.RequiresIntervention)
-                            {
-                                <div class="alert alert-danger alert-sm py-1 px-2 mb-2">
-                                    <small><i class="fas fa-exclamation-triangle"></i> Intervention Needed</small>
-                                </div>
-                            }
-
-                            <div class="mt-auto">
-                                <div class="btn-group btn-group-sm w-100" role="group">
-                                    <ActionLink Action="Edit" Parameters="@($"id={session.MonitoringSessionId}")" 
-                                               Text="View/Edit" ResourceKey="Edit" Class="btn btn-outline-primary btn-sm" />
-                                    <ActionLink Action="Photos" Parameters="@($"id={session.MonitoringSessionId}")" 
-                                               Text="Photos" ResourceKey="Photos" Class="btn btn-outline-info btn-sm" />
-                                    <ActionDialog Header="Delete Session" 
-                                                Message="Are you sure you wish to delete this monitoring session?" 
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Actions</th>
+                        <th>Beneficiary</th>
+                        <th class="mobile-hide">Evaluator</th>
+                        <th>Village</th>
+                        <th>Status</th>
+                        <th class="mobile-hide">Trees Planted</th>
+                        <th class="mobile-hide">Species</th>
+                        <th class="mobile-hide">Last Monitoring</th>
+                        <th class="mobile-hide">Sessions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var garden in _filteredGardens)
+                    {
+                        <tr class="@(garden.RequiresAttention ? "table-warning" : "")">
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <ActionLink Action="Edit" Parameters="@($"id={garden.GardenSiteId}")" 
+                                               Text="View/Edit" ResourceKey="Edit" Class="btn btn-sm btn-outline-primary" />
+                                    
+                                    @if (garden.Status == GardenStatus.Active || garden.Status == GardenStatus.Planted)
+                                    {
+                                        <ActionLink Action="Monitor" Parameters="@($"gardenId={garden.GardenSiteId}")" 
+                                                   Text="Monitor" ResourceKey="Monitor" Class="btn btn-sm btn-outline-success" />
+                                    }
+                                    
+                                    <ActionLink Action="Photos" Parameters="@($"gardenId={garden.GardenSiteId}")" 
+                                               Text="Photos" ResourceKey="Photos" Class="btn btn-sm btn-outline-info" />
+                                    
+                                    <ActionDialog Header="Delete Garden" 
+                                                Message="Are you sure you wish to delete this garden? This will also delete all monitoring sessions and photos." 
                                                 Action="Delete" Security="SecurityAccessLevel.Edit" 
-                                                Class="btn btn-outline-danger btn-sm" 
-                                                OnClick="@(async () => await Delete(session))" 
+                                                Class="btn btn-sm btn-outline-danger" 
+                                                OnClick="@(async () => await Delete(garden))" 
                                                 ResourceKey="Delete" />
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            }
+                            </td>
+                            <td>
+                                <div>
+                                    <strong>@garden.BeneficiaryName</strong>
+                                    <div class="d-md-none small text-muted">
+                                        @if (!string.IsNullOrEmpty(garden.Village))
+                                        {
+                                            <div>📍 @garden.Village</div>
+                                        }
+                                        @if (garden.PlantingDate.HasValue)
+                                        {
+                                            <div>🌱 @garden.PlantingDate?.ToString("MM/dd/yyyy")</div>
+                                        }
+                                        @if (!string.IsNullOrEmpty(garden.EvaluatorName))
+                                        {
+                                            <div>👤 @garden.EvaluatorName</div>
+                                        }
+                                        <div>🌳 @garden.TotalTreesPlanted trees, @garden.TreeSpeciesCount species</div>
+                                        <div>📊 @garden.MonitoringSessionCount sessions</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="mobile-hide">@garden.EvaluatorName</td>
+                            <td>@garden.Village</td>
+                            <td>
+                                <span class="badge @GetStatusBadgeClass(garden.Status)">
+                                    @garden.Status
+                                </span>
+                                @if (garden.RequiresAttention)
+                                {
+                                    <br /><small class="text-warning">⚠️ Needs attention</small>
+                                }
+                            </td>
+                            <td class="mobile-hide">@garden.TotalTreesPlanted</td>
+                            <td class="mobile-hide">@garden.TreeSpeciesCount</td>
+                            <td class="mobile-hide">@(garden.LastMonitoringDate?.ToString("MM/dd/yyyy") ?? "Never")</td>
+                            <td class="mobile-hide">@garden.MonitoringSessionCount</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
     }
     else
     {
         <div class="alert alert-info">
-            <i class="fas fa-info-circle"></i> No monitoring sessions found matching the current filter.
+            <i class="fas fa-info-circle"></i> No gardens found matching the current filter.
         </div>
     }
 
-    @if (_applications != null && _applications.Any())
+    @if (_gardens.Any())
     {
-        <div class="card mt-4">
-            <div class="card-header">
-                <h5>Quick Actions</h5>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <h6>Applications Needing Monitoring</h6>
-                        @{
-                            var needsMonitoring = _applications.Where(a => a.Status == ApplicationStatus.Approved).ToList();
-                        }
-                        @if (needsMonitoring.Any())
-                        {
-                            @foreach (var app in needsMonitoring.Take(5))
-                            {
-                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <span>@app.BeneficiaryName (@app.Village)</span>
-                                    <ActionLink Action="Add" Parameters="@($"applicationId={app.ApplicationId}")" 
-                                               Text="Monitor" ResourceKey="Monitor" Class="btn btn-sm btn-outline-success" />
-                                </div>
-                            }
-                        }
-                        else
-                        {
-                            <p class="text-muted">No approved applications need monitoring.</p>
-                        }
+        <div class="row mt-4">
+            <div class="col-md-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">@_gardens.Count</h5>
+                        <p class="card-text">Total Gardens</p>
                     </div>
-                    <div class="col-md-6">
-                        <h6>Statistics</h6>
-                        <div class="row text-center">
-                            <div class="col-4">
-                                <div class="border rounded p-2">
-                                    <div class="h4 mb-0 text-primary">@_monitoringSessions.Count</div>
-                                    <small>Total Visits</small>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="border rounded p-2">
-                                    <div class="h4 mb-0 text-warning">@_monitoringSessions.Count(s => s.RequiresIntervention)</div>
-                                    <small>Need Action</small>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="border rounded p-2">
-                                    <div class="h4 mb-0 text-success">@_monitoringSessions.Count(s => !s.RequiresIntervention)</div>
-                                    <small>Healthy</small>
-                                </div>
-                            </div>
-                        </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">@_gardens.Where(g => g.RequiresAttention).Count()</h5>
+                        <p class="card-text">Need Attention</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">@_gardens.Sum(g => g.TotalTreesPlanted)</h5>
+                        <p class="card-text">Trees Planted</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">@_gardens.Sum(g => g.MonitoringSessionCount)</h5>
+                        <p class="card-text">Monitoring Sessions</p>
                     </div>
                 </div>
             </div>
@@ -172,85 +194,96 @@ else
         new Script(ModulePath() + "Module.js")
     };
 
-    List<MonitoringListItemVm> _monitoringSessions;
-    List<MonitoringListItemVm> _filteredSessions = new();
-    List<TreePlantingApplication> _applications;
-    string _applicationFilter = "";
-    string _problemFilter = "";
+    List<GardenListItemVm> _gardens;
+    List<GardenListItemVm> _filteredGardens = new();
+    List<string> _villages = new();
+    string _statusFilter = "";
+    string _villageFilter = "";
+    bool _showOnlyRequiresAttention = false;
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            // Load monitoring sessions using LINQ joins
-            _monitoringSessions = await MonitoringService.GetMonitoringSessionListItemsAsync();
-
-            // Load applications for filtering
-            _applications = await MonitoringService.GetApplicationsForMonitoringAsync();
-            
-            _filteredSessions = _monitoringSessions;
+            _gardens = await GardenService.GetGardenListItemsAsync();
+            _filteredGardens = _gardens;
+            _villages = _gardens.Where(g => !string.IsNullOrEmpty(g.Village))
+                              .Select(g => g.Village)
+                              .Distinct()
+                              .OrderBy(v => v)
+                              .ToList();
         }
         catch (Exception ex)
         {
-            await logger.LogError(ex, "Error Loading Monitoring Sessions {Error}", ex.Message);
+            await logger.LogError(ex, "Error Loading Gardens {Error}", ex.Message);
             AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
         }
     }
 
-    private async Task Delete(MonitoringListItemVm session)
+    private async Task Delete(GardenListItemVm garden)
     {
         try
         {
-            await MonitoringService.DeleteMonitoringSessionAsync(session.MonitoringSessionId);
-            await logger.LogInformation("Monitoring Session Deleted {SessionId}", session.MonitoringSessionId);
-            
-            // Reload sessions
-            await OnInitializedAsync();
+            await GardenService.DeleteGardenAsync(garden.GardenSiteId);
+            await logger.LogInformation("Garden Deleted {Garden}", garden);
+            _gardens = await GardenService.GetGardenListItemsAsync();
+            ApplyFilters();
             StateHasChanged();
         }
         catch (Exception ex)
         {
-            await logger.LogError(ex, "Error Deleting Monitoring Session {SessionId} {Error}", session.MonitoringSessionId, ex.Message);
+            await logger.LogError(ex, "Error Deleting Garden {Garden} {Error}", garden, ex.Message);
             AddModuleMessage(Localizer["Message.DeleteError"], MessageType.Error);
         }
     }
 
-    private void OnApplicationFilterChanged(ChangeEventArgs e)
+    private void OnStatusFilterChanged(ChangeEventArgs e)
     {
-        _applicationFilter = e.Value?.ToString() ?? "";
+        _statusFilter = e.Value?.ToString() ?? "";
         ApplyFilters();
     }
 
-    private void OnProblemFilterChanged(ChangeEventArgs e)
+    private void OnVillageFilterChanged(ChangeEventArgs e)
     {
-        _problemFilter = e.Value?.ToString() ?? "";
+        _villageFilter = e.Value?.ToString() ?? "";
         ApplyFilters();
     }
 
     private void ApplyFilters()
     {
-        var filtered = _monitoringSessions.AsEnumerable();
+        _filteredGardens = _gardens.ToList();
 
-        if (!string.IsNullOrEmpty(_applicationFilter) && int.TryParse(_applicationFilter, out var appId))
+        if (!string.IsNullOrEmpty(_statusFilter))
         {
-            filtered = filtered.Where(s => s.ApplicationId == appId);
+            if (Enum.TryParse<GardenStatus>(_statusFilter, out var status))
+            {
+                _filteredGardens = _filteredGardens.Where(g => g.Status == status).ToList();
+            }
         }
 
-        if (!string.IsNullOrEmpty(_problemFilter) && bool.TryParse(_problemFilter, out var needsIntervention))
+        if (!string.IsNullOrEmpty(_villageFilter))
         {
-            filtered = filtered.Where(s => s.RequiresIntervention == needsIntervention);
+            _filteredGardens = _filteredGardens.Where(g => g.Village == _villageFilter).ToList();
         }
 
-        _filteredSessions = filtered.ToList();
+        if (_showOnlyRequiresAttention)
+        {
+            _filteredGardens = _filteredGardens.Where(g => g.RequiresAttention).ToList();
+        }
+
+        _filteredGardens = _filteredGardens.ToList();
         StateHasChanged();
     }
 
-    private string GetSessionCardClass(MonitoringListItemVm session)
+    private string GetStatusBadgeClass(GardenStatus status) => status switch
     {
-        if (session.RequiresIntervention)
-            return "border-danger";
-        if (session.MortalityRate > 15)
-            return "border-warning";
-        return "border-success";
-    }
+        GardenStatus.Active => "bg-primary",
+        GardenStatus.Planted => "bg-success",
+        GardenStatus.UnderMonitoring => "bg-info",
+        GardenStatus.RequiresIntervention => "bg-warning text-dark",
+        GardenStatus.Successful => "bg-success",
+        GardenStatus.Failed => "bg-danger",
+        GardenStatus.Abandoned => "bg-secondary",
+        _ => "bg-secondary"
+    };
 }

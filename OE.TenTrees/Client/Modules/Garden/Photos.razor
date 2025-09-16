@@ -1,171 +1,376 @@
-@using OE.TenTrees.Services
+﻿@using OE.TenTrees.Services
 @using OE.TenTrees.Models
 
 @namespace OE.TenTrees.Garden
 @inherits ModuleBase
-@inject IMonitoringService MonitoringService
+@inject IGardenService GardenService
 @inject NavigationManager NavigationManager
 @inject IStringLocalizer<Photos> Localizer
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h4>Garden Photos - @_sessionInfo</h4>
-                <NavLink class="btn btn-secondary" href="@NavigateUrl()">
-                    <i class="fas fa-arrow-left"></i> Back to Monitoring
-                </NavLink>
-            </div>
+@if (_garden == null)
+{
+    <p><em>Loading garden...</em></p>
+}
+else
+{
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h3>Garden Photos - @_garden.BeneficiaryName</h3>
+            <p class="text-muted">@_garden.Village • Status: @_garden.Status</p>
+        </div>
+        <div class="btn-group">
+            <button type="button" class="btn btn-primary" @onclick="ShowAddPhotoModal">
+                <i class="fas fa-camera"></i> Add Photo
+            </button>
+            <NavLink class="btn btn-secondary" href="@NavigateUrl("Edit", $"id={_gardenId}")">
+                <i class="fas fa-arrow-left"></i> Back to Garden
+            </NavLink>
+        </div>
+    </div>
 
-            <div class="card">
-                <div class="card-header">
-                    <h5>Upload New Photo</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row mb-3">
-                        <div class="col-md-8">
-                            <input type="file" class="form-control" accept="image/*" @ref="fileInput" />
-                        </div>
-                        <div class="col-md-4">
-                            <button type="button" class="btn btn-primary w-100" @onclick="UploadPhoto">
-                                <i class="fas fa-upload"></i> Upload Photo
-                            </button>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-12">
-                            <input type="text" class="form-control" placeholder="Photo caption (optional)" @bind="@_newPhotoCaption" />
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <label>Filter by Type:</label>
+            <select class="form-select" @onchange="OnPhotoTypeFilterChanged">
+                <option value="">All Photos</option>
+                <option value="@GardenPhotoType.General">General</option>
+                <option value="@GardenPhotoType.SiteAssessment">Site Assessment</option>
+                <option value="@GardenPhotoType.Planting">Planting</option>
+                <option value="@GardenPhotoType.Monitoring">Monitoring</option>
+                <option value="@GardenPhotoType.Before">Before</option>
+                <option value="@GardenPhotoType.After">After</option>
+                <option value="@GardenPhotoType.Progress">Progress</option>
+                <option value="@GardenPhotoType.Issues">Issues</option>
+            </select>
+        </div>
+    </div>
 
-            @if (_photos == null)
+    @if (_filteredPhotos.Any())
+    {
+        <div class="row">
+            @foreach (var photo in _filteredPhotos)
             {
-                <p><em>Loading photos...</em></p>
-            }
-            else if (_photos.Any())
-            {
-                <div class="row mt-4">
-                    @foreach (var photo in _photos)
-                    {
-                        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-                            <div class="card">
-                                <img src="@photo.Url" class="card-img-top" style="height: 200px; object-fit: cover;" alt="@photo.Caption" />
-                                <div class="card-body">
-                                    @if (!string.IsNullOrEmpty(photo.Caption))
-                                    {
-                                        <p class="card-text">@photo.Caption</p>
-                                    }
-                                    <small class="text-muted">@photo.CreatedOn.ToString("MM/dd/yyyy HH:mm")</small>
-                                </div>
-                                <div class="card-footer">
-                                    <ActionDialog Header="Delete Photo" 
-                                                Message="Are you sure you wish to delete this photo?" 
-                                                Action="Delete" Security="SecurityAccessLevel.Edit" 
-                                                Class="btn btn-outline-danger btn-sm w-100" 
-                                                OnClick="@(async () => await DeletePhoto(photo))" 
-                                                ResourceKey="Delete" />
-                                </div>
+                <div class="col-md-4 col-lg-3 mb-4">
+                    <div class="card">
+                        @if (!string.IsNullOrEmpty(photo.Url))
+                        {
+                            <img src="@photo.Url" class="card-img-top garden-photo" alt="@photo.Caption" style="height: 200px; object-fit: cover;" />
+                        }
+                        else
+                        {
+                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                                <i class="fas fa-image fa-3x text-muted"></i>
+                            </div>
+                        }
+                        <div class="card-body">
+                            <h6 class="card-title">
+                                <span class="badge @GetPhotoTypeBadgeClass(photo.PhotoType)">@photo.PhotoType</span>
+                            </h6>
+                            @if(!string.IsNullOrEmpty(photo.Caption))
+                            {
+                                <p class="card-text">@photo.Caption</p>
+                            }
+                            <small class="text-muted">
+                                📅 @photo.PhotoDate.ToString("MM/dd/yyyy")
+                               @*  @if(!string.IsNullOrEmpty(photo.FileName))
+                                {
+                                    <br />
+                                    File: @photo.FileName
+                                }
+                                @if (photo.FileSize.HasValue)
+                                {
+                                    <br />Size: @FormatFileSize(photo.FileSize.Value)
+                                } *@
+                            </small>
+                        </div>
+                        <div class="card-footer">
+                            <div class="btn-group w-100">
+                                @if (!string.IsNullOrEmpty(photo.Url))
+                                {
+                                    <a href="@photo.Url" target="_blank" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-external-link-alt"></i> View
+                                    </a>
+                                }
+                                <button class="btn btn-sm btn-outline-info" @onclick="@(() => EditPhoto(photo))">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" @onclick="@(() => DeletePhoto(photo))">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
                             </div>
                         </div>
-                    }
-                </div>
-            }
-            else
-            {
-                <div class="alert alert-info mt-4">
-                    <i class="fas fa-camera"></i> No photos uploaded yet. Add photos to document the garden's progress.
+                    </div>
                 </div>
             }
         </div>
+    }
+    else
+    {
+        <div class="alert alert-info text-center">
+            <i class="fas fa-camera fa-3x mb-3"></i>
+            <h5>No Photos Yet</h5>
+            <p>No photos have been added to this garden. Click "Add Photo" to upload the first photo.</p>
+        </div>
+    }
+}
+
+<!-- Add/Edit Photo Modal -->
+@if (_showPhotoModal)
+{
+    <div class="modal fade show" style="display: block;" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@(_editingPhoto?.GardenPhotoId > 0 ? "Edit Photo" : "Add Photo")</h5>
+                    <button type="button" class="btn-close" @onclick="HidePhotoModal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="photoUrl" class="form-label">Photo URL:</label>
+                        <input type="url" id="photoUrl" class="form-control" @bind="@_photoUrl" placeholder="https://example.com/photo.jpg" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="photoCaption" class="form-label">Caption:</label>
+                        <textarea id="photoCaption" class="form-control" rows="3" @bind="@_photoCaption" placeholder="Describe what this photo shows..."></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="photoType" class="form-label">Photo Type:</label>
+                        <select id="photoType" class="form-select" @bind="@_photoType">
+                            <option value="@GardenPhotoType.General">General</option>
+                            <option value="@GardenPhotoType.SiteAssessment">Site Assessment</option>
+                            <option value="@GardenPhotoType.Planting">Planting</option>
+                            <option value="@GardenPhotoType.Monitoring">Monitoring</option>
+                            <option value="@GardenPhotoType.Before">Before</option>
+                            <option value="@GardenPhotoType.After">After</option>
+                            <option value="@GardenPhotoType.Progress">Progress</option>
+                            <option value="@GardenPhotoType.Issues">Issues</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="photoDate" class="form-label">Photo Date:</label>
+                        <input type="datetime-local" id="photoDate" class="form-control" @bind="@_photoDate" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="HidePhotoModal">Cancel</button>
+                    <button type="button" class="btn btn-primary" @onclick="SavePhoto" disabled="@string.IsNullOrWhiteSpace(_photoUrl)">
+                        <i class="fas fa-save"></i> Save Photo
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
+    <div class="modal-backdrop fade show"></div>
+}
 
 @code {
     public override SecurityAccessLevel SecurityAccessLevel => SecurityAccessLevel.Edit;
     public override string Actions => "Photos";
     public override string Title => "Garden Photos";
 
-    private int _monitoringSessionId;
-    private string _sessionInfo = "";
-    private List<MonitoringPhoto> _photos;
-    private string _newPhotoCaption = "";
-    private ElementReference fileInput;
+    private int _gardenId;
+    private GardenSite _garden;
+    private List<GardenPhoto> _photos = new();
+    private List<GardenPhoto> _filteredPhotos = new();
+    private string _photoTypeFilter = "";
+
+    // Modal state
+    private bool _showPhotoModal = false;
+    private GardenPhoto _editingPhoto;
+    private string _photoUrl = "";
+    private string _photoCaption = "";
+    private GardenPhotoType _photoType = GardenPhotoType.General;
+    private DateTime _photoDate = DateTime.Now;
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            _monitoringSessionId = Int32.Parse(PageState.QueryString["id"]);
-            
-            // Load session info for display
-            var session = await MonitoringService.GetMonitoringSessionAsync(_monitoringSessionId);
-            if (session != null)
-            {
-                _sessionInfo = $"{session.BeneficiaryName} - {session.SessionDate:MM/dd/yyyy}";
-            }
-
-            // Load photos
+            _gardenId = Int32.Parse(PageState.QueryString["gardenId"]);
+            _garden = await GardenService.GetGardenAsync(_gardenId);
             await LoadPhotos();
         }
         catch (Exception ex)
         {
-            await logger.LogError(ex, "Error Loading Photos {SessionId} {Error}", _monitoringSessionId, ex.Message);
+            await logger.LogError(ex, "Error Loading Garden Photos {GardenId} {Error}", _gardenId, ex.Message);
             AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
         }
     }
 
     private async Task LoadPhotos()
     {
-        _photos = await MonitoringService.GetMonitoringPhotosAsync(_monitoringSessionId);
+        _photos = await GardenService.GetGardenPhotosAsync(_gardenId);
+        ApplyPhotoFilter();
+    }
+
+    private void OnPhotoTypeFilterChanged(ChangeEventArgs e)
+    {
+        _photoTypeFilter = e.Value?.ToString() ?? "";
+        ApplyPhotoFilter();
+    }
+
+    private void ApplyPhotoFilter()
+    {
+        _filteredPhotos = _photos.ToList();
+
+        if (!string.IsNullOrEmpty(_photoTypeFilter))
+        {
+            if (Enum.TryParse<GardenPhotoType>(_photoTypeFilter, out var photoType))
+            {
+                _filteredPhotos = _filteredPhotos.Where(p => p.PhotoType == photoType).ToList();
+            }
+        }
+
+        _filteredPhotos = _filteredPhotos.OrderByDescending(p => p.PhotoDate).ToList();
         StateHasChanged();
     }
 
-    private async Task UploadPhoto()
+    private void ShowAddPhotoModal()
+    {
+        _editingPhoto = null;
+        _photoUrl = "";
+        _photoCaption = "";
+        _photoType = GardenPhotoType.General;
+        _photoDate = DateTime.Now;
+        _showPhotoModal = true;
+    }
+
+    private void EditPhoto(GardenPhoto photo)
+    {
+        _editingPhoto = photo;
+        _photoUrl = photo.Url ?? "";
+        _photoCaption = photo.Caption ?? "";
+        _photoType = photo.PhotoType;
+        _photoDate = photo.PhotoDate;
+        _showPhotoModal = true;
+    }
+
+    private void HidePhotoModal()
+    {
+        _showPhotoModal = false;
+    }
+
+    private async Task SavePhoto()
     {
         try
         {
-            // In a real implementation, you would handle file upload here
-            // For now, we'll create a placeholder photo entry
-            var photo = new MonitoringPhoto
+            if (_editingPhoto?.GardenPhotoId > 0)
             {
-                MonitoringSessionId = _monitoringSessionId,
-                Caption = _newPhotoCaption,
-                Url = "/images/placeholder-garden.jpg", // Placeholder - would be actual uploaded file path
-                FileName = "garden-photo.jpg",
-                ContentType = "image/jpeg",
-                FileSize = 0
-            };
+                // Update existing photo
+                _editingPhoto.Url = _photoUrl;
+                _editingPhoto.Caption = _photoCaption;
+                _editingPhoto.PhotoType = _photoType;
+                _editingPhoto.PhotoDate = _photoDate;
 
-            await MonitoringService.AddMonitoringPhotoAsync(photo);
-            await logger.LogInformation("Photo Added to Monitoring Session {SessionId}", _monitoringSessionId);
-            
-            _newPhotoCaption = "";
+                // Note: UpdateGardenPhotoAsync would need to be implemented in the service
+                // For now, we'll delete and recreate
+                await GardenService.DeleteGardenPhotoAsync(_editingPhoto.GardenPhotoId);
+                
+                var newPhoto = new GardenPhoto
+                {
+                    GardenSiteId = _gardenId,
+                    Url = _photoUrl,
+                    Caption = _photoCaption,
+                    PhotoType = _photoType,
+                    PhotoDate = _photoDate,
+                    FileName = ExtractFileNameFromUrl(_photoUrl),
+                    ContentType = GuessContentTypeFromUrl(_photoUrl)
+                };
+
+                await GardenService.AddGardenPhotoAsync(newPhoto);
+                await logger.LogInformation("Garden Photo Updated {PhotoId}", _editingPhoto.GardenPhotoId);
+                AddModuleMessage("Photo updated successfully", MessageType.Success);
+            }
+            else
+            {
+                // Add new photo
+                var photo = new GardenPhoto
+                {
+                    GardenSiteId = _gardenId,
+                    Url = _photoUrl,
+                    Caption = _photoCaption,
+                    PhotoType = _photoType,
+                    PhotoDate = _photoDate,
+                    FileName = ExtractFileNameFromUrl(_photoUrl),
+                    ContentType = GuessContentTypeFromUrl(_photoUrl)
+                };
+
+                await GardenService.AddGardenPhotoAsync(photo);
+                await logger.LogInformation("Garden Photo Added {Photo}", photo);
+                AddModuleMessage("Photo added successfully", MessageType.Success);
+            }
+
+            _showPhotoModal = false;
             await LoadPhotos();
-            AddModuleMessage("Photo uploaded successfully", MessageType.Success);
         }
         catch (Exception ex)
         {
-            await logger.LogError(ex, "Error Uploading Photo {Error}", ex.Message);
-            AddModuleMessage("Error uploading photo", MessageType.Error);
+            await logger.LogError(ex, "Error Saving Garden Photo {Error}", ex.Message);
+            AddModuleMessage(Localizer["Message.SaveError"], MessageType.Error);
         }
     }
 
-    private async Task DeletePhoto(MonitoringPhoto photo)
+    private async Task DeletePhoto(GardenPhoto photo)
     {
         try
         {
-            await MonitoringService.DeleteMonitoringPhotoAsync(photo.MonitoringPhotoId);
-            await logger.LogInformation("Photo Deleted {PhotoId}", photo.MonitoringPhotoId);
-            
-            await LoadPhotos();
+            await GardenService.DeleteGardenPhotoAsync(photo.GardenPhotoId);
+            await logger.LogInformation("Garden Photo Deleted {PhotoId}", photo.GardenPhotoId);
             AddModuleMessage("Photo deleted successfully", MessageType.Success);
+            await LoadPhotos();
         }
         catch (Exception ex)
         {
-            await logger.LogError(ex, "Error Deleting Photo {PhotoId} {Error}", photo.MonitoringPhotoId, ex.Message);
-            AddModuleMessage("Error deleting photo", MessageType.Error);
+            await logger.LogError(ex, "Error Deleting Garden Photo {PhotoId} {Error}", photo.GardenPhotoId, ex.Message);
+            AddModuleMessage(Localizer["Message.DeleteError"], MessageType.Error);
         }
+    }
+
+    private string GetPhotoTypeBadgeClass(GardenPhotoType photoType) => photoType switch
+    {
+        GardenPhotoType.General => "bg-secondary",
+        GardenPhotoType.SiteAssessment => "bg-primary",
+        GardenPhotoType.Planting => "bg-success",
+        GardenPhotoType.Monitoring => "bg-info",
+        GardenPhotoType.Before => "bg-warning text-dark",
+        GardenPhotoType.After => "bg-success",
+        GardenPhotoType.Progress => "bg-info",
+        GardenPhotoType.Issues => "bg-danger",
+        _ => "bg-secondary"
+    };
+
+    private string FormatFileSize(int bytes)
+    {
+        if (bytes < 1024) return $"{bytes} B";
+        if (bytes < 1024 * 1024) return $"{bytes / 1024} KB";
+        return $"{bytes / (1024 * 1024)} MB";
+    }
+
+    private string ExtractFileNameFromUrl(string url)
+    {
+        if (string.IsNullOrEmpty(url)) return "";
+        try
+        {
+            var uri = new Uri(url);
+            return System.IO.Path.GetFileName(uri.LocalPath);
+        }
+        catch
+        {
+            return "";
+        }
+    }
+
+    private string GuessContentTypeFromUrl(string url)
+    {
+        if (string.IsNullOrEmpty(url)) return "";
+        var extension = System.IO.Path.GetExtension(url).ToLowerInvariant();
+        return extension switch
+        {
+            ".jpg" or ".jpeg" => "image/jpeg",
+            ".png" => "image/png",
+            ".gif" => "image/gif",
+            ".webp" => "image/webp",
+            _ => "image/jpeg"
+        };
     }
 }

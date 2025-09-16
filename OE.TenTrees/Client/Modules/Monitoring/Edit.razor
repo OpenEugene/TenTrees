@@ -1,0 +1,690 @@
+@using Oqtane.Modules.Controls
+@using OE.TenTrees.Services
+@using OE.TenTrees.Models
+
+@namespace OE.TenTrees.Monitoring
+@inherits ModuleBase
+@inject IMonitoringService MonitoringService
+@inject IApplicationService ApplicationService
+@inject NavigationManager NavigationManager
+@inject IStringLocalizer<Edit> Localizer
+
+<form @ref="form" class="@(validated ? " was-validated" : "needs-validation") monitoring-form" novalidate>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>@(PageState.Action == "Add" ? "New Monitoring Visit" : "Edit Monitoring Visit")</h4>
+                    </div>
+                    <div class="card-body">
+                        <!-- Basic Information -->
+                        <div class="row mb-3">
+                            <div class="col-sm-12 col-md-3">
+                                <Label For="sessionDate" HelpText="Date of monitoring visit" ResourceKey="SessionDate">Visit Date: </Label>
+                            </div>
+                            <div class="col-sm-12 col-md-9">
+                                <input id="sessionDate" type="date" class="form-control" @bind="@_sessionDate" required />
+                            </div>
+                        </div>
+
+                        @if (PageState.Action == "Add")
+                        {
+                            <div class="row mb-3">
+                                <div class="col-sm-12 col-md-3">
+                                    <Label For="applicationSelect" HelpText="Select application to monitor" ResourceKey="Application">Garden/Application: </Label>
+                                </div>
+                                <div class="col-sm-12 col-md-9">
+                                    <select id="applicationSelect" class="form-select" @bind="@ApplicationId" required>
+                                        <option value="">Select a garden...</option>
+                                        @if (_applications != null)
+                                        {
+                                            @foreach (var app in _applications)
+                                            {
+                                                <option value="@app.ApplicationId">@app.BeneficiaryName - @app.Village (@app.EvaluatorName)</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        }
+
+                        <!-- Evaluator Information (from form image) -->
+                        <div class="row mb-3">
+                            <div class="col-sm-12 col-md-3">
+                                <Label For="evaluatorName" HelpText="Evaluator's name/Vito ra mukambon" ResourceKey="EvaluatorName">Evaluator Name: </Label>
+                            </div>
+                            <div class="col-sm-12 col-md-9">
+                                <input id="evaluatorName" class="form-control" @bind="@_evaluatorName" required />
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-sm-12 col-md-3">
+                                <Label For="beneficiaryName" HelpText="Beneficiary's name/Vito ra mu amudul" ResourceKey="BeneficiaryName">Beneficiary Name: </Label>
+                            </div>
+                            <div class="col-sm-12 col-md-9">
+                                <input id="beneficiaryName" class="form-control" @bind="@_beneficiaryName" required />
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-sm-12 col-md-6">
+                                <Label For="houseNumber" HelpText="House Number/Nombero ya jindu" ResourceKey="HouseNumber">House Number: </Label>
+                                <input id="houseNumber" class="form-control" @bind="@_houseNumber" />
+                            </div>
+                            <div class="col-sm-12 col-md-6">
+                                <Label For="idOrBirthdate" HelpText="ID number or birthdate" ResourceKey="IdOrBirthdate">ID/Birthdate: </Label>
+                                <input id="idOrBirthdate" class="form-control" @bind="@_idOrBirthdate" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mapping Information (from form image) -->
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h5>Mapping Information / Swa ineno</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-8">
+                                <strong>Do you have water in the plot? / Kuna mati ka muli ye lowo?</strong>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="btn-group w-100" role="group">
+                                    <input type="radio" class="btn-check" name="hasWater" id="hasWaterYes" value="true" @onchange="@(() => _hasWaterInPlot = true)" checked="@(_hasWaterInPlot == true)" />
+                                    <label class="btn btn-outline-success" for="hasWaterYes">Yes / Ira</label>
+                                    <input type="radio" class="btn-check" name="hasWater" id="hasWaterNo" value="false" @onchange="@(() => _hasWaterInPlot = false)" checked="@(_hasWaterInPlot == false)" />
+                                    <label class="btn btn-outline-danger" for="hasWaterNo">No / Ee</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-8">
+                                <strong>Is there any water catchment system? / Jojo tanki? Kuna xo khoma mati ku fana na thanki?</strong>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="btn-group w-100" role="group">
+                                    <input type="radio" class="btn-check" name="hasCatchment" id="hasCatchmentYes" value="true" @onchange="@(() => _hasWaterCatchmentSystem = true)" checked="@(_hasWaterCatchmentSystem == true)" />
+                                    <label class="btn btn-outline-success" for="hasCatchmentYes">Yes / Ira</label>
+                                    <input type="radio" class="btn-check" name="hasCatchment" id="hasCatchmentNo" value="false" @onchange="@(() => _hasWaterCatchmentSystem = false)" checked="@(_hasWaterCatchmentSystem == false)" />
+                                    <label class="btn btn-outline-danger" for="hasCatchmentNo">No / Ee</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tree Counting (from form image) -->
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h5>Tree Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <Label For="existingTrees" HelpText="Number of existing trees/productive plants in the yard" ResourceKey="ExistingTrees">Existing Trees/Plants: </Label>
+                                <input id="existingTrees" type="number" class="form-control" @bind="@_numberOfExistingTrees" min="0" />
+                            </div>
+                            <div class="col-md-4">
+                                <Label For="indigenousTrees" HelpText="Number of indigenous trees" ResourceKey="IndigenousTrees">Indigenous Trees: </Label>
+                                <input id="indigenousTrees" type="number" class="form-control" @bind="@_numberOfIndigenousTrees" min="0" />
+                            </div>
+                            <div class="col-md-4">
+                                <Label For="fruitNutTrees" HelpText="Number of fruit and nut trees" ResourceKey="FruitNutTrees">Fruit/Nut Trees: </Label>
+                                <input id="fruitNutTrees" type="number" class="form-control" @bind="@_numberOfFruitNutTrees" min="0" />
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-8">
+                                <strong>Is there space for more trees? / Kuna ndawu ya ku engenda misinva?</strong>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="btn-group w-100" role="group">
+                                    <input type="radio" class="btn-check" name="hasSpace" id="hasSpaceYes" value="true" @onchange="@(() => _hasSpaceForMoreTrees = true)" checked="@(_hasSpaceForMoreTrees == true)" />
+                                    <label class="btn btn-outline-success" for="hasSpaceYes">Yes / Ira</label>
+                                    <input type="radio" class="btn-check" name="hasSpace" id="hasSpaceNo" value="false" @onchange="@(() => _hasSpaceForMoreTrees = false)" checked="@(_hasSpaceForMoreTrees == false)" />
+                                    <label class="btn btn-outline-danger" for="hasSpaceNo">No / Ee</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-8">
+                                <strong>Is the property fenced? / Ndawu yi pfafariwie hi darahi?</strong>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="btn-group w-100" role="group">
+                                    <input type="radio" class="btn-check" name="isFenced" id="isFencedYes" value="true" @onchange="@(() => _isPropertyFenced = true)" checked="@(_isPropertyFenced == true)" />
+                                    <label class="btn btn-outline-success" for="isFencedYes">Yes / Ira</label>
+                                    <input type="radio" class="btn-check" name="isFenced" id="isFencedNo" value="false" @onchange="@(() => _isPropertyFenced = false)" checked="@(_isPropertyFenced == false)" />
+                                    <label class="btn btn-outline-danger" for="isFencedNo">No / Ee</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-8">
+                                <strong>Are there any resources like compost or mulch that can be used for tree planting? / Kuna swimani leswi nga pfumelaka hi ku byala misinva, ku fana na manyora?</strong>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="btn-group w-100" role="group">
+                                    <input type="radio" class="btn-check" name="hasResources" id="hasResourcesYes" value="true" @onchange="@(() => _hasCompostOrMulchResources = true)" checked="@(_hasCompostOrMulchResources == true)" />
+                                    <label class="btn btn-outline-success" for="hasResourcesYes">Yes / Ira</label>
+                                    <input type="radio" class="btn-check" name="hasResources" id="hasResourcesNo" value="false" @onchange="@(() => _hasCompostOrMulchResources = false)" checked="@(_hasCompostOrMulchResources == false)" />
+                                    <label class="btn btn-outline-danger" for="hasResourcesNo">No / Ee</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Monitoring Data (from feature requirements) -->
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h5>Tree Health Monitoring</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <Label For="treesPlanted" HelpText="Total number of trees planted" ResourceKey="TreesPlanted">Trees Planted: </Label>
+                                <input id="treesPlanted" type="number" class="form-control" @bind="@_treesPlanted" min="0" />
+                            </div>
+                            <div class="col-md-6">
+                                <Label For="treesAlive" HelpText="Number of trees still alive" ResourceKey="TreesAlive">Trees Still Alive: </Label>
+                                <input id="treesAlive" type="number" class="form-control" @bind="@_treesAlive" min="0" />
+                            </div>
+                        </div>
+
+                        @if (_treesPlanted > 0 && _treesAlive.HasValue)
+                        {
+                            <div class="alert alert-info">
+                                <strong>Mortality Rate:</strong> @(CalculateMortalityRate().ToString("F1"))%
+                                @if (CalculateMortalityRate() > 30)
+                                {
+                                    <span class="text-danger"> - High mortality detected!</span>
+                                }
+                            </div>
+                        }
+
+                        <div class="row mb-3">
+                            <div class="col-md-8">
+                                <strong>Do trees look healthy?</strong>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="btn-group w-100" role="group">
+                                    <input type="radio" class="btn-check" name="treesHealthy" id="treesHealthyYes" value="true" @onchange="@(() => _treesLookingHealthy = true)" checked="@(_treesLookingHealthy == true)" />
+                                    <label class="btn btn-outline-success" for="treesHealthyYes">Yes</label>
+                                    <input type="radio" class="btn-check" name="treesHealthy" id="treesHealthyNo" value="false" @onchange="@(() => _treesLookingHealthy = false)" checked="@(_treesLookingHealthy == false)" />
+                                    <label class="btn btn-outline-danger" for="treesHealthyNo">No</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-8">
+                                <strong>Using chemical fertilizers?</strong>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="btn-group w-100" role="group">
+                                    <input type="radio" class="btn-check" name="chemicalFertilizers" id="chemicalFertilizersYes" value="true" @onchange="@(() => _usingChemicalFertilizers = true)" checked="@(_usingChemicalFertilizers == true)" />
+                                    <label class="btn btn-outline-danger" for="chemicalFertilizersYes">Yes</label>
+                                    <input type="radio" class="btn-check" name="chemicalFertilizers" id="chemicalFertilizersNo" value="false" @onchange="@(() => _usingChemicalFertilizers = false)" checked="@(_usingChemicalFertilizers == false)" />
+                                    <label class="btn btn-outline-success" for="chemicalFertilizersNo">No</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-8">
+                                <strong>Using pesticides?</strong>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="btn-group w-100" role="group">
+                                    <input type="radio" class="btn-check" name="pesticides" id="pesticidesYes" value="true" @onchange="@(() => _usingPesticides = true)" checked="@(_usingPesticides == true)" />
+                                    <label class="btn btn-outline-danger" for="pesticidesYes">Yes</label>
+                                    <input type="radio" class="btn-check" name="pesticides" id="pesticidesNo" value="false" @onchange="@(() => _usingPesticides = false)" checked="@(_usingPesticides == false)" />
+                                    <label class="btn btn-outline-success" for="pesticidesNo">No</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-8">
+                                <strong>Are trees being mulched?</strong>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="btn-group w-100" role="group">
+                                    <input type="radio" class="btn-check" name="mulched" id="mulchedYes" value="true" @onchange="@(() => _treesBeingMulched = true)" checked="@(_treesBeingMulched == true)" />
+                                    <label class="btn btn-outline-success" for="mulchedYes">Yes</label>
+                                    <input type="radio" class="btn-check" name="mulched" id="mulchedNo" value="false" @onchange="@(() => _treesBeingMulched = false)" checked="@(_treesBeingMulched == false)" />
+                                    <label class="btn btn-outline-danger" for="mulchedNo">No</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-8">
+                                <strong>Making compost?</strong>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="btn-group w-100" role="group">
+                                    <input type="radio" class="btn-check" name="compost" id="compostYes" value="true" @onchange="@(() => _makingCompost = true)" checked="@(_makingCompost == true)" />
+                                    <label class="btn btn-outline-success" for="compostYes">Yes</label>
+                                    <input type="radio" class="btn-check" name="compost" id="compostNo" value="false" @onchange="@(() => _makingCompost = false)" checked="@(_makingCompost == false)" />
+                                    <label class="btn btn-outline-danger" for="compostNo">No</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-8">
+                                <strong>Collecting water?</strong>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="btn-group w-100" role="group">
+                                    <input type="radio" class="btn-check" name="waterCollection" id="waterCollectionYes" value="true" @onchange="@(() => _collectingWater = true)" checked="@(_collectingWater == true)" />
+                                    <label class="btn btn-outline-success" for="waterCollectionYes">Yes</label>
+                                    <input type="radio" class="btn-check" name="waterCollection" id="waterCollectionNo" value="false" @onchange="@(() => _collectingWater = false)" checked="@(_collectingWater == false)" />
+                                    <label class="btn btn-outline-danger" for="waterCollectionNo">No</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Problems and Notes -->
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h5>Problems and Recommendations</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <Label For="problems" HelpText="Describe any problems identified" ResourceKey="Problems">Problems Identified: </Label>
+                                <textarea id="problems" class="form-control" rows="3" @bind="@_problemsIdentified" placeholder="Describe any issues with trees, site conditions, or other problems..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <Label For="intervention" HelpText="What intervention is needed?" ResourceKey="Intervention">Intervention Needed: </Label>
+                                <textarea id="intervention" class="form-control" rows="3" @bind="@_interventionNeeded" placeholder="Describe recommended actions, follow-up needed, or support required..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <Label For="notes" HelpText="Additional notes and observations" ResourceKey="Notes">Additional Notes: </Label>
+                                <textarea id="notes" class="form-control" rows="4" @bind="@_notes" placeholder="Additional observations, weather conditions, beneficiary feedback..."></textarea>
+                            </div>
+                        </div>
+
+                        @if (_treesPlanted > 0 && _treesAlive.HasValue && _treesAlive < _treesPlanted)
+                        {
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <Label For="mortalityReason" HelpText="What caused tree mortality?" ResourceKey="MortalityReason">Mortality Reason: </Label>
+                                    <input id="mortalityReason" class="form-control" @bind="@_mortalityReason" placeholder="e.g., drought, wind damage, pests, disease..." />
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Status and Actions Sidebar -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Monitoring Summary</h5>
+                    </div>
+                    <div class="card-body">
+                        @if (!string.IsNullOrEmpty(_beneficiaryName))
+                        {
+                            <p><strong>Garden:</strong> @_beneficiaryName</p>
+                        }
+                        @if (!string.IsNullOrEmpty(_evaluatorName))
+                        {
+                            <p><strong>Evaluator:</strong> @_evaluatorName</p>
+                        }
+                        <p><strong>Visit Date:</strong> @_sessionDate.ToString("MM/dd/yyyy")</p>
+
+                        @if (_treesPlanted > 0)
+                        {
+                            <hr />
+                            <h6>Tree Status</h6>
+                            <p><strong>Planted:</strong> @_treesPlanted</p>
+                            <p><strong>Alive:</strong> @_treesAlive</p>
+                            @if (_treesAlive.HasValue)
+                            {
+                                <p><strong>Mortality:</strong> @CalculateMortalityRate().ToString("F1")%</p>
+                                @if (CalculateMortalityRate() > 30)
+                                {
+                                    <div class="alert alert-danger alert-sm py-1 px-2">
+                                        <small><i class="fas fa-exclamation-triangle"></i> High mortality rate!</small>
+                                    </div>
+                                }
+                            }
+                        }
+
+                        @if (RequiresIntervention())
+                        {
+                            <div class="alert alert-warning alert-sm py-1 px-2 mt-2">
+                                <small><i class="fas fa-exclamation-triangle"></i> Intervention may be needed</small>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                @if (PageState.Action == "Edit")
+                {
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h6>Audit Information</h6>
+                        </div>
+                        <div class="card-body">
+                            <AuditInfo CreatedBy="@_createdby" CreatedOn="@_createdon" ModifiedBy="@_modifiedby" ModifiedOn="@_modifiedon"></AuditInfo>
+                        </div>
+                    </div>
+                }
+
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h6>Photos</h6>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted small">Photo upload functionality will be available after saving the monitoring session.</p>
+                        @if (PageState.Action == "Edit")
+                        {
+                            <ActionLink Action="Photos" Parameters="@($"id={_monitoringSessionId}")" 
+                                       Text="Manage Photos" ResourceKey="Photos" Class="btn btn-outline-info btn-sm w-100" />
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="d-flex gap-2 justify-content-center">
+                    <button type="button" class="btn btn-success" @onclick="SaveMonitoringSession">
+                        <i class="fas fa-save"></i> Save Monitoring Report
+                    </button>
+                    
+                    <NavLink class="btn btn-secondary" href="@NavigateUrl()">
+                        <i class="fas fa-arrow-left"></i> @Localizer["Cancel"]
+                    </NavLink>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@code {
+    public override SecurityAccessLevel SecurityAccessLevel => SecurityAccessLevel.Edit;
+    public override string Actions => "Add,Edit,Photos";
+    public override string Title => "Garden Monitoring";
+
+    public override List<Resource> Resources => new List<Resource>()
+    {
+        new Stylesheet(ModulePath() + "Module.css")
+    };
+
+    private ElementReference form;
+    private bool validated = false;
+
+    // Basic fields
+    private int _monitoringSessionId;
+    private int _applicationId;
+    private int ApplicationId 
+    { 
+        get => _applicationId; 
+        set 
+        { 
+            _applicationId = value; 
+            _ = OnApplicationChanged(); 
+        } 
+    }
+    private DateTime _sessionDate = DateTime.Today;
+    private string _evaluatorName = "";
+    private string _beneficiaryName = "";
+    private string _houseNumber = "";
+    private string _idOrBirthdate = "";
+    private string _notes = "";
+
+    // Mapping information
+    private bool? _hasWaterInPlot;
+    private bool? _hasWaterCatchmentSystem;
+
+    // Tree information
+    private int? _numberOfExistingTrees;
+    private int? _numberOfIndigenousTrees;
+    private int? _numberOfFruitNutTrees;
+    private bool? _hasSpaceForMoreTrees;
+    private bool? _isPropertyFenced;
+    private bool? _hasCompostOrMulchResources;
+
+    // Tree health monitoring
+    private int? _treesPlanted;
+    private int? _treesAlive;
+    private bool? _treesLookingHealthy;
+    private bool? _usingChemicalFertilizers;
+    private bool? _usingPesticides;
+    private bool? _treesBeingMulched;
+    private bool? _makingCompost;
+    private bool? _collectingWater;
+
+    // Problems and intervention
+    private string _problemsIdentified = "";
+    private string _interventionNeeded = "";
+    private string _mortalityReason = "";
+
+    // Audit fields
+    private string _createdby = "";
+    private DateTime _createdon;
+    private string _modifiedby = "";
+    private DateTime _modifiedon;
+
+    // Supporting data
+    private List<TreePlantingApplication> _applications;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            // Add debugging to see what we're loading
+            await logger.LogInformation("Garden Edit OnInitializedAsync: Action = {Action}", PageState.Action);
+
+            // Load applications for selection
+            _applications = await MonitoringService.GetApplicationsForMonitoringAsync();
+
+            // Add debugging to see how many applications were returned
+            await logger.LogInformation("Garden Edit: Found {ApplicationCount} applications for monitoring", _applications?.Count ?? 0);
+
+            if (_applications != null && _applications.Any())
+            {
+                foreach (var app in _applications)
+                {
+                    await logger.LogInformation("Application: {ApplicationId} - {BeneficiaryName} - Status: {Status}", 
+                        app.ApplicationId, app.BeneficiaryName, app.Status);
+                }
+            }
+
+            if (PageState.Action == "Edit")
+            {
+                _monitoringSessionId = Int32.Parse(PageState.QueryString["id"]);
+                var session = await MonitoringService.GetMonitoringSessionAsync(_monitoringSessionId);
+                if (session != null)
+                {
+                    LoadSessionData(session);
+                }
+            }
+            else if (PageState.Action == "Add" && PageState.QueryString.ContainsKey("applicationId"))
+            {
+                _applicationId = Int32.Parse(PageState.QueryString["applicationId"]);
+                await OnApplicationChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Loading Monitoring Session {SessionId} {Error}", _monitoringSessionId, ex.Message);
+            AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
+        }
+    }
+
+    private void LoadSessionData(MonitoringSession session)
+    {
+        _applicationId = session.ApplicationId;
+        _sessionDate = session.SessionDate;
+        _evaluatorName = session.EvaluatorName ?? "";
+        _beneficiaryName = session.BeneficiaryName ?? "";
+        _houseNumber = session.HouseNumber ?? "";
+        _idOrBirthdate = session.IdOrBirthdate ?? "";
+        _notes = session.Notes ?? "";
+
+        _hasWaterInPlot = session.HasWaterInPlot;
+        _hasWaterCatchmentSystem = session.HasWaterCatchmentSystem;
+
+        _numberOfExistingTrees = session.NumberOfExistingTrees;
+        _numberOfIndigenousTrees = session.NumberOfIndigenousTrees;
+        _numberOfFruitNutTrees = session.NumberOfFruitNutTrees;
+        _hasSpaceForMoreTrees = session.HasSpaceForMoreTrees;
+        _isPropertyFenced = session.IsPropertyFenced;
+        _hasCompostOrMulchResources = session.HasCompostOrMulchResources;
+
+        _treesPlanted = session.TreesPlanted;
+        _treesAlive = session.TreesAlive;
+        _treesLookingHealthy = session.TreesLookingHealthy;
+        _usingChemicalFertilizers = session.UsingChemicalFertilizers;
+        _usingPesticides = session.UsingPesticides;
+        _treesBeingMulched = session.TreesBeingMulched;
+        _makingCompost = session.MakingCompost;
+        _collectingWater = session.CollectingWater;
+
+        _problemsIdentified = session.ProblemsIdentified ?? "";
+        _interventionNeeded = session.InterventionNeeded ?? "";
+        _mortalityReason = session.MortalityReason ?? "";
+
+        _createdby = session.CreatedBy ?? "";
+        _createdon = session.CreatedOn;
+        _modifiedby = session.ModifiedBy ?? "";
+        _modifiedon = session.ModifiedOn;
+    }
+
+    private async Task OnApplicationChanged()
+    {
+        if (_applicationId > 0)
+        {
+            var application = _applications?.FirstOrDefault(a => a.ApplicationId == _applicationId);
+            if (application != null)
+            {
+                _beneficiaryName = application.BeneficiaryName ?? "";
+                _evaluatorName = application.EvaluatorName ?? "";
+                StateHasChanged();
+            }
+        }
+    }
+
+    private MonitoringSession CreateSessionFromForm() => new MonitoringSession
+		{
+			MonitoringSessionId = _monitoringSessionId,
+			ApplicationId = _applicationId,
+			ModuleId = ModuleState.ModuleId,
+			SessionDate = _sessionDate,
+			EvaluatorName = _evaluatorName,
+			BeneficiaryName = _beneficiaryName,
+			HouseNumber = _houseNumber,
+			IdOrBirthdate = _idOrBirthdate,
+			Notes = _notes,
+
+			HasWaterInPlot = _hasWaterInPlot,
+			HasWaterCatchmentSystem = _hasWaterCatchmentSystem,
+
+			NumberOfExistingTrees = _numberOfExistingTrees,
+			NumberOfIndigenousTrees = _numberOfIndigenousTrees,
+			NumberOfFruitNutTrees = _numberOfFruitNutTrees,
+			HasSpaceForMoreTrees = _hasSpaceForMoreTrees,
+			IsPropertyFenced = _isPropertyFenced,
+			HasCompostOrMulchResources = _hasCompostOrMulchResources,
+
+			TreesPlanted = _treesPlanted,
+			TreesAlive = _treesAlive,
+			TreesLookingHealthy = _treesLookingHealthy,
+			UsingChemicalFertilizers = _usingChemicalFertilizers,
+			UsingPesticides = _usingPesticides,
+			TreesBeingMulched = _treesBeingMulched,
+			MakingCompost = _makingCompost,
+			CollectingWater = _collectingWater,
+
+			ProblemsIdentified = _problemsIdentified,
+			InterventionNeeded = _interventionNeeded,
+			MortalityReason = _mortalityReason,
+            MortalityRate = (decimal?)CalculateMortalityRate()
+		};
+
+    private async Task SaveMonitoringSession()
+    {
+        try
+        {
+            validated = true;
+
+            // Basic validation
+            if (_applicationId <= 0)
+            {
+                AddModuleMessage("Please select a garden/application to monitor", MessageType.Warning);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(_beneficiaryName))
+            {
+                AddModuleMessage("Beneficiary name is required", MessageType.Warning);
+                return;
+            }
+
+            var session = CreateSessionFromForm();
+
+            if (PageState.Action == "Add")
+            {
+                session = await MonitoringService.AddMonitoringSessionAsync(session);
+                await logger.LogInformation("Monitoring Session Added {Session}", session);
+                AddModuleMessage("Monitoring session saved successfully", MessageType.Success);
+            }
+            else
+            {
+                session = await MonitoringService.UpdateMonitoringSessionAsync(session);
+                await logger.LogInformation("Monitoring Session Updated {Session}", session);
+                AddModuleMessage("Monitoring session updated successfully", MessageType.Success);
+            }
+
+            NavigationManager.NavigateTo(NavigateUrl());
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Saving Monitoring Session {Error}", ex.Message);
+            AddModuleMessage(Localizer["Message.SaveError"], MessageType.Error);
+        }
+    }
+
+    private double CalculateMortalityRate()
+    {
+        if (_treesPlanted.HasValue && _treesPlanted > 0 && _treesAlive.HasValue)
+        {
+            var dead = _treesPlanted.Value - _treesAlive.Value;
+            return (double)dead / _treesPlanted.Value * 100;
+        }
+        return 0;
+    }
+
+    private bool RequiresIntervention()
+    {
+        return CalculateMortalityRate() > 30 ||
+               _treesLookingHealthy == false ||
+               !string.IsNullOrEmpty(_problemsIdentified) ||
+               !string.IsNullOrEmpty(_interventionNeeded);
+    }
+}

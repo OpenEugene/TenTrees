@@ -1,0 +1,256 @@
+@using OE.TenTrees.Services
+@using OE.TenTrees.Models
+
+@namespace OE.TenTrees.Monitoring
+@inherits ModuleBase
+@inject IMonitoringService MonitoringService
+@inject IApplicationService ApplicationService
+@inject NavigationManager NavigationManager
+@inject IStringLocalizer<Index> Localizer
+
+@if (_monitoringSessions == null)
+{
+    <p><em>Loading monitoring sessions...</em></p>
+}
+else
+{
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>Garden Monitoring</h3>
+        <ActionLink Action="Add" Security="SecurityAccessLevel.Edit" Text="New Monitoring Visit" ResourceKey="Add" Class="btn btn-success" />
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <label>Filter by Application:</label>
+            <select class="form-select" @onchange="OnApplicationFilterChanged">
+                <option value="">All Gardens</option>
+                @if (_applications != null)
+                {
+                    @foreach (var app in _applications)
+                    {
+                        <option value="@app.ApplicationId">@app.BeneficiaryName (@app.Village)</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label>Show Only Problems:</label>
+            <select class="form-select" @onchange="OnProblemFilterChanged">
+                <option value="">All Sessions</option>
+                <option value="true">Intervention Needed</option>
+                <option value="false">No Problems</option>
+            </select>
+        </div>
+    </div>
+
+    @if (_filteredSessions.Any())
+    {
+        <div class="row">
+            @foreach (var session in _filteredSessions)
+            {
+                <div class="col-lg-6 col-xl-4 mb-4">
+                    <div class="card h-100 @(GetSessionCardClass(session))">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0">@session.BeneficiaryName</h6>
+                            <small class="text-muted">@session.SessionDate.ToString("MM/dd/yyyy")</small>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-2">
+                                <div class="col-6">
+                                    <strong>Evaluator:</strong><br />
+                                    <small>@session.EvaluatorName</small>
+                                </div>
+                                <div class="col-6">
+                                    <strong>Trees Status:</strong><br />
+                                    <small>@session.TreesAlive/@session.TreesPlanted alive</small>
+                                </div>
+                            </div>
+                            
+                            @if (session.MortalityRate > 0)
+                            {
+                                <div class="alert alert-sm @(session.MortalityRate > 30 ? "alert-danger" : "alert-warning") py-1 px-2 mb-2">
+                                    <small><strong>Mortality Rate:</strong> @session.MortalityRate.ToString("F1")%</small>
+                                </div>
+                            }
+
+                            @if (session.RequiresIntervention)
+                            {
+                                <div class="alert alert-danger alert-sm py-1 px-2 mb-2">
+                                    <small><i class="fas fa-exclamation-triangle"></i> Intervention Needed</small>
+                                </div>
+                            }
+
+                            <div class="mt-auto">
+                                <div class="btn-group btn-group-sm w-100" role="group">
+                                    <ActionLink Action="Edit" Parameters="@($"id={session.MonitoringSessionId}")" 
+                                               Text="View/Edit" ResourceKey="Edit" Class="btn btn-outline-primary btn-sm" />
+                                    <ActionLink Action="Photos" Parameters="@($"id={session.MonitoringSessionId}")" 
+                                               Text="Photos" ResourceKey="Photos" Class="btn btn-outline-info btn-sm" />
+                                    <ActionDialog Header="Delete Session" 
+                                                Message="Are you sure you wish to delete this monitoring session?" 
+                                                Action="Delete" Security="SecurityAccessLevel.Edit" 
+                                                Class="btn btn-outline-danger btn-sm" 
+                                                OnClick="@(async () => await Delete(session))" 
+                                                ResourceKey="Delete" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i> No monitoring sessions found matching the current filter.
+        </div>
+    }
+
+    @if (_applications != null && _applications.Any())
+    {
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5>Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Applications Needing Monitoring</h6>
+                        @{
+                            var needsMonitoring = _applications.Where(a => a.Status == ApplicationStatus.Approved).ToList();
+                        }
+                        @if (needsMonitoring.Any())
+                        {
+                            @foreach (var app in needsMonitoring.Take(5))
+                            {
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span>@app.BeneficiaryName (@app.Village)</span>
+                                    <ActionLink Action="Add" Parameters="@($"applicationId={app.ApplicationId}")" 
+                                               Text="Monitor" ResourceKey="Monitor" Class="btn btn-sm btn-outline-success" />
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <p class="text-muted">No approved applications need monitoring.</p>
+                        }
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Statistics</h6>
+                        <div class="row text-center">
+                            <div class="col-4">
+                                <div class="border rounded p-2">
+                                    <div class="h4 mb-0 text-primary">@_monitoringSessions.Count</div>
+                                    <small>Total Visits</small>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="border rounded p-2">
+                                    <div class="h4 mb-0 text-warning">@_monitoringSessions.Count(s => s.RequiresIntervention)</div>
+                                    <small>Need Action</small>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="border rounded p-2">
+                                    <div class="h4 mb-0 text-success">@_monitoringSessions.Count(s => !s.RequiresIntervention)</div>
+                                    <small>Healthy</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+@code {
+    public override List<Resource> Resources => new List<Resource>()
+    {
+        new Stylesheet(ModulePath() + "Module.css"),
+        new Script(ModulePath() + "Module.js")
+    };
+
+    List<MonitoringListItemVm> _monitoringSessions;
+    List<MonitoringListItemVm> _filteredSessions = new();
+    List<TreePlantingApplication> _applications;
+    string _applicationFilter = "";
+    string _problemFilter = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            // Load monitoring sessions using LINQ joins
+            _monitoringSessions = await MonitoringService.GetMonitoringSessionListItemsAsync();
+
+            // Load applications for filtering
+            _applications = await MonitoringService.GetApplicationsForMonitoringAsync();
+            
+            _filteredSessions = _monitoringSessions;
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Loading Monitoring Sessions {Error}", ex.Message);
+            AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
+        }
+    }
+
+    private async Task Delete(MonitoringListItemVm session)
+    {
+        try
+        {
+            await MonitoringService.DeleteMonitoringSessionAsync(session.MonitoringSessionId);
+            await logger.LogInformation("Monitoring Session Deleted {SessionId}", session.MonitoringSessionId);
+            
+            // Reload sessions
+            await OnInitializedAsync();
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Deleting Monitoring Session {SessionId} {Error}", session.MonitoringSessionId, ex.Message);
+            AddModuleMessage(Localizer["Message.DeleteError"], MessageType.Error);
+        }
+    }
+
+    private void OnApplicationFilterChanged(ChangeEventArgs e)
+    {
+        _applicationFilter = e.Value?.ToString() ?? "";
+        ApplyFilters();
+    }
+
+    private void OnProblemFilterChanged(ChangeEventArgs e)
+    {
+        _problemFilter = e.Value?.ToString() ?? "";
+        ApplyFilters();
+    }
+
+    private void ApplyFilters()
+    {
+        var filtered = _monitoringSessions.AsEnumerable();
+
+        if (!string.IsNullOrEmpty(_applicationFilter) && int.TryParse(_applicationFilter, out var appId))
+        {
+            filtered = filtered.Where(s => s.ApplicationId == appId);
+        }
+
+        if (!string.IsNullOrEmpty(_problemFilter) && bool.TryParse(_problemFilter, out var needsIntervention))
+        {
+            filtered = filtered.Where(s => s.RequiresIntervention == needsIntervention);
+        }
+
+        _filteredSessions = filtered.ToList();
+        StateHasChanged();
+    }
+
+    private string GetSessionCardClass(MonitoringListItemVm session)
+    {
+        if (session.RequiresIntervention)
+            return "border-danger";
+        if (session.MortalityRate > 15)
+            return "border-warning";
+        return "border-success";
+    }
+}

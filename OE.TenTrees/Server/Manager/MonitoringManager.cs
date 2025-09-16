@@ -13,14 +13,14 @@ using OE.TenTrees.Repository;
 
 namespace OE.TenTrees.Manager
 {
-    public class GardenManager : MigratableModuleBase, IInstallable, IPortable, ISearchable
+    public class MonitoringManager : MigratableModuleBase, IInstallable, IPortable, ISearchable
     {
-        private readonly IGardenRepository _gardenRepository;
+        private readonly IMonitoringRepository _monitoringRepository;
         private readonly IDBContextDependencies _DBContextDependencies;
 
-        public GardenManager(IGardenRepository gardenRepository, IDBContextDependencies DBContextDependencies)
+        public MonitoringManager(IMonitoringRepository monitoringRepository, IDBContextDependencies DBContextDependencies)
         {
-            _gardenRepository = gardenRepository;
+            _monitoringRepository = monitoringRepository;
             _DBContextDependencies = DBContextDependencies;
         }
 
@@ -37,27 +37,27 @@ namespace OE.TenTrees.Manager
         public string ExportModule(Module module)
         {
             string content = "";
-            List<Models.GardenSite> gardens = _gardenRepository.GetGardens().ToList();
-            if (gardens != null)
+            List<Models.MonitoringSession> sessions = _monitoringRepository.GetMonitoringSessions().ToList();
+            if (sessions != null)
             {
-                content = JsonSerializer.Serialize(gardens);
+                content = JsonSerializer.Serialize(sessions);
             }
             return content;
         }
 
         public void ImportModule(Module module, string content, string version)
         {
-            List<Models.GardenSite> gardens = null;
+            List<Models.MonitoringSession> sessions = null;
             if (!string.IsNullOrEmpty(content))
             {
-                gardens = JsonSerializer.Deserialize<List<Models.GardenSite>>(content);
+                sessions = JsonSerializer.Deserialize<List<Models.MonitoringSession>>(content);
             }
-            if (gardens != null)
+            if (sessions != null)
             {
-                foreach (var garden in gardens)
+                foreach (var session in sessions)
                 {
-                    garden.ModuleId = module.ModuleId;
-                    _gardenRepository.AddGarden(garden);
+                    session.ModuleId = module.ModuleId;
+                    _monitoringRepository.AddMonitoringSession(session);
                 }
             }
         }
@@ -66,19 +66,19 @@ namespace OE.TenTrees.Manager
         {
             var searchContentList = new List<SearchContent>();
 
-            foreach (var garden in _gardenRepository.GetGardens())
+            foreach (var session in _monitoringRepository.GetMonitoringSessions())
             {
-                if (garden.ModifiedOn >= lastIndexedOn)
+                if (session.ModifiedOn >= lastIndexedOn)
                 {
                     var searchContent = new SearchContent
                     {
-                        EntityName = "GardenSite",
-                        EntityId = garden.GardenSiteId.ToString(),
-                        Title = $"Garden - {garden.BeneficiaryName}",
-                        Body = $"Evaluator: {garden.EvaluatorName}, Village: {garden.Village}, Status: {garden.Status}",
-                        ContentModifiedBy = garden.ModifiedBy,
-                        ContentModifiedOn = garden.ModifiedOn,
-                        AdditionalContent = $"{garden.Notes} {garden.SpecialInstructions}".Trim()
+                        EntityName = "MonitoringSession",
+                        EntityId = session.MonitoringSessionId.ToString(),
+                        Title = $"Monitoring Session - {session.BeneficiaryName}",
+                        Body = $"Evaluator: {session.EvaluatorName}, Date: {session.SessionDate:MM/dd/yyyy}",
+                        ContentModifiedBy = session.ModifiedBy,
+                        ContentModifiedOn = session.ModifiedOn,
+                        AdditionalContent = session.Notes
                     };
                     searchContentList.Add(searchContent);
                 }

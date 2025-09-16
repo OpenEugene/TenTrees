@@ -23,6 +23,11 @@ namespace OE.TenTrees.Startup
             {
                 services.AddScoped<IMonitoringService, MonitoringService>();
             }
+            
+            if (!services.Any(s => s.ServiceType == typeof(IGardenService)))
+            {
+                services.AddScoped<IGardenService, GardenService>();
+            }
         }
     }
 }

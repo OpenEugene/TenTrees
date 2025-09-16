@@ -73,21 +73,18 @@ namespace OE.TenTrees.Repository
                            {
                                MonitoringSessionId = session.MonitoringSessionId,
                                ApplicationId = session.ApplicationId,
+                               GardenSiteId = session.GardenSiteId,
                                BeneficiaryName = session.BeneficiaryName,
                                EvaluatorName = session.EvaluatorName,
                                SessionDate = session.SessionDate,
                                TreesAlive = session.TreesAlive,
                                TreesPlanted = session.TreesPlanted,
-                               Village = application.Village,
-                               MortalityRate = session.TreesPlanted.HasValue && session.TreesPlanted > 0 && session.TreesAlive.HasValue
-                                   ? (double)(session.TreesPlanted.Value - session.TreesAlive.Value) / session.TreesPlanted.Value * 100
-                                   : 0,
-                               RequiresIntervention = (session.TreesPlanted.HasValue && session.TreesPlanted > 0 && session.TreesAlive.HasValue
-                                   ? (double)(session.TreesPlanted.Value - session.TreesAlive.Value) / session.TreesPlanted.Value * 100
-                                   : 0) > 30 || 
-                                   session.TreesLookingHealthy == false || 
-                                   !string.IsNullOrEmpty(session.ProblemsIdentified)
-                           };
+                               RequiresAttention = (session.TreesPlanted.HasValue && session.TreesPlanted > 0 && session.TreesAlive.HasValue
+                                    ? (double)(session.TreesPlanted.Value - session.TreesAlive.Value) / session.TreesPlanted.Value * 100
+                                    : 0) > 30 || 
+                                    session.TreesLookingHealthy == false || 
+                                    !string.IsNullOrEmpty(session.ProblemsIdentified)
+                            };
 
                 return query.ToList();
             }

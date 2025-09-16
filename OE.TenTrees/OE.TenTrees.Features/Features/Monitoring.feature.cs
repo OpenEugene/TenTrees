@@ -10,7 +10,7 @@
 // ------------------------------------------------------------------------------
 #region Designer generated code
 #pragma warning disable
-namespace OE.TenTrees.Features.Features
+namespace OE.TenTrees.Specs.Features
 {
     using Reqnroll;
     using System;
@@ -30,7 +30,7 @@ namespace OE.TenTrees.Features.Features
         
         private Xunit.Abstractions.ITestOutputHelper _testOutputHelper;
         
-#line 1 "GardenMonitoring.feature"
+#line 1 "Monitoring.feature"
 #line hidden
         
         public GardenMonitoringFeature(GardenMonitoringFeature.FixtureData fixtureData, Xunit.Abstractions.ITestOutputHelper testOutputHelper)

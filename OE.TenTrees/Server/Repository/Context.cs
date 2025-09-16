@@ -1,6 +1,10 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Oqtane.Modules;
 using Oqtane.Repository;
+using Oqtane.Infrastructure;
+using OE.TenTrees.Models;
 using Oqtane.Repository.Databases.Interfaces;
 
 namespace OE.TenTrees.Repository
@@ -8,88 +12,128 @@ namespace OE.TenTrees.Repository
     public class Context : DBContextBase, ITransientService, IMultiDatabase
     {
         public virtual DbSet<Models.MyModule> MyModule { get; set; }
+        public virtual DbSet<TreePlantingApplication> TreePlantingApplication { get; set; }
+        public virtual DbSet<ApplicationDocument> ApplicationDocument { get; set; }
+        public virtual DbSet<ApplicationStatusHistory> ApplicationStatusHistory { get; set; }
+        public virtual DbSet<ApplicationReview> ApplicationReview { get; set; }
+        public virtual DbSet<ReviewChecklistItem> ReviewChecklistItem { get; set; }
+        public virtual DbSet<SiteAssessment> SiteAssessment { get; set; }
+        public virtual DbSet<AssessmentPhoto> AssessmentPhoto { get; set; }
+        public virtual DbSet<MonitoringSession> MonitoringSession { get; set; }
+        public virtual DbSet<MonitoringMetric> MonitoringMetric { get; set; }
+        public virtual DbSet<MonitoringPhoto> MonitoringPhoto { get; set; }
         
-        // Application entities
-        public virtual DbSet<Models.TreePlantingApplication> TreePlantingApplication { get; set; }
-        public virtual DbSet<Models.ApplicationDocument> ApplicationDocument { get; set; }
-        public virtual DbSet<Models.ApplicationStatusHistory> ApplicationStatusHistory { get; set; }
-        public virtual DbSet<Models.ApplicationReview> ApplicationReview { get; set; }
-        public virtual DbSet<Models.ReviewChecklistItem> ReviewChecklistItem { get; set; }
-        
-        // Assessment entities
-        public virtual DbSet<Models.SiteAssessment> SiteAssessment { get; set; }
-        public virtual DbSet<Models.AssessmentPhoto> AssessmentPhoto { get; set; }
-        
-        // Monitoring entities
-        public virtual DbSet<Models.MonitoringSession> MonitoringSession { get; set; }
-        public virtual DbSet<Models.MonitoringMetric> MonitoringMetric { get; set; }
-        public virtual DbSet<Models.MonitoringPhoto> MonitoringPhoto { get; set; }
+        // Garden-related entities
+        public virtual DbSet<GardenSite> GardenSite { get; set; }
+        public virtual DbSet<TreePlanting> TreePlanting { get; set; }
+        public virtual DbSet<GardenPhoto> GardenPhoto { get; set; }
 
         public Context(IDBContextDependencies DBContextDependencies) : base(DBContextDependencies)
         {
-            // ContextBase handles multi-tenant database connections
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<Models.MyModule>().ToTable(ActiveDatabase.RewriteName("MyModule"));
-            
-            // Application tables
-            builder.Entity<Models.TreePlantingApplication>().ToTable(ActiveDatabase.RewriteName("TreePlantingApplication"));
-            builder.Entity<Models.ApplicationDocument>().ToTable(ActiveDatabase.RewriteName("ApplicationDocument"));
-            builder.Entity<Models.ApplicationStatusHistory>().ToTable(ActiveDatabase.RewriteName("ApplicationStatusHistory"));
-            builder.Entity<Models.ApplicationReview>().ToTable(ActiveDatabase.RewriteName("ApplicationReview"));
-            builder.Entity<Models.ReviewChecklistItem>().ToTable(ActiveDatabase.RewriteName("ReviewChecklistItem"));
-            
-            // Assessment tables
-            builder.Entity<Models.SiteAssessment>().ToTable(ActiveDatabase.RewriteName("SiteAssessment"));
-            builder.Entity<Models.AssessmentPhoto>().ToTable(ActiveDatabase.RewriteName("AssessmentPhoto"));
-            
-            // Monitoring tables
-            builder.Entity<Models.MonitoringSession>().ToTable(ActiveDatabase.RewriteName("MonitoringSession"));
-            builder.Entity<Models.MonitoringMetric>().ToTable(ActiveDatabase.RewriteName("MonitoringMetric"));
-            builder.Entity<Models.MonitoringPhoto>().ToTable(ActiveDatabase.RewriteName("MonitoringPhoto"));
-            
-            // Configure relationships
-            builder.Entity<Models.ApplicationDocument>()
-                .HasOne<Models.TreePlantingApplication>()
-                .WithMany(a => a.Documents)
+            // Configure Application relationships
+            builder.Entity<TreePlantingApplication>()
+                .HasMany(a => a.Documents)
+                .WithOne()
                 .HasForeignKey(d => d.ApplicationId)
                 .OnDelete(DeleteBehavior.Cascade);
-                
-            builder.Entity<Models.ApplicationStatusHistory>()
-                .HasOne<Models.TreePlantingApplication>()
-                .WithMany(a => a.History)
+
+            builder.Entity<TreePlantingApplication>()
+                .HasMany(a => a.History)
+                .WithOne()
                 .HasForeignKey(h => h.ApplicationId)
                 .OnDelete(DeleteBehavior.Cascade);
-                
-            builder.Entity<Models.ApplicationReview>()
-                .HasOne<Models.TreePlantingApplication>()
-                .WithMany()
-                .HasForeignKey(r => r.ApplicationId)
-                .OnDelete(DeleteBehavior.Cascade);
-                
-            builder.Entity<Models.ReviewChecklistItem>()
-                .HasOne<Models.ApplicationReview>()
-                .WithMany(r => r.Checklist)
+
+            // Configure Review relationships
+            builder.Entity<ApplicationReview>()
+                .HasMany(r => r.Checklist)
+                .WithOne()
                 .HasForeignKey(c => c.ReviewId)
                 .OnDelete(DeleteBehavior.Cascade);
-                
-            builder.Entity<Models.SiteAssessment>()
-                .HasOne<Models.TreePlantingApplication>()
-                .WithMany()
-                .HasForeignKey(s => s.ApplicationId)
-                .OnDelete(DeleteBehavior.Cascade);
-                
-            builder.Entity<Models.AssessmentPhoto>()
-                .HasOne<Models.SiteAssessment>()
-                .WithMany(a => a.Photos)
+
+            // Configure Assessment relationships
+            builder.Entity<SiteAssessment>()
+                .HasMany(a => a.Photos)
+                .WithOne()
                 .HasForeignKey(p => p.AssessmentId)
                 .OnDelete(DeleteBehavior.Cascade);
-                
-            // Monitoring tables - no EF relationship configuration, just foreign key constraints in database
+
+            // Configure Monitoring relationships
+            builder.Entity<MonitoringSession>()
+                .HasMany(ms => ms.Metrics)
+                .WithOne()
+                .HasForeignKey(m => m.MonitoringSessionId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<MonitoringSession>()
+                .HasMany(ms => ms.Photos)
+                .WithOne()
+                .HasForeignKey(p => p.MonitoringSessionId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Configure GardenSite relationships
+            builder.Entity<GardenSite>()
+                .HasOne(g => g.Application)
+                .WithMany()
+                .HasForeignKey(g => g.ApplicationId)
+                .OnDelete(DeleteBehavior.Restrict); // Don't delete application when garden site is deleted
+
+            builder.Entity<GardenSite>()
+                .HasMany(g => g.TreePlantings)
+                .WithOne(tp => tp.GardenSite)
+                .HasForeignKey(tp => tp.GardenSiteId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<GardenSite>()
+                .HasMany(g => g.Photos)
+                .WithOne(p => p.GardenSite)
+                .HasForeignKey(p => p.GardenSiteId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<GardenSite>()
+                .HasMany(g => g.MonitoringSessions)
+                .WithOne(ms => ms.GardenSite)
+                .HasForeignKey(ms => ms.GardenSiteId)
+                .OnDelete(DeleteBehavior.SetNull); // Keep monitoring sessions even if garden site is deleted
+
+            // Configure MonitoringSession to support both Application and GardenSite relationships
+            builder.Entity<MonitoringSession>()
+                .HasOne<TreePlantingApplication>()
+                .WithMany()
+                .HasForeignKey(ms => ms.ApplicationId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Configure decimal precision for coordinates
+            builder.Entity<GardenSite>()
+                .Property(g => g.Latitude)
+                .HasPrecision(18, 6);
+
+            builder.Entity<GardenSite>()
+                .Property(g => g.Longitude)
+                .HasPrecision(18, 6);
+
+            // Configure enum storage
+            builder.Entity<GardenSite>()
+                .Property(g => g.Status)
+                .HasConversion<int>();
+
+            builder.Entity<TreePlanting>()
+                .Property(tp => tp.Status)
+                .HasConversion<int>();
+
+            builder.Entity<GardenPhoto>()
+                .Property(gp => gp.PhotoType)
+                .HasConversion<int>();
+
+            // Ensure unique garden site per application
+            builder.Entity<GardenSite>()
+                .HasIndex(g => g.ApplicationId)
+                .IsUnique();
         }
     }
 }

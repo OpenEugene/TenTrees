@@ -1,0 +1,171 @@
+@using OE.TenTrees.Services
+@using OE.TenTrees.Models
+
+@namespace OE.TenTrees.Monitoring
+@inherits ModuleBase
+@inject IMonitoringService MonitoringService
+@inject NavigationManager NavigationManager
+@inject IStringLocalizer<Photos> Localizer
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4>Garden Photos - @_sessionInfo</h4>
+                <NavLink class="btn btn-secondary" href="@NavigateUrl()">
+                    <i class="fas fa-arrow-left"></i> Back to Monitoring
+                </NavLink>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5>Upload New Photo</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-8">
+                            <input type="file" class="form-control" accept="image/*" @ref="fileInput" />
+                        </div>
+                        <div class="col-md-4">
+                            <button type="button" class="btn btn-primary w-100" @onclick="UploadPhoto">
+                                <i class="fas fa-upload"></i> Upload Photo
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <input type="text" class="form-control" placeholder="Photo caption (optional)" @bind="@_newPhotoCaption" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @if (_photos == null)
+            {
+                <p><em>Loading photos...</em></p>
+            }
+            else if (_photos.Any())
+            {
+                <div class="row mt-4">
+                    @foreach (var photo in _photos)
+                    {
+                        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                            <div class="card">
+                                <img src="@photo.Url" class="card-img-top" style="height: 200px; object-fit: cover;" alt="@photo.Caption" />
+                                <div class="card-body">
+                                    @if (!string.IsNullOrEmpty(photo.Caption))
+                                    {
+                                        <p class="card-text">@photo.Caption</p>
+                                    }
+                                    <small class="text-muted">@photo.CreatedOn.ToString("MM/dd/yyyy HH:mm")</small>
+                                </div>
+                                <div class="card-footer">
+                                    <ActionDialog Header="Delete Photo" 
+                                                Message="Are you sure you wish to delete this photo?" 
+                                                Action="Delete" Security="SecurityAccessLevel.Edit" 
+                                                Class="btn btn-outline-danger btn-sm w-100" 
+                                                OnClick="@(async () => await DeletePhoto(photo))" 
+                                                ResourceKey="Delete" />
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info mt-4">
+                    <i class="fas fa-camera"></i> No photos uploaded yet. Add photos to document the garden's progress.
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    public override SecurityAccessLevel SecurityAccessLevel => SecurityAccessLevel.Edit;
+    public override string Actions => "Photos";
+    public override string Title => "Garden Photos";
+
+    private int _monitoringSessionId;
+    private string _sessionInfo = "";
+    private List<MonitoringPhoto> _photos;
+    private string _newPhotoCaption = "";
+    private ElementReference fileInput;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _monitoringSessionId = Int32.Parse(PageState.QueryString["id"]);
+            
+            // Load session info for display
+            var session = await MonitoringService.GetMonitoringSessionAsync(_monitoringSessionId);
+            if (session != null)
+            {
+                _sessionInfo = $"{session.BeneficiaryName} - {session.SessionDate:MM/dd/yyyy}";
+            }
+
+            // Load photos
+            await LoadPhotos();
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Loading Photos {SessionId} {Error}", _monitoringSessionId, ex.Message);
+            AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
+        }
+    }
+
+    private async Task LoadPhotos()
+    {
+        _photos = await MonitoringService.GetMonitoringPhotosAsync(_monitoringSessionId);
+        StateHasChanged();
+    }
+
+    private async Task UploadPhoto()
+    {
+        try
+        {
+            // In a real implementation, you would handle file upload here
+            // For now, we'll create a placeholder photo entry
+            var photo = new MonitoringPhoto
+            {
+                MonitoringSessionId = _monitoringSessionId,
+                Caption = _newPhotoCaption,
+                Url = "/images/placeholder-garden.jpg", // Placeholder - would be actual uploaded file path
+                FileName = "garden-photo.jpg",
+                ContentType = "image/jpeg",
+                FileSize = 0
+            };
+
+            await MonitoringService.AddMonitoringPhotoAsync(photo);
+            await logger.LogInformation("Photo Added to Monitoring Session {SessionId}", _monitoringSessionId);
+            
+            _newPhotoCaption = "";
+            await LoadPhotos();
+            AddModuleMessage("Photo uploaded successfully", MessageType.Success);
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Uploading Photo {Error}", ex.Message);
+            AddModuleMessage("Error uploading photo", MessageType.Error);
+        }
+    }
+
+    private async Task DeletePhoto(MonitoringPhoto photo)
+    {
+        try
+        {
+            await MonitoringService.DeleteMonitoringPhotoAsync(photo.MonitoringPhotoId);
+            await logger.LogInformation("Photo Deleted {PhotoId}", photo.MonitoringPhotoId);
+            
+            await LoadPhotos();
+            AddModuleMessage("Photo deleted successfully", MessageType.Success);
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Deleting Photo {PhotoId} {Error}", photo.MonitoringPhotoId, ex.Message);
+            AddModuleMessage("Error deleting photo", MessageType.Error);
+        }
+    }
+}

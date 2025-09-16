@@ -1,0 +1,195 @@
+@using OE.TenTrees.Services
+@using OE.TenTrees.Models
+
+@namespace OE.TenTrees.Garden
+@inherits ModuleBase
+@inject IGardenService GardenService
+@inject IApplicationService ApplicationService
+@inject NavigationManager NavigationManager
+@inject IStringLocalizer<Create> Localizer
+
+@if (_applications == null)
+{
+    <p><em>Loading approved applications...</em></p>
+}
+else
+{
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Create Garden from Approved Application</h4>
+                        <p class="mb-0 text-muted">Select an approved application that doesn't have a garden yet to create a new garden site.</p>
+                    </div>
+                    <div class="card-body">
+                        @if (_applicationsWithoutGardens.Any())
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Action</th>
+                                            <th>Beneficiary</th>
+                                            <th>Evaluator</th>
+                                            <th>Village</th>
+                                            <th>Approval Date</th>
+                                            <th>Application Details</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var application in _applicationsWithoutGardens)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <button class="btn btn-primary btn-sm" @onclick="@(() => CreateGarden(application.ApplicationId))">
+                                                        <i class="fas fa-seedling"></i> Create Garden
+                                                    </button>
+                                                </td>
+                                                <td>
+                                                    <strong>@application.BeneficiaryName</strong>
+                                                    @if (!string.IsNullOrEmpty(application.HouseholdIdentifier))
+                                                    {
+                                                        <br /><small class="text-muted">ID: @application.HouseholdIdentifier</small>
+                                                    }
+                                                </td>
+                                                <td>@application.EvaluatorName</td>
+                                                <td>@application.Village</td>
+                                                <td>@application.ModifiedOn.ToString("MM/dd/yyyy")</td>
+                                                <td>
+                                                    <div class="small">
+                                                        @if (application.HasExistingGardenInterest)
+                                                        {
+                                                            <span class="badge bg-success">?? Garden Interest</span>
+                                                        }
+                                                        @if (application.WomanHeadedHousehold)
+                                                        {
+                                                            <span class="badge bg-info">?? Woman Headed</span>
+                                                        }
+                                                        @if (application.ChildHeadedHousehold)
+                                                        {
+                                                            <span class="badge bg-warning text-dark">?? Child Headed</span>
+                                                        }
+                                                        @if (application.HouseholdSize.HasValue)
+                                                        {
+                                                            <span class="badge bg-secondary">?? @application.HouseholdSize people</span>
+                                                        }
+                                                    </div>
+                                                    @if (!string.IsNullOrEmpty(application.Notes))
+                                                    {
+                                                        <div class="small text-muted mt-1">
+                                                            @application.Notes.Substring(0, Math.Min(application.Notes.Length, 100))@(application.Notes.Length > 100 ? "..." : "")
+                                                        </div>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle"></i> No approved applications without gardens found. 
+                                <br />All approved applications either already have gardens or there are no approved applications.
+                                
+                                <div class="mt-3">
+                                    <NavLink class="btn btn-secondary" href="@NavigateUrl("", "Application")">
+                                        <i class="fas fa-file-alt"></i> View Applications
+                                    </NavLink>
+                                </div>
+                            </div>
+                        }
+
+                        @if (_applications.Any())
+                        {
+                            <div class="row mt-4">
+                                <div class="col-md-3">
+                                    <div class="card text-center">
+                                        <div class="card-body">
+                                            <h5 class="card-title">@_applications.Count</h5>
+                                            <p class="card-text">Total Approved</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="card text-center">
+                                        <div class="card-body">
+                                            <h5 class="card-title">@_existingGardensCount</h5>
+                                            <p class="card-text">Have Gardens</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="card text-center">
+                                        <div class="card-body">
+                                            <h5 class="card-title">@_applicationsWithoutGardens.Count</h5>
+                                            <p class="card-text">Need Gardens</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="card text-center">
+                                        <div class="card-body">
+                                            <div class="d-grid">
+                                                <NavLink class="btn btn-secondary" href="@NavigateUrl()">
+                                                    <i class="fas fa-arrow-left"></i> Back to Gardens
+                                                </NavLink>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    public override SecurityAccessLevel SecurityAccessLevel => SecurityAccessLevel.Edit;
+    public override string Actions => "Create";
+    public override string Title => "Create Garden from Application";
+
+    List<TreePlantingApplication> _applications = new();
+    List<TreePlantingApplication> _applicationsWithoutGardens = new();
+    int _existingGardensCount = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            // Get all approved applications
+            var allApplications = await ApplicationService.GetApplicationsAsync();
+            _applications = allApplications.Where(a => a.Status == ApplicationStatus.Approved).ToList();
+
+            // Check which applications already have gardens
+            var applicationsWithoutGardens = new List<TreePlantingApplication>();
+            
+            foreach (var application in _applications)
+            {
+                var existingGarden = await GardenService.GetGardenByApplicationIdAsync(application.ApplicationId);
+                if (existingGarden == null)
+                {
+                    applicationsWithoutGardens.Add(application);
+                }
+            }
+
+            _applicationsWithoutGardens = applicationsWithoutGardens;
+            _existingGardensCount = _applications.Count - _applicationsWithoutGardens.Count;
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Loading Applications for Garden Creation {Error}", ex.Message);
+            AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
+        }
+    }
+
+    private void CreateGarden(int applicationId)
+    {
+        NavigationManager.NavigateTo(NavigateUrl("Edit", $"applicationId={applicationId}"));
+    }
+}

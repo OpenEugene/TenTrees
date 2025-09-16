@@ -42,10 +42,16 @@ namespace OE.TenTrees.Startup
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<IMyModuleService, ServerMyModuleService>();
+            services.AddTransient<IMyModuleRepository, MyModuleRepository>();
+            
             services.AddTransient<IApplicationService, ServerApplicationService>();
             services.AddTransient<IApplicationRepository, ApplicationRepository>();
+            
             services.AddTransient<IMonitoringService, ServerMonitoringService>();
             services.AddTransient<IMonitoringRepository, MonitoringRepository>();
+            
+            services.AddTransient<IGardenService, ServerGardenService>();
+            services.AddTransient<IGardenRepository, GardenRepository>();
             services.AddDbContextFactory<Context>(opt => { }, ServiceLifetime.Transient);
             
             // Ensure HttpContextAccessor is registered for audit fields

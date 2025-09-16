@@ -10,7 +10,7 @@
 // ------------------------------------------------------------------------------
 #region Designer generated code
 #pragma warning disable
-namespace OE.TenTrees.Features.Features
+namespace OE.TenTrees.Specs.Features
 {
     using Reqnroll;
     using System;

@@ -54,4 +54,38 @@ namespace OE.TenTrees.Models
         MonitoringPhoto = 4,
         SupportingDocument = 5
     }
+
+    // Garden-related enums
+    public enum GardenStatus
+    {
+        Active = 0,
+        Planted = 1,
+        UnderMonitoring = 2,
+        RequiresIntervention = 3,
+        Successful = 4,
+        Failed = 5,
+        Abandoned = 6
+    }
+
+    public enum TreePlantingStatus
+    {
+        Planned = 0,
+        Planted = 1,
+        Growing = 2,
+        Mature = 3,
+        Dead = 4,
+        Removed = 5
+    }
+
+    public enum GardenPhotoType
+    {
+        General = 0,
+        SiteAssessment = 1,
+        Planting = 2,
+        Monitoring = 3,
+        Before = 4,
+        After = 5,
+        Progress = 6,
+        Issues = 7
+    }
 }

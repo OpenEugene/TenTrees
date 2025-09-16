@@ -5,12 +5,14 @@ using Oqtane.Models;
 
 namespace OE.TenTrees.Models
 {
-    public class MonitoringSession : IAuditable
+    // Core MonitoringSession entity
+    public partial class MonitoringSession : IAuditable
     {
         [Key]
         public int MonitoringSessionId { get; set; }
         public int ApplicationId { get; set; }
-        public int ModuleId { get; set; } // For module scoping in Oqtane
+        public int? GardenSiteId { get; set; } // New field for garden site reference
+        public int ModuleId { get; set; }
         public DateTime SessionDate { get; set; }
         public string ObserverUserId { get; set; }
         public string EvaluatorName { get; set; }
@@ -19,22 +21,18 @@ namespace OE.TenTrees.Models
         public string IdOrBirthdate { get; set; }
         public string WeatherConditions { get; set; }
         public string Notes { get; set; }
-
-        // Mapping Information
+        
+        // Site Assessment Questions
         public bool? HasWaterInPlot { get; set; }
         public bool? HasWaterCatchmentSystem { get; set; }
-
-        // Tree Counting
         public int? NumberOfExistingTrees { get; set; }
         public int? NumberOfIndigenousTrees { get; set; }
         public int? NumberOfFruitNutTrees { get; set; }
-
-        // Space and Infrastructure
         public bool? HasSpaceForMoreTrees { get; set; }
         public bool? IsPropertyFenced { get; set; }
         public bool? HasCompostOrMulchResources { get; set; }
-
-        // Tree Health Monitoring (from feature requirements)
+        
+        // Monitoring Observations
         public int? TreesPlanted { get; set; }
         public int? TreesAlive { get; set; }
         public bool? TreesLookingHealthy { get; set; }
@@ -43,17 +41,24 @@ namespace OE.TenTrees.Models
         public bool? TreesBeingMulched { get; set; }
         public bool? MakingCompost { get; set; }
         public bool? CollectingWater { get; set; }
-
-        // Problem Reporting
+        
+        // Issues and Interventions
         public string ProblemsIdentified { get; set; }
         public string InterventionNeeded { get; set; }
-        public double? MortalityRate { get; set; }
+        public decimal? MortalityRate { get; set; }
         public string MortalityReason { get; set; }
-
+        
+        // Audit
         public string CreatedBy { get; set; }
         public DateTime CreatedOn { get; set; }
         public string ModifiedBy { get; set; }
         public DateTime ModifiedOn { get; set; }
+
+        // Navigation properties
+        public TreePlantingApplication Application { get; set; }
+        public GardenSite GardenSite { get; set; } // Updated to use GardenSite
+        public ICollection<MonitoringMetric> Metrics { get; set; }
+        public ICollection<MonitoringPhoto> Photos { get; set; }
     }
 
     public class MonitoringMetric : IAuditable
@@ -62,7 +67,7 @@ namespace OE.TenTrees.Models
         public int MonitoringMetricId { get; set; }
         public int MonitoringSessionId { get; set; }
         public MonitoringMetricType MetricType { get; set; }
-        public double? Value { get; set; }
+        public decimal? Value { get; set; }
         public string Unit { get; set; }
         public string Notes { get; set; }
 
@@ -70,6 +75,9 @@ namespace OE.TenTrees.Models
         public DateTime CreatedOn { get; set; }
         public string ModifiedBy { get; set; }
         public DateTime ModifiedOn { get; set; }
+
+        // Navigation
+        public MonitoringSession MonitoringSession { get; set; }
     }
 
     public class MonitoringPhoto : IAuditable
@@ -81,54 +89,49 @@ namespace OE.TenTrees.Models
         public string Caption { get; set; }
         public string FileName { get; set; }
         public string ContentType { get; set; }
-        public int FileSize { get; set; }
+        public int? FileSize { get; set; }
 
         public string CreatedBy { get; set; }
         public DateTime CreatedOn { get; set; }
         public string ModifiedBy { get; set; }
         public DateTime ModifiedOn { get; set; }
+
+        // Navigation
+        public MonitoringSession MonitoringSession { get; set; }
     }
 
-    // Enhanced View Models (no navigation properties, just data)
+    // View Models
     public class MonitoringSessionVm
     {
         public MonitoringSession Session { get; set; }
         public IEnumerable<MonitoringMetric> Metrics { get; set; }
         public IEnumerable<MonitoringPhoto> Photos { get; set; }
         public TreePlantingApplication Application { get; set; }
-        public double CalculatedMortalityRate => CalculateMortalityRate();
-        public bool RequiresIntervention => CheckInterventionNeeded();
-
-        private double CalculateMortalityRate()
-        {
-            if (Session?.TreesPlanted > 0 && Session?.TreesAlive.HasValue == true)
-            {
-                var dead = Session.TreesPlanted.Value - Session.TreesAlive.Value;
-                return (double)dead / Session.TreesPlanted.Value * 100;
-            }
-            return 0;
-        }
-
-        private bool CheckInterventionNeeded()
-        {
-            return CalculatedMortalityRate > 30 || // High mortality rate
-                   Session?.TreesLookingHealthy == false || // Trees not healthy
-                   !string.IsNullOrEmpty(Session?.ProblemsIdentified); // Problems identified
-        }
+        public GardenSite GardenSite { get; set; } // Updated to use GardenSite
     }
 
     public class MonitoringListItemVm
     {
         public int MonitoringSessionId { get; set; }
         public int ApplicationId { get; set; }
+        public int? GardenSiteId { get; set; } // Updated field name
         public string BeneficiaryName { get; set; }
         public string EvaluatorName { get; set; }
         public DateTime SessionDate { get; set; }
-        public int? TreesAlive { get; set; }
         public int? TreesPlanted { get; set; }
-        public double MortalityRate { get; set; }
-        public bool RequiresIntervention { get; set; }
-        public string Village { get; set; } // From Application
-        public string Summary => $"{BeneficiaryName} - {SessionDate:MM/dd/yyyy} - {TreesAlive}/{TreesPlanted} trees alive";
+        public int? TreesAlive { get; set; }
+        public bool RequiresAttention { get; set; }
+
+        public int TreesDead => (TreesPlanted ?? 0) - (TreesAlive ?? 0);
+        public int SurvivalRate => (TreesPlanted.HasValue && TreesPlanted > 0) 
+            ? (int)Math.Round(((decimal)(TreesAlive ?? 0) / TreesPlanted.Value) * 100) 
+            : 0;
+        public string MortalitySummary => TreesDead > 0 ? $"{TreesDead} dead ({SurvivalRate}%)" : "All alive";
+        
+        public int MortalityRate => (TreesPlanted.HasValue && TreesPlanted > 0) 
+            ? (int)Math.Round(((decimal)TreesDead / TreesPlanted.Value) * 100) 
+            : 0;
+        public bool RequiresIntervention => MortalityRate > 30; // Example threshold
+        public string Summary => $"{BeneficiaryName} - {SessionDate:MM/dd/yyyy} ({TreesAlive}/{TreesPlanted} alive)";
     }
 }
