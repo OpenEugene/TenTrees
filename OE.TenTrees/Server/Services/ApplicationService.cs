@@ -13,18 +13,7 @@ using OE.TenTrees.Models;
 
 namespace OE.TenTrees.Services
 {
-    public interface IApplicationService
-    {
-        Task<List<TreePlantingApplication>> GetApplicationsAsync();
-        Task<TreePlantingApplication> GetApplicationAsync(int ApplicationId);
-        Task<TreePlantingApplication> AddApplicationAsync(TreePlantingApplication Application);
-        Task<TreePlantingApplication> UpdateApplicationAsync(TreePlantingApplication Application);
-        Task DeleteApplicationAsync(int ApplicationId);
-        Task<TreePlantingApplication> ApproveApplicationAsync(int ApplicationId, string Comments = null);
-        Task<TreePlantingApplication> RejectApplicationAsync(int ApplicationId, string RejectionReason);
-        Task<ApplicationReview> AddReviewAsync(ApplicationReview Review);
-        Task<List<ApplicationReview>> GetApplicationReviewsAsync(int ApplicationId);
-    }
+
 
     public class ServerApplicationService : IApplicationService
     {

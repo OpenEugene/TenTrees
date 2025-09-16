@@ -13,29 +13,6 @@ using OE.TenTrees.Models;
 
 namespace OE.TenTrees.Services
 {
-    public interface IGardenService
-    {
-        Task<List<GardenSite>> GetGardensAsync();
-        Task<GardenSite> GetGardenAsync(int GardenSiteId);
-        Task<GardenSite> GetGardenByApplicationIdAsync(int ApplicationId);
-        Task<GardenSite> AddGardenAsync(GardenSite gardenSite);
-        Task<GardenSite> UpdateGardenAsync(GardenSite gardenSite);
-        Task DeleteGardenAsync(int GardenSiteId);
-        
-        Task<List<TreePlanting>> GetTreePlantingsAsync(int GardenSiteId);
-        Task<TreePlanting> AddTreePlantingAsync(TreePlanting treePlanting);
-        Task<TreePlanting> UpdateTreePlantingAsync(TreePlanting treePlanting);
-        Task DeleteTreePlantingAsync(int TreePlantingId);
-        
-        Task<List<GardenPhoto>> GetGardenPhotosAsync(int GardenSiteId);
-        Task<GardenPhoto> AddGardenPhotoAsync(GardenPhoto photo);
-        Task DeleteGardenPhotoAsync(int GardenPhotoId);
-        
-        Task<GardenStatistics> GetGardenStatisticsAsync(int GardenSiteId);
-        Task<List<GardenListItemVm>> GetGardenListItemsAsync();
-        Task<GardenDetailVm> GetGardenDetailAsync(int GardenSiteId);
-        Task<GardenSite> CreateGardenFromApplicationAsync(CreateGardenFromApplicationRequest request);
-    }
 
     public class ServerGardenService : IGardenService
     {

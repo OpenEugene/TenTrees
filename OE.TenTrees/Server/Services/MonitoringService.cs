@@ -13,21 +13,7 @@ using OE.TenTrees.Models;
 
 namespace OE.TenTrees.Services
 {
-    public interface IMonitoringService
-    {
-        Task<List<MonitoringSession>> GetMonitoringSessionsAsync();
-        Task<List<MonitoringSession>> GetMonitoringSessionsByApplicationAsync(int ApplicationId);
-        Task<MonitoringSession> GetMonitoringSessionAsync(int MonitoringSessionId);
-        Task<MonitoringSession> AddMonitoringSessionAsync(MonitoringSession Session);
-        Task<MonitoringSession> UpdateMonitoringSessionAsync(MonitoringSession Session);
-        Task DeleteMonitoringSessionAsync(int MonitoringSessionId);
-        Task<List<MonitoringPhoto>> GetMonitoringPhotosAsync(int MonitoringSessionId);
-        Task<MonitoringPhoto> AddMonitoringPhotoAsync(MonitoringPhoto Photo);
-        Task DeleteMonitoringPhotoAsync(int PhotoId);
-        Task<List<TreePlantingApplication>> GetApplicationsForMonitoringAsync();
-        Task<MonitoringSessionVm> GetMonitoringSessionWithDetailsAsync(int MonitoringSessionId);
-        Task<List<MonitoringListItemVm>> GetMonitoringSessionListItemsAsync();
-    }
+
 
     public class ServerMonitoringService : IMonitoringService
     {
