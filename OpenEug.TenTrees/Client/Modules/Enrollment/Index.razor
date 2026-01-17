@@ -1,0 +1,79 @@
+@using OpenEug.TenTrees.Module.Enrollment.Services
+@using OpenEug.TenTrees.Module.Enrollment.Models
+
+@namespace OpenEug.TenTrees.Module.Enrollment
+@inherits ModuleBase
+@inject IEnrollmentService EnrollmentService
+@inject NavigationManager NavigationManager
+@inject IStringLocalizer<Index> Localizer
+
+@if (_Enrollments == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <ActionLink Action="Add" Security="SecurityAccessLevel.Edit" Text="Add Enrollment" ResourceKey="Add" />
+    <br />
+    <br />
+    @if (@_Enrollments.Count != 0)
+    {
+        <Pager Items="@_Enrollments">
+            <Header>
+                <th style="width: 1px;">&nbsp;</th>
+                <th style="width: 1px;">&nbsp;</th>
+                <th>@Localizer["Name"]</th>
+            </Header>
+            <Row>
+                <td><ActionLink Action="Edit" Parameters="@($"id=" + context.EnrollmentId.ToString())" ResourceKey="Edit"  /></td>
+                <td><ActionDialog Header="Delete Enrollment" Message="Are You Sure You Wish To Delete This Enrollment?" Action="Delete" Security="SecurityAccessLevel.Edit" Class="btn btn-danger" OnClick="@(async () => await Delete(context))" ResourceKey="Delete"  Id="@context.EnrollmentId.ToString()" /></td>
+                <td>@context.Name</td>
+            </Row>
+        </Pager>
+    }
+    else
+    {
+        <p>@Localizer["Message.DisplayNone"]</p>
+    }
+}
+
+@code {
+    public override string RenderMode => RenderModes.Static;
+
+    public override List<Resource> Resources => new List<Resource>()
+    {
+        new Stylesheet(ModulePath() + "Module.css"),
+        new Script(ModulePath() + "Module.js")
+    };
+
+    List<Enrollment> _Enrollments;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _Enrollments = await EnrollmentService.GetEnrollmentsAsync(ModuleState.ModuleId);
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Loading Enrollment {Error}", ex.Message);
+            AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
+        }
+    }
+
+    private async Task Delete(Enrollment Enrollment)
+    {
+        try
+        {
+            await EnrollmentService.DeleteEnrollmentAsync(Enrollment.EnrollmentId, ModuleState.ModuleId);
+            await logger.LogInformation("Enrollment Deleted {Enrollment}", Enrollment);
+            _Enrollments = await EnrollmentService.GetEnrollmentsAsync(ModuleState.ModuleId);
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Deleting Enrollment {Enrollment} {Error}", Enrollment, ex.Message);
+            AddModuleMessage(Localizer["Message.DeleteError"], MessageType.Error);
+        }
+    }
+}

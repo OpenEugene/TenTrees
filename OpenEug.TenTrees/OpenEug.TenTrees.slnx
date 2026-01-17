@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="../10_Trees_BDD_Project_Plan.md" />
+  </Folder>
+  <Project Path="Client/OpenEug.TenTrees.Client.csproj" />
+  <Project Path="Server/OpenEug.TenTrees.Server.csproj" />
+  <Project Path="Shared/OpenEug.TenTrees.Shared.csproj" />
+</Solution>
