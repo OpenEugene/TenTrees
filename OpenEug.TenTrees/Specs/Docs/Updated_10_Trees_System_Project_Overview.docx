@@ -1,0 +1,177 @@
+🌿 **10 Trees Digital Tracking Platform --- System/Project Overview**
+
+**Main Idea**
+
+The system is built around digital forms used by mentors in the field.
+
+Mentors collect data on their smartphones, and upload it (when
+connected) to a central web-based database accessible to the 10 Trees
+team at the Centre.
+
+The admin, project manager, and educator can then view and download data
+as needed.
+
+**Core Components**
+
+> **A. Users and Devices**
+
+-   **Tree Mentors (Currently 17 total)**
+
+    -   Use small smartphones (mixed brands like Nokia/off-brand)
+
+    -   Collect data offline or with limited data
+
+    -   Upload data at the Centre via Wi-Fi
+
+    -   Continue using WhatsApp for garden photos if easier
+
+-   **Centre Staff (Admin, Project Manager, Educator, ED)**
+
+    -   Access data via laptops at the Centre
+
+    -   Review, export, and aggregate data (Excel/CSV)
+
+    -   Optionally drop map pins during garden visits
+
+**B. Data Flow**
+
+1.  **Application Form**
+
+    -   Completed by mentors on smartphones
+
+    -   Tick-box question + e-signature
+
+    -   Includes "Date left program" and "Reason" tick box
+
+2.  **Mapping Form**
+
+    -   Linked to Application Form (same household)
+
+    -   Optional GPS pin (added later by staff if mentors can't do it)
+
+    -   Optional photo (uploads or WhatsApp integration)
+
+3.  Release Form (Becky to send)
+
+4.  **Garden Assessment**
+
+    -   Completed by mentors twice per month (Year 1), then monthly
+        > (Year 2)
+
+    -   Calculates tree survival rate automatically
+
+    -   Tick boxes for problems, dropdown for tree types (or text entry
+        > if long list)
+
+    -   "Do you need help with this problem?" added below issues
+
+    -   MED: checkboxes for permaculture best practices
+
+    -   MED: also keep track of the total number.
+
+5.  **Class Attendance (optional for now)**
+
+    -   May remain in Excel rather than integrated into the platform
+
+6.  **Central Database (Web App)**
+
+    -   Stores all digital form submissions
+
+    -   Data organized by Village Tabs (Orpen Gate Village, etc.)
+
+    -   Accessible only to Centre staff (admin, PM, ED, educator)
+
+7.  **Data Reporting/Export**
+
+    -   Downloadable as Excel or CSV
+
+    -   Summary views show:
+
+        -   Total trees planted
+
+        -   Tree survival rate
+
+        -   Use of permaculture principles
+
+    -   No complex visual charts required - numbers and lists only
+
+**Connectivity Workflow**
+
+Mentor (Smartphone, collects data offline or with limited data)
+
+↓
+
+Uploads via Wi-Fi at Centre
+
+↓
+
+10 Trees Web App (secure database)
+
+↓
+
+Admin/PM/ED/Educator (review & export)
+
+↓
+
+Excel Reports for tracking & grants
+
+**Key Notes**
+
+-   All mentors have data plans, but connection quality varies -
+    > offline-first or "save and sync later" mode is ideal
+
+-   Photos: continue via WhatsApp unless reliable upload is confirmed
+
+-   Language: English and Xitsonga side-by-side
+
+-   Access Levels: mentors can submit only; staff can view/edit/export
+
+-   Testing: led by Becky, Trygive, and Quentan
+
+Meeting feedback
+
+-   Each village has It's own data
+
+-   Adam's can see all data
+
+-   Generate reports
+
+    -   Tree survival rates
+
+    -   Good principals followed
+
+    -   Area of improvement
+
+    -   See link from Becky (email to mark)
+
+-   Monthly reports
+
+    -   Send to each village
+
+    -   Admin only
+
+-   Data entry challenges
+
+    -   Mentors move between houses
+
+    -   Admin needs to impersonate mentors for data entry
+
+-   Each mentor has 10ish households
+
+-   Screen sizes
+
+    -   What's popular in Africa?
+
+        -   Samsung (Africa)
+
+        -   Nokia (Africa)
+
+        -   IPhones (13ish)
+
+        -   Pep Phones
+
+            -   Please take pictures
+
+        -   \$17 rand = \$1US
+
+-   

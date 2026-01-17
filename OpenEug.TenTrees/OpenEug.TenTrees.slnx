@@ -5,4 +5,5 @@
   <Project Path="Client/OpenEug.TenTrees.Client.csproj" />
   <Project Path="Server/OpenEug.TenTrees.Server.csproj" />
   <Project Path="Shared/OpenEug.TenTrees.Shared.csproj" />
+  <Project Path="Specs/Specs.csproj" Id="7b26ae3e-13b2-48a0-b024-d18553cd2e31" />
 </Solution>
