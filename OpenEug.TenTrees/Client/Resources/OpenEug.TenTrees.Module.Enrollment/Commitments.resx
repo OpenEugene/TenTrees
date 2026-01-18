@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="FormTitle" xml:space="preserve"><value>Beneficiary Enrollment</value></data>
+  <data name="Step" xml:space="preserve"><value>Step</value></data>
+  <data name="Of" xml:space="preserve"><value>of</value></data>
+  <data name="Section.Commitments" xml:space="preserve"><value>Commitments</value></data>
+  <data name="Section.Commitments.Help" xml:space="preserve"><value>Check all boxes to acknowledge commitments</value></data>
+  <data name="Commit.NoChemicals" xml:space="preserve"><value>Committed to not using chemicals or pesticides</value></data>
+  <data name="Commit.AttendClasses" xml:space="preserve"><value>Committed to attend five permaculture training classes</value></data>
+  <data name="Commit.NoCutting" xml:space="preserve"><value>Committed not to cut trees</value></data>
+  <data name="Commit.WomenChildren" xml:space="preserve"><value>Committed to standing for women and children with no abuse</value></data>
+  <data name="Commit.CareWhileAway" xml:space="preserve"><value>Agree to care for trees while away from home</value></data>
+  <data name="Commit.YardAccess" xml:space="preserve"><value>Give permission for mentor to enter yard</value></data>
+  <data name="Previous" xml:space="preserve"><value>Previous</value></data>
+  <data name="Next" xml:space="preserve"><value>Next</value></data>
+</root>

@@ -1,0 +1,182 @@
+@using OpenEug.TenTrees.Module.Enrollment.Services
+@using OpenEug.TenTrees.Module.Enrollment.Models
+@using Oqtane.Modules.Controls
+
+@namespace OpenEug.TenTrees.Module.Enrollment
+@inherits ModuleBase
+@inject IEnrollmentService EnrollmentService
+@inject IEnrollmentStateService StateService
+@inject NavigationManager NavigationManager
+@inject IStringLocalizer<Signature> Localizer
+
+<div class="container">
+    <h3>@Localizer["FormTitle"]</h3>
+    <p class="text-muted">@Localizer["Step"] 4 @Localizer["Of"] 4</p>
+    
+    <div class="progress mb-4">
+        <div class="progress-bar" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">100%</div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-header">
+            <h5>@Localizer["Section.Signature"]</h5>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle"></i> @Localizer["Signature.Info"]
+            </div>
+            
+            <div class="mb-3">
+                <Label For="signature" ResourceKey="Signature">Signature: *</Label>
+                <textarea id="signature" class="form-control" @bind="@_signatureData" rows="4" 
+                          placeholder="@Localizer["Signature.Placeholder"]" required></textarea>
+                <small class="form-text text-muted">@Localizer["Signature.Help"]</small>
+            </div>
+
+            <div class="mb-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="confirm" @bind="@_confirmed" required />
+                    <label class="form-check-label" for="confirm">
+                        @Localizer["Signature.Confirm"]
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Summary Card -->
+    <div class="card mb-3">
+        <div class="card-header">
+            <h5>@Localizer["Summary"]</h5>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-4">@Localizer["BeneficiaryName"]</dt>
+                <dd class="col-sm-8">@StateService.CurrentDraft?.BeneficiaryName</dd>
+                
+                <dt class="col-sm-4">@Localizer["Village"]</dt>
+                <dd class="col-sm-8">@StateService.CurrentDraft?.VillageId</dd>
+                
+                <dt class="col-sm-4">@Localizer["HouseholdSize"]</dt>
+                <dd class="col-sm-8">@StateService.CurrentDraft?.HouseholdSize</dd>
+            </dl>
+        </div>
+    </div>
+    
+    @if (_isSaving)
+    {
+        <div class="alert alert-info">
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            @Localizer["Saving"]
+        </div>
+    }
+    
+    <div class="d-flex justify-content-between">
+        <button type="button" class="btn btn-secondary" @onclick="PreviousStep" disabled="@_isSaving">
+            <i class="bi bi-arrow-left"></i> @Localizer["Previous"]
+        </button>
+        <button type="button" class="btn btn-success" @onclick="Submit" disabled="@(!_confirmed || _isSaving)">
+            <i class="bi bi-check-circle"></i> @Localizer["Submit"]
+        </button>
+    </div>
+</div>
+
+@code {
+    public override SecurityAccessLevel SecurityAccessLevel => SecurityAccessLevel.Edit;
+    public override string Actions => "Signature";
+    public override string Title => "Enrollment - Signature";
+
+    private string _signatureData;
+    private bool _confirmed;
+    private bool _isSaving;
+
+    protected override void OnInitialized()
+    {
+        if (StateService.CurrentDraft == null)
+        {
+            NavigationManager.NavigateTo(EditUrl("BasicInfo"));
+            return;
+        }
+
+        // Restore from draft
+        _signatureData = StateService.CurrentDraft.SignatureData;
+    }
+
+    private void PreviousStep()
+    {
+        StateService.CurrentDraft.SignatureData = _signatureData;
+        NavigationManager.NavigateTo(EditUrl("Commitments"));
+    }
+
+    private async Task Submit()
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(_signatureData) || !_confirmed)
+            {
+                AddModuleMessage(Localizer["Message.SignatureRequired"], MessageType.Warning);
+                return;
+            }
+
+            _isSaving = true;
+            StateHasChanged();
+
+            // Create enrollment from draft
+            var enrollment = new Enrollment
+            {
+                ModuleId = ModuleState.ModuleId,
+                
+                // Basic Information
+                BeneficiaryName = StateService.CurrentDraft.BeneficiaryName,
+                VillageId = StateService.CurrentDraft.VillageId,
+                HouseNumber = StateService.CurrentDraft.HouseNumber,
+                IdNumber = StateService.CurrentDraft.IdNumber,
+                BirthDate = StateService.CurrentDraft.BirthDate,
+                HouseholdSize = StateService.CurrentDraft.HouseholdSize,
+                OwnsHome = StateService.CurrentDraft.OwnsHome,
+                EnrollmentDate = DateTime.UtcNow,
+                MentorId = PageState.User.UserId,
+                EvaluatorName = StateService.CurrentDraft.EvaluatorName,
+                
+                // Preferred Criteria
+                EnrolledInPE = StateService.CurrentDraft.EnrolledInPE,
+                PEGraduate = StateService.CurrentDraft.PEGraduate,
+                GardenPlantedAndTended = StateService.CurrentDraft.GardenPlantedAndTended,
+                ChildHeadedHousehold = StateService.CurrentDraft.ChildHeadedHousehold,
+                WomanHeadedHousehold = StateService.CurrentDraft.WomanHeadedHousehold,
+                EmptyYard = StateService.CurrentDraft.EmptyYard,
+                
+                // Commitments
+                CommitNoChemicals = StateService.CurrentDraft.CommitNoChemicals,
+                CommitAttendClasses = StateService.CurrentDraft.CommitAttendClasses,
+                CommitNoCuttingTrees = StateService.CurrentDraft.CommitNoCuttingTrees,
+                CommitStandForWomenChildren = StateService.CurrentDraft.CommitStandForWomenChildren,
+                CommitCareWhileAway = StateService.CurrentDraft.CommitCareWhileAway,
+                CommitAllowYardAccess = StateService.CurrentDraft.CommitAllowYardAccess,
+                
+                // Signature
+                SignatureData = _signatureData,
+                SignatureCollected = true,
+                SignatureDate = DateTime.UtcNow,
+                
+                Status = EnrollmentStatus.Pending
+            };
+
+            var result = await EnrollmentService.AddEnrollmentAsync(enrollment);
+            await logger.LogInformation("Enrollment Added {Enrollment}", result);
+
+            // Clear draft
+            StateService.ClearDraft();
+
+            // Show success and navigate
+            AddModuleMessage(Localizer["Message.Success"], MessageType.Success);
+            NavigationManager.NavigateTo(NavigateUrl());
+        }
+        catch (Exception ex)
+        {
+            _isSaving = false;
+            await logger.LogError(ex, "Error Saving Enrollment {Error}", ex.Message);
+            AddModuleMessage(Localizer["Message.Error"], MessageType.Error);
+        }
+    }
+}

@@ -13,6 +13,11 @@ namespace OpenEug.TenTrees.Module.Enrollment.Startup
             {
                 services.AddScoped<IEnrollmentService, EnrollmentService>();
             }
+            
+            if (!services.Any(s => s.ServiceType == typeof(IEnrollmentStateService)))
+            {
+                services.AddScoped<IEnrollmentStateService, EnrollmentStateService>();
+            }
         }
     }
 }

@@ -56,7 +56,14 @@ namespace OpenEug.TenTrees.Module.Enrollment.Manager
             {
                 foreach(var Enrollment in Enrollments)
                 {
-                    _EnrollmentRepository.AddEnrollment(new Models.Enrollment { ModuleId = module.ModuleId, Name = Enrollment.Name });
+                    _EnrollmentRepository.AddEnrollment(new Models.Enrollment { 
+                        ModuleId = module.ModuleId, 
+                        BeneficiaryName = Enrollment.BeneficiaryName,
+                        VillageId = Enrollment.VillageId,
+                        HouseholdSize = Enrollment.HouseholdSize,
+                        MentorId = Enrollment.MentorId,
+                        EnrollmentDate = DateTime.UtcNow
+                    });
                 }
             }
         }
@@ -73,8 +80,8 @@ namespace OpenEug.TenTrees.Module.Enrollment.Manager
                    {
                        EntityName = "OpenEug.TenTreesEnrollment",
                        EntityId = Enrollment.EnrollmentId.ToString(),
-                       Title = Enrollment.Name,
-                       Body = Enrollment.Name,
+                       Title = Enrollment.BeneficiaryName,
+                       Body = $"{Enrollment.BeneficiaryName} - Village: {Enrollment.VillageId}",
                        ContentModifiedBy = Enrollment.ModifiedBy,
                        ContentModifiedOn = Enrollment.ModifiedOn
                    });

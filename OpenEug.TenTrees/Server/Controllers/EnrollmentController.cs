@@ -110,5 +110,80 @@ namespace OpenEug.TenTrees.Module.Enrollment.Controllers
                 HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
             }
         }
+        
+        // POST api/<controller>/validate
+        [HttpPost("validate")]
+        [Authorize(Policy = PolicyNames.EditModule)]
+        public async Task<ValidationResult> Validate([FromBody] Models.Enrollment Enrollment)
+        {
+            if (IsAuthorizedEntityId(EntityNames.Module, Enrollment.ModuleId))
+            {
+                return await _EnrollmentService.ValidateRequiredAsync(Enrollment);
+            }
+            else
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Enrollment Validate Attempt");
+                HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                return null;
+            }
+        }
+        
+        // POST api/<controller>/5/signature
+        [HttpPost("{id}/signature")]
+        [Authorize(Policy = PolicyNames.EditModule)]
+        public async Task<bool> CaptureSignature(int id, [FromBody] SignatureRequest request)
+        {
+            var enrollment = await _EnrollmentService.GetEnrollmentAsync(id, request.ModuleId);
+            if (enrollment != null && IsAuthorizedEntityId(EntityNames.Module, enrollment.ModuleId))
+            {
+                return await _EnrollmentService.CaptureSignatureAsync(id, request.SignatureData);
+            }
+            else
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Signature Capture Attempt {EnrollmentId}", id);
+                HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                return false;
+            }
+        }
+        
+        // GET api/<controller>/mentor/5
+        [HttpGet("mentor/{userid}")]
+        [Authorize(Policy = PolicyNames.ViewModule)]
+        public async Task<MentorInfo> GetMentorInfo(int userid)
+        {
+            return await _EnrollmentService.AutoFillMentorAsync(userid);
+        }
+        
+        // GET api/<controller>/status/{status}?moduleid=x
+        [HttpGet("status/{status}")]
+        [Authorize(Policy = PolicyNames.ViewModule)]
+        public async Task<IEnumerable<Models.Enrollment>> GetByStatus(Models.EnrollmentStatus status, string moduleid)
+        {
+            int ModuleId;
+            if (int.TryParse(moduleid, out ModuleId) && IsAuthorizedEntityId(EntityNames.Module, ModuleId))
+            {
+                return await _EnrollmentService.GetByStatusAsync(ModuleId, status);
+            }
+            else
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Enrollment Get By Status Attempt {ModuleId}", moduleid);
+                HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                return null;
+            }
+        }
+        
+        // GET api/<controller>/village/5
+        [HttpGet("village/{villageid}")]
+        [Authorize(Policy = PolicyNames.ViewModule)]
+        public async Task<IEnumerable<Models.Enrollment>> GetByVillage(int villageid)
+        {
+            return await _EnrollmentService.GetByVillageAsync(villageid);
+        }
+    }
+    
+    public class SignatureRequest
+    {
+        public int ModuleId { get; set; }
+        public string SignatureData { get; set; }
     }
 }

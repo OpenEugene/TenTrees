@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="FormTitle" xml:space="preserve"><value>Beneficiary Enrollment</value></data>
+  <data name="Step" xml:space="preserve"><value>Step</value></data>
+  <data name="Of" xml:space="preserve"><value>of</value></data>
+  <data name="Section.PreferredCriteria" xml:space="preserve"><value>Preferred Criteria</value></data>
+  <data name="Section.PreferredCriteria.Help" xml:space="preserve"><value>Select all that apply</value></data>
+  <data name="Criteria.EnrolledInPE" xml:space="preserve"><value>Are they currently enrolled in PE with a garden growing?</value></data>
+  <data name="Criteria.PEGraduate" xml:space="preserve"><value>Are they a graduate of PE in the past?</value></data>
+  <data name="Criteria.GardenPlanted" xml:space="preserve"><value>If so, is their garden planted and tended?</value></data>
+  <data name="Criteria.ChildHeaded" xml:space="preserve"><value>Child headed household?</value></data>
+  <data name="Criteria.WomanHeaded" xml:space="preserve"><value>Woman headed household?</value></data>
+  <data name="Criteria.EmptyYard" xml:space="preserve"><value>Empty or nearly empty yard?</value></data>
+  <data name="Previous" xml:space="preserve"><value>Previous</value></data>
+  <data name="Next" xml:space="preserve"><value>Next</value></data>
+</root>

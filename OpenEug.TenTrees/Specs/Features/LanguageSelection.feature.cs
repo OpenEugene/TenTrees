@@ -17,28 +17,28 @@ namespace Specs.Features
     
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Reqnroll", "3.0.0.0")]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::Xunit.TraitAttribute("Category", "workflow-reporting")]
+    [global::Xunit.TraitAttribute("Category", "workflow-localization")]
     [global::Xunit.TraitAttribute("Category", "priority-high")]
-    [global::Xunit.TraitAttribute("Category", "staff-only")]
-    public partial class ProgramReportsAndDataExportFeature : object, global::Xunit.IClassFixture<ProgramReportsAndDataExportFeature.FixtureData>, global::Xunit.IAsyncLifetime
+    [global::Xunit.TraitAttribute("Category", "mobile")]
+    public partial class LanguageSelectionFeature : object, global::Xunit.IClassFixture<LanguageSelectionFeature.FixtureData>, global::Xunit.IAsyncLifetime
     {
         
         private global::Reqnroll.ITestRunner testRunner;
         
         private static string[] featureTags = new string[] {
-                "workflow-reporting",
+                "workflow-localization",
                 "priority-high",
-                "staff-only"};
+                "mobile"};
         
-        private static global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new global::System.Globalization.CultureInfo("en-US"), "Features", "Program Reports and Data Export", "  As Centre staff\r\n  I want to generate reports and export data\r\n  So that I can " +
-                "track program outcomes and report to funders", global::Reqnroll.ProgrammingLanguage.CSharp, featureTags, InitializeCucumberMessages());
+        private static global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new global::System.Globalization.CultureInfo("en-US"), "Features", "Language Selection", "  As a mentor or staff member\r\n  I want to select my preferred language\r\n  So tha" +
+                "t I can use the app in a language I understand", global::Reqnroll.ProgrammingLanguage.CSharp, featureTags, InitializeCucumberMessages());
         
         private global::Xunit.Abstractions.ITestOutputHelper _testOutputHelper;
         
-#line 1 "ProgramReporting.feature"
+#line 1 "LanguageSelection.feature"
 #line hidden
         
-        public ProgramReportsAndDataExportFeature(ProgramReportsAndDataExportFeature.FixtureData fixtureData, global::Xunit.Abstractions.ITestOutputHelper testOutputHelper)
+        public LanguageSelectionFeature(LanguageSelectionFeature.FixtureData fixtureData, global::Xunit.Abstractions.ITestOutputHelper testOutputHelper)
         {
             this._testOutputHelper = testOutputHelper;
         }
@@ -115,16 +115,13 @@ namespace Specs.Features
 #line 7
   #line hidden
 #line 8
-    await testRunner.GivenAsync("I am Centre staff (Admin, PM, or ED)", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
-#line hidden
-#line 9
-    await testRunner.AndAsync("I have access to reporting functions", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+    await testRunner.GivenAsync("the app supports \"en-ZA\" and \"ts-ZA\" languages", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
         }
         
         private static global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages InitializeCucumberMessages()
         {
-            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/ProgramReporting.feature.ndjson", 7);
+            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/LanguageSelection.feature.ndjson", 8);
         }
         
         async global::System.Threading.Tasks.Task global::Xunit.IAsyncLifetime.InitializeAsync()
@@ -152,18 +149,18 @@ namespace Specs.Features
             await this.TestTearDownAsync();
         }
         
-        [global::Xunit.SkippableFactAttribute(DisplayName="Generate tree survival report")]
-        [global::Xunit.TraitAttribute("FeatureTitle", "Program Reports and Data Export")]
-        [global::Xunit.TraitAttribute("Description", "Generate tree survival report")]
-        public async global::System.Threading.Tasks.Task GenerateTreeSurvivalReport()
+        [global::Xunit.SkippableFactAttribute(DisplayName="Auto-detect language from device settings")]
+        [global::Xunit.TraitAttribute("FeatureTitle", "Language Selection")]
+        [global::Xunit.TraitAttribute("Description", "Auto-detect language from device settings")]
+        public async global::System.Threading.Tasks.Task Auto_DetectLanguageFromDeviceSettings()
         {
             string[] tagsOfScenario = ((string[])(null));
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
             string pickleIndex = "0";
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Generate tree survival report", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Auto-detect language from device settings", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
-#line 11
+#line 10
   this.ScenarioInitialize(scenarioInfo, ruleInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -176,46 +173,31 @@ namespace Specs.Features
 #line 7
   await this.FeatureBackgroundAsync();
 #line hidden
+#line 11
+    await testRunner.GivenAsync("my device language is set to \"ts-ZA\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line hidden
 #line 12
-    await testRunner.WhenAsync("I select report \"Tree Survival Rate\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+    await testRunner.WhenAsync("I open the 10 Trees app", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 13
-    await testRunner.AndAsync("I filter by village \"Orpen Gate Village\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
-#line hidden
-#line 14
-    await testRunner.AndAsync("I set date range \"2025-10-01\" to \"2025-10-31\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
-#line hidden
-                global::Reqnroll.Table table11 = new global::Reqnroll.Table(new string[] {
-                            "Metric",
-                            "Value"});
-                table11.AddRow(new string[] {
-                            "Total trees planted",
-                            "500"});
-                table11.AddRow(new string[] {
-                            "Total trees alive",
-                            "455"});
-                table11.AddRow(new string[] {
-                            "Survival rate",
-                            "91%"});
-#line 15
-    await testRunner.ThenAsync("I should see:", ((string)(null)), table11, "Then ");
+    await testRunner.ThenAsync("the app should display in Xitsonga", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Xunit.SkippableFactAttribute(DisplayName="Generate permaculture compliance report")]
-        [global::Xunit.TraitAttribute("FeatureTitle", "Program Reports and Data Export")]
-        [global::Xunit.TraitAttribute("Description", "Generate permaculture compliance report")]
-        public async global::System.Threading.Tasks.Task GeneratePermacultureComplianceReport()
+        [global::Xunit.SkippableFactAttribute(DisplayName="Auto-detect falls back to English for unsupported language")]
+        [global::Xunit.TraitAttribute("FeatureTitle", "Language Selection")]
+        [global::Xunit.TraitAttribute("Description", "Auto-detect falls back to English for unsupported language")]
+        public async global::System.Threading.Tasks.Task Auto_DetectFallsBackToEnglishForUnsupportedLanguage()
         {
             string[] tagsOfScenario = ((string[])(null));
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
             string pickleIndex = "1";
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Generate permaculture compliance report", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Auto-detect falls back to English for unsupported language", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
-#line 21
+#line 15
   this.ScenarioInitialize(scenarioInfo, ruleInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -228,49 +210,111 @@ namespace Specs.Features
 #line 7
   await this.FeatureBackgroundAsync();
 #line hidden
-#line 22
-    await testRunner.WhenAsync("I select report \"Permaculture Practices\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line 16
+    await testRunner.GivenAsync("my device language is set to \"fr-FR\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
-#line 23
-    await testRunner.AndAsync("I filter by village \"Orpen Gate Village\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line 17
+    await testRunner.WhenAsync("I open the 10 Trees app", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-                global::Reqnroll.Table table12 = new global::Reqnroll.Table(new string[] {
-                            "Practice",
-                            "Percentage"});
-                table12.AddRow(new string[] {
-                            "Making compost",
-                            "85%"});
-                table12.AddRow(new string[] {
-                            "Collecting water",
-                            "90%"});
-                table12.AddRow(new string[] {
-                            "Using greywater",
-                            "75%"});
-                table12.AddRow(new string[] {
-                            "No chemical fertilizers",
-                            "95%"});
-                table12.AddRow(new string[] {
-                            "No pesticides",
-                            "92%"});
-#line 24
-    await testRunner.ThenAsync("I should see percentage using each practice:", ((string)(null)), table12, "Then ");
-#line hidden
-#line 31
-    await testRunner.AndAsync("I should see \"Areas needing improvement: Using greywater\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line 18
+    await testRunner.ThenAsync("the app should display in English", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Xunit.SkippableFactAttribute(DisplayName="Export data to Excel")]
-        [global::Xunit.TraitAttribute("FeatureTitle", "Program Reports and Data Export")]
-        [global::Xunit.TraitAttribute("Description", "Export data to Excel")]
-        public async global::System.Threading.Tasks.Task ExportDataToExcel()
+        [global::Xunit.SkippableFactAttribute(DisplayName="Manually switch language via picker")]
+        [global::Xunit.TraitAttribute("FeatureTitle", "Language Selection")]
+        [global::Xunit.TraitAttribute("Description", "Manually switch language via picker")]
+        public async global::System.Threading.Tasks.Task ManuallySwitchLanguageViaPicker()
         {
             string[] tagsOfScenario = ((string[])(null));
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
             string pickleIndex = "2";
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Export data to Excel", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Manually switch language via picker", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            string[] tagsOfRule = ((string[])(null));
+            global::Reqnroll.RuleInfo ruleInfo = null;
+#line 20
+  this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line hidden
+            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                await testRunner.SkipScenarioAsync();
+            }
+            else
+            {
+                await this.ScenarioStartAsync();
+#line 7
+  await this.FeatureBackgroundAsync();
+#line hidden
+#line 21
+    await testRunner.GivenAsync("I am viewing the app in English", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line hidden
+#line 22
+    await testRunner.WhenAsync("I tap the language picker", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 23
+    await testRunner.AndAsync("I select \"Xitsonga\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 24
+    await testRunner.ThenAsync("the app should display in Xitsonga", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+#line 25
+    await testRunner.AndAsync("all form labels should be in Xitsonga", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 26
+    await testRunner.AndAsync("all button text should be in Xitsonga", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+            }
+            await this.ScenarioCleanupAsync();
+        }
+        
+        [global::Xunit.SkippableFactAttribute(DisplayName="Language preference persists across sessions")]
+        [global::Xunit.TraitAttribute("FeatureTitle", "Language Selection")]
+        [global::Xunit.TraitAttribute("Description", "Language preference persists across sessions")]
+        public async global::System.Threading.Tasks.Task LanguagePreferencePersistsAcrossSessions()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
+            string pickleIndex = "3";
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Language preference persists across sessions", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            string[] tagsOfRule = ((string[])(null));
+            global::Reqnroll.RuleInfo ruleInfo = null;
+#line 28
+  this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line hidden
+            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                await testRunner.SkipScenarioAsync();
+            }
+            else
+            {
+                await this.ScenarioStartAsync();
+#line 7
+  await this.FeatureBackgroundAsync();
+#line hidden
+#line 29
+    await testRunner.GivenAsync("I have set my language preference to \"ts-ZA\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line hidden
+#line 30
+    await testRunner.WhenAsync("I close and reopen the app", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 31
+    await testRunner.ThenAsync("the app should display in Xitsonga", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+            }
+            await this.ScenarioCleanupAsync();
+        }
+        
+        [global::Xunit.SkippableFactAttribute(DisplayName="Supported languages list")]
+        [global::Xunit.TraitAttribute("FeatureTitle", "Language Selection")]
+        [global::Xunit.TraitAttribute("Description", "Supported languages list")]
+        public async global::System.Threading.Tasks.Task SupportedLanguagesList()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
+            string pickleIndex = "4";
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Supported languages list", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
 #line 33
@@ -287,39 +331,36 @@ namespace Specs.Features
   await this.FeatureBackgroundAsync();
 #line hidden
 #line 34
-    await testRunner.GivenAsync("I have filtered data by village \"Orpen Gate Village\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+    await testRunner.WhenAsync("I view the language picker", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
+                global::Reqnroll.Table table9 = new global::Reqnroll.Table(new string[] {
+                            "Language",
+                            "Culture Code"});
+                table9.AddRow(new string[] {
+                            "English",
+                            "en-ZA"});
+                table9.AddRow(new string[] {
+                            "Xitsonga (Shangaan)",
+                            "ts-ZA"});
 #line 35
-    await testRunner.AndAsync("date range \"Last 30 days\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
-#line hidden
-#line 36
-    await testRunner.WhenAsync("I click \"Export to Excel\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
-#line hidden
-#line 37
-    await testRunner.ThenAsync("a .xlsx file should download", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
-#line hidden
-#line 38
-    await testRunner.AndAsync("it should contain all filtered records", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
-#line hidden
-#line 39
-    await testRunner.AndAsync("columns should match the data grid", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+    await testRunner.ThenAsync("I should see the following languages available:", ((string)(null)), table9, "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Xunit.SkippableFactAttribute(DisplayName="Export data to CSV")]
-        [global::Xunit.TraitAttribute("FeatureTitle", "Program Reports and Data Export")]
-        [global::Xunit.TraitAttribute("Description", "Export data to CSV")]
-        public async global::System.Threading.Tasks.Task ExportDataToCSV()
+        [global::Xunit.SkippableFactAttribute(DisplayName="Language selection updates immediately")]
+        [global::Xunit.TraitAttribute("FeatureTitle", "Language Selection")]
+        [global::Xunit.TraitAttribute("Description", "Language selection updates immediately")]
+        public async global::System.Threading.Tasks.Task LanguageSelectionUpdatesImmediately()
         {
             string[] tagsOfScenario = ((string[])(null));
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
-            string pickleIndex = "3";
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Export data to CSV", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            string pickleIndex = "5";
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Language selection updates immediately", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
-#line 41
+#line 40
   this.ScenarioInitialize(scenarioInfo, ruleInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -331,73 +372,21 @@ namespace Specs.Features
                 await this.ScenarioStartAsync();
 #line 7
   await this.FeatureBackgroundAsync();
+#line hidden
+#line 41
+    await testRunner.GivenAsync("I am viewing the Enrollment Form in English", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
 #line 42
-    await testRunner.GivenAsync("I have filtered assessment data", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+    await testRunner.WhenAsync("I switch the language to \"ts-ZA\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 43
-    await testRunner.WhenAsync("I click \"Export to CSV\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+    await testRunner.ThenAsync("all visible text should update to Xitsonga", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
 #line 44
-    await testRunner.ThenAsync("a .csv file should download", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+    await testRunner.AndAsync("the form title should change from \"Enrollment\" to \"Ngheniso\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
 #line 45
-    await testRunner.AndAsync("it should be compatible with Excel import", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
-#line hidden
-            }
-            await this.ScenarioCleanupAsync();
-        }
-        
-        [global::Xunit.SkippableFactAttribute(DisplayName="Generate monthly village report")]
-        [global::Xunit.TraitAttribute("FeatureTitle", "Program Reports and Data Export")]
-        [global::Xunit.TraitAttribute("Description", "Generate monthly village report")]
-        public async global::System.Threading.Tasks.Task GenerateMonthlyVillageReport()
-        {
-            string[] tagsOfScenario = ((string[])(null));
-            global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
-            string pickleIndex = "4";
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Generate monthly village report", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
-            string[] tagsOfRule = ((string[])(null));
-            global::Reqnroll.RuleInfo ruleInfo = null;
-#line 47
-  this.ScenarioInitialize(scenarioInfo, ruleInfo);
-#line hidden
-            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
-            {
-                await testRunner.SkipScenarioAsync();
-            }
-            else
-            {
-                await this.ScenarioStartAsync();
-#line 7
-  await this.FeatureBackgroundAsync();
-#line hidden
-#line 48
-    await testRunner.WhenAsync("I generate monthly report for \"November 2025\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
-#line hidden
-#line 49
-    await testRunner.AndAsync("village \"Orpen Gate Village\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
-#line hidden
-                global::Reqnroll.Table table13 = new global::Reqnroll.Table(new string[] {
-                            "Section",
-                            "Content"});
-                table13.AddRow(new string[] {
-                            "Tree Survival",
-                            "Rate and trend"});
-                table13.AddRow(new string[] {
-                            "New Enrollments",
-                            "Count this month"});
-                table13.AddRow(new string[] {
-                            "Active Assessments",
-                            "Count completed"});
-                table13.AddRow(new string[] {
-                            "Permaculture Compliance",
-                            "Practice percentages"});
-                table13.AddRow(new string[] {
-                            "Areas for Improvement",
-                            "Identified gaps"});
-#line 50
-    await testRunner.ThenAsync("report should include:", ((string)(null)), table13, "Then ");
+    await testRunner.AndAsync("I should not see any English text", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
@@ -410,12 +399,12 @@ namespace Specs.Features
             
             async global::System.Threading.Tasks.Task global::Xunit.IAsyncLifetime.InitializeAsync()
             {
-                await ProgramReportsAndDataExportFeature.FeatureSetupAsync();
+                await LanguageSelectionFeature.FeatureSetupAsync();
             }
             
             async global::System.Threading.Tasks.Task global::Xunit.IAsyncLifetime.DisposeAsync()
             {
-                await ProgramReportsAndDataExportFeature.FeatureTearDownAsync();
+                await LanguageSelectionFeature.FeatureTearDownAsync();
             }
         }
     }

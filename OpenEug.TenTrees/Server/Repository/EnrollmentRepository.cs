@@ -8,6 +8,7 @@ namespace OpenEug.TenTrees.Module.Enrollment.Repository
     public interface IEnrollmentRepository
     {
         IEnumerable<Models.Enrollment> GetEnrollments(int ModuleId);
+        IEnumerable<Models.Enrollment> GetEnrollments();
         Models.Enrollment GetEnrollment(int EnrollmentId);
         Models.Enrollment GetEnrollment(int EnrollmentId, bool tracking);
         Models.Enrollment AddEnrollment(Models.Enrollment Enrollment);
@@ -28,6 +29,12 @@ namespace OpenEug.TenTrees.Module.Enrollment.Repository
         {
             using var db = _factory.CreateDbContext();
             return db.Enrollment.Where(item => item.ModuleId == ModuleId).ToList();
+        }
+        
+        public IEnumerable<Models.Enrollment> GetEnrollments()
+        {
+            using var db = _factory.CreateDbContext();
+            return db.Enrollment.ToList();
         }
 
         public Models.Enrollment GetEnrollment(int EnrollmentId)

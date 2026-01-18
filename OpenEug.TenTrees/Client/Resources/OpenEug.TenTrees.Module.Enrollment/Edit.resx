@@ -117,11 +117,101 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Name.Text" xml:space="preserve">
-    <value>Name: </value>
+  <data name="FormTitle" xml:space="preserve">
+    <value>Beneficiary Enrollment Form</value>
   </data>
-  <data name="Name.HelpText" xml:space="preserve">
-    <value>Enter the name</value>
+  <data name="Section.BasicInfo" xml:space="preserve">
+    <value>Basic Information</value>
+  </data>
+  <data name="Section.PreferredCriteria" xml:space="preserve">
+    <value>Preferred Criteria</value>
+  </data>
+  <data name="Section.Commitments" xml:space="preserve">
+    <value>Commitments</value>
+  </data>
+  <data name="Section.Signature" xml:space="preserve">
+    <value>Signature</value>
+  </data>
+  <data name="EvaluatorName" xml:space="preserve">
+    <value>Evaluator Name:</value>
+  </data>
+  <data name="BeneficiaryName" xml:space="preserve">
+    <value>Beneficiary Name:</value>
+  </data>
+  <data name="Village" xml:space="preserve">
+    <value>Village:</value>
+  </data>
+  <data name="HouseNumber" xml:space="preserve">
+    <value>House Number:</value>
+  </data>
+  <data name="IdNumber" xml:space="preserve">
+    <value>ID Number:</value>
+  </data>
+  <data name="BirthDate" xml:space="preserve">
+    <value>Birth Date:</value>
+  </data>
+  <data name="OwnsHome" xml:space="preserve">
+    <value>Do they own their home?</value>
+  </data>
+  <data name="HouseholdSize" xml:space="preserve">
+    <value>Household Size:</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>Date:</value>
+  </data>
+  <data name="Select" xml:space="preserve">
+    <value>-- Select --</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="Criteria.EnrolledInPE" xml:space="preserve">
+    <value>Are they currently enrolled in PE with a garden growing?</value>
+  </data>
+  <data name="Criteria.PEGraduate" xml:space="preserve">
+    <value>Are they a graduate of PE in the past?</value>
+  </data>
+  <data name="Criteria.GardenPlanted" xml:space="preserve">
+    <value>If so, is their garden planted and tended?</value>
+  </data>
+  <data name="Criteria.ChildHeaded" xml:space="preserve">
+    <value>Child headed household?</value>
+  </data>
+  <data name="Criteria.WomanHeaded" xml:space="preserve">
+    <value>Woman headed household?</value>
+  </data>
+  <data name="Criteria.EmptyYard" xml:space="preserve">
+    <value>Empty or nearly empty yard?</value>
+  </data>
+  <data name="Commit.NoChemicals" xml:space="preserve">
+    <value>Committed to not using chemicals or pesticides</value>
+  </data>
+  <data name="Commit.AttendClasses" xml:space="preserve">
+    <value>Committed to attend five permaculture training classes</value>
+  </data>
+  <data name="Commit.NoCutting" xml:space="preserve">
+    <value>Committed not to cut trees</value>
+  </data>
+  <data name="Commit.WomenChildren" xml:space="preserve">
+    <value>Committed to standing for women and children with no abuse</value>
+  </data>
+  <data name="Commit.CareWhileAway" xml:space="preserve">
+    <value>Agree to care for trees while away from home</value>
+  </data>
+  <data name="Commit.YardAccess" xml:space="preserve">
+    <value>Give permission for mentor to enter yard</value>
+  </data>
+  <data name="Signature" xml:space="preserve">
+    <value>Signature:</value>
+  </data>
+  <data name="Signature.Placeholder" xml:space="preserve">
+    <value>E-signature (type name or draw signature)</value>
+  </data>
+  <data name="Signature.Help" xml:space="preserve">
+    <value>Type beneficiary name or capture signature</value>
   </data>
   <data name="Save" xml:space="preserve">
     <value>Save</value>
@@ -137,5 +227,11 @@
   </data>
   <data name="Message.SaveError" xml:space="preserve">
     <value>Error Saving Enrollment</value>
+  </data>
+  <data name="Message.SaveSuccess" xml:space="preserve">
+    <value>Enrollment saved successfully</value>
+  </data>
+  <data name="Message.UpdateSuccess" xml:space="preserve">
+    <value>Enrollment updated successfully</value>
   </data>
 </root>

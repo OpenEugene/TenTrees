@@ -10,19 +10,212 @@
 
 <form @ref="form" class="@(validated ? " was-validated" : "needs-validation" )" novalidate>
     <div class="container">
-        <div class="row mb-1 align-items-center">
-            <Label Class="col-sm-3" For="name" HelpText="Enter a name" ResourceKey="Name">Name: </Label>
-            <div class="col-sm-9">
-                <input id="name" class="form-control" @bind="@_name" required />
+        <h3>@Localizer["FormTitle"]</h3>
+        
+        <!-- Section 1: Basic Information -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5>@Localizer["Section.BasicInfo"]</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-2">
+                    <Label Class="col-sm-4" For="evaluatorname" ResourceKey="EvaluatorName">Evaluator Name:</Label>
+                    <div class="col-sm-8">
+                        <input id="evaluatorname" class="form-control" @bind="@_evaluatorName" readonly />
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <Label Class="col-sm-4" For="beneficiaryname" ResourceKey="BeneficiaryName">Beneficiary Name:</Label>
+                    <div class="col-sm-8">
+                        <input id="beneficiaryname" class="form-control" @bind="@_beneficiaryName" required />
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <Label Class="col-sm-4" For="villageid" ResourceKey="Village">Village:</Label>
+                    <div class="col-sm-8">
+                        <input id="villageid" type="number" class="form-control" @bind="@_villageId" required />
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <Label Class="col-sm-4" For="housenumber" ResourceKey="HouseNumber">House Number:</Label>
+                    <div class="col-sm-8">
+                        <input id="housenumber" class="form-control" @bind="@_houseNumber" />
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <Label Class="col-sm-4" For="idnumber" ResourceKey="IdNumber">ID Number:</Label>
+                    <div class="col-sm-8">
+                        <input id="idnumber" class="form-control" @bind="@_idNumber" />
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <Label Class="col-sm-4" For="birthdate" ResourceKey="BirthDate">Birth Date:</Label>
+                    <div class="col-sm-8">
+                        <input id="birthdate" type="date" class="form-control" @bind="@_birthDate" />
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <Label Class="col-sm-4" For="ownshome" ResourceKey="OwnsHome">Do they own their home?</Label>
+                    <div class="col-sm-8">
+                        <select id="ownshome" class="form-select" @bind="@_ownsHome">
+                            <option value="">@Localizer["Select"]</option>
+                            <option value="true">@Localizer["Yes"]</option>
+                            <option value="false">@Localizer["No"]</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <Label Class="col-sm-4" For="householdsize" ResourceKey="HouseholdSize">Household Size:</Label>
+                    <div class="col-sm-8">
+                        <input id="householdsize" type="number" class="form-control" @bind="@_householdSize" required />
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <Label Class="col-sm-4" For="enrollmentdate" ResourceKey="Date">Date:</Label>
+                    <div class="col-sm-8">
+                        <input id="enrollmentdate" type="date" class="form-control" @bind="@_enrollmentDate" readonly />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Preferred Criteria -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5>@Localizer["Section.PreferredCriteria"]</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="enrolledinpe" @bind="@_enrolledInPE" />
+                        <Label Class="form-check-label" For="enrolledinpe" ResourceKey="Criteria.EnrolledInPE">
+                            Are they currently enrolled in PE with a garden growing?
+                        </Label>
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="pegraduate" @bind="@_peGraduate" />
+                        <Label Class="form-check-label" For="pegraduate" ResourceKey="Criteria.PEGraduate">
+                            Are they a graduate of PE in the past?
+                        </Label>
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="gardenplanted" @bind="@_gardenPlantedAndTended" />
+                        <Label Class="form-check-label" For="gardenplanted" ResourceKey="Criteria.GardenPlanted">
+                            If so, is their garden planted and tended?
+                        </Label>
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="childheaded" @bind="@_childHeadedHousehold" />
+                        <Label Class="form-check-label" For="childheaded" ResourceKey="Criteria.ChildHeaded">
+                            Child headed household?
+                        </Label>
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="womanheaded" @bind="@_womanHeadedHousehold" />
+                        <Label Class="form-check-label" For="womanheaded" ResourceKey="Criteria.WomanHeaded">
+                            Woman headed household?
+                        </Label>
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="emptyyard" @bind="@_emptyYard" />
+                        <Label Class="form-check-label" For="emptyyard" ResourceKey="Criteria.EmptyYard">
+                            Empty or nearly empty yard?
+                        </Label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: Commitments -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5>@Localizer["Section.Commitments"]</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="commitchemicals" @bind="@_commitNoChemicals" />
+                        <Label Class="form-check-label" For="commitchemicals" ResourceKey="Commit.NoChemicals">
+                            Committed to not using chemicals or pesticides
+                        </Label>
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="commitclasses" @bind="@_commitAttendClasses" />
+                        <Label Class="form-check-label" For="commitclasses" ResourceKey="Commit.AttendClasses">
+                            Committed to attend five permaculture training classes
+                        </Label>
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="commitcutting" @bind="@_commitNoCuttingTrees" />
+                        <Label Class="form-check-label" For="commitcutting" ResourceKey="Commit.NoCutting">
+                            Committed not to cut trees
+                        </Label>
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="commitwomen" @bind="@_commitStandForWomenChildren" />
+                        <Label Class="form-check-label" For="commitwomen" ResourceKey="Commit.WomenChildren">
+                            Committed to standing for women and children with no abuse
+                        </Label>
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="commitcare" @bind="@_commitCareWhileAway" />
+                        <Label Class="form-check-label" For="commitcare" ResourceKey="Commit.CareWhileAway">
+                            Agree to care for trees while away from home
+                        </Label>
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="commitaccess" @bind="@_commitAllowYardAccess" />
+                        <Label Class="form-check-label" For="commitaccess" ResourceKey="Commit.YardAccess">
+                            Give permission for mentor to enter yard
+                        </Label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 4: Signature -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5>@Localizer["Section.Signature"]</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-2">
+                    <Label Class="col-sm-4" For="signature" ResourceKey="Signature">Signature:</Label>
+                    <div class="col-sm-8">
+                        <textarea id="signature" class="form-control" @bind="@_signatureData" rows="3" placeholder="@Localizer["Signature.Placeholder"]"></textarea>
+                        <small class="form-text text-muted">@Localizer["Signature.Help"]</small>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+    
     <button type="button" class="btn btn-success" @onclick="Save">@Localizer["Save"]</button>
     <NavLink class="btn btn-secondary" href="@NavigateUrl()">@Localizer["Cancel"]</NavLink>
     <br /><br />
     @if (PageState.Action == "Edit")
     {
-    <AuditInfo CreatedBy="@_createdby" CreatedOn="@_createdon" ModifiedBy="@_modifiedby" ModifiedOn="@_modifiedon"></AuditInfo>
+        <AuditInfo CreatedBy="@_createdby" CreatedOn="@_createdon" ModifiedBy="@_modifiedby" ModifiedOn="@_modifiedon"></AuditInfo>
     }
 </form>
 
@@ -37,7 +230,38 @@
     private bool validated = false;
 
     private int _id;
-    private string _name;
+    
+    // Basic Information
+    private string _evaluatorName;
+    private string _beneficiaryName;
+    private int _villageId;
+    private string _houseNumber;
+    private string _idNumber;
+    private DateTime? _birthDate;
+    private bool _ownsHome;
+    private int _householdSize = 1;
+    private DateTime _enrollmentDate = DateTime.Today;
+    
+    // Preferred Criteria
+    private bool _enrolledInPE;
+    private bool _peGraduate;
+    private bool _gardenPlantedAndTended;
+    private bool _childHeadedHousehold;
+    private bool _womanHeadedHousehold;
+    private bool _emptyYard;
+    
+    // Commitments
+    private bool _commitNoChemicals;
+    private bool _commitAttendClasses;
+    private bool _commitNoCuttingTrees;
+    private bool _commitStandForWomenChildren;
+    private bool _commitCareWhileAway;
+    private bool _commitAllowYardAccess;
+    
+    // Signature
+    private string _signatureData;
+    
+    // Audit fields
     private string _createdby;
     private DateTime _createdon;
     private string _modifiedby;
@@ -47,13 +271,45 @@
     {
         try
         {
+            // Auto-fill evaluator name from current user
+            _evaluatorName = PageState.User.DisplayName;
+            
             if (PageState.Action == "Edit")
             {
                 _id = Int32.Parse(PageState.QueryString["id"]);
                 Enrollment Enrollment = await EnrollmentService.GetEnrollmentAsync(_id, ModuleState.ModuleId);
                 if (Enrollment != null)
                 {
-                    _name = Enrollment.Name;
+                    _beneficiaryName = Enrollment.BeneficiaryName;
+                    _villageId = Enrollment.VillageId;
+                    _houseNumber = Enrollment.HouseNumber;
+                    _idNumber = Enrollment.IdNumber;
+                    _birthDate = Enrollment.BirthDate;
+                    _householdSize = Enrollment.HouseholdSize;
+                    _ownsHome = Enrollment.OwnsHome;
+                    _enrollmentDate = Enrollment.EnrollmentDate.Date;
+                    _evaluatorName = Enrollment.EvaluatorName;
+                    
+                    // Preferred Criteria
+                    _enrolledInPE = Enrollment.EnrolledInPE;
+                    _peGraduate = Enrollment.PEGraduate;
+                    _gardenPlantedAndTended = Enrollment.GardenPlantedAndTended;
+                    _childHeadedHousehold = Enrollment.ChildHeadedHousehold;
+                    _womanHeadedHousehold = Enrollment.WomanHeadedHousehold;
+                    _emptyYard = Enrollment.EmptyYard;
+                    
+                    // Commitments
+                    _commitNoChemicals = Enrollment.CommitNoChemicals;
+                    _commitAttendClasses = Enrollment.CommitAttendClasses;
+                    _commitNoCuttingTrees = Enrollment.CommitNoCuttingTrees;
+                    _commitStandForWomenChildren = Enrollment.CommitStandForWomenChildren;
+                    _commitCareWhileAway = Enrollment.CommitCareWhileAway;
+                    _commitAllowYardAccess = Enrollment.CommitAllowYardAccess;
+                    
+                    // Signature
+                    _signatureData = Enrollment.SignatureData;
+                    
+                    // Audit
                     _createdby = Enrollment.CreatedBy;
                     _createdon = Enrollment.CreatedOn;
                     _modifiedby = Enrollment.ModifiedBy;
@@ -80,16 +336,90 @@
                 {
                     Enrollment Enrollment = new Enrollment();
                     Enrollment.ModuleId = ModuleState.ModuleId;
-                    Enrollment.Name = _name;
+                    
+                    // Basic Information
+                    Enrollment.BeneficiaryName = _beneficiaryName;
+                    Enrollment.VillageId = _villageId;
+                    Enrollment.HouseNumber = _houseNumber;
+                    Enrollment.IdNumber = _idNumber;
+                    Enrollment.BirthDate = _birthDate;
+                    Enrollment.HouseholdSize = _householdSize;
+                    Enrollment.OwnsHome = _ownsHome;
+                    Enrollment.EnrollmentDate = DateTime.UtcNow;
+                    Enrollment.MentorId = PageState.User.UserId;
+                    Enrollment.EvaluatorName = _evaluatorName;
+                    
+                    // Preferred Criteria
+                    Enrollment.EnrolledInPE = _enrolledInPE;
+                    Enrollment.PEGraduate = _peGraduate;
+                    Enrollment.GardenPlantedAndTended = _gardenPlantedAndTended;
+                    Enrollment.ChildHeadedHousehold = _childHeadedHousehold;
+                    Enrollment.WomanHeadedHousehold = _womanHeadedHousehold;
+                    Enrollment.EmptyYard = _emptyYard;
+                    
+                    // Commitments
+                    Enrollment.CommitNoChemicals = _commitNoChemicals;
+                    Enrollment.CommitAttendClasses = _commitAttendClasses;
+                    Enrollment.CommitNoCuttingTrees = _commitNoCuttingTrees;
+                    Enrollment.CommitStandForWomenChildren = _commitStandForWomenChildren;
+                    Enrollment.CommitCareWhileAway = _commitCareWhileAway;
+                    Enrollment.CommitAllowYardAccess = _commitAllowYardAccess;
+                    
+                    // Signature
+                    Enrollment.SignatureData = _signatureData;
+                    Enrollment.SignatureCollected = !string.IsNullOrWhiteSpace(_signatureData);
+                    if (Enrollment.SignatureCollected)
+                    {
+                        Enrollment.SignatureDate = DateTime.UtcNow;
+                    }
+                    
+                    Enrollment.Status = EnrollmentStatus.Pending;
+                    
                     Enrollment = await EnrollmentService.AddEnrollmentAsync(Enrollment);
                     await logger.LogInformation("Enrollment Added {Enrollment}", Enrollment);
+                    AddModuleMessage(Localizer["Message.SaveSuccess"], MessageType.Success);
                 }
                 else
                 {
                     Enrollment Enrollment = await EnrollmentService.GetEnrollmentAsync(_id, ModuleState.ModuleId);
-                    Enrollment.Name = _name;
+                    
+                    // Basic Information
+                    Enrollment.BeneficiaryName = _beneficiaryName;
+                    Enrollment.VillageId = _villageId;
+                    Enrollment.HouseNumber = _houseNumber;
+                    Enrollment.IdNumber = _idNumber;
+                    Enrollment.BirthDate = _birthDate;
+                    Enrollment.HouseholdSize = _householdSize;
+                    Enrollment.OwnsHome = _ownsHome;
+                    Enrollment.EvaluatorName = _evaluatorName;
+                    
+                    // Preferred Criteria
+                    Enrollment.EnrolledInPE = _enrolledInPE;
+                    Enrollment.PEGraduate = _peGraduate;
+                    Enrollment.GardenPlantedAndTended = _gardenPlantedAndTended;
+                    Enrollment.ChildHeadedHousehold = _childHeadedHousehold;
+                    Enrollment.WomanHeadedHousehold = _womanHeadedHousehold;
+                    Enrollment.EmptyYard = _emptyYard;
+                    
+                    // Commitments
+                    Enrollment.CommitNoChemicals = _commitNoChemicals;
+                    Enrollment.CommitAttendClasses = _commitAttendClasses;
+                    Enrollment.CommitNoCuttingTrees = _commitNoCuttingTrees;
+                    Enrollment.CommitStandForWomenChildren = _commitStandForWomenChildren;
+                    Enrollment.CommitCareWhileAway = _commitCareWhileAway;
+                    Enrollment.CommitAllowYardAccess = _commitAllowYardAccess;
+                    
+                    // Signature
+                    Enrollment.SignatureData = _signatureData;
+                    Enrollment.SignatureCollected = !string.IsNullOrWhiteSpace(_signatureData);
+                    if (Enrollment.SignatureCollected && !Enrollment.SignatureDate.HasValue)
+                    {
+                        Enrollment.SignatureDate = DateTime.UtcNow;
+                    }
+                    
                     await EnrollmentService.UpdateEnrollmentAsync(Enrollment);
                     await logger.LogInformation("Enrollment Updated {Enrollment}", Enrollment);
+                    AddModuleMessage(Localizer["Message.UpdateSuccess"], MessageType.Success);
                 }
                 NavigationManager.NavigateTo(NavigateUrl());
             }

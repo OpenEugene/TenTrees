@@ -187,32 +187,32 @@ namespace Specs.Features
 #line 14
     await testRunner.WhenAsync("I capture GPS coordinates", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-                global::Reqnroll.Table table5 = new global::Reqnroll.Table(new string[] {
+                global::Reqnroll.Table table6 = new global::Reqnroll.Table(new string[] {
                             "Question",
                             "Response"});
-                table5.AddRow(new string[] {
+                table6.AddRow(new string[] {
                             "Do you have water in the plot?",
                             "Yes"});
-                table5.AddRow(new string[] {
+                table6.AddRow(new string[] {
                             "Is there any water catchment system (Jojo tank)?",
                             "Yes"});
 #line 15
-    await testRunner.AndAsync("I answer water availability questions:", ((string)(null)), table5, "And ");
+    await testRunner.AndAsync("I answer water availability questions:", ((string)(null)), table6, "And ");
 #line hidden
-                global::Reqnroll.Table table6 = new global::Reqnroll.Table(new string[] {
+                global::Reqnroll.Table table7 = new global::Reqnroll.Table(new string[] {
                             "Type",
                             "Count"});
-                table6.AddRow(new string[] {
+                table7.AddRow(new string[] {
                             "Existing trees/productive plants",
                             "5"});
-                table6.AddRow(new string[] {
+                table7.AddRow(new string[] {
                             "Indigenous trees",
                             "2"});
-                table6.AddRow(new string[] {
+                table7.AddRow(new string[] {
                             "Fruit and nut trees",
                             "3"});
 #line 19
-    await testRunner.AndAsync("I record existing trees:", ((string)(null)), table6, "And ");
+    await testRunner.AndAsync("I record existing trees:", ((string)(null)), table7, "And ");
 #line hidden
 #line 24
     await testRunner.AndAsync("I answer \"Yes\" to \"Is there space for more trees?\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
@@ -315,20 +315,20 @@ namespace Specs.Features
 #line 42
     await testRunner.ThenAsync("I should see \"Mary Nkuna\" in results", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
-                global::Reqnroll.Table table7 = new global::Reqnroll.Table(new string[] {
+                global::Reqnroll.Table table8 = new global::Reqnroll.Table(new string[] {
                             "Field",
                             "Value"});
-                table7.AddRow(new string[] {
+                table8.AddRow(new string[] {
                             "Beneficiary name",
                             "Mary Nkuna"});
-                table7.AddRow(new string[] {
+                table8.AddRow(new string[] {
                             "House number",
                             "42"});
-                table7.AddRow(new string[] {
+                table8.AddRow(new string[] {
                             "Village",
                             "Orpen Gate Village"});
 #line 43
-    await testRunner.AndAsync("selecting her should auto-fill:", ((string)(null)), table7, "And ");
+    await testRunner.AndAsync("selecting her should auto-fill:", ((string)(null)), table8, "And ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();

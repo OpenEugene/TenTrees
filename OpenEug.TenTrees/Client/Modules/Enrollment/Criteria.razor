@@ -1,0 +1,135 @@
+@using OpenEug.TenTrees.Module.Enrollment.Services
+@using Oqtane.Modules.Controls
+
+@namespace OpenEug.TenTrees.Module.Enrollment
+@inherits ModuleBase
+@inject IEnrollmentStateService StateService
+@inject NavigationManager NavigationManager
+@inject IStringLocalizer<Criteria> Localizer
+
+<div class="container">
+    <h3>@Localizer["FormTitle"]</h3>
+    <p class="text-muted">@Localizer["Step"] 2 @Localizer["Of"] 4</p>
+    
+    <div class="progress mb-4">
+        <div class="progress-bar" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">50%</div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-header">
+            <h5>@Localizer["Section.PreferredCriteria"]</h5>
+            <p class="card-text text-muted">@Localizer["Section.PreferredCriteria.Help"]</p>
+        </div>
+        <div class="card-body">
+            <div class="mb-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="enrolledinpe" @bind="@_enrolledInPE" />
+                    <Label Class="form-check-label" For="enrolledinpe" ResourceKey="Criteria.EnrolledInPE">
+                        Are they currently enrolled in PE with a garden growing?
+                    </Label>
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="pegraduate" @bind="@_peGraduate" />
+                    <Label Class="form-check-label" For="pegraduate" ResourceKey="Criteria.PEGraduate">
+                        Are they a graduate of PE in the past?
+                    </Label>
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="gardenplanted" @bind="@_gardenPlantedAndTended" />
+                    <Label Class="form-check-label" For="gardenplanted" ResourceKey="Criteria.GardenPlanted">
+                        If so, is their garden planted and tended?
+                    </Label>
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="childheaded" @bind="@_childHeadedHousehold" />
+                    <Label Class="form-check-label" For="childheaded" ResourceKey="Criteria.ChildHeaded">
+                        Child headed household?
+                    </Label>
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="womanheaded" @bind="@_womanHeadedHousehold" />
+                    <Label Class="form-check-label" For="womanheaded" ResourceKey="Criteria.WomanHeaded">
+                        Woman headed household?
+                    </Label>
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="emptyyard" @bind="@_emptyYard" />
+                    <Label Class="form-check-label" For="emptyyard" ResourceKey="Criteria.EmptyYard">
+                        Empty or nearly empty yard?
+                    </Label>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="d-flex justify-content-between">
+        <button type="button" class="btn btn-secondary" @onclick="PreviousStep">
+            <i class="bi bi-arrow-left"></i> @Localizer["Previous"]
+        </button>
+        <button type="button" class="btn btn-primary" @onclick="NextStep">
+            @Localizer["Next"] <i class="bi bi-arrow-right"></i>
+        </button>
+    </div>
+</div>
+
+@code {
+    public override SecurityAccessLevel SecurityAccessLevel => SecurityAccessLevel.Edit;
+    public override string Actions => "Criteria";
+    public override string Title => "Enrollment - Preferred Criteria";
+
+    private bool _enrolledInPE;
+    private bool _peGraduate;
+    private bool _gardenPlantedAndTended;
+    private bool _childHeadedHousehold;
+    private bool _womanHeadedHousehold;
+    private bool _emptyYard;
+
+    protected override void OnInitialized()
+    {
+        if (StateService.CurrentDraft == null)
+        {
+            NavigationManager.NavigateTo(EditUrl("BasicInfo"));
+            return;
+        }
+
+        // Restore from draft
+        _enrolledInPE = StateService.CurrentDraft.EnrolledInPE;
+        _peGraduate = StateService.CurrentDraft.PEGraduate;
+        _gardenPlantedAndTended = StateService.CurrentDraft.GardenPlantedAndTended;
+        _childHeadedHousehold = StateService.CurrentDraft.ChildHeadedHousehold;
+        _womanHeadedHousehold = StateService.CurrentDraft.WomanHeadedHousehold;
+        _emptyYard = StateService.CurrentDraft.EmptyYard;
+    }
+
+    private void PreviousStep()
+    {
+        SaveToDraft();
+        NavigationManager.NavigateTo(EditUrl("BasicInfo"));
+    }
+
+    private void NextStep()
+    {
+        SaveToDraft();
+        NavigationManager.NavigateTo(EditUrl("Commitments"));
+    }
+
+    private void SaveToDraft()
+    {
+        StateService.CurrentDraft.EnrolledInPE = _enrolledInPE;
+        StateService.CurrentDraft.PEGraduate = _peGraduate;
+        StateService.CurrentDraft.GardenPlantedAndTended = _gardenPlantedAndTended;
+        StateService.CurrentDraft.ChildHeadedHousehold = _childHeadedHousehold;
+        StateService.CurrentDraft.WomanHeadedHousehold = _womanHeadedHousehold;
+        StateService.CurrentDraft.EmptyYard = _emptyYard;
+    }
+}

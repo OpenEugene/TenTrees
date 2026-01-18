@@ -117,23 +117,23 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Name" xml:space="preserve">
-    <value>Name</value>
-  </data>
-  <data name="Add.Text" xml:space="preserve">
+  <data name="Add" xml:space="preserve">
     <value>Add Enrollment</value>
   </data>
-  <data name="Edit.Text" xml:space="preserve">
+  <data name="Edit" xml:space="preserve">
     <value>Edit</value>
   </data>
-  <data name="Delete.Text" xml:space="preserve">
+  <data name="Delete" xml:space="preserve">
     <value>Delete</value>
   </data>
-  <data name="Delete.Header" xml:space="preserve">
-    <value>Delete Enrollment</value>
+  <data name="Beneficiary" xml:space="preserve">
+    <value>Beneficiary</value>
   </data>
-  <data name="Delete.Message" xml:space="preserve">
-    <value>Are You Sure You Wish To Delete This Enrollment?</value>
+  <data name="Village" xml:space="preserve">
+    <value>Village</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Status</value>
   </data>
   <data name="Message.DisplayNone" xml:space="preserve">
     <value>No Enrollments To Display</value>

@@ -176,23 +176,23 @@ namespace Specs.Features
 #line 12
     await testRunner.ThenAsync("the assessment should be recorded with mentor \"Bondi\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
-                global::Reqnroll.Table table12 = new global::Reqnroll.Table(new string[] {
+                global::Reqnroll.Table table16 = new global::Reqnroll.Table(new string[] {
                             "Field",
                             "Value"});
-                table12.AddRow(new string[] {
+                table16.AddRow(new string[] {
                             "Action",
                             "Assessment Created"});
-                table12.AddRow(new string[] {
+                table16.AddRow(new string[] {
                             "Entered By",
                             "Becky"});
-                table12.AddRow(new string[] {
+                table16.AddRow(new string[] {
                             "On Behalf Of",
                             "Bondi"});
-                table12.AddRow(new string[] {
+                table16.AddRow(new string[] {
                             "Timestamp",
                             "[current time]"});
 #line 13
-    await testRunner.AndAsync("audit log should show:", ((string)(null)), table12, "And ");
+    await testRunner.AndAsync("audit log should show:", ((string)(null)), table16, "And ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
@@ -299,23 +299,23 @@ namespace Specs.Features
 #line 34
     await testRunner.GivenAsync("I am an administrator", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
-                global::Reqnroll.Table table13 = new global::Reqnroll.Table(new string[] {
+                global::Reqnroll.Table table17 = new global::Reqnroll.Table(new string[] {
                             "Field",
                             "Value"});
-                table13.AddRow(new string[] {
+                table17.AddRow(new string[] {
                             "Name",
                             "Thandi Nkosi"});
-                table13.AddRow(new string[] {
+                table17.AddRow(new string[] {
                             "Role",
                             "Mentor"});
-                table13.AddRow(new string[] {
+                table17.AddRow(new string[] {
                             "Village",
                             "Orpen Gate Village"});
-                table13.AddRow(new string[] {
+                table17.AddRow(new string[] {
                             "Email",
                             "thandi@example.com"});
 #line 35
-    await testRunner.WhenAsync("I create new user:", ((string)(null)), table13, "When ");
+    await testRunner.WhenAsync("I create new user:", ((string)(null)), table17, "When ");
 #line hidden
 #line 41
     await testRunner.ThenAsync("the account should be created", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
@@ -348,44 +348,44 @@ namespace Specs.Features
             else
             {
                 await this.ScenarioStartAsync();
-                global::Reqnroll.Table table14 = new global::Reqnroll.Table(new string[] {
+                global::Reqnroll.Table table18 = new global::Reqnroll.Table(new string[] {
                             "Role",
                             "Can Submit Forms",
                             "Can View All Villages",
                             "Can Export",
                             "Can Manage Users"});
-                table14.AddRow(new string[] {
+                table18.AddRow(new string[] {
                             "Mentor",
                             "Yes",
                             "No",
                             "No",
                             "No"});
-                table14.AddRow(new string[] {
+                table18.AddRow(new string[] {
                             "Educator",
                             "Yes",
                             "Yes",
                             "Yes",
                             "No"});
-                table14.AddRow(new string[] {
+                table18.AddRow(new string[] {
                             "Project Manager",
                             "Yes",
                             "Yes",
                             "Yes",
                             "No"});
-                table14.AddRow(new string[] {
+                table18.AddRow(new string[] {
                             "Admin",
                             "Yes",
                             "Yes",
                             "Yes",
                             "Yes"});
-                table14.AddRow(new string[] {
+                table18.AddRow(new string[] {
                             "Executive Director",
                             "Yes",
                             "Yes",
                             "Yes",
                             "Yes"});
 #line 45
-    await testRunner.GivenAsync("the following roles exist:", ((string)(null)), table14, "Given ");
+    await testRunner.GivenAsync("the following roles exist:", ((string)(null)), table18, "Given ");
 #line hidden
 #line 52
     await testRunner.WhenAsync("a user logs in with role \"Mentor\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");

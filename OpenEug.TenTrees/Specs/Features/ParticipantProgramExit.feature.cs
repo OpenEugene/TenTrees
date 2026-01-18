@@ -214,20 +214,20 @@ namespace Specs.Features
 #line 19
     await testRunner.WhenAsync("I view the exit reason dropdown", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-                global::Reqnroll.Table table8 = new global::Reqnroll.Table(new string[] {
+                global::Reqnroll.Table table10 = new global::Reqnroll.Table(new string[] {
                             "Reason"});
-                table8.AddRow(new string[] {
+                table10.AddRow(new string[] {
                             "Moved away"});
-                table8.AddRow(new string[] {
+                table10.AddRow(new string[] {
                             "Deceased"});
-                table8.AddRow(new string[] {
+                table10.AddRow(new string[] {
                             "Voluntary withdrawal"});
-                table8.AddRow(new string[] {
+                table10.AddRow(new string[] {
                             "Non-compliance"});
-                table8.AddRow(new string[] {
+                table10.AddRow(new string[] {
                             "Other"});
 #line 20
-    await testRunner.ThenAsync("I should see predefined reasons:", ((string)(null)), table8, "Then ");
+    await testRunner.ThenAsync("I should see predefined reasons:", ((string)(null)), table10, "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
