@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="FormTitle" xml:space="preserve">
+    <value>Fomo ya Nkandziyiso wa Muxavi</value>
+  </data>
+  <data name="Section.BasicInfo" xml:space="preserve">
+    <value>Mahungu ya Nsinya</value>
+  </data>
+  <data name="Section.PreferredCriteria" xml:space="preserve">
+    <value>Swilaveko swa Nkombiso</value>
+  </data>
+  <data name="Section.Commitments" xml:space="preserve">
+    <value>Swiboho</value>
+  </data>
+  <data name="Section.Signature" xml:space="preserve">
+    <value>Kusayina</value>
+  </data>
+  <data name="EvaluatorName" xml:space="preserve">
+    <value>Vito ra Muhlayiyi:</value>
+  </data>
+  <data name="BeneficiaryName" xml:space="preserve">
+    <value>Vito ra Muxavi:</value>
+  </data>
+  <data name="Village" xml:space="preserve">
+    <value>Rixaka:</value>
+  </data>
+  <data name="HouseNumber" xml:space="preserve">
+    <value>Nomboro ya Yindlu:</value>
+  </data>
+  <data name="IdNumber" xml:space="preserve">
+    <value>Nomboro ya ID:</value>
+  </data>
+  <data name="BirthDate" xml:space="preserve">
+    <value>Siku ra Vutswalo:</value>
+  </data>
+  <data name="OwnsHome" xml:space="preserve">
+    <value>Va ni yindlu ya vona?</value>
+  </data>
+  <data name="HouseholdSize" xml:space="preserve">
+    <value>Nhlayo ya Vanhu eKaya:</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>Siku:</value>
+  </data>
+  <data name="Select" xml:space="preserve">
+    <value>-- Hlawula --</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Ina</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>E-e</value>
+  </data>
+  <data name="Criteria.EnrolledInPE" xml:space="preserve">
+    <value>Va nghenile eka PE va ri ni xibakela lexi hlanteriweke?</value>
+  </data>
+  <data name="Criteria.PEGraduate" xml:space="preserve">
+    <value>Va herile PE emasikweni lama nga hundza?</value>
+  </data>
+  <data name="Criteria.GardenPlanted" xml:space="preserve">
+    <value>Loko swi ri tano, xibakela xa vona xi hlanteriwile naswona xi hlayisiwa?</value>
+  </data>
+  <data name="Criteria.ChildHeaded" xml:space="preserve">
+    <value>Kaya leri rhomelerwaka hi n'wana?</value>
+  </data>
+  <data name="Criteria.WomanHeaded" xml:space="preserve">
+    <value>Kaya leri rhomelerwaka hi wansati?</value>
+  </data>
+  <data name="Criteria.EmptyYard" xml:space="preserve">
+    <value>Jarata leri nga riki na nchumu kumbe leyitsongo?</value>
+  </data>
+  <data name="Commit.NoChemicals" xml:space="preserve">
+    <value>U tiyimisela ku nga tirhisi tikhemikhali kumbe timbheteri</value>
+  </data>
+  <data name="Commit.AttendClasses" xml:space="preserve">
+    <value>U tiyimisela ku kota tlilasi ta ntlhanu ta ku leha permaculture</value>
+  </data>
+  <data name="Commit.NoCutting" xml:space="preserve">
+    <value>U tiyimisela ku nga tsemi mirhi</value>
+  </data>
+  <data name="Commit.WomenChildren" xml:space="preserve">
+    <value>U tiyimisela ku yimela vasati na vana handle ka ku hlundzukiwa</value>
+  </data>
+</root>

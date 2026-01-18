@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="FormTitle" xml:space="preserve"><value>Nkandziyiso wa Muxavi</value></data>
+  <data name="Step" xml:space="preserve"><value>Goza</value></data>
+  <data name="Of" xml:space="preserve"><value>ya</value></data>
+  <data name="Section.Signature" xml:space="preserve"><value>Kusayina</value></data>
+  <data name="Signature" xml:space="preserve"><value>Kusayina:</value></data>
+  <data name="Signature.Info" xml:space="preserve"><value>Kombela u langutisisa nhlamuselo ivi u nyika kusayina ku hetisa nkandziyiso</value></data>
+  <data name="Signature.Placeholder" xml:space="preserve"><value>Thayipa vito ra muxavi kumbe u dirowa kusayina</value></data>
+  <data name="Signature.Help" xml:space="preserve"><value>Kusayina hi e-signature swi nga va vito leri thayiperiweke kumbe kusayina loku diroweriweke</value></data>
+  <data name="Signature.Confirm" xml:space="preserve"><value>Ndzi tiyisisa leswaku mahungu hinkwawo ma lulamile naswona muxavi u pfumela swiboho</value></data>
+  <data name="Summary" xml:space="preserve"><value>Nhlamuselo</value></data>
+  <data name="BeneficiaryName" xml:space="preserve"><value>Vito ra Muxavi</value></data>
+  <data name="Village" xml:space="preserve"><value>Rixaka</value></data>
+  <data name="HouseholdSize" xml:space="preserve"><value>Nhlayo ya Vanhu eKaya</value></data>
+  <data name="Saving" xml:space="preserve"><value>Yi ri karhi yi hlayisa nkandziyiso...</value></data>
+  <data name="Previous" xml:space="preserve"><value>Khale</value></data>
+  <data name="Submit" xml:space="preserve"><value>Rhumela Nkandziyiso</value></data>
+  <data name="Message.SignatureRequired" xml:space="preserve"><value>Kusayina na pfumelo swi laveka</value></data>
+  <data name="Message.Success" xml:space="preserve"><value>Nkandziyiso wu hlayisiwile hi ndlela</value></data>
+  <data name="Message.Error" xml:space="preserve"><value>Xiphiqo xi humelele hi ku hlayisa nkandziyiso. Kombela u ringeta nakambe.</value></data>
+</root>

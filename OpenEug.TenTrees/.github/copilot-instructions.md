@@ -60,6 +60,10 @@ This is the 10 Trees Digital Platform - a Blazor WebAssembly application built o
 - Use Bootstrap cards for section organization
 - One section per page in multi-step workflows
 - Include progress bars: `<div class="progress-bar" style="width: 25%">25%</div>`
+- **NEVER use admin containers** - render components directly for mobile users
+- Avoid desktop-only UI patterns (hover effects, right-click menus, etc.)
+- Touch-friendly buttons and form controls (minimum 44x44px touch targets)
+- Large, easy-to-read fonts (minimum 16px for body text)
 
 ### BDD-Driven Development
 - All features defined in Specs/Features/*.feature files

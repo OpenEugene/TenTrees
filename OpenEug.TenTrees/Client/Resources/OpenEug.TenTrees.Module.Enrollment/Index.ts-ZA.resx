@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Add" xml:space="preserve">
+    <value>Engetela Nkandziyiso</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Lulamisa</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Sula</value>
+  </data>
+  <data name="Beneficiary" xml:space="preserve">
+    <value>Muxavi</value>
+  </data>
+  <data name="Village" xml:space="preserve">
+    <value>Rixaka</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Xiyimo</value>
+  </data>
+  <data name="Message.DisplayNone" xml:space="preserve">
+    <value>A Ku Na Swi Kandziyiso Leswi Nga Kombisiwaka</value>
+  </data>
+  <data name="Message.LoadError" xml:space="preserve">
+    <value>Xiphiqo xi Humelele eka ku Loda Nkandziyiso</value>
+  </data>
+  <data name="Message.DeleteError" xml:space="preserve">
+    <value>Xiphiqo xi Humelele eka ku Sula Nkandziyiso</value>
+  </data>
+</root>

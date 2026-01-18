@@ -7,85 +7,79 @@
 @inject NavigationManager NavigationManager
 @inject IStringLocalizer<Commitments> Localizer
 
-<div class="container">
-    <h3>@Localizer["FormTitle"]</h3>
-    <p class="text-muted">@Localizer["Step"] 3 @Localizer["Of"] 4</p>
-    
-    <div class="progress mb-4">
-        <div class="progress-bar" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">75%</div>
-    </div>
+<div class="mb-3">
+    <h3 class="mb-2">@Localizer["FormTitle"]</h3>
+    <p class="text-muted small">@Localizer["Step"] 3 @Localizer["Of"] 4</p>
+</div>
 
-    <div class="card mb-3">
-        <div class="card-header">
-            <h5>@Localizer["Section.Commitments"]</h5>
-            <p class="card-text text-muted">@Localizer["Section.Commitments.Help"]</p>
+<div class="progress mb-3" style="height: 8px;">
+    <div class="progress-bar" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+</div>
+
+<div class="card mb-3">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">@Localizer["Section.Commitments"]</h5>
+        <p class="card-text small mb-0 mt-1 opacity-75">@Localizer["Section.Commitments.Help"]</p>
+    </div>
+    <div class="card-body">
+        <div class="form-check mb-3 p-3 border rounded">
+            <input class="form-check-input" type="checkbox" id="commitchemicals" @bind="@_commitNoChemicals" style="width: 24px; height: 24px;" />
+            <Label Class="form-check-label ms-2" For="commitchemicals" ResourceKey="Commit.NoChemicals">
+                Committed to not using chemicals or pesticides
+            </Label>
         </div>
-        <div class="card-body">
-            <div class="mb-3">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="commitchemicals" @bind="@_commitNoChemicals" />
-                    <Label Class="form-check-label" For="commitchemicals" ResourceKey="Commit.NoChemicals">
-                        Committed to not using chemicals or pesticides
-                    </Label>
-                </div>
-            </div>
-            <div class="mb-3">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="commitclasses" @bind="@_commitAttendClasses" />
-                    <Label Class="form-check-label" For="commitclasses" ResourceKey="Commit.AttendClasses">
-                        Committed to attend five permaculture training classes
-                    </Label>
-                </div>
-            </div>
-            <div class="mb-3">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="commitcutting" @bind="@_commitNoCuttingTrees" />
-                    <Label Class="form-check-label" For="commitcutting" ResourceKey="Commit.NoCutting">
-                        Committed not to cut trees
-                    </Label>
-                </div>
-            </div>
-            <div class="mb-3">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="commitwomen" @bind="@_commitStandForWomenChildren" />
-                    <Label Class="form-check-label" For="commitwomen" ResourceKey="Commit.WomenChildren">
-                        Committed to standing for women and children with no abuse
-                    </Label>
-                </div>
-            </div>
-            <div class="mb-3">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="commitcare" @bind="@_commitCareWhileAway" />
-                    <Label Class="form-check-label" For="commitcare" ResourceKey="Commit.CareWhileAway">
-                        Agree to care for trees while away from home
-                    </Label>
-                </div>
-            </div>
-            <div class="mb-3">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="commitaccess" @bind="@_commitAllowYardAccess" />
-                    <Label Class="form-check-label" For="commitaccess" ResourceKey="Commit.YardAccess">
-                        Give permission for mentor to enter yard
-                    </Label>
-                </div>
-            </div>
+        
+        <div class="form-check mb-3 p-3 border rounded">
+            <input class="form-check-input" type="checkbox" id="commitclasses" @bind="@_commitAttendClasses" style="width: 24px; height: 24px;" />
+            <Label Class="form-check-label ms-2" For="commitclasses" ResourceKey="Commit.AttendClasses">
+                Committed to attend five permaculture training classes
+            </Label>
+        </div>
+        
+        <div class="form-check mb-3 p-3 border rounded">
+            <input class="form-check-input" type="checkbox" id="commitcutting" @bind="@_commitNoCuttingTrees" style="width: 24px; height: 24px;" />
+            <Label Class="form-check-label ms-2" For="commitcutting" ResourceKey="Commit.NoCutting">
+                Committed not to cut trees
+            </Label>
+        </div>
+        
+        <div class="form-check mb-3 p-3 border rounded">
+            <input class="form-check-input" type="checkbox" id="commitwomen" @bind="@_commitStandForWomenChildren" style="width: 24px; height: 24px;" />
+            <Label Class="form-check-label ms-2" For="commitwomen" ResourceKey="Commit.WomenChildren">
+                Committed to standing for women and children with no abuse
+            </Label>
+        </div>
+        
+        <div class="form-check mb-3 p-3 border rounded">
+            <input class="form-check-input" type="checkbox" id="commitcare" @bind="@_commitCareWhileAway" style="width: 24px; height: 24px;" />
+            <Label Class="form-check-label ms-2" For="commitcare" ResourceKey="Commit.CareWhileAway">
+                Agree to care for trees while away from home
+            </Label>
+        </div>
+        
+        <div class="form-check mb-3 p-3 border rounded">
+            <input class="form-check-input" type="checkbox" id="commitaccess" @bind="@_commitAllowYardAccess" style="width: 24px; height: 24px;" />
+            <Label Class="form-check-label ms-2" For="commitaccess" ResourceKey="Commit.YardAccess">
+                Give permission for mentor to enter yard
+            </Label>
         </div>
     </div>
-    
-    <div class="d-flex justify-content-between">
-        <button type="button" class="btn btn-secondary" @onclick="PreviousStep">
-            <i class="bi bi-arrow-left"></i> @Localizer["Previous"]
-        </button>
-        <button type="button" class="btn btn-primary" @onclick="NextStep">
-            @Localizer["Next"] <i class="bi bi-arrow-right"></i>
-        </button>
-    </div>
+</div>
+
+<div class="d-grid gap-2 mb-3">
+    <button type="button" class="btn btn-primary btn-lg" @onclick="NextStep">
+        @Localizer["Next"] <i class="bi bi-arrow-right"></i>
+    </button>
+    <button type="button" class="btn btn-outline-secondary" @onclick="PreviousStep">
+        <i class="bi bi-arrow-left"></i> @Localizer["Previous"]
+    </button>
 </div>
 
 @code {
     public override SecurityAccessLevel SecurityAccessLevel => SecurityAccessLevel.Edit;
     public override string Actions => "Commitments";
     public override string Title => "Enrollment - Commitments";
+    public override bool UseAdminContainer => false;
 
     private bool _commitNoChemicals;
     private bool _commitAttendClasses;

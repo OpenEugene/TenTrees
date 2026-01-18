@@ -9,98 +9,89 @@
 @inject NavigationManager NavigationManager
 @inject IStringLocalizer<BasicInfo> Localizer
 
-<div class="container">
-    <h3>@Localizer["FormTitle"]</h3>
-    <p class="text-muted">@Localizer["Step"] 1 @Localizer["Of"] 4</p>
-    
-    <div class="progress mb-4">
-        <div class="progress-bar" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
-    </div>
-
-    <form @ref="form" class="@(validated ? " was-validated" : "needs-validation" )" novalidate>
-        <div class="card mb-3">
-            <div class="card-header">
-                <h5>@Localizer["Section.BasicInfo"]</h5>
-            </div>
-            <div class="card-body">
-                <div class="row mb-3">
-                    <Label Class="col-sm-4" For="evaluatorname" ResourceKey="EvaluatorName">Evaluator Name:</Label>
-                    <div class="col-sm-8">
-                        <input id="evaluatorname" class="form-control" @bind="@_evaluatorName" readonly />
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <Label Class="col-sm-4" For="beneficiaryname" ResourceKey="BeneficiaryName">Beneficiary Name: *</Label>
-                    <div class="col-sm-8">
-                        <input id="beneficiaryname" class="form-control" @bind="@_beneficiaryName" required />
-                        <div class="invalid-feedback">@Localizer["Validation.Required"]</div>
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <Label Class="col-sm-4" For="villageid" ResourceKey="Village">Village: *</Label>
-                    <div class="col-sm-8">
-                        <input id="villageid" type="number" class="form-control" @bind="@_villageId" required />
-                        <div class="invalid-feedback">@Localizer["Validation.Required"]</div>
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <Label Class="col-sm-4" For="housenumber" ResourceKey="HouseNumber">House Number:</Label>
-                    <div class="col-sm-8">
-                        <input id="housenumber" class="form-control" @bind="@_houseNumber" />
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <Label Class="col-sm-4" For="idnumber" ResourceKey="IdNumber">ID Number:</Label>
-                    <div class="col-sm-8">
-                        <input id="idnumber" class="form-control" @bind="@_idNumber" />
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <Label Class="col-sm-4" For="birthdate" ResourceKey="BirthDate">Birth Date:</Label>
-                    <div class="col-sm-8">
-                        <input id="birthdate" type="date" class="form-control" @bind="@_birthDate" />
-                        <small class="form-text text-muted">@Localizer["BirthDate.Help"]</small>
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <Label Class="col-sm-4" For="ownshome" ResourceKey="OwnsHome">Do they own their home?</Label>
-                    <div class="col-sm-8">
-                        <select id="ownshome" class="form-select" @bind="@_ownsHome">
-                            <option value="">@Localizer["Select"]</option>
-                            <option value="true">@Localizer["Yes"]</option>
-                            <option value="false">@Localizer["No"]</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <Label Class="col-sm-4" For="householdsize" ResourceKey="HouseholdSize">Household Size: *</Label>
-                    <div class="col-sm-8">
-                        <input id="householdsize" type="number" class="form-control" @bind="@_householdSize" required min="1" />
-                        <div class="invalid-feedback">@Localizer["Validation.Required"]</div>
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <Label Class="col-sm-4" For="enrollmentdate" ResourceKey="Date">Date:</Label>
-                    <div class="col-sm-8">
-                        <input id="enrollmentdate" type="date" class="form-control" @bind="@_enrollmentDate" readonly />
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="d-flex justify-content-between">
-            <NavLink class="btn btn-secondary" href="@NavigateUrl()">@Localizer["Cancel"]</NavLink>
-            <button type="button" class="btn btn-primary" @onclick="NextStep">
-                @Localizer["Next"] <i class="bi bi-arrow-right"></i>
-            </button>
-        </div>
-    </form>
+<div class="mb-3">
+    <h3 class="mb-2">@Localizer["FormTitle"]</h3>
+    <p class="text-muted small">@Localizer["Step"] 1 @Localizer["Of"] 4</p>
 </div>
+
+<div class="progress mb-3" style="height: 8px;">
+    <div class="progress-bar" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+</div>
+
+<form @ref="form" class="@(validated ? " was-validated" : "needs-validation" )" novalidate>
+    <div class="card mb-3">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">@Localizer["Section.BasicInfo"]</h5>
+        </div>
+        <div class="card-body">
+            <div class="mb-3">
+                <Label For="evaluatorname" ResourceKey="EvaluatorName" Class="form-label fw-bold">Evaluator Name:</Label>
+                <input id="evaluatorname" class="form-control form-control-lg" @bind="@_evaluatorName" readonly />
+            </div>
+            
+            <div class="mb-3">
+                <Label For="beneficiaryname" ResourceKey="BeneficiaryName" Class="form-label fw-bold">Beneficiary Name: *</Label>
+                <input id="beneficiaryname" class="form-control form-control-lg" @bind="@_beneficiaryName" required />
+                <div class="invalid-feedback">@Localizer["Validation.Required"]</div>
+            </div>
+            
+            <div class="mb-3">
+                <Label For="villageid" ResourceKey="Village" Class="form-label fw-bold">Village: *</Label>
+                <input id="villageid" type="number" class="form-control form-control-lg" @bind="@_villageId" required />
+                <div class="invalid-feedback">@Localizer["Validation.Required"]</div>
+            </div>
+            
+            <div class="mb-3">
+                <Label For="housenumber" ResourceKey="HouseNumber" Class="form-label fw-bold">House Number:</Label>
+                <input id="housenumber" class="form-control form-control-lg" @bind="@_houseNumber" />
+            </div>
+            
+            <div class="mb-3">
+                <Label For="idnumber" ResourceKey="IdNumber" Class="form-label fw-bold">ID Number:</Label>
+                <input id="idnumber" class="form-control form-control-lg" @bind="@_idNumber" />
+            </div>
+            
+            <div class="mb-3">
+                <Label For="birthdate" ResourceKey="BirthDate" Class="form-label fw-bold">Birth Date:</Label>
+                <input id="birthdate" type="date" class="form-control form-control-lg" @bind="@_birthDate" />
+                <small class="form-text text-muted">@Localizer["BirthDate.Help"]</small>
+            </div>
+            
+            <div class="mb-3">
+                <Label For="ownshome" ResourceKey="OwnsHome" Class="form-label fw-bold">Do they own their home?</Label>
+                <select id="ownshome" class="form-select form-select-lg" @bind="@_ownsHome">
+                    <option value="">@Localizer["Select"]</option>
+                    <option value="true">@Localizer["Yes"]</option>
+                    <option value="false">@Localizer["No"]</option>
+                </select>
+            </div>
+            
+            <div class="mb-3">
+                <Label For="householdsize" ResourceKey="HouseholdSize" Class="form-label fw-bold">Household Size: *</Label>
+                <input id="householdsize" type="number" class="form-control form-control-lg" @bind="@_householdSize" required min="1" />
+                <div class="invalid-feedback">@Localizer["Validation.Required"]</div>
+            </div>
+            
+            <div class="mb-3">
+                <Label For="enrollmentdate" ResourceKey="Date" Class="form-label fw-bold">Date:</Label>
+                <input id="enrollmentdate" type="date" class="form-control form-control-lg" @bind="@_enrollmentDate" readonly />
+            </div>
+        </div>
+    </div>
+    
+    <div class="d-grid gap-2 mb-3">
+        <button type="button" class="btn btn-primary btn-lg" @onclick="NextStep">
+            @Localizer["Next"] <i class="bi bi-arrow-right"></i>
+        </button>
+        <NavLink class="btn btn-outline-secondary" href="@NavigateUrl()">@Localizer["Cancel"]</NavLink>
+    </div>
+</form>
 
 @code {
     public override SecurityAccessLevel SecurityAccessLevel => SecurityAccessLevel.Edit;
     public override string Actions => "BasicInfo";
     public override string Title => "Enrollment - Basic Information";
+    public override bool UseAdminContainer => false;
 
     private ElementReference form;
     private bool validated = false;

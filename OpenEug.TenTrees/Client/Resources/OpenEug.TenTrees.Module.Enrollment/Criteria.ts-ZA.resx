@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="FormTitle" xml:space="preserve"><value>Nkandziyiso wa Muxavi</value></data>
+  <data name="Step" xml:space="preserve"><value>Goza</value></data>
+  <data name="Of" xml:space="preserve"><value>ya</value></data>
+  <data name="Section.PreferredCriteria" xml:space="preserve"><value>Swilaveko swa Nkombiso</value></data>
+  <data name="Section.PreferredCriteria.Help" xml:space="preserve"><value>Hlawula hinkwaswo leswi fambelanaka</value></data>
+  <data name="Criteria.EnrolledInPE" xml:space="preserve"><value>Va nghenile eka PE va ri ni xibakela lexi hlanteriweke?</value></data>
+  <data name="Criteria.PEGraduate" xml:space="preserve"><value>Va herile PE emasikweni lama nga hundza?</value></data>
+  <data name="Criteria.GardenPlanted" xml:space="preserve"><value>Loko swi ri tano, xibakela xa vona xi hlanteriwile naswona xi hlayisiwa?</value></data>
+  <data name="Criteria.ChildHeaded" xml:space="preserve"><value>Kaya leri rhomelerwaka hi n'wana?</value></data>
+  <data name="Criteria.WomanHeaded" xml:space="preserve"><value>Kaya leri rhomelerwaka hi wansati?</value></data>
+  <data name="Criteria.EmptyYard" xml:space="preserve"><value>Jarata leri nga riki na nchumu kumbe leyitsongo?</value></data>
+  <data name="Previous" xml:space="preserve"><value>Khale</value></data>
+  <data name="Next" xml:space="preserve"><value>Landzelaka</value></data>
+</root>

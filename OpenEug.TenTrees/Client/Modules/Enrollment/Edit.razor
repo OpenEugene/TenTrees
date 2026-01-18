@@ -225,6 +225,7 @@
     public override string Actions => "Add,Edit";
 
     public override string Title => "Manage Enrollment";
+    public override bool UseAdminContainer => false;
 
     private ElementReference form;
     private bool validated = false;

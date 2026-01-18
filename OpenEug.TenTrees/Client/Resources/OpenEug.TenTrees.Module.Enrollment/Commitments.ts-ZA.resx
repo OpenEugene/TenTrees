@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="FormTitle" xml:space="preserve"><value>Nkandziyiso wa Muxavi</value></data>
+  <data name="Step" xml:space="preserve"><value>Goza</value></data>
+  <data name="Of" xml:space="preserve"><value>ya</value></data>
+  <data name="Section.Commitments" xml:space="preserve"><value>Swiboho</value></data>
+  <data name="Section.Commitments.Help" xml:space="preserve"><value>Hlawula mabokisi hinkwawo ku pfumela swiboho</value></data>
+  <data name="Commit.NoChemicals" xml:space="preserve"><value>U tiyimisela ku nga tirhisi tikhemikhali kumbe timbheteri</value></data>
+  <data name="Commit.AttendClasses" xml:space="preserve"><value>U tiyimisela ku kota tlilasi ta ntlhanu ta ku leha permaculture</value></data>
+  <data name="Commit.NoCutting" xml:space="preserve"><value>U tiyimisela ku nga tsemi mirhi</value></data>
+  <data name="Commit.WomenChildren" xml:space="preserve"><value>U tiyimisela ku yimela vasati na vana handle ka ku hlundzukiwa</value></data>
+  <data name="Commit.CareWhileAway" xml:space="preserve"><value>U pfumela ku hlayisa mirhi loko u nga ri le kaya</value></data>
+  <data name="Commit.YardAccess" xml:space="preserve"><value>U nyika mpfumelelo wo nghenisa muleriseri ejarateni</value></data>
+  <data name="Previous" xml:space="preserve"><value>Khale</value></data>
+  <data name="Next" xml:space="preserve"><value>Landzelaka</value></data>
+</root>
