@@ -24,34 +24,34 @@
   <data name="Section.BasicInfo" xml:space="preserve">
     <value>Mahungu ya Nsinya</value>
   </data>
-  <data name="EvaluatorName" xml:space="preserve">
+  <data name="EvaluatorName.Text" xml:space="preserve">
     <value>Vito ra Muhlayiyi:</value>
   </data>
-  <data name="BeneficiaryName" xml:space="preserve">
+  <data name="BeneficiaryName.Text" xml:space="preserve">
     <value>Vito ra Muxavi:</value>
   </data>
-  <data name="Village" xml:space="preserve">
+  <data name="Village.Text" xml:space="preserve">
     <value>Rixaka:</value>
   </data>
-  <data name="HouseNumber" xml:space="preserve">
+  <data name="HouseNumber.Text" xml:space="preserve">
     <value>Nomboro ya Yindlu:</value>
   </data>
-  <data name="IdNumber" xml:space="preserve">
+  <data name="IdNumber.Text" xml:space="preserve">
     <value>Nomboro ya ID:</value>
   </data>
-  <data name="BirthDate" xml:space="preserve">
+  <data name="BirthDate.Text" xml:space="preserve">
     <value>Siku ra Vutswalo:</value>
   </data>
-  <data name="BirthDate.Help" xml:space="preserve">
+  <data name="BirthDate.HelpText" xml:space="preserve">
     <value>Nghenisa loko nomboro ya ID yi nga kumi</value>
   </data>
-  <data name="OwnsHome" xml:space="preserve">
+  <data name="OwnsHome.Text" xml:space="preserve">
     <value>Va ni yindlu ya vona?</value>
   </data>
-  <data name="HouseholdSize" xml:space="preserve">
+  <data name="HouseholdSize.Text" xml:space="preserve">
     <value>Nhlayo ya Vanhu eKaya:</value>
   </data>
-  <data name="Date" xml:space="preserve">
+  <data name="Date.Text" xml:space="preserve">
     <value>Siku:</value>
   </data>
   <data name="Select" xml:space="preserve">

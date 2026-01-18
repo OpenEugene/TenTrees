@@ -24,34 +24,34 @@
   <data name="Section.BasicInfo" xml:space="preserve">
     <value>Basic Information</value>
   </data>
-  <data name="EvaluatorName" xml:space="preserve">
+  <data name="EvaluatorName.Text" xml:space="preserve">
     <value>Evaluator Name:</value>
   </data>
-  <data name="BeneficiaryName" xml:space="preserve">
+  <data name="BeneficiaryName.Text" xml:space="preserve">
     <value>Beneficiary Name:</value>
   </data>
-  <data name="Village" xml:space="preserve">
+  <data name="Village.Text" xml:space="preserve">
     <value>Village:</value>
   </data>
-  <data name="HouseNumber" xml:space="preserve">
+  <data name="HouseNumber.Text" xml:space="preserve">
     <value>House Number:</value>
   </data>
-  <data name="IdNumber" xml:space="preserve">
+  <data name="IdNumber.Text" xml:space="preserve">
     <value>ID Number:</value>
   </data>
-  <data name="BirthDate" xml:space="preserve">
+  <data name="BirthDate.Text" xml:space="preserve">
     <value>Birth Date:</value>
   </data>
-  <data name="BirthDate.Help" xml:space="preserve">
+  <data name="BirthDate.HelpText" xml:space="preserve">
     <value>Enter if ID number not available</value>
   </data>
-  <data name="OwnsHome" xml:space="preserve">
+  <data name="OwnsHome.Text" xml:space="preserve">
     <value>Do they own their home?</value>
   </data>
-  <data name="HouseholdSize" xml:space="preserve">
+  <data name="HouseholdSize.Text" xml:space="preserve">
     <value>Household Size:</value>
   </data>
-  <data name="Date" xml:space="preserve">
+  <data name="Date.Text" xml:space="preserve">
     <value>Date:</value>
   </data>
   <data name="Select" xml:space="preserve">
