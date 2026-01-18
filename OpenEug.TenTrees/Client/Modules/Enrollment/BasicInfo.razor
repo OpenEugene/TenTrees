@@ -25,40 +25,40 @@
         </div>
         <div class="card-body">
             <div class="mb-3">
-                <Label For="evaluatorname" ResourceKey="EvaluatorName" Class="form-label fw-bold">Evaluator Name:</Label>
+                <Label For="evaluatorname" ResourceKey="EvaluatorName" ResourceType="@resourceType" Class="form-label fw-bold">Evaluator Name:</Label>
                 <input id="evaluatorname" class="form-control form-control-lg" @bind="@_evaluatorName" readonly />
             </div>
             
             <div class="mb-3">
-                <Label For="beneficiaryname" ResourceKey="BeneficiaryName" Class="form-label fw-bold">Beneficiary Name: *</Label>
+                <Label For="beneficiaryname" ResourceKey="BeneficiaryName" ResourceType="@resourceType" Class="form-label fw-bold">Beneficiary Name: *</Label>
                 <input id="beneficiaryname" class="form-control form-control-lg" @bind="@_beneficiaryName" required />
                 <div class="invalid-feedback">@Localizer["Validation.Required"]</div>
             </div>
             
             <div class="mb-3">
-                <Label For="villageid" ResourceKey="Village" Class="form-label fw-bold">Village: *</Label>
+                <Label For="villageid" ResourceKey="Village" ResourceType="@resourceType" Class="form-label fw-bold">Village: *</Label>
                 <input id="villageid" type="number" class="form-control form-control-lg" @bind="@_villageId" required />
                 <div class="invalid-feedback">@Localizer["Validation.Required"]</div>
             </div>
             
             <div class="mb-3">
-                <Label For="housenumber" ResourceKey="HouseNumber" Class="form-label fw-bold">House Number:</Label>
+                <Label For="housenumber" ResourceKey="HouseNumber" ResourceType="@resourceType" Class="form-label fw-bold">House Number:</Label>
                 <input id="housenumber" class="form-control form-control-lg" @bind="@_houseNumber" />
             </div>
             
             <div class="mb-3">
-                <Label For="idnumber" ResourceKey="IdNumber" Class="form-label fw-bold">ID Number:</Label>
+                <Label For="idnumber" ResourceKey="IdNumber" ResourceType="@resourceType" Class="form-label fw-bold">ID Number:</Label>
                 <input id="idnumber" class="form-control form-control-lg" @bind="@_idNumber" />
             </div>
             
             <div class="mb-3">
-                <Label For="birthdate" ResourceKey="BirthDate" Class="form-label fw-bold">Birth Date:</Label>
+                <Label For="birthdate" ResourceKey="BirthDate" ResourceType="@resourceType" Class="form-label fw-bold">Birth Date:</Label>
                 <input id="birthdate" type="date" class="form-control form-control-lg" @bind="@_birthDate" />
                 <small class="form-text text-muted">@Localizer["BirthDate.Help"]</small>
             </div>
             
             <div class="mb-3">
-                <Label For="ownshome" ResourceKey="OwnsHome" Class="form-label fw-bold">Do they own their home?</Label>
+                <Label For="ownshome" ResourceKey="OwnsHome" ResourceType="@resourceType" Class="form-label fw-bold">Do they own their home?</Label>
                 <select id="ownshome" class="form-select form-select-lg" @bind="@_ownsHome">
                     <option value="">@Localizer["Select"]</option>
                     <option value="true">@Localizer["Yes"]</option>
@@ -67,13 +67,13 @@
             </div>
             
             <div class="mb-3">
-                <Label For="householdsize" ResourceKey="HouseholdSize" Class="form-label fw-bold">Household Size: *</Label>
+                <Label For="householdsize" ResourceKey="HouseholdSize" ResourceType="@resourceType" Class="form-label fw-bold">Household Size: *</Label>
                 <input id="householdsize" type="number" class="form-control form-control-lg" @bind="@_householdSize" required min="1" />
                 <div class="invalid-feedback">@Localizer["Validation.Required"]</div>
             </div>
             
             <div class="mb-3">
-                <Label For="enrollmentdate" ResourceKey="Date" Class="form-label fw-bold">Date:</Label>
+                <Label For="enrollmentdate" ResourceKey="Date" ResourceType="@resourceType" Class="form-label fw-bold">Date:</Label>
                 <input id="enrollmentdate" type="date" class="form-control form-control-lg" @bind="@_enrollmentDate" readonly />
             </div>
         </div>
@@ -105,10 +105,12 @@
     private bool _ownsHome;
     private int _householdSize = 1;
     private DateTime _enrollmentDate = DateTime.Today;
+    private string resourceType;
 
     protected override void OnInitialized()
     {
         _evaluatorName = PageState.User.DisplayName;
+        resourceType = GetType().AssemblyQualifiedName;
         
         // Initialize or restore draft
         if (StateService.CurrentDraft == null)
