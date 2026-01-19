@@ -9,6 +9,7 @@ using Oqtane.Interfaces;
 using Oqtane.Enums;
 using Oqtane.Repository;
 using OpenEug.TenTrees.Module.Enrollment.Repository;
+using OpenEug.TenTrees.Models;
 using System.Threading.Tasks;
 
 namespace OpenEug.TenTrees.Module.Enrollment.Manager
@@ -26,12 +27,12 @@ namespace OpenEug.TenTrees.Module.Enrollment.Manager
 
         public bool Install(Tenant tenant, string version)
         {
-            return Migrate(new EnrollmentContext(_DBContextDependencies), tenant, MigrationType.Up);
+            return Migrate(new OpenEug.TenTrees.Repository.TenTreesContext(_DBContextDependencies), tenant, MigrationType.Up);
         }
 
         public bool Uninstall(Tenant tenant)
         {
-            return Migrate(new EnrollmentContext(_DBContextDependencies), tenant, MigrationType.Down);
+            return Migrate(new OpenEug.TenTrees.Repository.TenTreesContext(_DBContextDependencies), tenant, MigrationType.Down);
         }
 
         public string ExportModule(Oqtane.Models.Module module)

@@ -1,0 +1,77 @@
+@using OpenEug.TenTrees.Module.Village.Services
+
+@namespace OpenEug.TenTrees.Module.Village
+@inherits ModuleBase
+@inject IVillageService VillageService
+@inject NavigationManager NavigationManager
+@inject IStringLocalizer<Index> Localizer
+
+@if (_villages == null)
+{
+    <p><em>@Localizer["Loading"]</em></p>
+}
+else
+{
+    <ActionLink Action="Edit" Text="Add Village" ResourceKey="Add" Class="btn btn-primary mb-3" Security="SecurityAccessLevel.Edit" />
+    <br />
+    @if (_villages.Count != 0)
+    {
+        <Pager Items="@_villages">
+            <Header>
+                <th style="width: 1px;">&nbsp;</th>
+                <th style="width: 1px;">&nbsp;</th>
+                <th>@Localizer["VillageName"]</th>
+                <th>@Localizer["ContactName"]</th>
+                <th>@Localizer["ContactPhone"]</th>
+                <th>@Localizer["Status"]</th>
+            </Header>
+            <Row>
+                <td><ActionLink Action="Edit" Parameters="@($"id=" + context.VillageId.ToString())" ResourceKey="Edit" /></td>
+                <td><ActionDialog Header="Delete Village" Message="Are You Sure You Wish To Delete This Village?" Action="Delete" Security="SecurityAccessLevel.Edit" Class="btn btn-danger" OnClick="@(async () => await Delete(context))" ResourceKey="Delete" /></td>
+                <td>@context.VillageName</td>
+                <td>@context.ContactName</td>
+                <td>@context.ContactPhone</td>
+                <td>@(context.IsActive ? Localizer["Active"] : Localizer["Inactive"])</td>
+            </Row>
+        </Pager>
+    }
+    else
+    {
+        <p>@Localizer["Message.NoVillages"]</p>
+    }
+}
+
+@code {
+public override SecurityAccessLevel SecurityAccessLevel => SecurityAccessLevel.Admin;
+
+    private List<Models.Village> _villages;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        try
+        {
+            _villages = await VillageService.GetVillagesAsync();
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Loading Villages {Error}", ex.Message);
+            AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
+        }
+    }
+
+    private async Task Delete(Models.Village village)
+    {
+        try
+        {
+            await VillageService.DeleteVillageAsync(village.VillageId);
+            await logger.LogInformation("Village Deleted {Village}", village.VillageName);
+            _villages = await VillageService.GetVillagesAsync();
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Deleting Village {Village} {Error}", village.VillageName, ex.Message);
+            AddModuleMessage(Localizer["Message.DeleteError"], MessageType.Error);
+        }
+    }
+}

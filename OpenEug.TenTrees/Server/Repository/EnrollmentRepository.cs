@@ -2,33 +2,34 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Collections.Generic;
 using Oqtane.Modules;
+using OpenEug.TenTrees.Models;
 
 namespace OpenEug.TenTrees.Module.Enrollment.Repository
 {
     public interface IEnrollmentRepository
     {
-        IEnumerable<Models.Enrollment> GetEnrollments(int ModuleId);
+        IEnumerable<Models.Enrollment> GetEnrollments(int moduleId);
         IEnumerable<Models.Enrollment> GetEnrollments();
-        Models.Enrollment GetEnrollment(int EnrollmentId);
-        Models.Enrollment GetEnrollment(int EnrollmentId, bool tracking);
-        Models.Enrollment AddEnrollment(Models.Enrollment Enrollment);
-        Models.Enrollment UpdateEnrollment(Models.Enrollment Enrollment);
-        void DeleteEnrollment(int EnrollmentId);
+        Models.Enrollment GetEnrollment(int enrollmentId);
+        Models.Enrollment GetEnrollment(int enrollmentId, bool tracking);
+        Models.Enrollment AddEnrollment(Models.Enrollment enrollment);
+        Models.Enrollment UpdateEnrollment(Models.Enrollment enrollment);
+        void DeleteEnrollment(int enrollmentId);
     }
 
     public class EnrollmentRepository : IEnrollmentRepository, ITransientService
     {
-        private readonly IDbContextFactory<EnrollmentContext> _factory;
+        private readonly IDbContextFactory<OpenEug.TenTrees.Repository.TenTreesContext> _factory;
 
-        public EnrollmentRepository(IDbContextFactory<EnrollmentContext> factory)
+        public EnrollmentRepository(IDbContextFactory<OpenEug.TenTrees.Repository.TenTreesContext> factory)
         {
             _factory = factory;
         }
 
-        public IEnumerable<Models.Enrollment> GetEnrollments(int ModuleId)
+        public IEnumerable<Models.Enrollment> GetEnrollments(int moduleId)
         {
             using var db = _factory.CreateDbContext();
-            return db.Enrollment.Where(item => item.ModuleId == ModuleId).ToList();
+            return db.Enrollment.Where(item => item.ModuleId == moduleId).ToList();
         }
         
         public IEnumerable<Models.Enrollment> GetEnrollments()
@@ -37,45 +38,45 @@ namespace OpenEug.TenTrees.Module.Enrollment.Repository
             return db.Enrollment.ToList();
         }
 
-        public Models.Enrollment GetEnrollment(int EnrollmentId)
+        public Models.Enrollment GetEnrollment(int enrollmentId)
         {
-            return GetEnrollment(EnrollmentId, true);
+            return GetEnrollment(enrollmentId, true);
         }
 
-        public Models.Enrollment GetEnrollment(int EnrollmentId, bool tracking)
+        public Models.Enrollment GetEnrollment(int enrollmentId, bool tracking)
         {
             using var db = _factory.CreateDbContext();
             if (tracking)
             {
-                return db.Enrollment.Find(EnrollmentId);
+                return db.Enrollment.Find(enrollmentId);
             }
             else
             {
-                return db.Enrollment.AsNoTracking().FirstOrDefault(item => item.EnrollmentId == EnrollmentId);
+                return db.Enrollment.AsNoTracking().FirstOrDefault(item => item.EnrollmentId == enrollmentId);
             }
         }
 
-        public Models.Enrollment AddEnrollment(Models.Enrollment Enrollment)
+        public Models.Enrollment AddEnrollment(Models.Enrollment enrollment)
         {
             using var db = _factory.CreateDbContext();
-            db.Enrollment.Add(Enrollment);
+            db.Enrollment.Add(enrollment);
             db.SaveChanges();
-            return Enrollment;
+            return enrollment;
         }
 
-        public Models.Enrollment UpdateEnrollment(Models.Enrollment Enrollment)
+        public Models.Enrollment UpdateEnrollment(Models.Enrollment enrollment)
         {
             using var db = _factory.CreateDbContext();
-            db.Entry(Enrollment).State = EntityState.Modified;
+            db.Entry(enrollment).State = EntityState.Modified;
             db.SaveChanges();
-            return Enrollment;
+            return enrollment;
         }
 
-        public void DeleteEnrollment(int EnrollmentId)
+        public void DeleteEnrollment(int enrollmentId)
         {
             using var db = _factory.CreateDbContext();
-            Models.Enrollment Enrollment = db.Enrollment.Find(EnrollmentId);
-            db.Enrollment.Remove(Enrollment);
+            Models.Enrollment enrollment = db.Enrollment.Find(enrollmentId);
+            db.Enrollment.Remove(enrollment);
             db.SaveChanges();
         }
     }

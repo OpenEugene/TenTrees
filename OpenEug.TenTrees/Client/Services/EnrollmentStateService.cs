@@ -1,5 +1,5 @@
 using System;
-using OpenEug.TenTrees.Module.Enrollment.Models;
+using OpenEug.TenTrees.Models;
 
 namespace OpenEug.TenTrees.Module.Enrollment.Services
 {
