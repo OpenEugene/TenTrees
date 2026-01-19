@@ -259,6 +259,16 @@ Line 3"  # PowerShell won't parse this correctly
 3. **Reference Issues** - Use `Closes #5` or `Relates to #5`
 4. **Test Before Commit** - Ensure code compiles and runs
 5. **Review Changes** - Use `git status` and `git diff` before committing
+6. **?? WAIT FOR APPROVAL** - Never commit and push without explicit user approval
+
+### Copilot Assistant Git Workflow
+
+**IMPORTANT**: When assisting with Git operations:
+1. ? **Prepare commit messages** - Draft proper conventional commit messages
+2. ? **Show what will be committed** - Display git status and proposed changes
+3. ? **DO NOT commit automatically** - Always wait for user's explicit "commit" or "push" command
+4. ? **DO NOT push automatically** - User must explicitly request "push" operation
+5. ? **Ask for confirmation** - "Ready to commit? Type 'commit' to proceed."
 
 ### Common Git Workflow
 ```powershell
