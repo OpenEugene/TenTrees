@@ -185,3 +185,110 @@ DateTime ModifiedOn { get; set; }
 - Offline support is essential (poor connectivity)
 - Forms should be as short as possible (minimize scrolling on small screens)
 - Use checkboxes instead of text input whenever possible
+
+## Git & Version Control
+
+### Commit Messages
+Follow the Conventional Commits format for clear history:
+
+**Format:**
+```
+<type>(<scope>): <subject>
+
+<body>
+
+<footer>
+```
+
+**Types:**
+- `feat` - New feature
+- `fix` - Bug fix
+- `docs` - Documentation changes
+- `style` - Code style changes (formatting, naming)
+- `refactor` - Code restructuring without behavior change
+- `perf` - Performance improvements
+- `test` - Adding or updating tests
+- `chore` - Build process, dependencies, tooling
+
+**Examples:**
+```bash
+feat(village): implement Village CRUD module with bilingual support
+
+fix(enrollment): correct parameter naming conventions in repositories
+
+docs(readme): add deployment instructions for MonsterASP
+
+refactor(db): consolidate contexts into unified TenTreesContext
+```
+
+### PowerShell-Specific Git Commands
+
+PowerShell has issues with multi-line strings in git commit messages. Use these patterns:
+
+**? RECOMMENDED - Multiple -m flags:**
+```powershell
+git commit -m "Title of commit" `
+          -m "Body paragraph explaining what changed" `
+          -m "Additional details if needed" `
+          -m "Closes #123"
+```
+
+**? ALTERNATIVE - PowerShell here-string:**
+```powershell
+$message = @"
+Title of commit
+
+Body paragraph explaining what changed.
+
+Closes #123
+"@
+git commit -m $message
+```
+
+**? AVOID - This doesn't work in PowerShell:**
+```powershell
+git commit -m "Line 1
+Line 2
+Line 3"  # PowerShell won't parse this correctly
+```
+
+### Commit Best Practices
+
+1. **Atomic Commits** - One logical change per commit
+2. **Meaningful Messages** - Explain WHY, not just WHAT
+3. **Reference Issues** - Use `Closes #5` or `Relates to #5`
+4. **Test Before Commit** - Ensure code compiles and runs
+5. **Review Changes** - Use `git status` and `git diff` before committing
+
+### Common Git Workflow
+```powershell
+# Check current status
+git status
+
+# Stage all changes
+git add -A
+
+# Commit with proper message
+git commit -m "feat(module): add new feature" `
+          -m "Detailed description of changes" `
+          -m "Closes #5"
+
+# Push to remote
+git push origin feature/branch-name
+
+# Create PR via GitHub CLI or web interface
+```
+
+### Branch Naming
+- Feature branches: `feature/5-village-data-management`
+- Bug fixes: `fix/123-bug-description`
+- Documentation: `docs/update-readme`
+- Format: `<type>/<issue-number>-<short-description>`
+
+### Pull Request Guidelines
+- Reference the issue number in PR title and description
+- Include detailed summary of changes
+- List files added, modified, deleted
+- Provide testing checklist
+- Tag reviewers with `cc @username`
+
