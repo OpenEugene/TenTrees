@@ -417,3 +417,4 @@ FodyWeavers.xsd
 *.msm
 *.msp
 /OpenEug.TenTrees/.playwright-mcp
+/OpenEug.TenTrees/Server/appsettings.Production.json
