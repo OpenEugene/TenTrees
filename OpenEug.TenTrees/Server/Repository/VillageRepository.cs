@@ -69,6 +69,10 @@ namespace OpenEug.TenTrees.Module.Village.Repository
         {
             using var db = _factory.CreateDbContext();
             Models.Village village = db.Village.Find(villageId);
+            if (village == null)
+            {
+                return;
+            }
             db.Village.Remove(village);
             db.SaveChanges();
         }
