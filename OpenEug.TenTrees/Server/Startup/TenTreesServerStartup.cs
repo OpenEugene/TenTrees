@@ -2,12 +2,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Oqtane.Infrastructure;
-using OpenEug.TenTrees.Module.Enrollment.Repository;
-using OpenEug.TenTrees.Module.Enrollment.Services;
 
-namespace OpenEug.TenTrees.Module.Enrollment.Startup
+namespace OpenEug.TenTrees.Startup
 {
-    public class EnrollmentServerStartup : IServerStartup
+    public class TenTreesServerStartup : IServerStartup
     {
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -21,7 +19,8 @@ namespace OpenEug.TenTrees.Module.Enrollment.Startup
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient<IEnrollmentService, ServerEnrollmentService>();
+            // Register shared TenTreesContext DbContextFactory once for all modules
+            services.AddDbContextFactory<OpenEug.TenTrees.Repository.TenTreesContext>(opt => { }, ServiceLifetime.Transient);
         }
     }
 }
