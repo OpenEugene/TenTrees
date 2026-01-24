@@ -26,7 +26,7 @@ else
                 <th>@Localizer["Status"]</th>
             </Header>
             <Row>
-                <td><ActionLink Action="Edit" Parameters="@($"id=" + context.VillageId.ToString())" ResourceKey="Edit" /></td>
+                <td><ActionLink Action="Edit" Parameters="@($"id={context.VillageId}")" ResourceKey="Edit" /></td>
                 <td><ActionDialog Header="@Localizer["Dialog.DeleteVillage.Header"]" Message="@Localizer["Dialog.DeleteVillage.Message"]" Action="Delete" Security="SecurityAccessLevel.Edit" Class="btn btn-danger" OnClick="@(async () => await Delete(context))" ResourceKey="Delete" /></td>
                 <td>@context.VillageName</td>
                 <td>@context.ContactName</td>
