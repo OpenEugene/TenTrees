@@ -73,20 +73,17 @@ namespace OpenEug.TenTrees.Module.Village.Manager
         {
            var searchContentList = new List<SearchContent>();
 
-           foreach (var village in _villageRepository.GetVillages())
+           foreach (var village in _villageRepository.GetVillages().Where(v => v.ModifiedOn >= lastIndexedOn))
            {
-               if (village.ModifiedOn >= lastIndexedOn)
+               searchContentList.Add(new SearchContent
                {
-                   searchContentList.Add(new SearchContent
-                   {
-                       EntityName = "OpenEug.TenTreesVillage",
-                       EntityId = village.VillageId.ToString(),
-                       Title = village.VillageName,
-                       Body = $"{village.VillageName} - Contact: {village.ContactName}",
-                       ContentModifiedBy = village.ModifiedBy,
-                       ContentModifiedOn = village.ModifiedOn
-                   });
-               }
+                   EntityName = "OpenEug.TenTreesVillage",
+                   EntityId = village.VillageId.ToString(),
+                   Title = village.VillageName,
+                   Body = $"{village.VillageName} - Contact: {village.ContactName}",
+                   ContentModifiedBy = village.ModifiedBy,
+                   ContentModifiedOn = village.ModifiedOn
+               });
            }
 
            return Task.FromResult(searchContentList);
