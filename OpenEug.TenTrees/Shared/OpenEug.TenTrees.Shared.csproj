@@ -14,4 +14,9 @@
     <PackageReference Include="Oqtane.Shared" Version="10.0.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Constants\" />
+    <Folder Include="Extensions\" />
+  </ItemGroup>
+
 </Project>

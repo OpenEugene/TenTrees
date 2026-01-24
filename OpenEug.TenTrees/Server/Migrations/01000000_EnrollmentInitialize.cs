@@ -3,11 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Oqtane.Databases.Interfaces;
 using Oqtane.Migrations;
 using OpenEug.TenTrees.Module.Enrollment.Migrations.EntityBuilders;
-using OpenEug.TenTrees.Module.Enrollment.Repository;
 
 namespace OpenEug.TenTrees.Module.Enrollment.Migrations
 {
-    [DbContext(typeof(EnrollmentContext))]
+    [DbContext(typeof(OpenEug.TenTrees.Repository.TenTreesContext))]
     [Migration("OpenEug.TenTrees.Module.Enrollment.01.00.00.00")]
     public class EnrollmentInitialize : MultiDatabaseMigration
     {

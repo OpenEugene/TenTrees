@@ -1,5 +1,4 @@
 @using OpenEug.TenTrees.Module.Enrollment.Services
-@using OpenEug.TenTrees.Module.Enrollment.Models
 
 @namespace OpenEug.TenTrees.Module.Enrollment
 @inherits ModuleBase
@@ -41,15 +40,14 @@ else
 }
 
 @code {
-    public override string RenderMode => RenderModes.Static;
 
-    public override List<Resource> Resources => new List<Resource>()
+public override List<Resource> Resources => new List<Resource>()
     {
         new Stylesheet(ModulePath() + "Module.css"),
         new Script(ModulePath() + "Module.js")
     };
 
-    List<Enrollment> _Enrollments;
+    List<Models.Enrollment> _Enrollments;
 
     protected override async Task OnInitializedAsync()
     {
@@ -64,7 +62,7 @@ else
         }
     }
 
-    private async Task Delete(Enrollment Enrollment)
+    private async Task Delete(Models.Enrollment Enrollment)
     {
         try
         {

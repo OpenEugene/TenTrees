@@ -1,5 +1,4 @@
 @using OpenEug.TenTrees.Module.Enrollment.Services
-@using OpenEug.TenTrees.Module.Enrollment.Models
 @using Oqtane.Modules.Controls
 
 @namespace OpenEug.TenTrees.Module.Enrollment
@@ -124,7 +123,7 @@
             StateHasChanged();
 
             // Create enrollment from draft
-            var enrollment = new Enrollment
+            var enrollment = new Models.Enrollment
             {
                 ModuleId = ModuleState.ModuleId,
                 
@@ -161,7 +160,7 @@
                 SignatureCollected = true,
                 SignatureDate = DateTime.UtcNow,
                 
-                Status = EnrollmentStatus.Pending
+                Status = Models.EnrollmentStatus.Pending
             };
 
             var result = await EnrollmentService.AddEnrollmentAsync(enrollment);

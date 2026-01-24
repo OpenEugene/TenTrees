@@ -1,6 +1,5 @@
 @using Oqtane.Modules.Controls
 @using OpenEug.TenTrees.Module.Enrollment.Services
-@using OpenEug.TenTrees.Module.Enrollment.Models
 
 @namespace OpenEug.TenTrees.Module.Enrollment
 @inherits ModuleBase
@@ -278,7 +277,7 @@
             if (PageState.Action == "Edit")
             {
                 _id = Int32.Parse(PageState.QueryString["id"]);
-                Enrollment Enrollment = await EnrollmentService.GetEnrollmentAsync(_id, ModuleState.ModuleId);
+                Models.Enrollment Enrollment = await EnrollmentService.GetEnrollmentAsync(_id, ModuleState.ModuleId);
                 if (Enrollment != null)
                 {
                     _beneficiaryName = Enrollment.BeneficiaryName;
@@ -335,7 +334,7 @@
             {
                 if (PageState.Action == "Add")
                 {
-                    Enrollment Enrollment = new Enrollment();
+                    Models.Enrollment Enrollment = new Models.Enrollment();
                     Enrollment.ModuleId = ModuleState.ModuleId;
                     
                     // Basic Information
@@ -374,7 +373,7 @@
                         Enrollment.SignatureDate = DateTime.UtcNow;
                     }
                     
-                    Enrollment.Status = EnrollmentStatus.Pending;
+                    Enrollment.Status = Models.EnrollmentStatus.Pending;
                     
                     Enrollment = await EnrollmentService.AddEnrollmentAsync(Enrollment);
                     await logger.LogInformation("Enrollment Added {Enrollment}", Enrollment);
@@ -382,7 +381,7 @@
                 }
                 else
                 {
-                    Enrollment Enrollment = await EnrollmentService.GetEnrollmentAsync(_id, ModuleState.ModuleId);
+                    Models.Enrollment Enrollment = await EnrollmentService.GetEnrollmentAsync(_id, ModuleState.ModuleId);
                     
                     // Basic Information
                     Enrollment.BeneficiaryName = _beneficiaryName;
