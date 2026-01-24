@@ -43,8 +43,8 @@ namespace OpenEug.TenTrees.Module.Village.Controllers
             }
             else
             { 
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Village Get Attempt {VillageId}", id);
-                HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                _logger.Log(LogLevel.Warning, this, LogFunction.Security, "Village Not Found {VillageId}", id);
+                HttpContext.Response.StatusCode = (int)HttpStatusCode.NotFound;
                 return null;
             }
         }
