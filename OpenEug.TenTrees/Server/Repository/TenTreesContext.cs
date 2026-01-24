@@ -18,5 +18,14 @@ namespace OpenEug.TenTrees.Repository
         {
             // ContextBase handles multi-tenant database connections
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Models.Village>().ToTable(ActiveDatabase.RewriteName("Village"));
+            modelBuilder.Entity<Models.Enrollment>().ToTable(ActiveDatabase.RewriteName("Enrollment"));
+            modelBuilder.Entity<Models.Participant>().ToTable(ActiveDatabase.RewriteName("Participant"));
+        }
     }
 }
