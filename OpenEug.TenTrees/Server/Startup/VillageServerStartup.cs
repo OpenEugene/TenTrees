@@ -22,7 +22,6 @@ namespace OpenEug.TenTrees.Module.Village.Startup
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<IVillageService, ServerVillageService>();
-            services.AddDbContextFactory<OpenEug.TenTrees.Repository.TenTreesContext>(opt => { }, ServiceLifetime.Transient);
         }
     }
 }
