@@ -115,7 +115,7 @@
         {
             if (string.IsNullOrWhiteSpace(_signatureData) || !_confirmed)
             {
-                AddModuleMessage(Localizer["Message.SignatureRequired"], MessageType.Warning);
+                AddModuleMessage(Localizer["Message.ValidationError"], MessageType.Error);
                 return;
             }
 

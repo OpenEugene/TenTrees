@@ -91,4 +91,13 @@
   <data name="Message.SaveError" xml:space="preserve">
     <value>Error saving village</value>
   </data>
+  <data name="Message.ValidationError" xml:space="preserve">
+    <value>Please fix the validation errors below</value>
+  </data>
+  <data name="Validation.VillageNameRequired" xml:space="preserve">
+    <value>Village name is required</value>
+  </data>
+  <data name="Validation.EmailInvalid" xml:space="preserve">
+    <value>Please enter a valid email address</value>
+  </data>
 </root>

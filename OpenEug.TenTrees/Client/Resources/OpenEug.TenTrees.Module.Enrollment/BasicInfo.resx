@@ -24,6 +24,12 @@
   <data name="Section.BasicInfo" xml:space="preserve">
     <value>Basic Information</value>
   </data>
+  <data name="Section.ParticipantInfo" xml:space="preserve">
+    <value>Participant Information</value>
+  </data>
+  <data name="Section.HouseholdInfo" xml:space="preserve">
+    <value>Household Information</value>
+  </data>
   <data name="EvaluatorName.Text" xml:space="preserve">
     <value>Evaluator Name:</value>
   </data>
@@ -74,6 +80,9 @@
   </data>
   <data name="Message.Validation" xml:space="preserve">
     <value>Please fill in all required fields</value>
+  </data>
+  <data name="Message.ValidationError" xml:space="preserve">
+    <value>Please fix the validation errors below</value>
   </data>
   <data name="Message.Error" xml:space="preserve">
     <value>An error occurred. Please try again.</value>

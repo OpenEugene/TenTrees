@@ -91,4 +91,13 @@
   <data name="Message.SaveError" xml:space="preserve">
     <value>Xihoxo xo hlayisa motse</value>
   </data>
+  <data name="Message.ValidationError" xml:space="preserve">
+    <value>Khongela u lulamisa swihoxo swa nkandziyiso laha hansi</value>
+  </data>
+  <data name="Validation.VillageNameRequired" xml:space="preserve">
+    <value>Vito ra motse ri laveka</value>
+  </data>
+  <data name="Validation.EmailInvalid" xml:space="preserve">
+    <value>Khongela u nghenisa adirese ya email leyi lungaka</value>
+  </data>
 </root>
