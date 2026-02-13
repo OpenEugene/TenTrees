@@ -41,7 +41,7 @@ namespace OpenEug.TenTrees.Module.Enrollment.Services
         public async Task<List<Models.Enrollment>> GetEnrollmentsAsync(int moduleId)
         {
             List<Models.Enrollment> enrollments = await GetJsonAsync<List<Models.Enrollment>>(CreateAuthorizationPolicyUrl($"{Apiurl}?moduleid={moduleId}", EntityNames.Module, moduleId), Enumerable.Empty<Models.Enrollment>().ToList());
-            return enrollments.OrderBy(item => item.BeneficiaryName).ToList();
+            return enrollments.OrderBy(item => item.GrowerName).ToList();
         }
 
         public async Task<Models.Enrollment> GetEnrollmentAsync(int enrollmentId, int moduleId)
@@ -100,7 +100,7 @@ namespace OpenEug.TenTrees.Module.Enrollment.Services
     public class MentorInfo
     {
         public int MentorId { get; set; }
-        public string EvaluatorName { get; set; }
+        public string TreeMentorName { get; set; }
         public int VillageId { get; set; }
     }
     

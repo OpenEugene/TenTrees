@@ -59,7 +59,7 @@ namespace OpenEug.TenTrees.Module.Enrollment.Manager
                 {
                     _EnrollmentRepository.AddEnrollment(new Models.Enrollment { 
                         ModuleId = module.ModuleId, 
-                        BeneficiaryName = Enrollment.BeneficiaryName,
+                        GrowerName = Enrollment.GrowerName,
                         VillageId = Enrollment.VillageId,
                         HouseholdSize = Enrollment.HouseholdSize,
                         MentorId = Enrollment.MentorId,
@@ -81,8 +81,8 @@ namespace OpenEug.TenTrees.Module.Enrollment.Manager
                    {
                        EntityName = "OpenEug.TenTreesEnrollment",
                        EntityId = Enrollment.EnrollmentId.ToString(),
-                       Title = Enrollment.BeneficiaryName,
-                       Body = $"{Enrollment.BeneficiaryName} - Village: {Enrollment.VillageId}",
+                       Title = Enrollment.GrowerName,
+                       Body = $"{Enrollment.GrowerName} - Village: {Enrollment.VillageId}",
                        ContentModifiedBy = Enrollment.ModifiedBy,
                        ContentModifiedOn = Enrollment.ModifiedOn
                    });

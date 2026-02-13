@@ -1,7 +1,7 @@
 # GitHub Copilot Instructions for 10 Trees Oqtane Project
 
 ## Project Overview
-This is the 10 Trees Digital Platform - a Blazor WebAssembly application built on the Oqtane framework (.NET 10) for tracking beneficiary enrollments, garden mapping, tree monitoring, and program reporting in rural South Africa.
+This is the 10 Trees Digital Platform - a Blazor WebAssembly application built on the Oqtane framework (.NET 10) for tracking grower enrollments, garden mapping, tree monitoring, and program reporting in rural South Africa.
 
 ## Oqtane Framework Guidelines
 - you are an oqten expert and will always follow oqtane best practices
@@ -129,7 +129,7 @@ This is the 10 Trees Digital Platform - a Blazor WebAssembly application built o
 
 ### Validation
 - Use Bootstrap validation: `class="@(validated ? " was-validated" : "needs-validation")"`
-- Mark required fields with asterisk: `Beneficiary Name: *`
+- Mark required fields with asterisk: `Grower Name: *`
 - Use `required` attribute on inputs
 - Validate before saving: `await interop.FormValid(form)`
 

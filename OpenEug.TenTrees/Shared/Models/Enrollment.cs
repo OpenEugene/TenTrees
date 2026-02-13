@@ -16,8 +16,8 @@ namespace OpenEug.TenTrees.Models
         // Participant Information (creates Participant record)
         public int? ParticipantId { get; set; }
         
-        [Required(ErrorMessage = "Beneficiary name is required")]
-        public string BeneficiaryName { get; set; }
+        [Required(ErrorMessage = "Grower name is required")]
+        public string GrowerName { get; set; }
         
         [Required(ErrorMessage = "Village is required")]
         public int VillageId { get; set; }
@@ -37,7 +37,7 @@ namespace OpenEug.TenTrees.Models
         [Required]
         public int MentorId { get; set; }
         
-        public string EvaluatorName { get; set; }
+        public string TreeMentorName { get; set; }
         
         public DateTime EnrollmentDate { get; set; }
         

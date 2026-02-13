@@ -24,13 +24,13 @@
         </div>
         <div class="card-body">
             <div class="mb-3">
-                <Label For="evaluatorname" ResourceKey="EvaluatorName" ResourceType="@resourceType" Class="form-label fw-bold">Evaluator Name:</Label>
-                <input id="evaluatorname" class="form-control form-control-lg" @bind="@_evaluatorName" readonly />
+                <Label For="treementorname" ResourceKey="TreeMentorName" ResourceType="@resourceType" Class="form-label fw-bold">Tree Mentor Name:</Label>
+                <input id="treementorname" class="form-control form-control-lg" @bind="@_treeMentorName" readonly />
             </div>
             
             <div class="mb-3">
-                <Label For="beneficiaryname" ResourceKey="BeneficiaryName" ResourceType="@resourceType" Class="form-label fw-bold">Beneficiary Name: *</Label>
-                <input id="beneficiaryname" class="form-control form-control-lg" @bind="@_beneficiaryName" required />
+                <Label For="growername" ResourceKey="GrowerName" ResourceType="@resourceType" Class="form-label fw-bold">Grower Name: *</Label>
+                <input id="growername" class="form-control form-control-lg" @bind="@_growerName" required />
                 <div class="invalid-feedback">@Localizer["Validation.Required"]</div>
             </div>
             
@@ -95,8 +95,8 @@
     private ElementReference form;
     private bool validated = false;
 
-    private string _evaluatorName;
-    private string _beneficiaryName;
+    private string _treeMentorName;
+    private string _growerName;
     private int _villageId;
     private string _houseNumber;
     private string _idNumber;
@@ -108,7 +108,7 @@
 
     protected override void OnInitialized()
     {
-        _evaluatorName = PageState.User.DisplayName;
+        _treeMentorName = PageState.User.DisplayName;
         resourceType = GetType().AssemblyQualifiedName;
         
         // Initialize or restore draft
@@ -119,8 +119,8 @@
         else
         {
             // Restore from draft
-            _evaluatorName = StateService.CurrentDraft.EvaluatorName ?? PageState.User.DisplayName;
-            _beneficiaryName = StateService.CurrentDraft.BeneficiaryName;
+            _treeMentorName = StateService.CurrentDraft.TreeMentorName ?? PageState.User.DisplayName;
+            _growerName = StateService.CurrentDraft.GrowerName;
             _villageId = StateService.CurrentDraft.VillageId;
             _houseNumber = StateService.CurrentDraft.HouseNumber;
             _idNumber = StateService.CurrentDraft.IdNumber;
@@ -139,8 +139,8 @@
             if (await interop.FormValid(form))
             {
                 // Save to draft state
-                StateService.CurrentDraft.EvaluatorName = _evaluatorName;
-                StateService.CurrentDraft.BeneficiaryName = _beneficiaryName;
+                StateService.CurrentDraft.TreeMentorName = _treeMentorName;
+                StateService.CurrentDraft.GrowerName = _growerName;
                 StateService.CurrentDraft.VillageId = _villageId;
                 StateService.CurrentDraft.HouseNumber = _houseNumber;
                 StateService.CurrentDraft.IdNumber = _idNumber;

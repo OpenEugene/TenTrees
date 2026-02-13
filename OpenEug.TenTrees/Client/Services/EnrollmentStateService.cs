@@ -34,8 +34,8 @@ namespace OpenEug.TenTrees.Module.Enrollment.Services
         public int? EnrollmentId { get; set; }
         
         // Basic Information
-        public string EvaluatorName { get; set; }
-        public string BeneficiaryName { get; set; }
+        public string TreeMentorName { get; set; }
+        public string GrowerName { get; set; }
         public int VillageId { get; set; }
         public string HouseNumber { get; set; }
         public string IdNumber { get; set; }

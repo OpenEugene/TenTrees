@@ -27,7 +27,7 @@ namespace OpenEug.TenTrees.Module.Enrollment.Migrations.EntityBuilders
             
             // Participant Information
             ParticipantId = AddIntegerColumn(table, "ParticipantId", true);
-            BeneficiaryName = AddMaxStringColumn(table, "BeneficiaryName");
+            GrowerName = AddMaxStringColumn(table, "GrowerName");
             VillageId = AddIntegerColumn(table, "VillageId");
             HouseNumber = AddStringColumn(table, "HouseNumber", 50, true);
             IdNumber = AddStringColumn(table, "IdNumber", 50, true);
@@ -37,7 +37,7 @@ namespace OpenEug.TenTrees.Module.Enrollment.Migrations.EntityBuilders
             
             // Enrollment metadata
             MentorId = AddIntegerColumn(table, "MentorId");
-            EvaluatorName = AddStringColumn(table, "EvaluatorName", 200, true);
+            TreeMentorName = AddStringColumn(table, "TreeMentorName", 200, true);
             EnrollmentDate = AddDateTimeColumn(table, "EnrollmentDate");
             
             // Preferred Criteria
@@ -71,7 +71,7 @@ namespace OpenEug.TenTrees.Module.Enrollment.Migrations.EntityBuilders
         public OperationBuilder<AddColumnOperation> EnrollmentId { get; set; }
         public OperationBuilder<AddColumnOperation> ModuleId { get; set; }
         public OperationBuilder<AddColumnOperation> ParticipantId { get; set; }
-        public OperationBuilder<AddColumnOperation> BeneficiaryName { get; set; }
+        public OperationBuilder<AddColumnOperation> GrowerName { get; set; }
         public OperationBuilder<AddColumnOperation> VillageId { get; set; }
         public OperationBuilder<AddColumnOperation> HouseNumber { get; set; }
         public OperationBuilder<AddColumnOperation> IdNumber { get; set; }
@@ -79,7 +79,7 @@ namespace OpenEug.TenTrees.Module.Enrollment.Migrations.EntityBuilders
         public OperationBuilder<AddColumnOperation> HouseholdSize { get; set; }
         public OperationBuilder<AddColumnOperation> OwnsHome { get; set; }
         public OperationBuilder<AddColumnOperation> MentorId { get; set; }
-        public OperationBuilder<AddColumnOperation> EvaluatorName { get; set; }
+        public OperationBuilder<AddColumnOperation> TreeMentorName { get; set; }
         public OperationBuilder<AddColumnOperation> EnrollmentDate { get; set; }
         public OperationBuilder<AddColumnOperation> EnrolledInPE { get; set; }
         public OperationBuilder<AddColumnOperation> PEGraduate { get; set; }

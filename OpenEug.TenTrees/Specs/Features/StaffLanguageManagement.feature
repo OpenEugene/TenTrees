@@ -30,7 +30,7 @@ Feature: Staff Language Management
     And the translation should be saved
 
   Scenario: Update existing translation
-    Given the field "Beneficiary Name" exists
+    Given the field "Grower Name" exists
     When I navigate to the translation editor
     And I update the Xitsonga translation to "Vito ra Munhu Loyi Pfuniwaka"
     Then the new translation should be saved

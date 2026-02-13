@@ -126,8 +126,8 @@
   <data name="Delete" xml:space="preserve">
     <value>Delete</value>
   </data>
-  <data name="Beneficiary" xml:space="preserve">
-    <value>Beneficiary</value>
+  <data name="Grower" xml:space="preserve">
+    <value>Grower</value>
   </data>
   <data name="Village" xml:space="preserve">
     <value>Village</value>

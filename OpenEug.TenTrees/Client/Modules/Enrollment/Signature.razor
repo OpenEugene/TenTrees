@@ -49,8 +49,8 @@
     </div>
     <div class="card-body">
         <div class="mb-2">
-            <strong>@Localizer["BeneficiaryName"]:</strong><br />
-            <span class="fs-5">@StateService.CurrentDraft?.BeneficiaryName</span>
+            <strong>@Localizer["GrowerName"]:</strong><br />
+            <span class="fs-5">@StateService.CurrentDraft?.GrowerName</span>
         </div>
         <div class="mb-2">
             <strong>@Localizer["Village"]:</strong><br />
@@ -128,7 +128,7 @@
                 ModuleId = ModuleState.ModuleId,
                 
                 // Basic Information
-                BeneficiaryName = StateService.CurrentDraft.BeneficiaryName,
+                GrowerName = StateService.CurrentDraft.GrowerName,
                 VillageId = StateService.CurrentDraft.VillageId,
                 HouseNumber = StateService.CurrentDraft.HouseNumber,
                 IdNumber = StateService.CurrentDraft.IdNumber,
@@ -137,7 +137,7 @@
                 OwnsHome = StateService.CurrentDraft.OwnsHome,
                 EnrollmentDate = DateTime.UtcNow,
                 MentorId = PageState.User.UserId,
-                EvaluatorName = StateService.CurrentDraft.EvaluatorName,
+                TreeMentorName = StateService.CurrentDraft.TreeMentorName,
                 
                 // Preferred Criteria
                 EnrolledInPE = StateService.CurrentDraft.EnrolledInPE,
