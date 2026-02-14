@@ -1,17 +1,17 @@
 @workflow-enrollment @priority-high @mobile
-Feature: Beneficiary Enrollment Submission
+Feature: Grower Enrollment Submission
   As a tree mentor
-  I want to submit beneficiary enrollments digitally
+  I want to submit grower enrollments digitally
   So that enrollment data is captured accurately and linked to participants
 
   Background:
     Given I am a tree mentor logged into the system
-    And I am at a beneficiary's household
+    And I am at a grower's household
 
-  Scenario: Submit new beneficiary enrollment
+  Scenario: Submit new grower enrollment
     Given I navigate to "New Enrollment"
     When I select the village "Orpen Gate Village"
-    And I enter the beneficiary name "Mary Nkuna"
+    And I enter the grower name "Mary Nkuna"
     And I enter house number "42"
     And I enter ID number or birthdate
     And I record household size as "5"
@@ -24,14 +24,14 @@ Feature: Beneficiary Enrollment Submission
 
   Scenario: Validate required fields before submission
     Given I have started a new enrollment
-    When I attempt to submit without beneficiary name
-    Then I should see validation error "Beneficiary name is required"
+    When I attempt to submit without grower name
+    Then I should see validation error "Grower name is required"
     And the form should not be submitted
 
   Scenario: Auto-populate mentor information
     Given I am logged in as mentor "Bondi"
     When I start a new enrollment
-    Then the evaluator name should be pre-filled as "Bondi"
+    Then the tree mentor name should be pre-filled as "Bondi"
     And the date should be set to today
 
   Scenario: Record preferred criteria responses

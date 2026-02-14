@@ -25,7 +25,7 @@
 
 ## 1. Executive Summary
 
-The 10 Trees Digital Platform is a web-based application built on the Oqtane framework to support the 10 Trees program operated by Zingela Ulwazi Trust in rural South Africa. The platform digitizes paper-based workflows for tracking beneficiary enrollments, garden mapping, tree monitoring, and program reporting.
+The 10 Trees Digital Platform is a web-based application built on the Oqtane framework to support the 10 Trees program operated by Zingela Ulwazi Trust in rural South Africa. The platform digitizes paper-based workflows for tracking grower enrollments, garden mapping, tree monitoring, and program reporting.
 
 This document provides a comprehensive Behavior-Driven Development (BDD) project plan that establishes complete traceability from business workflows through feature definitions to module implementations.
 
@@ -33,7 +33,7 @@ This document provides a comprehensive Behavior-Driven Development (BDD) project
 
 - **Tree Mentors (17 total):** Field staff collecting data on smartphones
 - **Centre Staff:** Admin, Project Manager, Educator, Executive Director
-- **Beneficiaries:** Women in the community receiving trees and training
+- **Growers:** Women in the community receiving trees and training
 - **External Villages:** Future partner organizations using the 10 Trees brand
 
 ### 1.2 Technical Constraints
@@ -51,7 +51,7 @@ The following workflows have been identified from project documentation and stak
 
 | ID | Workflow Name | Description |
 |----|---------------|-------------|
-| WF-001 | Participant Enrollment | Complete enrollment process for new beneficiaries |
+| WF-001 | Participant Enrollment | Complete enrollment process for new growers |
 | WF-002 | Release Form Capture | Capture photo release consent with preference options |
 | WF-003 | Garden Site Mapping | Document garden location and existing resources |
 | WF-004 | Garden Assessment | Ongoing monitoring of tree health and garden practices |
@@ -72,19 +72,19 @@ Features are organized by workflow and tagged for traceability. Each feature inc
 **Tags:** `@workflow-enrollment` `@priority-high` `@mobile`
 
 ```gherkin
-Feature: Beneficiary Enrollment Submission
+Feature: Grower Enrollment Submission
   As a tree mentor
-  I want to submit beneficiary enrollments digitally
+  I want to submit grower enrollments digitally
   So that enrollment data is captured accurately and linked to participants
 
   Background:
     Given I am a tree mentor logged into the system
-    And I am at a beneficiary's household
+    And I am at a grower's household
 
-  Scenario: Submit new beneficiary enrollment
+  Scenario: Submit new grower enrollment
     Given I navigate to "New Enrollment"
     When I select the village "Orpen Gate Village"
-    And I enter the beneficiary name "Mary Nkuna"
+    And I enter the grower name "Mary Nkuna"
     And I enter house number "42"
     And I enter ID number or birthdate
     And I record household size as "5"
@@ -97,14 +97,14 @@ Feature: Beneficiary Enrollment Submission
 
   Scenario: Validate required fields before submission
     Given I have started a new enrollment
-    When I attempt to submit without beneficiary name
-    Then I should see validation error "Beneficiary name is required"
+    When I attempt to submit without grower name
+    Then I should see validation error "Grower name is required"
     And the form should not be submitted
 
   Scenario: Auto-populate mentor information
     Given I am logged in as mentor "Bondi"
     When I start a new enrollment
-    Then the evaluator name should be pre-filled as "Bondi"
+    Then the tree mentor name should be pre-filled as "Bondi"
     And the date should be set to today
 
   Scenario: Record preferred criteria responses
@@ -175,11 +175,11 @@ Feature: Garden Location and Resource Documentation
 
   Background:
     Given I am a tree mentor with an approved enrollment
-    And I am at the beneficiary's garden site
+    And I am at the grower's garden site
 
   Scenario: Complete garden mapping with GPS
     Given I navigate to mapping for "Mary Nkuna"
-    Then beneficiary information should be auto-filled
+    Then grower information should be auto-filled
     When I capture GPS coordinates
     And I answer water availability questions:
       | Question | Response |
@@ -211,7 +211,7 @@ Feature: Garden Location and Resource Documentation
     Then I should see "Mary Nkuna" in results
     And selecting her should auto-fill:
       | Field | Value |
-      | Beneficiary name | Mary Nkuna |
+      | Grower name | Mary Nkuna |
       | House number | 42 |
       | Village | Orpen Gate Village |
 ```
@@ -358,20 +358,20 @@ Feature: Village-Scoped Data Access
   I want to organize data by village
   So that each village sees only their own data while admins see all
 
-  Scenario: Mentor views village-specific beneficiaries
+  Scenario: Mentor views village-specific growers
     Given I am mentor "Bondi" assigned to "Orpen Gate Village"
-    When I view the beneficiary list
-    Then I should only see beneficiaries in "Orpen Gate Village"
-    And I should not see beneficiaries from "Londelozzi"
+    When I view the grower list
+    Then I should only see growers in "Orpen Gate Village"
+    And I should not see growers from "Londelozzi"
 
   Scenario: Admin views all villages
     Given I am logged in as administrator "Becky"
-    When I view the beneficiary list
+    When I view the grower list
     Then I should see a village filter dropdown
     When I select "All Villages"
-    Then I should see beneficiaries from all villages
+    Then I should see growers from all villages
     When I select "Orpen Gate Village"
-    Then I should only see beneficiaries from "Orpen Gate Village"
+    Then I should only see growers from "Orpen Gate Village"
 
   Scenario: Add new village
     Given I am an administrator
@@ -382,10 +382,10 @@ Feature: Village-Scoped Data Access
     And mentors can be assigned to it
 
   Scenario: Village data isolation
-    Given "Orpen Gate Village" has 50 beneficiaries
-    And "Londelozzi" has 30 beneficiaries
+    Given "Orpen Gate Village" has 50 growers
+    And "Londelozzi" has 30 growers
     When mentor from "Londelozzi" logs in
-    Then they should see exactly 30 beneficiaries
+    Then they should see exactly 30 growers
     And no data from "Orpen Gate Village" should be visible
 ```
 
@@ -563,7 +563,7 @@ Detailed breakdown of actions each module must support, derived from BDD feature
 
 | Action | Behavior | Input | Output | Source |
 |--------|----------|-------|--------|--------|
-| `CreateParticipant` | Create new beneficiary record | ParticipantDto | ParticipantId | WF-001 |
+| `CreateParticipant` | Create new grower record | ParticipantDto | ParticipantId | WF-001 |
 | `GetParticipant` | Retrieve participant by ID | int id | ParticipantDto | All |
 | `SearchParticipants` | Find by name, ID, village | SearchCriteria | List<ParticipantDto> | WF-003, WF-004 |
 | `GetByVillage` | List all in village | int villageId | List<ParticipantDto> | WF-007 |
@@ -579,7 +579,7 @@ public class Participant
     public int ParticipantId { get; set; }
     public int VillageId { get; set; }
     public int? MentorId { get; set; }
-    public string BeneficiaryName { get; set; }
+    public string GrowerName { get; set; }
     public string HouseNumber { get; set; }
     public string IdNumber { get; set; }
     public DateTime? BirthDate { get; set; }
@@ -869,7 +869,7 @@ Each workflow file should contain:
 
 ## Preconditions
 - Mentor is logged in
-- Mentor is at beneficiary household
+- Mentor is at grower household
 
 ## Main Flow
 1. Mentor navigates to New Enrollment
@@ -902,7 +902,7 @@ Each module file should contain:
 # TenTrees.Enrollment Module
 
 ## Overview
-Handles beneficiary enrollment submission and management.
+Handles grower enrollment submission and management.
 
 ## Dependencies
 - TenTrees.Participant (required)
@@ -1290,11 +1290,11 @@ Phased approach aligned with the 10 Trees Work Plan timeline.
 
 | Term | Definition |
 |------|------------|
-| **Beneficiary** | Woman enrolled in the 10 Trees program receiving trees |
+| **Grower** | Woman enrolled in the 10 Trees program receiving trees |
 | **Tree Mentor** | Field staff who visits households and collects data |
 | **Centre** | Zingela Ulwazi headquarters with Wi-Fi |
 | **PE** | Permaculture Education program |
-| **Village** | Geographic grouping of beneficiaries |
+| **Village** | Geographic grouping of growers |
 | **Assessment** | Regular garden health check (twice monthly Year 1, monthly Year 2) |
 | **Survival Rate** | Trees alive ÷ Trees planted × 100 |
 | **Impersonation** | Admin entering data on behalf of a mentor |
@@ -1308,7 +1308,7 @@ Key naming convention: `[Module].[Component].[Element]`
 ```
 // Enrollment Form
 Enrollment.Edit.Title = "10 Trees Enrollment Form" / "Fomo ya ku mepa ka 10 Trees"
-Enrollment.Edit.BeneficiaryName = "Beneficiary's name" / "Vito ra mu amukeli"
+Enrollment.Edit.GrowerName = "Grower's name" / "Vito ra mu amukeli"
 Enrollment.Edit.HouseNumber = "House Number" / "Nomboro ya yindlu"
 Enrollment.Edit.OwnsHome = "Do they own their home?" / "Xana kaya leri va tshamaku ka roho ira voho xi mfumo keh?"
 Enrollment.Edit.HouseholdSize = "Number of people living in the home" / "Nhlayu ya vanhu lava va tshamaku ka ndyangu lowu"

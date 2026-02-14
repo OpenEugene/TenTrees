@@ -1,6 +1,6 @@
 # 10 Trees Digital Tracking Platform
 
-A Blazor WebAssembly application built on the Oqtane framework for tracking beneficiary enrollments, garden mapping, tree monitoring, and program reporting for the 10 Trees permaculture program in rural South Africa.
+A Blazor WebAssembly application built on the Oqtane framework for tracking grower enrollments, garden mapping, tree monitoring, and program reporting for the 10 Trees permaculture program in rural South Africa.
 
 ## Project Overview
 
@@ -15,7 +15,7 @@ The 10 Trees Digital Platform replaces paper-based processes for tracking permac
 
 ## Key Features
 
-### 1. Beneficiary Enrollment
+### 1. Grower Enrollment
 Multi-step workflow for enrolling new participants:
 - **Basic Information**: Name, village, household details
 - **Eligibility Criteria**: Program requirements and preferred criteria
@@ -83,7 +83,7 @@ Comprehensive bilingual implementation:
 ```
 Client/
   ?? Modules/
-  ?   ?? Enrollment/         # Beneficiary enrollment workflows
+  ?   ?? Enrollment/         # Grower enrollment workflows
   ?? Services/               # Client-side services and state management
   ?? Resources/              # Localization .resx files (en-ZA, ts-ZA)
   ?? Themes/                 # Mobile-optimized theming

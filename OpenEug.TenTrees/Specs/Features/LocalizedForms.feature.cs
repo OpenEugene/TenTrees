@@ -189,7 +189,7 @@ namespace Specs.Features
     await testRunner.AndAsync("I should see validation messages in Xitsonga", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
 #line 16
-    await testRunner.AndAsync("I should see \"Vito ra Munhu\" for \"Beneficiary Name\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+    await testRunner.AndAsync("I should see \"Vito ra Mulimi\" for \"Grower Name\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
 #line 17
     await testRunner.AndAsync("I should see \"Ndawu\" for \"Village\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
@@ -229,7 +229,7 @@ namespace Specs.Features
     await testRunner.WhenAsync("I open the Application Form", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 22
-    await testRunner.ThenAsync("I should see \"Beneficiary Name\" as a field label", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+    await testRunner.ThenAsync("I should see \"Grower Name\" as a field label", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
 #line 23
     await testRunner.AndAsync("I should see \"Village\" as a field label", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
@@ -444,7 +444,7 @@ namespace Specs.Features
     await testRunner.WhenAsync("I attempt to submit a form without required fields", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 57
-    await testRunner.ThenAsync("I should see \"Vito ra munhu ri laveka\" for \"Beneficiary name is required\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+    await testRunner.ThenAsync("I should see \"Vito ra mulimi ri laveka\" for \"Grower name is required\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
 #line 58
     await testRunner.AndAsync("I should see \"Ndawu yi laveka\" for \"Village is required\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");

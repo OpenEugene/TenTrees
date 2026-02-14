@@ -18,15 +18,15 @@
             </div>
             <div class="card-body">
                 <div class="row mb-2">
-                    <Label Class="col-sm-4" For="evaluatorname" ResourceKey="EvaluatorName">Evaluator Name:</Label>
+                    <Label Class="col-sm-4" For="treementorname" ResourceKey="TreeMentorName">Tree Mentor Name:</Label>
                     <div class="col-sm-8">
-                        <input id="evaluatorname" class="form-control" @bind="@_evaluatorName" readonly />
+                        <input id="treementorname" class="form-control" @bind="@_treeMentorName" readonly />
                     </div>
                 </div>
                 <div class="row mb-2">
-                    <Label Class="col-sm-4" For="beneficiaryname" ResourceKey="BeneficiaryName">Beneficiary Name:</Label>
+                    <Label Class="col-sm-4" For="growername" ResourceKey="GrowerName">Grower Name:</Label>
                     <div class="col-sm-8">
-                        <input id="beneficiaryname" class="form-control" @bind="@_beneficiaryName" required />
+                        <input id="growername" class="form-control" @bind="@_growerName" required />
                     </div>
                 </div>
                 <div class="row mb-2">
@@ -232,8 +232,8 @@
     private int _id;
     
     // Basic Information
-    private string _evaluatorName;
-    private string _beneficiaryName;
+    private string _treeMentorName;
+    private string _growerName;
     private int _villageId;
     private string _houseNumber;
     private string _idNumber;
@@ -271,8 +271,8 @@
     {
         try
         {
-            // Auto-fill evaluator name from current user
-            _evaluatorName = PageState.User.DisplayName;
+            // Auto-fill tree mentor name from current user
+            _treeMentorName = PageState.User.DisplayName;
             
             if (PageState.Action == "Edit")
             {
@@ -280,7 +280,7 @@
                 Models.Enrollment Enrollment = await EnrollmentService.GetEnrollmentAsync(_id, ModuleState.ModuleId);
                 if (Enrollment != null)
                 {
-                    _beneficiaryName = Enrollment.BeneficiaryName;
+                    _growerName = Enrollment.GrowerName;
                     _villageId = Enrollment.VillageId;
                     _houseNumber = Enrollment.HouseNumber;
                     _idNumber = Enrollment.IdNumber;
@@ -288,7 +288,7 @@
                     _householdSize = Enrollment.HouseholdSize;
                     _ownsHome = Enrollment.OwnsHome;
                     _enrollmentDate = Enrollment.EnrollmentDate.Date;
-                    _evaluatorName = Enrollment.EvaluatorName;
+                    _treeMentorName = Enrollment.TreeMentorName;
                     
                     // Preferred Criteria
                     _enrolledInPE = Enrollment.EnrolledInPE;
@@ -338,7 +338,7 @@
                     Enrollment.ModuleId = ModuleState.ModuleId;
                     
                     // Basic Information
-                    Enrollment.BeneficiaryName = _beneficiaryName;
+                    Enrollment.GrowerName = _growerName;
                     Enrollment.VillageId = _villageId;
                     Enrollment.HouseNumber = _houseNumber;
                     Enrollment.IdNumber = _idNumber;
@@ -347,7 +347,7 @@
                     Enrollment.OwnsHome = _ownsHome;
                     Enrollment.EnrollmentDate = DateTime.UtcNow;
                     Enrollment.MentorId = PageState.User.UserId;
-                    Enrollment.EvaluatorName = _evaluatorName;
+                    Enrollment.TreeMentorName = _treeMentorName;
                     
                     // Preferred Criteria
                     Enrollment.EnrolledInPE = _enrolledInPE;
@@ -384,14 +384,14 @@
                     Models.Enrollment Enrollment = await EnrollmentService.GetEnrollmentAsync(_id, ModuleState.ModuleId);
                     
                     // Basic Information
-                    Enrollment.BeneficiaryName = _beneficiaryName;
+                    Enrollment.GrowerName = _growerName;
                     Enrollment.VillageId = _villageId;
                     Enrollment.HouseNumber = _houseNumber;
                     Enrollment.IdNumber = _idNumber;
                     Enrollment.BirthDate = _birthDate;
                     Enrollment.HouseholdSize = _householdSize;
                     Enrollment.OwnsHome = _ownsHome;
-                    Enrollment.EvaluatorName = _evaluatorName;
+                    Enrollment.TreeMentorName = _treeMentorName;
                     
                     // Preferred Criteria
                     Enrollment.EnrolledInPE = _enrolledInPE;

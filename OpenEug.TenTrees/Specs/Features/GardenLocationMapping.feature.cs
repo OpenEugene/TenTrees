@@ -120,7 +120,7 @@ namespace Specs.Features
     await testRunner.GivenAsync("I am a tree mentor with an approved enrollment", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
 #line 9
-    await testRunner.AndAsync("I am at the beneficiary\'s garden site", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+    await testRunner.AndAsync("I am at the grower\'s garden site", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
         }
         
@@ -182,37 +182,37 @@ namespace Specs.Features
     await testRunner.GivenAsync("I navigate to mapping for \"Mary Nkuna\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
 #line 13
-    await testRunner.ThenAsync("beneficiary information should be auto-filled", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+    await testRunner.ThenAsync("grower information should be auto-filled", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
 #line 14
     await testRunner.WhenAsync("I capture GPS coordinates", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-                global::Reqnroll.Table table6 = new global::Reqnroll.Table(new string[] {
+                global::Reqnroll.Table table4 = new global::Reqnroll.Table(new string[] {
                             "Question",
                             "Response"});
-                table6.AddRow(new string[] {
+                table4.AddRow(new string[] {
                             "Do you have water in the plot?",
                             "Yes"});
-                table6.AddRow(new string[] {
+                table4.AddRow(new string[] {
                             "Is there any water catchment system (Jojo tank)?",
                             "Yes"});
 #line 15
-    await testRunner.AndAsync("I answer water availability questions:", ((string)(null)), table6, "And ");
+    await testRunner.AndAsync("I answer water availability questions:", ((string)(null)), table4, "And ");
 #line hidden
-                global::Reqnroll.Table table7 = new global::Reqnroll.Table(new string[] {
+                global::Reqnroll.Table table5 = new global::Reqnroll.Table(new string[] {
                             "Type",
                             "Count"});
-                table7.AddRow(new string[] {
+                table5.AddRow(new string[] {
                             "Existing trees/productive plants",
                             "5"});
-                table7.AddRow(new string[] {
+                table5.AddRow(new string[] {
                             "Indigenous trees",
                             "2"});
-                table7.AddRow(new string[] {
+                table5.AddRow(new string[] {
                             "Fruit and nut trees",
                             "3"});
 #line 19
-    await testRunner.AndAsync("I record existing trees:", ((string)(null)), table7, "And ");
+    await testRunner.AndAsync("I record existing trees:", ((string)(null)), table5, "And ");
 #line hidden
 #line 24
     await testRunner.AndAsync("I answer \"Yes\" to \"Is there space for more trees?\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
@@ -315,20 +315,20 @@ namespace Specs.Features
 #line 42
     await testRunner.ThenAsync("I should see \"Mary Nkuna\" in results", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
-                global::Reqnroll.Table table8 = new global::Reqnroll.Table(new string[] {
+                global::Reqnroll.Table table6 = new global::Reqnroll.Table(new string[] {
                             "Field",
                             "Value"});
-                table8.AddRow(new string[] {
-                            "Beneficiary name",
+                table6.AddRow(new string[] {
+                            "Grower name",
                             "Mary Nkuna"});
-                table8.AddRow(new string[] {
+                table6.AddRow(new string[] {
                             "House number",
                             "42"});
-                table8.AddRow(new string[] {
+                table6.AddRow(new string[] {
                             "Village",
                             "Orpen Gate Village"});
 #line 43
-    await testRunner.AndAsync("selecting her should auto-fill:", ((string)(null)), table8, "And ");
+    await testRunner.AndAsync("selecting her should auto-fill:", ((string)(null)), table6, "And ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();

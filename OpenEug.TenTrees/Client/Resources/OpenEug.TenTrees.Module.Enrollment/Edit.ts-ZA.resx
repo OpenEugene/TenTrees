@@ -13,7 +13,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="FormTitle" xml:space="preserve">
-    <value>Fomo ya Nkandziyiso wa Muxavi</value>
+    <value>Fomo ya Nkandziyiso wa Mulimi</value>
   </data>
   <data name="Section.BasicInfo" xml:space="preserve">
     <value>Mahungu ya Nsinya</value>
@@ -27,11 +27,11 @@
   <data name="Section.Signature" xml:space="preserve">
     <value>Kusayina</value>
   </data>
-  <data name="EvaluatorName" xml:space="preserve">
-    <value>Vito ra Muhlayiyi:</value>
+  <data name="TreeMentorName" xml:space="preserve">
+    <value>Vito ra Muleriseri wa Mirhi:</value>
   </data>
-  <data name="BeneficiaryName" xml:space="preserve">
-    <value>Vito ra Muxavi:</value>
+  <data name="GrowerName" xml:space="preserve">
+    <value>Vito ra Mulimi:</value>
   </data>
   <data name="Village" xml:space="preserve">
     <value>Rixaka:</value>

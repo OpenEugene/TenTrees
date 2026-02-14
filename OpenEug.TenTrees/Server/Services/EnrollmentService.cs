@@ -103,10 +103,10 @@ namespace OpenEug.TenTrees.Module.Enrollment.Services
         {
             var result = new ValidationResult { IsValid = true, Errors = new List<string>() };
             
-            if (string.IsNullOrWhiteSpace(Enrollment.BeneficiaryName))
+            if (string.IsNullOrWhiteSpace(Enrollment.GrowerName))
             {
                 result.IsValid = false;
-                result.Errors.Add("Beneficiary name is required");
+                result.Errors.Add("Grower name is required");
             }
             
             if (Enrollment.VillageId == 0)
@@ -152,7 +152,7 @@ namespace OpenEug.TenTrees.Module.Enrollment.Services
             var mentorInfo = new MentorInfo
             {
                 MentorId = UserId,
-                EvaluatorName = "Mentor Name", // Would come from user profile
+                TreeMentorName = "Mentor Name", // Would come from user profile
                 VillageId = 1 // Would come from user's village assignment
             };
             return Task.FromResult(mentorInfo);

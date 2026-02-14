@@ -20,7 +20,7 @@ namespace Specs.Features
     [global::Xunit.TraitAttribute("Category", "workflow-enrollment")]
     [global::Xunit.TraitAttribute("Category", "priority-high")]
     [global::Xunit.TraitAttribute("Category", "mobile")]
-    public partial class BeneficiaryEnrollmentSubmissionFeature : object, global::Xunit.IClassFixture<BeneficiaryEnrollmentSubmissionFeature.FixtureData>, global::Xunit.IAsyncLifetime
+    public partial class GrowerEnrollmentSubmissionFeature : object, global::Xunit.IClassFixture<GrowerEnrollmentSubmissionFeature.FixtureData>, global::Xunit.IAsyncLifetime
     {
         
         private global::Reqnroll.ITestRunner testRunner;
@@ -30,15 +30,15 @@ namespace Specs.Features
                 "priority-high",
                 "mobile"};
         
-        private static global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new global::System.Globalization.CultureInfo("en-US"), "Features", "Beneficiary Enrollment Submission", "  As a tree mentor\r\n  I want to submit beneficiary enrollments digitally\r\n  So th" +
-                "at enrollment data is captured accurately and linked to participants", global::Reqnroll.ProgrammingLanguage.CSharp, featureTags, InitializeCucumberMessages());
+        private static global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new global::System.Globalization.CultureInfo("en-US"), "Features", "Grower Enrollment Submission", "  As a tree mentor\r\n  I want to submit grower enrollments digitally\r\n  So that en" +
+                "rollment data is captured accurately and linked to participants", global::Reqnroll.ProgrammingLanguage.CSharp, featureTags, InitializeCucumberMessages());
         
         private global::Xunit.Abstractions.ITestOutputHelper _testOutputHelper;
         
-#line 1 "BeneficiaryEnrollment.feature"
+#line 1 "GrowerEnrollment.feature"
 #line hidden
         
-        public BeneficiaryEnrollmentSubmissionFeature(BeneficiaryEnrollmentSubmissionFeature.FixtureData fixtureData, global::Xunit.Abstractions.ITestOutputHelper testOutputHelper)
+        public GrowerEnrollmentSubmissionFeature(GrowerEnrollmentSubmissionFeature.FixtureData fixtureData, global::Xunit.Abstractions.ITestOutputHelper testOutputHelper)
         {
             this._testOutputHelper = testOutputHelper;
         }
@@ -118,13 +118,13 @@ namespace Specs.Features
     await testRunner.GivenAsync("I am a tree mentor logged into the system", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
 #line 9
-    await testRunner.AndAsync("I am at a beneficiary\'s household", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+    await testRunner.AndAsync("I am at a grower\'s household", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
         }
         
         private static global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages InitializeCucumberMessages()
         {
-            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/BeneficiaryEnrollment.feature.ndjson", 7);
+            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/GrowerEnrollment.feature.ndjson", 7);
         }
         
         async global::System.Threading.Tasks.Task global::Xunit.IAsyncLifetime.InitializeAsync()
@@ -152,15 +152,15 @@ namespace Specs.Features
             await this.TestTearDownAsync();
         }
         
-        [global::Xunit.SkippableFactAttribute(DisplayName="Submit new beneficiary enrollment")]
-        [global::Xunit.TraitAttribute("FeatureTitle", "Beneficiary Enrollment Submission")]
-        [global::Xunit.TraitAttribute("Description", "Submit new beneficiary enrollment")]
-        public async global::System.Threading.Tasks.Task SubmitNewBeneficiaryEnrollment()
+        [global::Xunit.SkippableFactAttribute(DisplayName="Submit new grower enrollment")]
+        [global::Xunit.TraitAttribute("FeatureTitle", "Grower Enrollment Submission")]
+        [global::Xunit.TraitAttribute("Description", "Submit new grower enrollment")]
+        public async global::System.Threading.Tasks.Task SubmitNewGrowerEnrollment()
         {
             string[] tagsOfScenario = ((string[])(null));
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
             string pickleIndex = "0";
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Submit new beneficiary enrollment", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Submit new grower enrollment", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
 #line 11
@@ -183,7 +183,7 @@ namespace Specs.Features
     await testRunner.WhenAsync("I select the village \"Orpen Gate Village\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 14
-    await testRunner.AndAsync("I enter the beneficiary name \"Mary Nkuna\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+    await testRunner.AndAsync("I enter the grower name \"Mary Nkuna\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
 #line 15
     await testRunner.AndAsync("I enter house number \"42\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
@@ -217,7 +217,7 @@ namespace Specs.Features
         }
         
         [global::Xunit.SkippableFactAttribute(DisplayName="Validate required fields before submission")]
-        [global::Xunit.TraitAttribute("FeatureTitle", "Beneficiary Enrollment Submission")]
+        [global::Xunit.TraitAttribute("FeatureTitle", "Grower Enrollment Submission")]
         [global::Xunit.TraitAttribute("Description", "Validate required fields before submission")]
         public async global::System.Threading.Tasks.Task ValidateRequiredFieldsBeforeSubmission()
         {
@@ -244,10 +244,10 @@ namespace Specs.Features
     await testRunner.GivenAsync("I have started a new enrollment", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
 #line 27
-    await testRunner.WhenAsync("I attempt to submit without beneficiary name", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+    await testRunner.WhenAsync("I attempt to submit without grower name", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 28
-    await testRunner.ThenAsync("I should see validation error \"Beneficiary name is required\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+    await testRunner.ThenAsync("I should see validation error \"Grower name is required\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
 #line 29
     await testRunner.AndAsync("the form should not be submitted", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
@@ -257,7 +257,7 @@ namespace Specs.Features
         }
         
         [global::Xunit.SkippableFactAttribute(DisplayName="Auto-populate mentor information")]
-        [global::Xunit.TraitAttribute("FeatureTitle", "Beneficiary Enrollment Submission")]
+        [global::Xunit.TraitAttribute("FeatureTitle", "Grower Enrollment Submission")]
         [global::Xunit.TraitAttribute("Description", "Auto-populate mentor information")]
         public async global::System.Threading.Tasks.Task Auto_PopulateMentorInformation()
         {
@@ -287,7 +287,7 @@ namespace Specs.Features
     await testRunner.WhenAsync("I start a new enrollment", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 34
-    await testRunner.ThenAsync("the evaluator name should be pre-filled as \"Bondi\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+    await testRunner.ThenAsync("the tree mentor name should be pre-filled as \"Bondi\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
 #line 35
     await testRunner.AndAsync("the date should be set to today", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
@@ -297,7 +297,7 @@ namespace Specs.Features
         }
         
         [global::Xunit.SkippableFactAttribute(DisplayName="Record preferred criteria responses")]
-        [global::Xunit.TraitAttribute("FeatureTitle", "Beneficiary Enrollment Submission")]
+        [global::Xunit.TraitAttribute("FeatureTitle", "Grower Enrollment Submission")]
         [global::Xunit.TraitAttribute("Description", "Record preferred criteria responses")]
         public async global::System.Threading.Tasks.Task RecordPreferredCriteriaResponses()
         {
@@ -323,29 +323,29 @@ namespace Specs.Features
 #line 38
     await testRunner.GivenAsync("I am completing an enrollment", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
-                global::Reqnroll.Table table1 = new global::Reqnroll.Table(new string[] {
+                global::Reqnroll.Table table7 = new global::Reqnroll.Table(new string[] {
                             "Question",
                             "Response"});
-                table1.AddRow(new string[] {
+                table7.AddRow(new string[] {
                             "Are they currently enrolled in PE with a garden growing?",
                             "Yes"});
-                table1.AddRow(new string[] {
+                table7.AddRow(new string[] {
                             "Are they a graduate of PE in the past?",
                             "Yes"});
-                table1.AddRow(new string[] {
+                table7.AddRow(new string[] {
                             "If so, is their garden planted and tended?",
                             "Yes"});
-                table1.AddRow(new string[] {
+                table7.AddRow(new string[] {
                             "Child headed household?",
                             "No"});
-                table1.AddRow(new string[] {
+                table7.AddRow(new string[] {
                             "Woman headed household?",
                             "Yes"});
-                table1.AddRow(new string[] {
+                table7.AddRow(new string[] {
                             "Empty or nearly empty yard?",
                             "No"});
 #line 39
-    await testRunner.WhenAsync("I answer the preferred criteria questions:", ((string)(null)), table1, "When ");
+    await testRunner.WhenAsync("I answer the preferred criteria questions:", ((string)(null)), table7, "When ");
 #line hidden
 #line 47
     await testRunner.ThenAsync("all criteria responses should be saved", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
@@ -355,7 +355,7 @@ namespace Specs.Features
         }
         
         [global::Xunit.SkippableFactAttribute(DisplayName="Record commitment acknowledgments")]
-        [global::Xunit.TraitAttribute("FeatureTitle", "Beneficiary Enrollment Submission")]
+        [global::Xunit.TraitAttribute("FeatureTitle", "Grower Enrollment Submission")]
         [global::Xunit.TraitAttribute("Description", "Record commitment acknowledgments")]
         public async global::System.Threading.Tasks.Task RecordCommitmentAcknowledgments()
         {
@@ -381,29 +381,29 @@ namespace Specs.Features
 #line 50
     await testRunner.GivenAsync("I am completing an enrollment", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
-                global::Reqnroll.Table table2 = new global::Reqnroll.Table(new string[] {
+                global::Reqnroll.Table table8 = new global::Reqnroll.Table(new string[] {
                             "Commitment",
                             "Acknowledged"});
-                table2.AddRow(new string[] {
+                table8.AddRow(new string[] {
                             "Committed to not using chemicals or pesticides",
                             "Yes"});
-                table2.AddRow(new string[] {
+                table8.AddRow(new string[] {
                             "Committed to attend five permaculture training classes",
                             "Yes"});
-                table2.AddRow(new string[] {
+                table8.AddRow(new string[] {
                             "Committed not to cut trees",
                             "Yes"});
-                table2.AddRow(new string[] {
+                table8.AddRow(new string[] {
                             "Committed to standing for women and children with no abuse",
                             "Yes"});
-                table2.AddRow(new string[] {
+                table8.AddRow(new string[] {
                             "Agree to care for trees while away from home",
                             "Yes"});
-                table2.AddRow(new string[] {
+                table8.AddRow(new string[] {
                             "Give permission for mentor to enter yard",
                             "Yes"});
 #line 51
-    await testRunner.WhenAsync("I record commitment responses:", ((string)(null)), table2, "When ");
+    await testRunner.WhenAsync("I record commitment responses:", ((string)(null)), table8, "When ");
 #line hidden
 #line 59
     await testRunner.ThenAsync("all commitments should be recorded", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
@@ -419,12 +419,12 @@ namespace Specs.Features
             
             async global::System.Threading.Tasks.Task global::Xunit.IAsyncLifetime.InitializeAsync()
             {
-                await BeneficiaryEnrollmentSubmissionFeature.FeatureSetupAsync();
+                await GrowerEnrollmentSubmissionFeature.FeatureSetupAsync();
             }
             
             async global::System.Threading.Tasks.Task global::Xunit.IAsyncLifetime.DisposeAsync()
             {
-                await BeneficiaryEnrollmentSubmissionFeature.FeatureTearDownAsync();
+                await GrowerEnrollmentSubmissionFeature.FeatureTearDownAsync();
             }
         }
     }

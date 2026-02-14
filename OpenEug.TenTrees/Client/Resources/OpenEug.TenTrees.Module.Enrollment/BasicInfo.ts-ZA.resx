@@ -13,7 +13,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="FormTitle" xml:space="preserve">
-    <value>Nkandziyiso wa Muxavi</value>
+    <value>Nkandziyiso wa Mulimi</value>
   </data>
   <data name="Step" xml:space="preserve">
     <value>Goza</value>
@@ -30,11 +30,11 @@
   <data name="Section.HouseholdInfo" xml:space="preserve">
     <value>Mahungu ya le Kaya</value>
   </data>
-  <data name="EvaluatorName.Text" xml:space="preserve">
-    <value>Vito ra Muhlayiyi:</value>
+  <data name="TreeMentorName.Text" xml:space="preserve">
+    <value>Vito ra Muleriseri wa Mirhi:</value>
   </data>
-  <data name="BeneficiaryName.Text" xml:space="preserve">
-    <value>Vito ra Muxavi:</value>
+  <data name="GrowerName.Text" xml:space="preserve">
+    <value>Vito ra Mulimi:</value>
   </data>
   <data name="Village.Text" xml:space="preserve">
     <value>Rixaka:</value>
@@ -48,7 +48,7 @@
   <data name="BirthDate.Text" xml:space="preserve">
     <value>Siku ra Vutswalo:</value>
   </data>
-  <data name="BirthDate.HelpText" xml:space="preserve">
+  <data name="BirthDate.Help" xml:space="preserve">
     <value>Nghenisa loko nomboro ya ID yi nga kumi</value>
   </data>
   <data name="OwnsHome.Text" xml:space="preserve">

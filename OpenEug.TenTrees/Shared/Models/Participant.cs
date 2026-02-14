@@ -17,7 +17,7 @@ namespace OpenEug.TenTrees.Models
         public int? MentorId { get; set; }
         
         [Required]
-        public string BeneficiaryName { get; set; }
+        public string GrowerName { get; set; }
         
         public string HouseNumber { get; set; }
         

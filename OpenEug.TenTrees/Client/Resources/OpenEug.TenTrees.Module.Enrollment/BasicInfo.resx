@@ -13,7 +13,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="FormTitle" xml:space="preserve">
-    <value>Beneficiary Enrollment</value>
+    <value>Grower Enrollment</value>
   </data>
   <data name="Step" xml:space="preserve">
     <value>Step</value>
@@ -30,11 +30,11 @@
   <data name="Section.HouseholdInfo" xml:space="preserve">
     <value>Household Information</value>
   </data>
-  <data name="EvaluatorName.Text" xml:space="preserve">
-    <value>Evaluator Name:</value>
+  <data name="TreeMentorName.Text" xml:space="preserve">
+    <value>Tree Mentor Name:</value>
   </data>
-  <data name="BeneficiaryName.Text" xml:space="preserve">
-    <value>Beneficiary Name:</value>
+  <data name="GrowerName.Text" xml:space="preserve">
+    <value>Grower Name:</value>
   </data>
   <data name="Village.Text" xml:space="preserve">
     <value>Village:</value>
@@ -48,7 +48,7 @@
   <data name="BirthDate.Text" xml:space="preserve">
     <value>Birth Date:</value>
   </data>
-  <data name="BirthDate.HelpText" xml:space="preserve">
+  <data name="BirthDate.Help" xml:space="preserve">
     <value>Enter if ID number not available</value>
   </data>
   <data name="OwnsHome.Text" xml:space="preserve">

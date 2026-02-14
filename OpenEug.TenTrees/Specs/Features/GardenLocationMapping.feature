@@ -6,11 +6,11 @@ Feature: Garden Location and Resource Documentation
 
   Background:
     Given I am a tree mentor with an approved enrollment
-    And I am at the beneficiary's garden site
+    And I am at the grower's garden site
 
   Scenario: Complete garden mapping with GPS
     Given I navigate to mapping for "Mary Nkuna"
-    Then beneficiary information should be auto-filled
+    Then grower information should be auto-filled
     When I capture GPS coordinates
     And I answer water availability questions:
       | Question                                             | Response |
@@ -42,6 +42,6 @@ Feature: Garden Location and Resource Documentation
     Then I should see "Mary Nkuna" in results
     And selecting her should auto-fill:
       | Field            | Value              |
-      | Beneficiary name | Mary Nkuna         |
+      | Grower name      | Mary Nkuna         |
       | House number     | 42                 |
       | Village          | Orpen Gate Village |

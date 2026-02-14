@@ -4,20 +4,20 @@ Feature: Village-Scoped Data Access
   I want to organize data by village
   So that each village sees only their own data while admins see all
 
-  Scenario: Mentor views village-specific beneficiaries
+  Scenario: Mentor views village-specific growers
     Given I am mentor "Bondi" assigned to "Orpen Gate Village"
-    When I view the beneficiary list
-    Then I should only see beneficiaries in "Orpen Gate Village"
-    And I should not see beneficiaries from "Londelozzi"
+    When I view the grower list
+    Then I should only see growers in "Orpen Gate Village"
+    And I should not see growers from "Londelozzi"
 
   Scenario: Admin views all villages
     Given I am logged in as administrator "Becky"
-    When I view the beneficiary list
+    When I view the grower list
     Then I should see a village filter dropdown
     When I select "All Villages"
-    Then I should see beneficiaries from all villages
+    Then I should see growers from all villages
     When I select "Orpen Gate Village"
-    Then I should only see beneficiaries from "Orpen Gate Village"
+    Then I should only see growers from "Orpen Gate Village"
 
   Scenario: Add new village
     Given I am an administrator
@@ -28,8 +28,8 @@ Feature: Village-Scoped Data Access
     And mentors can be assigned to it
 
   Scenario: Village data isolation
-    Given "Orpen Gate Village" has 50 beneficiaries
-    And "Londelozzi" has 30 beneficiaries
+    Given "Orpen Gate Village" has 50 growers
+    And "Londelozzi" has 30 growers
     When mentor from "Londelozzi" logs in
-    Then they should see exactly 30 beneficiaries
+    Then they should see exactly 30 growers
     And no data from "Orpen Gate Village" should be visible

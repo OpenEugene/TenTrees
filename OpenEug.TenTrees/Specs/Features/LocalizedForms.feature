@@ -13,13 +13,13 @@ Feature: Localized Forms
     Then I should see form labels in Xitsonga
     And I should see field placeholders in Xitsonga
     And I should see validation messages in Xitsonga
-    And I should see "Vito ra Munhu" for "Beneficiary Name"
+    And I should see "Vito ra Mulimi" for "Grower Name"
     And I should see "Ndawu" for "Village"
 
   Scenario: Application Form displays in English
     Given my language is set to English
     When I open the Application Form
-    Then I should see "Beneficiary Name" as a field label
+    Then I should see "Grower Name" as a field label
     And I should see "Village" as a field label
     And I should see "House Number" as a field label
 
@@ -54,7 +54,7 @@ Feature: Localized Forms
   Scenario: Validation messages in selected language
     Given my language is set to Xitsonga
     When I attempt to submit a form without required fields
-    Then I should see "Vito ra munhu ri laveka" for "Beneficiary name is required"
+    Then I should see "Vito ra mulimi ri laveka" for "Grower name is required"
     And I should see "Ndawu yi laveka" for "Village is required"
 
   Scenario: Success messages in selected language

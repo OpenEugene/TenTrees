@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="FormTitle" xml:space="preserve">
-    <value>Beneficiary Enrollment Form</value>
+    <value>Grower Enrollment Form</value>
   </data>
   <data name="Section.BasicInfo" xml:space="preserve">
     <value>Basic Information</value>
@@ -132,11 +132,11 @@
   <data name="Section.Signature" xml:space="preserve">
     <value>Signature</value>
   </data>
-  <data name="EvaluatorName" xml:space="preserve">
-    <value>Evaluator Name:</value>
+  <data name="TreeMentorName" xml:space="preserve">
+    <value>Tree Mentor Name:</value>
   </data>
-  <data name="BeneficiaryName" xml:space="preserve">
-    <value>Beneficiary Name:</value>
+  <data name="GrowerName" xml:space="preserve">
+    <value>Grower Name:</value>
   </data>
   <data name="Village" xml:space="preserve">
     <value>Village:</value>
@@ -211,7 +211,7 @@
     <value>E-signature (type name or draw signature)</value>
   </data>
   <data name="Signature.Help" xml:space="preserve">
-    <value>Type beneficiary name or capture signature</value>
+    <value>Type grower name or capture signature</value>
   </data>
   <data name="Save" xml:space="preserve">
     <value>Save</value>

@@ -20,14 +20,16 @@ else
             <Header>
                 <th style="width: 1px;">&nbsp;</th>
                 <th style="width: 1px;">&nbsp;</th>
-                <th>@Localizer["Beneficiary"]</th>
+                <th>@Localizer["Grower"]</th>
+                <th>@Localizer["TreeMentor"]</th>
                 <th>@Localizer["Village"]</th>
                 <th>@Localizer["Status"]</th>
             </Header>
             <Row>
                 <td><ActionLink Action="Edit" Parameters="@($"id=" + context.EnrollmentId.ToString())" ResourceKey="Edit"  /></td>
                 <td><ActionDialog Header="Delete Enrollment" Message="Are You Sure You Wish To Delete This Enrollment?" Action="Delete" Security="SecurityAccessLevel.Edit" Class="btn btn-danger" OnClick="@(async () => await Delete(context))" ResourceKey="Delete"  Id="@context.EnrollmentId.ToString()" /></td>
-                <td>@context.BeneficiaryName</td>
+                <td>@context.GrowerName</td>
+                <td>@context.TreeMentorName</td>
                 <td>@context.VillageId</td>
                 <td>@context.Status</td>
             </Row>

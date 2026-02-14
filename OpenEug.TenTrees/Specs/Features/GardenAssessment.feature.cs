@@ -196,38 +196,38 @@ namespace Specs.Features
 #line 17
     await testRunner.AndAsync("I answer \"Yes\" to \"Do you need help with this problem?\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-                global::Reqnroll.Table table4 = new global::Reqnroll.Table(new string[] {
+                global::Reqnroll.Table table2 = new global::Reqnroll.Table(new string[] {
                             "Practice",
                             "Response"});
-                table4.AddRow(new string[] {
+                table2.AddRow(new string[] {
                             "Do the trees look healthy?",
                             "Yes"});
-                table4.AddRow(new string[] {
+                table2.AddRow(new string[] {
                             "Any chemical fertilizers?",
                             "No"});
-                table4.AddRow(new string[] {
+                table2.AddRow(new string[] {
                             "Any pesticides used?",
                             "No"});
-                table4.AddRow(new string[] {
+                table2.AddRow(new string[] {
                             "Are the trees mulched?",
                             "Yes"});
-                table4.AddRow(new string[] {
+                table2.AddRow(new string[] {
                             "Are they making compost?",
                             "Yes"});
-                table4.AddRow(new string[] {
+                table2.AddRow(new string[] {
                             "Are they collecting water?",
                             "Yes"});
-                table4.AddRow(new string[] {
+                table2.AddRow(new string[] {
                             "Any leaky taps visible?",
                             "No"});
-                table4.AddRow(new string[] {
+                table2.AddRow(new string[] {
                             "Is the garden designed to capture water?",
                             "Yes"});
-                table4.AddRow(new string[] {
+                table2.AddRow(new string[] {
                             "Are they using greywater?",
                             "Yes"});
 #line 18
-    await testRunner.AndAsync("I complete permaculture practice questions:", ((string)(null)), table4, "And ");
+    await testRunner.AndAsync("I complete permaculture practice questions:", ((string)(null)), table2, "And ");
 #line hidden
 #line 29
     await testRunner.ThenAsync("the assessment should be saved with timestamp", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
@@ -343,16 +343,16 @@ namespace Specs.Features
 #line 44
     await testRunner.GivenAsync("I am completing an assessment", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
-                global::Reqnroll.Table table5 = new global::Reqnroll.Table(new string[] {
+                global::Reqnroll.Table table3 = new global::Reqnroll.Table(new string[] {
                             "Problem"});
-                table5.AddRow(new string[] {
+                table3.AddRow(new string[] {
                             "The trees have broken branches"});
-                table5.AddRow(new string[] {
+                table3.AddRow(new string[] {
                             "The trees have yellow leaves"});
-                table5.AddRow(new string[] {
+                table3.AddRow(new string[] {
                             "Pests eating the plant"});
 #line 45
-    await testRunner.WhenAsync("I select multiple problems:", ((string)(null)), table5, "When ");
+    await testRunner.WhenAsync("I select multiple problems:", ((string)(null)), table3, "When ");
 #line hidden
 #line 50
     await testRunner.AndAsync("I answer \"Yes\" to \"Do you need someone to help with this problem?\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");

@@ -7,7 +7,7 @@ Feature: Data Entry Language Independence
   Scenario: View form submitted in Xitsonga
     Given a mentor submitted a form in Xitsonga
     When I view the submission as a staff member in English
-    Then I should see the beneficiary name correctly
+    Then I should see the grower name correctly
     And I should see the data values correctly
     And dropdown selections should display in my preferred language
 
@@ -16,20 +16,20 @@ Feature: Data Entry Language Independence
     When I view the submission as a staff member in Xitsonga
     Then I should see all labels in Xitsonga
     And I should see the data values correctly
-    And the beneficiary name should display as entered
+    And the grower name should display as entered
 
   Scenario: Mixed language submissions in list view
     Given forms have been submitted in both English and Xitsonga
     When I view the enrollment list
     Then I should see all enrollments
-    And beneficiary names should display as entered
+    And grower names should display as entered
     And column headers should be in my current language
 
   Scenario: Export data is language-neutral
     Given forms have been submitted in multiple languages
     When I export data to Excel
     Then the column headers should be in English
-    And the beneficiary names should be as entered
+    And the grower names should be as entered
     And Yes/No values should be exported as "Yes" and "No" regardless of submission language
 
   Scenario: Report generation with mixed language data
@@ -48,7 +48,7 @@ Feature: Data Entry Language Independence
   Scenario: Data integrity across languages
     Given a form was submitted in Xitsonga with:
       | Field          | Value      |
-      | Beneficiary    | Mary Nkuna |
+      | Grower         | Mary Nkuna |
       | Village        | Orpen Gate |
       | Owns Home      | Ina        |
     When I view the data in English
