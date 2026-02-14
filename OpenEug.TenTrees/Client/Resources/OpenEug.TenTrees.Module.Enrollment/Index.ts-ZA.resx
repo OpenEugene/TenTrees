@@ -24,6 +24,9 @@
   <data name="Grower" xml:space="preserve">
     <value>Mulimi</value>
   </data>
+  <data name="TreeMentor" xml:space="preserve">
+    <value>Muleriseri wa Mirhi</value>
+  </data>
   <data name="Village" xml:space="preserve">
     <value>Rixaka</value>
   </data>
