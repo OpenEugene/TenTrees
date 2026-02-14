@@ -140,15 +140,15 @@ namespace Specs.Features
             await this.TestTearDownAsync();
         }
         
-        [global::Xunit.SkippableFactAttribute(DisplayName="Mentor views village-specific beneficiaries")]
+        [global::Xunit.SkippableFactAttribute(DisplayName="Mentor views village-specific growers")]
         [global::Xunit.TraitAttribute("FeatureTitle", "Village-Scoped Data Access")]
-        [global::Xunit.TraitAttribute("Description", "Mentor views village-specific beneficiaries")]
-        public async global::System.Threading.Tasks.Task MentorViewsVillage_SpecificBeneficiaries()
+        [global::Xunit.TraitAttribute("Description", "Mentor views village-specific growers")]
+        public async global::System.Threading.Tasks.Task MentorViewsVillage_SpecificGrowers()
         {
             string[] tagsOfScenario = ((string[])(null));
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
             string pickleIndex = "0";
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Mentor views village-specific beneficiaries", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Mentor views village-specific growers", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
 #line 7
@@ -165,13 +165,13 @@ namespace Specs.Features
     await testRunner.GivenAsync("I am mentor \"Bondi\" assigned to \"Orpen Gate Village\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
 #line 9
-    await testRunner.WhenAsync("I view the beneficiary list", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+    await testRunner.WhenAsync("I view the grower list", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 10
-    await testRunner.ThenAsync("I should only see beneficiaries in \"Orpen Gate Village\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+    await testRunner.ThenAsync("I should only see growers in \"Orpen Gate Village\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
 #line 11
-    await testRunner.AndAsync("I should not see beneficiaries from \"Londelozzi\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+    await testRunner.AndAsync("I should not see growers from \"Londelozzi\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
@@ -202,7 +202,7 @@ namespace Specs.Features
     await testRunner.GivenAsync("I am logged in as administrator \"Becky\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
 #line 15
-    await testRunner.WhenAsync("I view the beneficiary list", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+    await testRunner.WhenAsync("I view the grower list", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 16
     await testRunner.ThenAsync("I should see a village filter dropdown", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
@@ -211,13 +211,13 @@ namespace Specs.Features
     await testRunner.WhenAsync("I select \"All Villages\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 18
-    await testRunner.ThenAsync("I should see beneficiaries from all villages", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+    await testRunner.ThenAsync("I should see growers from all villages", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
 #line 19
     await testRunner.WhenAsync("I select \"Orpen Gate Village\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 20
-    await testRunner.ThenAsync("I should only see beneficiaries from \"Orpen Gate Village\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+    await testRunner.ThenAsync("I should only see growers from \"Orpen Gate Village\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
@@ -288,16 +288,16 @@ namespace Specs.Features
             {
                 await this.ScenarioStartAsync();
 #line 31
-    await testRunner.GivenAsync("\"Orpen Gate Village\" has 50 beneficiaries", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+    await testRunner.GivenAsync("\"Orpen Gate Village\" has 50 growers", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
 #line 32
-    await testRunner.AndAsync("\"Londelozzi\" has 30 beneficiaries", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+    await testRunner.AndAsync("\"Londelozzi\" has 30 growers", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
 #line 33
     await testRunner.WhenAsync("mentor from \"Londelozzi\" logs in", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 34
-    await testRunner.ThenAsync("they should see exactly 30 beneficiaries", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+    await testRunner.ThenAsync("they should see exactly 30 growers", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
 #line 35
     await testRunner.AndAsync("no data from \"Orpen Gate Village\" should be visible", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");

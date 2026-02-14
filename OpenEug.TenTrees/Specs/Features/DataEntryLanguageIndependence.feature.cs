@@ -168,7 +168,7 @@ namespace Specs.Features
     await testRunner.WhenAsync("I view the submission as a staff member in English", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 10
-    await testRunner.ThenAsync("I should see the beneficiary name correctly", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+    await testRunner.ThenAsync("I should see the grower name correctly", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
 #line 11
     await testRunner.AndAsync("I should see the data values correctly", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
@@ -214,7 +214,7 @@ namespace Specs.Features
     await testRunner.AndAsync("I should see the data values correctly", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
 #line 19
-    await testRunner.AndAsync("the beneficiary name should display as entered", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+    await testRunner.AndAsync("the grower name should display as entered", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
@@ -251,7 +251,7 @@ namespace Specs.Features
     await testRunner.ThenAsync("I should see all enrollments", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
 #line 25
-    await testRunner.AndAsync("beneficiary names should display as entered", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+    await testRunner.AndAsync("grower names should display as entered", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
 #line 26
     await testRunner.AndAsync("column headers should be in my current language", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
@@ -291,7 +291,7 @@ namespace Specs.Features
     await testRunner.ThenAsync("the column headers should be in English", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
 #line 32
-    await testRunner.AndAsync("the beneficiary names should be as entered", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+    await testRunner.AndAsync("the grower names should be as entered", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
 #line 33
     await testRunner.AndAsync("Yes/No values should be exported as \"Yes\" and \"No\" regardless of submission langu" +
@@ -399,20 +399,20 @@ namespace Specs.Features
             else
             {
                 await this.ScenarioStartAsync();
-                global::Reqnroll.Table table3 = new global::Reqnroll.Table(new string[] {
+                global::Reqnroll.Table table1 = new global::Reqnroll.Table(new string[] {
                             "Field",
                             "Value"});
-                table3.AddRow(new string[] {
-                            "Beneficiary",
+                table1.AddRow(new string[] {
+                            "Grower",
                             "Mary Nkuna"});
-                table3.AddRow(new string[] {
+                table1.AddRow(new string[] {
                             "Village",
                             "Orpen Gate"});
-                table3.AddRow(new string[] {
+                table1.AddRow(new string[] {
                             "Owns Home",
                             "Ina"});
 #line 49
-    await testRunner.GivenAsync("a form was submitted in Xitsonga with:", ((string)(null)), table3, "Given ");
+    await testRunner.GivenAsync("a form was submitted in Xitsonga with:", ((string)(null)), table1, "Given ");
 #line hidden
 #line 54
     await testRunner.WhenAsync("I view the data in English", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");

@@ -314,7 +314,7 @@ namespace Specs.Features
   await this.FeatureBackgroundAsync();
 #line hidden
 #line 33
-    await testRunner.GivenAsync("the field \"Beneficiary Name\" exists", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+    await testRunner.GivenAsync("the field \"Grower Name\" exists", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
 #line 34
     await testRunner.WhenAsync("I navigate to the translation editor", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
