@@ -6,58 +6,68 @@
 @inject NavigationManager NavigationManager
 @inject IStringLocalizer<Edit> Localizer
 
-<form @ref="form" class="@(validated ? " was-validated" : "needs-validation")" novalidate>
-    <div class="container">
-        <div class="row mb-3 align-items-center">
-            <Label Class="col-sm-3" For="villageName" HelpText="Enter the village name" ResourceKey="VillageName">Village Name: </Label>
-            <div class="col-sm-9">
-                <input id="villageName" type="text" class="form-control" @bind="@_village.VillageName" required />
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8 col-xl-6">
+            <form @ref="form" class="@(validated ? " was-validated" : "needs-validation")" novalidate>
+                <div class="row mb-3 align-items-center">
+                    <Label Class="col-sm-4" For="villageName" HelpText="Enter the village name" ResourceKey="VillageName">Village Name: </Label>
+                    <div class="col-sm-8">
+                        <input id="villageName" type="text" class="form-control" @bind="@_village.VillageName" required />
+                        <div class="invalid-feedback">@Localizer["Validation.VillageNameRequired"]</div>
+                    </div>
+                </div>
+                <div class="row mb-3 align-items-center">
+                    <Label Class="col-sm-4" For="contactName" HelpText="Enter the primary contact name" ResourceKey="ContactName">Contact Name: </Label>
+                    <div class="col-sm-8">
+                        <input id="contactName" type="text" class="form-control" @bind="@_village.ContactName" />
+                    </div>
+                </div>
+                <div class="row mb-3 align-items-center">
+                    <Label Class="col-sm-4" For="contactPhone" HelpText="Enter the contact phone number" ResourceKey="ContactPhone">Contact Phone: </Label>
+                    <div class="col-sm-8">
+                        <input id="contactPhone" type="tel" class="form-control" @bind="@_village.ContactPhone" />
+                    </div>
+                </div>
+                <div class="row mb-3 align-items-center">
+                    <Label Class="col-sm-4" For="contactEmail" HelpText="Enter the contact email address" ResourceKey="ContactEmail">Contact Email: </Label>
+                    <div class="col-sm-8">
+                        <input id="contactEmail" type="email" class="form-control" @bind="@_village.ContactEmail" />
+                        <div class="invalid-feedback">@Localizer["Validation.EmailInvalid"]</div>
+                    </div>
+                </div>
+                <div class="row mb-3 align-items-center">
+                    <Label Class="col-sm-4" For="notes" HelpText="Additional notes about the village" ResourceKey="Notes">Notes: </Label>
+                    <div class="col-sm-8">
+                        <textarea id="notes" class="form-control" @bind="@_village.Notes" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="row mb-3 align-items-center">
+                    <Label Class="col-sm-4" For="isActive" HelpText="Is this village currently active?" ResourceKey="IsActive">Active: </Label>
+                    <div class="col-sm-8">
+                        <input id="isActive" type="checkbox" @bind="@_village.IsActive" />
+                    </div>
+                </div>
+            </form>
+
+            <div class="d-flex gap-2 mb-3">
+                <button type="button" class="btn btn-success" @onclick="Save">@Localizer["Save"]</button>
+                <NavLink class="btn btn-secondary" href="@NavigateUrl()">@Localizer["Cancel"]</NavLink>
             </div>
-        </div>
-        <div class="row mb-3 align-items-center">
-            <Label Class="col-sm-3" For="contactName" HelpText="Enter the primary contact name" ResourceKey="ContactName">Contact Name: </Label>
-            <div class="col-sm-9">
-                <input id="contactName" type="text" class="form-control" @bind="@_village.ContactName" />
-            </div>
-        </div>
-        <div class="row mb-3 align-items-center">
-            <Label Class="col-sm-3" For="contactPhone" HelpText="Enter the contact phone number" ResourceKey="ContactPhone">Contact Phone: </Label>
-            <div class="col-sm-9">
-                <input id="contactPhone" type="tel" class="form-control" @bind="@_village.ContactPhone" />
-            </div>
-        </div>
-        <div class="row mb-3 align-items-center">
-            <Label Class="col-sm-3" For="contactEmail" HelpText="Enter the contact email address" ResourceKey="ContactEmail">Contact Email: </Label>
-            <div class="col-sm-9">
-                <input id="contactEmail" type="email" class="form-control" @bind="@_village.ContactEmail" />
-            </div>
-        </div>
-        <div class="row mb-3 align-items-center">
-            <Label Class="col-sm-3" For="notes" HelpText="Additional notes about the village" ResourceKey="Notes">Notes: </Label>
-            <div class="col-sm-9">
-                <textarea id="notes" class="form-control" @bind="@_village.Notes" rows="3"></textarea>
-            </div>
-        </div>
-        <div class="row mb-3 align-items-center">
-            <Label Class="col-sm-3" For="isActive" HelpText="Is this village currently active?" ResourceKey="IsActive">Active: </Label>
-            <div class="col-sm-9">
-                <input id="isActive" type="checkbox" @bind="@_village.IsActive" />
-            </div>
+            
+            @if (PageState.Action == "Edit")
+            {
+                <AuditInfo CreatedBy="@_village.CreatedBy" CreatedOn="@_village.CreatedOn" ModifiedBy="@_village.ModifiedBy" ModifiedOn="@_village.ModifiedOn"></AuditInfo>
+            }
         </div>
     </div>
-</form>
-
-<button type="button" class="btn btn-success" @onclick="Save">@Localizer["Save"]</button>
-<NavLink class="btn btn-secondary" href="@NavigateUrl()">@Localizer["Cancel"]</NavLink>
-<br /><br />
-@if (PageState.Action == "Edit")
-{
-    <AuditInfo CreatedBy="@_village.CreatedBy" CreatedOn="@_village.CreatedOn" ModifiedBy="@_village.ModifiedBy" ModifiedOn="@_village.ModifiedOn"></AuditInfo>
-}
+</div>
 
 @code {
+public override string Actions => "Add,Edit";
 public override string Title => "Manage Village";
 public override SecurityAccessLevel SecurityAccessLevel => SecurityAccessLevel.Admin;
+public override bool UseAdminContainer => false;
 
     private ElementReference form;
     private bool validated = false;
@@ -101,6 +111,10 @@ public override SecurityAccessLevel SecurityAccessLevel => SecurityAccessLevel.A
                 
                 AddModuleMessage(Localizer["Message.SaveSuccess"], MessageType.Success);
                 NavigationManager.NavigateTo(NavigateUrl());
+            }
+            else
+            {
+                AddModuleMessage(Localizer["Message.ValidationError"], MessageType.Error);
             }
         }
         catch (Exception ex)
