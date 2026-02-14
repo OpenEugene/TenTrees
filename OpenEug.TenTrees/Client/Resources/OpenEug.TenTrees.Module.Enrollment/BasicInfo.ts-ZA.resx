@@ -48,7 +48,7 @@
   <data name="BirthDate.Text" xml:space="preserve">
     <value>Siku ra Vutswalo:</value>
   </data>
-  <data name="BirthDate.HelpText" xml:space="preserve">
+  <data name="BirthDate.Help" xml:space="preserve">
     <value>Nghenisa loko nomboro ya ID yi nga kumi</value>
   </data>
   <data name="OwnsHome.Text" xml:space="preserve">

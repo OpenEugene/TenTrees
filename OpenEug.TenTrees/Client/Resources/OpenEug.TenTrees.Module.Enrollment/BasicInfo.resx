@@ -48,7 +48,7 @@
   <data name="BirthDate.Text" xml:space="preserve">
     <value>Birth Date:</value>
   </data>
-  <data name="BirthDate.HelpText" xml:space="preserve">
+  <data name="BirthDate.Help" xml:space="preserve">
     <value>Enter if ID number not available</value>
   </data>
   <data name="OwnsHome.Text" xml:space="preserve">

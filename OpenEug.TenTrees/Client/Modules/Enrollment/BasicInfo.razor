@@ -33,13 +33,13 @@
                         <Label For="treementorname" ResourceKey="TreeMentorName" ResourceType="@resourceType" Class="form-label fw-bold">Tree Mentor Name:</Label>
                         <input id="treementorname" class="form-control form-control-lg" @bind="@_treeMentorName" readonly />
                     </div>
-                    
+
                     <div class="mb-3">
                         <Label For="growername" ResourceKey="GrowerName" ResourceType="@resourceType" Class="form-label fw-bold">Grower Name: *</Label>
                         <input id="growername" class="form-control form-control-lg" @bind="@_growerName" required />
                         <div class="invalid-feedback">@Localizer["Validation.Required"]</div>
                     </div>
-                    
+
                     <div class="mb-3">
                         <Label For="villageid" ResourceKey="Village" ResourceType="@resourceType" Class="form-label fw-bold">Village: *</Label>
                         <select id="villageid" class="form-select form-select-lg" @bind="@_villageId" required>
@@ -54,63 +54,64 @@
                         </select>
                         <div class="invalid-feedback">@Localizer["Validation.Required"]</div>
                     </div>
-                    
+
                     <div class="mb-3">
                         <Label For="housenumber" ResourceKey="HouseNumber" ResourceType="@resourceType" Class="form-label fw-bold">House Number:</Label>
                         <input id="housenumber" class="form-control form-control-lg" @bind="@_houseNumber" />
                     </div>
-                    
+
                     <div class="mb-3">
                         <Label For="idnumber" ResourceKey="IdNumber" ResourceType="@resourceType" Class="form-label fw-bold">ID Number:</Label>
                         <input id="idnumber" class="form-control form-control-lg" @bind="@_idNumber" />
                     </div>
                 </div>
             </div>
-            </div>
-            <!-- Card 2: Household Information -->
-            <div class="col-12 col-lg-6 mb-3">
-                <div class="card h-100">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0">@Localizer["Section.HouseholdInfo"]</h5>
+        </div>
+
+        <!-- Card 2: Household Information -->
+        <div class="col-12 col-lg-6 mb-3">
+            <div class="card h-100">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">@Localizer["Section.HouseholdInfo"]</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <Label For="birthdate" ResourceKey="BirthDate" ResourceType="@resourceType" Class="form-label fw-bold">Birth Date:</Label>
+                        <input id="birthdate" type="date" class="form-control form-control-lg" @bind="@_birthDate" @bind:format="yyyy-MM-dd" />
+                        <small class="form-text text-muted">@Localizer["BirthDate.Help"]</small>
                     </div>
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <Label For="birthdate" ResourceKey="BirthDate" ResourceType="@resourceType" Class="form-label fw-bold">Birth Date:</Label>
-                            <input id="birthdate" type="date" class="form-control form-control-lg" @bind="@_birthDate" @bind:format="yyyy-MM-dd" />
-                            <small class="form-text text-muted">@Localizer["BirthDate.Help"]</small>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <Label For="ownshome" ResourceKey="OwnsHome" ResourceType="@resourceType" Class="form-label fw-bold">Do they own their home?</Label>
-                            <select id="ownshome" class="form-select form-select-lg" @bind="@_ownsHomeString">
-                                <option value="">@Localizer["Select"]</option>
-                                <option value="true">@Localizer["Yes"]</option>
-                                <option value="false">@Localizer["No"]</option>
-                            </select>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <Label For="householdsize" ResourceKey="HouseholdSize" ResourceType="@resourceType" Class="form-label fw-bold">Household Size: *</Label>
-                            <input id="householdsize" type="number" class="form-control form-control-lg" @bind="@_householdSize" required min="1" />
-                            <div class="invalid-feedback">@Localizer["Validation.Required"]</div>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <Label For="enrollmentdate" ResourceKey="Date" ResourceType="@resourceType" Class="form-label fw-bold">Date:</Label>
-                            <input id="enrollmentdate" type="date" class="form-control form-control-lg" @bind="@_enrollmentDate" @bind:format="yyyy-MM-dd" />
-                        </div>
+
+                    <div class="mb-3">
+                        <Label For="ownshome" ResourceKey="OwnsHome" ResourceType="@resourceType" Class="form-label fw-bold">Do they own their home?</Label>
+                        <select id="ownshome" class="form-select form-select-lg" @bind="@_ownsHomeString">
+                            <option value="">@Localizer["Select"]</option>
+                            <option value="true">@Localizer["Yes"]</option>
+                            <option value="false">@Localizer["No"]</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <Label For="householdsize" ResourceKey="HouseholdSize" ResourceType="@resourceType" Class="form-label fw-bold">Household Size: *</Label>
+                        <input id="householdsize" type="number" class="form-control form-control-lg" @bind="@_householdSize" required min="1" />
+                        <div class="invalid-feedback">@Localizer["Validation.Required"]</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <Label For="enrollmentdate" ResourceKey="Date" ResourceType="@resourceType" Class="form-label fw-bold">Date:</Label>
+                        <input id="enrollmentdate" type="date" class="form-control form-control-lg" @bind="@_enrollmentDate" @bind:format="yyyy-MM-dd" />
                     </div>
                 </div>
             </div>
         </div>
-        
-        <div class="d-grid gap-2 mb-3">
-            <button type="button" class="btn btn-primary btn-lg" @onclick="NextStep">
-                @Localizer["Next"] <i class="bi bi-arrow-right"></i>
-            </button>
-            <NavLink class="btn btn-outline-secondary" href="@NavigateUrl()">@Localizer["Cancel"]</NavLink>
-        </div>
-    </form>
+    </div>
+
+    <div class="d-grid gap-2 mb-3">
+        <button type="button" class="btn btn-primary btn-lg" @onclick="NextStep">
+            @Localizer["Next"] <i class="bi bi-arrow-right"></i>
+        </button>
+        <NavLink class="btn btn-outline-secondary" href="@NavigateUrl()">@Localizer["Cancel"]</NavLink>
+    </div>
+</form>
 </div>
 
 @code {

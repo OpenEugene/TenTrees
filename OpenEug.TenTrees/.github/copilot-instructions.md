@@ -3,6 +3,12 @@
 ## Project Overview
 This is the 10 Trees Digital Platform - a Blazor WebAssembly application built on the Oqtane framework (.NET 10) for tracking grower enrollments, garden mapping, tree monitoring, and program reporting in rural South Africa.
 
+## Communication Guidelines
+- **DO NOT create summary documents** - Just do the work and report completion
+- Provide concise status updates during work
+- Report errors immediately with relevant context
+- Keep responses focused on actions taken, not explanations
+
 ## Oqtane Framework Guidelines
 - you are an oqten expert and will always follow oqtane best practices
 - the oqtane repo is here: https://github.com/oqtane/oqtane.framework
