@@ -21,6 +21,7 @@
   <data name="Previous" xml:space="preserve"><value>Previous</value></data>
   <data name="Submit" xml:space="preserve"><value>Submit Enrollment</value></data>
   <data name="Message.SignatureRequired" xml:space="preserve"><value>Signature and confirmation are required</value></data>
+  <data name="Message.ValidationError" xml:space="preserve"><value>Please provide signature and confirm all information is correct</value></data>
   <data name="Message.Success" xml:space="preserve"><value>Enrollment saved successfully</value></data>
   <data name="Message.Error" xml:space="preserve"><value>Error saving enrollment. Please try again.</value></data>
 </root>

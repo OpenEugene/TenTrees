@@ -24,6 +24,12 @@
   <data name="Section.BasicInfo" xml:space="preserve">
     <value>Mahungu ya Nsinya</value>
   </data>
+  <data name="Section.ParticipantInfo" xml:space="preserve">
+    <value>Mahungu ya Muhlanganyeli</value>
+  </data>
+  <data name="Section.HouseholdInfo" xml:space="preserve">
+    <value>Mahungu ya le Kaya</value>
+  </data>
   <data name="TreeMentorName.Text" xml:space="preserve">
     <value>Vito ra Muleriseri wa Mirhi:</value>
   </data>
@@ -74,6 +80,9 @@
   </data>
   <data name="Message.Validation" xml:space="preserve">
     <value>Kombela u talula switirhiswa hinkwaswo leswi lavekaka</value>
+  </data>
+  <data name="Message.ValidationError" xml:space="preserve">
+    <value>Khongela u lulamisa swihoxo swa nkandziyiso laha hansi</value>
   </data>
   <data name="Message.Error" xml:space="preserve">
     <value>Xiphiqo xi humelele. Kombela u ringeta nakambe.</value>

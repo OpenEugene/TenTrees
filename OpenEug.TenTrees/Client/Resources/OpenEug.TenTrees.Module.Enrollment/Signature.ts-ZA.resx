@@ -21,6 +21,7 @@
   <data name="Previous" xml:space="preserve"><value>Khale</value></data>
   <data name="Submit" xml:space="preserve"><value>Rhumela Nkandziyiso</value></data>
   <data name="Message.SignatureRequired" xml:space="preserve"><value>Kusayina na pfumelo swi laveka</value></data>
+  <data name="Message.ValidationError" xml:space="preserve"><value>Khongela u nyika kusayina na ku tiyisisa leswaku mahungu hinkwawo ma lulamile</value></data>
   <data name="Message.Success" xml:space="preserve"><value>Nkandziyiso wu hlayisiwile hi ndlela</value></data>
   <data name="Message.Error" xml:space="preserve"><value>Xiphiqo xi humelele hi ku hlayisa nkandziyiso. Kombela u ringeta nakambe.</value></data>
 </root>

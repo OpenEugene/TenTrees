@@ -49,13 +49,70 @@ This is the 10 Trees Digital Platform - a Blazor WebAssembly application built o
 
 ### Models & Entities
 - Shared models inherit from `ModelBase` (provides audit fields)
-- Use `[Table("Schema.TableName")]` attribute
-- Database tables prefixed with "OpenEug.TenTrees"
-- Use EntityBuilders for migrations (inherit from `AuditableBaseEntityBuilder`)
+- Use `[Table("ModelName")]` attribute - simple table names matching model names
+- No prefixes or schema qualifiers needed
+- **Database schema managed via SQL project only** (see Database Development section below)
 
 ### Client-Side Services
-- Register services in ClientStartup.cs: `services.AddScoped<IService, ServiceImpl>()`
+- Register all services in consolidated `TenTreesClientStartup.cs`: `services.AddScoped<IService, ServiceImpl>()`
 - Use scoped lifetime for state services
+- Do NOT create separate startup files per module
+
+### Server-Side Services
+- Register all services in consolidated `TenTreesServerStartup.cs`: `services.AddTransient<IService, ServerServiceImpl>()`
+- Register shared DbContextFactory once for all modules
+- Do NOT create separate startup files per module
+
+## Database Development
+
+### SQL Project as Source of Truth
+- **Primary and ONLY database development**: Use the Visual Studio SQL Project at `Sql/Sql.sqlproj`
+- All table definitions live in `Sql/dbo/Tables/*.sql`
+- Use Visual Studio SQL tooling for schema design, refactoring, and comparison
+- SQL project provides IntelliSense, validation, and database publishing
+- **DO NOT create Entity Framework migrations** - we use SQL project exclusively
+
+### Database Deployment
+- Use SQL Server Data Tools (SSDT) to publish schema changes
+- Use Visual Studio's "Publish" feature from the SQL project
+- Schema comparison tools for comparing database to project
+- Generate deployment scripts using SSDT
+- For production deployments, generate and review scripts before applying
+
+### Creating New Tables
+1. Create table in SQL Project: `Sql/dbo/Tables/[ModelName].sql`
+2. Use standard SQL Server CREATE TABLE syntax with simple table names (e.g., `[dbo].[Village]`)
+3. Include audit columns: `CreatedBy NVARCHAR(256), CreatedOn DATETIME2(7), ModifiedBy NVARCHAR(256), ModifiedOn DATETIME2(7)`
+4. Use Visual Studio SQL project tools to validate syntax
+5. Publish to development database using SQL project
+6. EF Core will automatically discover tables via DbContext
+
+### Example Table Definition
+```sql
+CREATE TABLE [dbo].[ModelName] (
+    [ModelNameId] INT            IDENTITY (1, 1) NOT NULL,
+    [Name]        NVARCHAR (MAX) NOT NULL,
+    [CreatedBy]   NVARCHAR (256) NOT NULL,
+    [CreatedOn]   DATETIME2 (7)  NOT NULL,
+    [ModifiedBy]  NVARCHAR (256) NOT NULL,
+    [ModifiedOn]  DATETIME2 (7)  NOT NULL,
+    CONSTRAINT [PK_ModelName] PRIMARY KEY CLUSTERED ([ModelNameId] ASC)
+);
+```
+
+### Database Schema Changes
+1. Modify SQL file in SQL project
+2. Use Schema Compare to see differences
+3. Generate script or publish directly to development database
+4. For production, generate deployment script and review before applying
+5. EF Core DbContext automatically maps to updated schema
+
+### Initial Database Setup
+1. Create empty database in SQL Server
+2. Right-click SQL project ? Publish
+3. Select target database
+4. Review changes and publish
+5. Run application - EF Core will connect to existing schema
 
 ## 10 Trees Specific Patterns
 

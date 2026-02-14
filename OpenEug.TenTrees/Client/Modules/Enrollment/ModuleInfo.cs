@@ -9,9 +9,9 @@ namespace OpenEug.TenTrees.Module.Enrollment
         {
             Name = "Enrollment",
             Description = "Grower Enrollment Submission",
-            Version = "1.0.0",
-            ServerManagerType = "OpenEug.TenTrees.Module.Enrollment.Manager.EnrollmentManager, OpenEug.TenTrees.Server.Oqtane",
-            ReleaseVersions = "1.0.0",
+            Version = "1.1.1",
+            ServerManagerType = "",
+            ReleaseVersions = "1.0.0,1.1.0,1.1.1",
             Dependencies = ""
         };
     }

@@ -5,7 +5,7 @@ using Oqtane.Models;
 
 namespace OpenEug.TenTrees.Models
 {
-    [Table("OpenEug.TenTreesEnrollment")]
+    [Table("Enrollment")]
     public class Enrollment : ModelBase
     {
         [Key]
