@@ -1,9 +1,11 @@
 @using Oqtane.Modules.Controls
 @using OpenEug.TenTrees.Module.Enrollment.Services
+@using OpenEug.TenTrees.Module.Village.Services
 
 @namespace OpenEug.TenTrees.Module.Enrollment
 @inherits ModuleBase
 @inject IEnrollmentService EnrollmentService
+@inject IVillageService VillageService
 @inject NavigationManager NavigationManager
 @inject IStringLocalizer<Edit> Localizer
 
@@ -32,7 +34,16 @@
                 <div class="row mb-2">
                     <Label Class="col-sm-4" For="villageid" ResourceKey="Village">Village:</Label>
                     <div class="col-sm-8">
-                        <input id="villageid" type="number" class="form-control" @bind="@_villageId" required />
+                        <select id="villageid" class="form-select" @bind="@_villageId" required>
+                            <option value="">@Localizer["SelectVillage"]</option>
+                            @if (_villages != null)
+                            {
+                                @foreach (var village in _villages)
+                                {
+                                    <option value="@village.VillageId">@village.VillageName</option>
+                                }
+                            }
+                        </select>
                     </div>
                 </div>
                 <div class="row mb-2">
@@ -230,7 +241,10 @@
     private bool validated = false;
 
     private int _id;
-    
+
+    // Villages for dropdown
+    private List<Models.Village> _villages;
+
     // Basic Information
     private string _treeMentorName;
     private string _growerName;
@@ -271,9 +285,12 @@
     {
         try
         {
+            // Load villages for dropdown
+            _villages = await VillageService.GetActiveVillagesAsync();
+
             // Auto-fill tree mentor name from current user
             _treeMentorName = PageState.User.DisplayName;
-            
+
             if (PageState.Action == "Edit")
             {
                 _id = Int32.Parse(PageState.QueryString["id"]);
@@ -289,7 +306,7 @@
                     _ownsHome = Enrollment.OwnsHome;
                     _enrollmentDate = Enrollment.EnrollmentDate.Date;
                     _treeMentorName = Enrollment.TreeMentorName;
-                    
+
                     // Preferred Criteria
                     _enrolledInPE = Enrollment.EnrolledInPE;
                     _peGraduate = Enrollment.PEGraduate;
@@ -297,7 +314,7 @@
                     _childHeadedHousehold = Enrollment.ChildHeadedHousehold;
                     _womanHeadedHousehold = Enrollment.WomanHeadedHousehold;
                     _emptyYard = Enrollment.EmptyYard;
-                    
+
                     // Commitments
                     _commitNoChemicals = Enrollment.CommitNoChemicals;
                     _commitAttendClasses = Enrollment.CommitAttendClasses;
@@ -305,10 +322,10 @@
                     _commitStandForWomenChildren = Enrollment.CommitStandForWomenChildren;
                     _commitCareWhileAway = Enrollment.CommitCareWhileAway;
                     _commitAllowYardAccess = Enrollment.CommitAllowYardAccess;
-                    
+
                     // Signature
                     _signatureData = Enrollment.SignatureData;
-                    
+
                     // Audit
                     _createdby = Enrollment.CreatedBy;
                     _createdon = Enrollment.CreatedOn;

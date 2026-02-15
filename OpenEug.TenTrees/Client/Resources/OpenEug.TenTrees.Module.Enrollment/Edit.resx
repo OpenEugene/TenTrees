@@ -162,6 +162,9 @@
   <data name="Select" xml:space="preserve">
     <value>-- Select --</value>
   </data>
+  <data name="SelectVillage" xml:space="preserve">
+    <value>-- Select a Village --</value>
+  </data>
   <data name="Yes" xml:space="preserve">
     <value>Yes</value>
   </data>

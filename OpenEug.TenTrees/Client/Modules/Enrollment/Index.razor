@@ -30,7 +30,7 @@ else
                 <td><ActionDialog Header="Delete Enrollment" Message="Are You Sure You Wish To Delete This Enrollment?" Action="Delete" Security="SecurityAccessLevel.Edit" Class="btn btn-danger" OnClick="@(async () => await Delete(context))" ResourceKey="Delete"  Id="@context.EnrollmentId.ToString()" /></td>
                 <td>@context.GrowerName</td>
                 <td>@context.TreeMentorName</td>
-                <td>@context.VillageId</td>
+                <td>@context.VillageName</td>
                 <td>@context.Status</td>
             </Row>
         </Pager>
@@ -49,13 +49,13 @@ public override List<Resource> Resources => new List<Resource>()
         new Script(ModulePath() + "Module.js")
     };
 
-    List<Models.Enrollment> _Enrollments;
+    List<Models.EnrollmentViewModel> _Enrollments;
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            _Enrollments = await EnrollmentService.GetEnrollmentsAsync(ModuleState.ModuleId);
+            _Enrollments = await EnrollmentService.GetEnrollmentViewModelsAsync(ModuleState.ModuleId);
         }
         catch (Exception ex)
         {
@@ -64,13 +64,13 @@ public override List<Resource> Resources => new List<Resource>()
         }
     }
 
-    private async Task Delete(Models.Enrollment Enrollment)
+    private async Task Delete(Models.EnrollmentViewModel Enrollment)
     {
         try
         {
             await EnrollmentService.DeleteEnrollmentAsync(Enrollment.EnrollmentId, ModuleState.ModuleId);
             await logger.LogInformation("Enrollment Deleted {Enrollment}", Enrollment);
-            _Enrollments = await EnrollmentService.GetEnrollmentsAsync(ModuleState.ModuleId);
+            _Enrollments = await EnrollmentService.GetEnrollmentViewModelsAsync(ModuleState.ModuleId);
             StateHasChanged();
         }
         catch (Exception ex)

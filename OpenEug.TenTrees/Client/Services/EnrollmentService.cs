@@ -11,6 +11,8 @@ namespace OpenEug.TenTrees.Module.Enrollment.Services
     {
         Task<List<Models.Enrollment>> GetEnrollmentsAsync(int moduleId);
 
+        Task<List<Models.EnrollmentViewModel>> GetEnrollmentViewModelsAsync(int moduleId);
+
         Task<Models.Enrollment> GetEnrollmentAsync(int enrollmentId, int moduleId);
 
         Task<Models.Enrollment> AddEnrollmentAsync(Models.Enrollment enrollment);
@@ -18,17 +20,17 @@ namespace OpenEug.TenTrees.Module.Enrollment.Services
         Task<Models.Enrollment> UpdateEnrollmentAsync(Models.Enrollment enrollment);
 
         Task DeleteEnrollmentAsync(int enrollmentId, int moduleId);
-        
+
         // BDD-Specified Actions
         Task<ValidationResult> ValidateRequiredAsync(Models.Enrollment Enrollment);
-        
+
         Task<bool> CaptureSignatureAsync(int EnrollmentId, string SignatureData);
-        
+
         Task<MentorInfo> AutoFillMentorAsync(int UserId);
-        
+
         Task<List<Models.Enrollment>> GetByStatusAsync(int ModuleId, Models.EnrollmentStatus Status);
-        
-        
+
+
         Task<List<Models.Enrollment>> GetByVillageAsync(int villageId);
     }
 
@@ -42,6 +44,12 @@ namespace OpenEug.TenTrees.Module.Enrollment.Services
         {
             List<Models.Enrollment> enrollments = await GetJsonAsync<List<Models.Enrollment>>(CreateAuthorizationPolicyUrl($"{Apiurl}?moduleid={moduleId}", EntityNames.Module, moduleId), Enumerable.Empty<Models.Enrollment>().ToList());
             return enrollments.OrderBy(item => item.GrowerName).ToList();
+        }
+
+        public async Task<List<Models.EnrollmentViewModel>> GetEnrollmentViewModelsAsync(int moduleId)
+        {
+            List<Models.EnrollmentViewModel> viewModels = await GetJsonAsync<List<Models.EnrollmentViewModel>>(CreateAuthorizationPolicyUrl($"{Apiurl}/viewmodels?moduleid={moduleId}", EntityNames.Module, moduleId), Enumerable.Empty<Models.EnrollmentViewModel>().ToList());
+            return viewModels.OrderBy(item => item.GrowerName).ToList();
         }
 
         public async Task<Models.Enrollment> GetEnrollmentAsync(int enrollmentId, int moduleId)
