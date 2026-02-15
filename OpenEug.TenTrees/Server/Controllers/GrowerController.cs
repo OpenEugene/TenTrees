@@ -53,6 +53,13 @@ namespace OpenEug.TenTrees.Module.Grower.Controllers
             return await _growerService.GetActiveGrowersAsync(moduleId, villageId);
         }
 
+        [HttpGet("by-status")]
+        [Authorize(Policy = PolicyNames.ViewModule)]
+        public async Task<List<Models.Grower>> GetByStatus(int moduleId, GrowerStatus status, int? villageId = null)
+        {
+            return await _growerService.GetGrowersByStatusAsync(status, moduleId, villageId);
+        }
+
         [HttpGet("status-summary")]
         [Authorize(Policy = PolicyNames.ViewModule)]
         public async Task<GrowerStatusSummary> GetStatusSummary(int moduleId, int? villageId = null)

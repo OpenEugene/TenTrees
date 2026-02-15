@@ -170,59 +170,87 @@ namespace OpenEug.TenTrees.Module.Enrollment.Repository
         /// <summary>
         /// Backfill Grower records for existing Enrollments that don't have a linked Grower.
         /// Use this for data migration after adding Grower table.
+        /// Optimized with batched inserts and transaction for atomicity.
         /// </summary>
         public int BackfillGrowersFromEnrollments()
         {
             using var db = _factory.CreateDbContext();
+            using var transaction = db.Database.BeginTransaction();
 
-            // Find all enrollments without a linked grower
-            var enrollmentsWithoutGrower = db.Enrollment
-                .Where(e => e.GrowerId == null)
-                .ToList();
-
-            int created = 0;
-
-            foreach (var enrollment in enrollmentsWithoutGrower)
+            try
             {
-                // Check if grower already exists (by name and village)
-                var existingGrower = db.Grower
-                    .FirstOrDefault(g => g.GrowerName == enrollment.GrowerName && g.VillageId == enrollment.VillageId);
+                // Find all enrollments without a linked grower
+                var enrollmentsWithoutGrower = db.Enrollment
+                    .Where(e => e.GrowerId == null)
+                    .ToList();
 
-                if (existingGrower != null)
+                int created = 0;
+                var newGrowers = new List<Models.Grower>();
+
+                foreach (var enrollment in enrollmentsWithoutGrower)
                 {
-                    // Link to existing grower
-                    enrollment.GrowerId = existingGrower.GrowerId;
-                }
-                else
-                {
-                    // Create new Grower from enrollment data
-                    var grower = new Models.Grower
+                    // Check if grower already exists (by name and village)
+                    var existingGrower = db.Grower
+                        .FirstOrDefault(g => g.GrowerName == enrollment.GrowerName && g.VillageId == enrollment.VillageId);
+
+                    if (existingGrower != null)
                     {
-                        GrowerName = enrollment.GrowerName,
-                        VillageId = enrollment.VillageId,
-                        MentorId = enrollment.MentorId,
-                        HouseNumber = enrollment.HouseNumber,
-                        IdNumber = enrollment.IdNumber,
-                        BirthDate = enrollment.BirthDate,
-                        HouseholdSize = enrollment.HouseholdSize,
-                        OwnsHome = enrollment.OwnsHome,
-                        Status = GrowerStatus.Active,
-                        CreatedBy = enrollment.CreatedBy,
-                        CreatedOn = enrollment.CreatedOn,
-                        ModifiedBy = enrollment.ModifiedBy,
-                        ModifiedOn = enrollment.ModifiedOn
-                    };
+                        // Link to existing grower
+                        enrollment.GrowerId = existingGrower.GrowerId;
+                    }
+                    else
+                    {
+                        // Create new Grower from enrollment data
+                        var grower = new Models.Grower
+                        {
+                            GrowerName = enrollment.GrowerName,
+                            VillageId = enrollment.VillageId,
+                            MentorId = enrollment.MentorId,
+                            HouseNumber = enrollment.HouseNumber,
+                            IdNumber = enrollment.IdNumber,
+                            BirthDate = enrollment.BirthDate,
+                            HouseholdSize = enrollment.HouseholdSize,
+                            OwnsHome = enrollment.OwnsHome,
+                            Status = GrowerStatus.Active,
+                            CreatedBy = enrollment.CreatedBy,
+                            CreatedOn = enrollment.CreatedOn,
+                            ModifiedBy = enrollment.ModifiedBy,
+                            ModifiedOn = enrollment.ModifiedOn
+                        };
 
-                    db.Grower.Add(grower);
-                    db.SaveChanges(); // Save to get GrowerId
-
-                    enrollment.GrowerId = grower.GrowerId;
-                    created++;
+                        newGrowers.Add(grower);
+                        created++;
+                    }
                 }
-            }
 
-            db.SaveChanges();
-            return created;
+                // Batch insert all new growers
+                if (newGrowers.Any())
+                {
+                    db.Grower.AddRange(newGrowers);
+                    db.SaveChanges(); // Get GrowerId for all growers
+
+                    // Link enrollments to newly created growers
+                    int growerIndex = 0;
+                    foreach (var enrollment in enrollmentsWithoutGrower.Where(e => e.GrowerId == null))
+                    {
+                        enrollment.GrowerId = newGrowers[growerIndex].GrowerId;
+                        growerIndex++;
+                    }
+                }
+
+                // Save all enrollment updates
+                db.SaveChanges();
+
+                // Commit transaction
+                transaction.Commit();
+
+                return created;
+            }
+            catch
+            {
+                transaction.Rollback();
+                throw;
+            }
         }
     }
 }
