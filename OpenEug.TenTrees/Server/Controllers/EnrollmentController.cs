@@ -41,6 +41,24 @@ namespace OpenEug.TenTrees.Module.Enrollment.Controllers
             }
         }
 
+        // GET: api/<controller>/listviewmodels?moduleid=x
+        [HttpGet("listviewmodels")]
+        [Authorize(Policy = PolicyNames.ViewModule)]
+        public async Task<IEnumerable<EnrollmentListViewModel>> GetListViewModels(string moduleid)
+        {
+            int ModuleId;
+            if (int.TryParse(moduleid, out ModuleId) && IsAuthorizedEntityId(EntityNames.Module, ModuleId))
+            {
+                return await _EnrollmentService.GetEnrollmentListViewModelsAsync(ModuleId);
+            }
+            else
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Enrollment List ViewModel Get Attempt {ModuleId}", moduleid);
+                HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                return null;
+            }
+        }
+
         // GET api/<controller>/5
         [HttpGet("{id}/{moduleid}")]
         [Authorize(Policy = PolicyNames.ViewModule)]

@@ -42,4 +42,7 @@
   <data name="Message.DeleteError" xml:space="preserve">
     <value>Xiphiqo xi Humelele eka ku Sula Nkandziyiso</value>
   </data>
+  <data name="UnknownVillage" xml:space="preserve">
+    <value>Rixaka ri nga Tiviwi</value>
+  </data>
 </root>

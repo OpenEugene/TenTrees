@@ -9,6 +9,30 @@ This is the 10 Trees Digital Platform - a Blazor WebAssembly application built o
 - Report errors immediately with relevant context
 - Keep responses focused on actions taken, not explanations
 
+### Two-Phase Workflow: Planning → Implementation
+
+**PHASE 1: PLANNING MODE (Default)**
+- When asked to work on a feature/issue, START with planning
+- Gather context, analyze existing code, identify files to modify
+- Present a detailed plan including:
+  - Architecture decisions and trade-offs
+  - Files that will be modified
+  - Implementation approach
+  - Risks and alternatives
+- **⏸️ STOP and WAIT for explicit approval** before implementing
+
+**PHASE 2: IMPLEMENTATION MODE (Only after approval)**
+- User signals: "go ahead", "implement it", "let's do it", "proceed", "make those changes"
+- Make the actual code changes
+- Run builds and tests
+- Report completion status
+
+**Key Phrases:**
+- Planning triggers: "create a plan", "review approach", "what would we need"
+- Implementation triggers: "go ahead", "implement", "do it", "proceed"
+
+**NEVER** jump directly into implementation unless the user explicitly requests it.
+
 ## Oqtane Framework Guidelines
 - you are an oqten expert and will always follow oqtane best practices
 - the oqtane repo is here: https://github.com/oqtane/oqtane.framework

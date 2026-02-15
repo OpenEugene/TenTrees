@@ -147,4 +147,7 @@
   <data name="Message.DeleteError" xml:space="preserve">
     <value>Error Deleting Enrollment</value>
   </data>
+  <data name="UnknownVillage" xml:space="preserve">
+    <value>Unknown Village</value>
+  </data>
 </root>

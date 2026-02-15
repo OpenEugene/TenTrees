@@ -10,6 +10,7 @@ namespace OpenEug.TenTrees.Module.Enrollment.Repository
     {
         IEnumerable<Models.Enrollment> GetEnrollments(int moduleId);
         IEnumerable<Models.Enrollment> GetEnrollments();
+        IEnumerable<EnrollmentListViewModel> GetEnrollmentListViewModels(int moduleId);
         Models.Enrollment GetEnrollment(int enrollmentId);
         Models.Enrollment GetEnrollment(int enrollmentId, bool tracking);
         Models.Enrollment AddEnrollment(Models.Enrollment enrollment);
@@ -31,11 +32,29 @@ namespace OpenEug.TenTrees.Module.Enrollment.Repository
             using var db = _factory.CreateDbContext();
             return db.Enrollment.Where(item => item.ModuleId == moduleId).ToList();
         }
-        
+
         public IEnumerable<Models.Enrollment> GetEnrollments()
         {
             using var db = _factory.CreateDbContext();
             return db.Enrollment.ToList();
+        }
+
+        public IEnumerable<EnrollmentListViewModel> GetEnrollmentListViewModels(int moduleId)
+        {
+            using var db = _factory.CreateDbContext();
+            var viewModels = from e in db.Enrollment
+                           join v in db.Village on e.VillageId equals v.VillageId into villageJoin
+                           from v in villageJoin.DefaultIfEmpty()
+                           where e.ModuleId == moduleId
+                           select new EnrollmentListViewModel
+                           {
+                               EnrollmentId = e.EnrollmentId,
+                               GrowerName = e.GrowerName,
+                               TreeMentorName = e.TreeMentorName,
+                               VillageName = v != null ? v.VillageName : null,
+                               Status = e.Status
+                           };
+            return viewModels.ToList();
         }
 
         public Models.Enrollment GetEnrollment(int enrollmentId)
