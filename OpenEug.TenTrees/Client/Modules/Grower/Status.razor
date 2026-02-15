@@ -189,11 +189,11 @@ else
 
     protected override async Task OnParametersSetAsync()
     {
-        _isLoading = true;
         try
         {
             if (!string.IsNullOrEmpty(Id))
             {
+                _isLoading = true;
                 int growerId = int.Parse(Id);
                 _grower = await GrowerService.GetGrowerAsync(growerId, ModuleState.ModuleId);
                 
