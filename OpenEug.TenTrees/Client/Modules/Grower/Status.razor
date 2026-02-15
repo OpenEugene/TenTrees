@@ -1,0 +1,311 @@
+@using OpenEug.TenTrees.Module.Grower.Services
+@using OpenEug.TenTrees.Models
+@using Oqtane.UI
+
+@namespace OpenEug.TenTrees.Module.Grower
+@inherits ModuleBase
+@inject IGrowerService GrowerService
+@inject NavigationManager NavigationManager
+@inject IStringLocalizer<Status> Localizer
+@inject IJSRuntime JSRuntime
+
+@if (_grower == null)
+{
+    <p><em>@Localizer["Message.Loading"]</em></p>
+}
+else
+{
+    <div class="container">
+        <h3>@Localizer["Page.Title"]: @_grower.GrowerName</h3>
+
+        <!-- Current Status Section -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5>@Localizer["Section.CurrentStatus"]</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <strong>@Localizer["Label.CurrentStatus"]:</strong>
+                    </div>
+                    <div class="col-md-8">
+                        <span class="badge @GetStatusBadgeClass(_grower.Status) fs-6">
+                            @GetStatusText(_grower.Status)
+                        </span>
+                    </div>
+                </div>
+
+                @if (_grower.Status == GrowerStatus.Exited && _grower.ExitDate.HasValue)
+                {
+                    <div class="row mb-2">
+                        <div class="col-md-4">
+                            <strong>@Localizer["Label.ExitDate"]:</strong>
+                        </div>
+                        <div class="col-md-8">
+                            @_grower.ExitDate.Value.ToString("yyyy-MM-dd")
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-4">
+                            <strong>@Localizer["Label.ExitReason"]:</strong>
+                        </div>
+                        <div class="col-md-8">
+                            @(_grower.ExitReason ?? "-")
+                        </div>
+                    </div>
+                    @if (!string.IsNullOrWhiteSpace(_grower.ExitNotes))
+                    {
+                        <div class="row mb-2">
+                            <div class="col-md-4">
+                                <strong>@Localizer["Label.ExitNotes"]:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                @_grower.ExitNotes
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+
+        <!-- Admin Actions (Admin-Only) -->
+        @if (UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin))
+        {
+            <div class="card mb-3">
+                <div class="card-header bg-primary text-white">
+                    <h5>@Localizer["Section.AdminActions"]</h5>
+                </div>
+                <div class="card-body">
+                    @if (_grower.Status == GrowerStatus.Active)
+                    {
+                        <button class="btn btn-warning mb-2" @onclick="ToggleInactive">
+                            <i class="bi bi-pause-circle"></i> @Localizer["Action.MarkInactive"]
+                        </button>
+                        <button class="btn btn-danger mb-2 ms-2" @onclick="ShowExitModal">
+                            <i class="bi bi-box-arrow-right"></i> @Localizer["Action.RecordExit"]
+                        </button>
+                    }
+                    else if (_grower.Status == GrowerStatus.Inactive)
+                    {
+                        <button class="btn btn-success mb-2" @onclick="ToggleActive">
+                            <i class="bi bi-play-circle"></i> @Localizer["Action.MarkActive"]
+                        </button>
+                        <button class="btn btn-danger mb-2 ms-2" @onclick="ShowExitModal">
+                            <i class="bi bi-box-arrow-right"></i> @Localizer["Action.RecordExit"]
+                        </button>
+                    }
+                    else if (_grower.Status == GrowerStatus.Exited)
+                    {
+                        <p class="text-muted">@Localizer["Message.GrowerExited"]</p>
+                    }
+                </div>
+            </div>
+        }
+
+        <!-- Exit Program Form (Visible when ShowExitForm is true) -->
+        @if (_showExitForm && UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin))
+        {
+            <div class="card mb-3 border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h5>@Localizer["Modal.ExitTitle"]</h5>
+                </div>
+                <div class="card-body">
+                    <form @ref="exitForm" class="@(exitValidated ? " was-validated" : "needs-validation" )" novalidate>
+                        <div class="mb-3">
+                            <label for="exitDate" class="form-label">@Localizer["Label.ExitDate"]</label>
+                            <input id="exitDate" type="date" class="form-control" @bind="_exitDate" required />
+                            <div class="invalid-feedback">@Localizer["Validation.ExitDateRequired"]</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="exitReason" class="form-label">@Localizer["Label.ExitReason"]</label>
+                            <select id="exitReason" class="form-select" @bind="_exitReason" required>
+                                <option value="">@Localizer["Select"]</option>
+                                <option value="MovedAway">@Localizer["ExitReason.MovedAway"]</option>
+                                <option value="Deceased">@Localizer["ExitReason.Deceased"]</option>
+                                <option value="Voluntary">@Localizer["ExitReason.Voluntary"]</option>
+                                <option value="NonCompliance">@Localizer["ExitReason.NonCompliance"]</option>
+                                <option value="Other">@Localizer["ExitReason.Other"]</option>
+                            </select>
+                            <div class="invalid-feedback">@Localizer["Validation.ExitReasonRequired"]</div>
+                        </div>
+
+                        @if (_exitReason == "Other")
+                        {
+                            <div class="mb-3">
+                                <label for="exitNotes" class="form-label">@Localizer["Label.ExitNotes"]</label>
+                                <textarea id="exitNotes" class="form-control" rows="3" @bind="_exitNotes" required></textarea>
+                                <div class="invalid-feedback">@Localizer["Validation.NotesRequiredForOther"]</div>
+                            </div>
+                        }
+
+                        <div class="alert alert-warning">
+                            <i class="bi bi-exclamation-triangle"></i> @Localizer["Modal.ExitConfirm"]
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="button" class="btn btn-danger" @onclick="SubmitExit">
+                                @Localizer["Action.ConfirmExit"]
+                            </button>
+                            <button type="button" class="btn btn-secondary" @onclick="CancelExit">
+                                @Localizer["Action.Cancel"]
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        }
+
+        <!-- Back Button -->
+        <button class="btn btn-secondary" @onclick="NavigateToIndex">
+            <i class="bi bi-arrow-left"></i> @Localizer["Action.BackToList"]
+        </button>
+    </div>
+}
+
+@code {
+    private Models.Grower _grower;
+    private bool _showExitForm = false;
+    private DateTime _exitDate = DateTime.Today;
+    private string _exitReason = "";
+    private string _exitNotes = "";
+    private ElementReference exitForm;
+    private bool exitValidated = false;
+
+    [Parameter]
+    public string Id { get; set; }
+
+    public override SecurityAccessLevel SecurityAccessLevel => SecurityAccessLevel.View;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        try
+        {
+            if (!string.IsNullOrEmpty(Id))
+            {
+                int growerId = int.Parse(Id);
+                _grower = await GrowerService.GetGrowerAsync(growerId, ModuleState.ModuleId);
+            }
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Loading Grower {Id} {Error}", Id, ex.Message);
+            AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
+        }
+    }
+
+    private async Task ToggleInactive()
+    {
+        try
+        {
+            _grower = await GrowerService.ToggleActiveStatusAsync(_grower.GrowerId, ModuleState.ModuleId);
+            AddModuleMessage(Localizer["Message.StatusUpdated"], MessageType.Success);
+            await logger.LogInformation("Grower {GrowerId} marked Inactive", _grower.GrowerId);
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Toggling Status {GrowerId} {Error}", _grower.GrowerId, ex.Message);
+            AddModuleMessage(Localizer["Message.StatusUpdateError"], MessageType.Error);
+        }
+    }
+
+    private async Task ToggleActive()
+    {
+        try
+        {
+            _grower = await GrowerService.ToggleActiveStatusAsync(_grower.GrowerId, ModuleState.ModuleId);
+            AddModuleMessage(Localizer["Message.StatusUpdated"], MessageType.Success);
+            await logger.LogInformation("Grower {GrowerId} marked Active", _grower.GrowerId);
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Toggling Status {GrowerId} {Error}", _grower.GrowerId, ex.Message);
+            AddModuleMessage(Localizer["Message.StatusUpdateError"], MessageType.Error);
+        }
+    }
+
+    private void ShowExitModal()
+    {
+        _showExitForm = true;
+        _exitDate = DateTime.Today;
+        _exitReason = "";
+        _exitNotes = "";
+        exitValidated = false;
+    }
+
+    private void CancelExit()
+    {
+        _showExitForm = false;
+    }
+
+    private async Task SubmitExit()
+    {
+        exitValidated = true;
+        var interop = new Interop(JSRuntime);
+        
+        if (!await interop.FormValid(exitForm))
+        {
+            return;
+        }
+
+        try
+        {
+            var request = new ProgramExitRequest
+            {
+                GrowerId = _grower.GrowerId,
+                ModuleId = ModuleState.ModuleId,
+                ExitDate = _exitDate,
+                ExitReason = _exitReason,
+                Notes = _exitNotes
+            };
+
+            _grower = await GrowerService.RecordProgramExitAsync(_grower.GrowerId, request, ModuleState.ModuleId);
+            
+            if (_grower != null)
+            {
+                AddModuleMessage(Localizer["Message.ExitRecorded"], MessageType.Success);
+                await logger.LogInformation("Program Exit Recorded {GrowerId} Reason: {Reason}", _grower.GrowerId, _exitReason);
+                _showExitForm = false;
+                StateHasChanged();
+            }
+            else
+            {
+                AddModuleMessage(Localizer["Message.ExitRecordError"], MessageType.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Recording Exit {GrowerId} {Error}", _grower.GrowerId, ex.Message);
+            AddModuleMessage(Localizer["Message.ExitRecordError"], MessageType.Error);
+        }
+    }
+
+    private void NavigateToIndex()
+    {
+        NavigationManager.NavigateTo(NavigateUrl());
+    }
+
+    private string GetStatusBadgeClass(GrowerStatus status)
+    {
+        return status switch
+        {
+            GrowerStatus.Active => "bg-success",
+            GrowerStatus.Inactive => "bg-warning",
+            GrowerStatus.Exited => "bg-secondary",
+            _ => "bg-light"
+        };
+    }
+
+    private string GetStatusText(GrowerStatus status)
+    {
+        return status switch
+        {
+            GrowerStatus.Active => Localizer["Status.Active"],
+            GrowerStatus.Inactive => Localizer["Status.Inactive"],
+            GrowerStatus.Exited => Localizer["Status.Exited"],
+            _ => status.ToString()
+        };
+    }
+}

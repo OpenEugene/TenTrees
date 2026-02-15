@@ -194,5 +194,22 @@ namespace OpenEug.TenTrees.Module.Enrollment.Services
                 .ToList();
             return Task.FromResult(enrollments);
         }
+
+        public Task<int> BackfillGrowersFromEnrollmentsAsync(int moduleId)
+        {
+            // Admin-only operation
+            if (_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.Edit) &&
+                _accessor.HttpContext.User.IsInRole(RoleNames.Admin))
+            {
+                int created = _enrollmentRepository.BackfillGrowersFromEnrollments();
+                _logger.Log(LogLevel.Information, this, LogFunction.Create, "Backfilled {Count} Growers from Enrollments", created);
+                return Task.FromResult(created);
+            }
+            else
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Backfill Attempt {ModuleId}", moduleId);
+                return Task.FromResult(0);
+            }
+        }
     }
 }

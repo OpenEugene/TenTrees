@@ -34,12 +34,14 @@ namespace OpenEug.TenTrees.Models
         public DateTime? ExitDate { get; set; }
 
         public string ExitReason { get; set; }
+
+        public string ExitNotes { get; set; }
     }
 
     public enum GrowerStatus
     {
         Active = 0,
-        Exited = 1,
-        Suspended = 2
+        Inactive = 1,
+        Exited = 2
     }
 }

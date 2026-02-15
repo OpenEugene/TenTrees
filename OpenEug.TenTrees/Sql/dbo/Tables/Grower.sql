@@ -11,6 +11,7 @@ CREATE TABLE [dbo].[Grower] (
     [Status]        INT            NOT NULL,
     [ExitDate]      DATETIME2 (7)  NULL,
     [ExitReason]    NVARCHAR (MAX) NULL,
+    [ExitNotes]     NVARCHAR (MAX) NULL,
     [CreatedBy]     NVARCHAR (256) NOT NULL,
     [CreatedOn]     DATETIME2 (7)  NOT NULL,
     [ModifiedBy]    NVARCHAR (256) NOT NULL,

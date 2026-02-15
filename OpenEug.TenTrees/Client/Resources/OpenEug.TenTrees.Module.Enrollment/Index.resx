@@ -150,4 +150,46 @@
   <data name="UnknownVillage" xml:space="preserve">
     <value>Unknown Village</value>
   </data>
+  <data name="EnrollmentStatus.Pending" xml:space="preserve">
+    <value>Pending</value>
+  </data>
+  <data name="EnrollmentStatus.Approved" xml:space="preserve">
+    <value>Approved</value>
+  </data>
+  <data name="EnrollmentStatus.Rejected" xml:space="preserve">
+    <value>Rejected</value>
+  </data>
+  <data name="Filter.Status" xml:space="preserve">
+    <value>Filter by Status</value>
+  </data>
+  <data name="Filter.AllStatuses" xml:space="preserve">
+    <value>All Statuses</value>
+  </data>
+  <data name="Filter.Village" xml:space="preserve">
+    <value>Filter by Village</value>
+  </data>
+  <data name="Filter.AllVillages" xml:space="preserve">
+    <value>All Villages</value>
+  </data>
+  <data name="Action.ClearFilters" xml:space="preserve">
+    <value>Clear Filters</value>
+  </data>
+  <data name="Summary.Total" xml:space="preserve">
+    <value>Total</value>
+  </data>
+  <data name="Column.GrowerStatus" xml:space="preserve">
+    <value>Grower Status</value>
+  </data>
+  <data name="GrowerStatus.Active" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="GrowerStatus.Inactive" xml:space="preserve">
+    <value>Inactive</value>
+  </data>
+  <data name="GrowerStatus.Exited" xml:space="preserve">
+    <value>Exited</value>
+  </data>
+  <data name="Message.Loading" xml:space="preserve">
+    <value>Loading...</value>
+  </data>
 </root>

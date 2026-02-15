@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="Page.Title" xml:space="preserve">
+    <value>Manage Grower Status</value>
+  </data>
+  <data name="Section.CurrentStatus" xml:space="preserve">
+    <value>Current Status</value>
+  </data>
+  <data name="Section.AdminActions" xml:space="preserve">
+    <value>Admin Actions</value>
+  </data>
+  <data name="Label.CurrentStatus" xml:space="preserve">
+    <value>Current Status</value>
+  </data>
+  <data name="Label.ExitDate" xml:space="preserve">
+    <value>Exit Date</value>
+  </data>
+  <data name="Label.ExitReason" xml:space="preserve">
+    <value>Reason for Leaving</value>
+  </data>
+  <data name="Label.ExitNotes" xml:space="preserve">
+    <value>Additional Notes</value>
+  </data>
+  <data name="Action.MarkInactive" xml:space="preserve">
+    <value>Mark as Inactive</value>
+  </data>
+  <data name="Action.MarkActive" xml:space="preserve">
+    <value>Mark as Active</value>
+  </data>
+  <data name="Action.RecordExit" xml:space="preserve">
+    <value>Record Program Exit</value>
+  </data>
+  <data name="Action.ConfirmExit" xml:space="preserve">
+    <value>Confirm Exit</value>
+  </data>
+  <data name="Action.Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Action.BackToList" xml:space="preserve">
+    <value>Back to List</value>
+  </data>
+  <data name="Status.Active" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="Status.Inactive" xml:space="preserve">
+    <value>Inactive</value>
+  </data>
+  <data name="Status.Exited" xml:space="preserve">
+    <value>Exited</value>
+  </data>
+  <data name="ExitReason.MovedAway" xml:space="preserve">
+    <value>Moved away</value>
+  </data>
+  <data name="ExitReason.Deceased" xml:space="preserve">
+    <value>Deceased</value>
+  </data>
+  <data name="ExitReason.Voluntary" xml:space="preserve">
+    <value>Voluntary withdrawal</value>
+  </data>
+  <data name="ExitReason.NonCompliance" xml:space="preserve">
+    <value>Non-compliance</value>
+  </data>
+  <data name="ExitReason.Other" xml:space="preserve">
+    <value>Other</value>
+  </data>
+  <data name="Select" xml:space="preserve">
+    <value>-- Select --</value>
+  </data>
+  <data name="Modal.ExitTitle" xml:space="preserve">
+    <value>Record Program Exit</value>
+  </data>
+  <data name="Modal.ExitConfirm" xml:space="preserve">
+    <value>This will permanently mark the grower as exited from the program. This action records formal program departure.</value>
+  </data>
+  <data name="Message.Loading" xml:space="preserve">
+    <value>Loading grower information...</value>
+  </data>
+  <data name="Message.LoadError" xml:space="preserve">
+    <value>Error loading grower</value>
+  </data>
+  <data name="Message.StatusUpdated" xml:space="preserve">
+    <value>Grower status updated successfully</value>
+  </data>
+  <data name="Message.StatusUpdateError" xml:space="preserve">
+    <value>Error updating grower status</value>
+  </data>
+  <data name="Message.ExitRecorded" xml:space="preserve">
+    <value>Program exit recorded successfully</value>
+  </data>
+  <data name="Message.ExitRecordError" xml:space="preserve">
+    <value>Error recording program exit</value>
+  </data>
+  <data name="Message.GrowerExited" xml:space="preserve">
+    <value>This grower has exited the program. No further status changes allowed.</value>
+  </data>
+  <data name="Validation.ExitDateRequired" xml:space="preserve">
+    <value>Please enter the exit date</value>
+  </data>
+  <data name="Validation.ExitReasonRequired" xml:space="preserve">
+    <value>Please select a reason for exit</value>
+  </data>
+  <data name="Validation.NotesRequiredForOther" xml:space="preserve">
+    <value>Please provide details when selecting "Other"</value>
+  </data>
+</root>

@@ -237,4 +237,40 @@
   <data name="Message.UpdateSuccess" xml:space="preserve">
     <value>Enrollment updated successfully</value>
   </data>
+  <data name="Section.EnrollmentStatus" xml:space="preserve">
+    <value>Enrollment Status (Admin Only)</value>
+  </data>
+  <data name="Label.CurrentStatus" xml:space="preserve">
+    <value>Current Status</value>
+  </data>
+  <data name="Action.Approve" xml:space="preserve">
+    <value>Approve Enrollment</value>
+  </data>
+  <data name="Action.Reject" xml:space="preserve">
+    <value>Reject Enrollment</value>
+  </data>
+  <data name="Action.SetPending" xml:space="preserve">
+    <value>Set to Pending</value>
+  </data>
+  <data name="Message.Approved" xml:space="preserve">
+    <value>Enrollment approved successfully</value>
+  </data>
+  <data name="Message.Rejected" xml:space="preserve">
+    <value>Enrollment rejected</value>
+  </data>
+  <data name="Message.SetPending" xml:space="preserve">
+    <value>Enrollment set to pending status</value>
+  </data>
+  <data name="Message.StatusChangeError" xml:space="preserve">
+    <value>Error changing enrollment status</value>
+  </data>
+  <data name="EnrollmentStatus.Pending" xml:space="preserve">
+    <value>Pending</value>
+  </data>
+  <data name="EnrollmentStatus.Approved" xml:space="preserve">
+    <value>Approved</value>
+  </data>
+  <data name="EnrollmentStatus.Rejected" xml:space="preserve">
+    <value>Rejected</value>
+  </data>
 </root>

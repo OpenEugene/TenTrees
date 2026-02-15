@@ -218,6 +218,53 @@
                 </div>
             </div>
         </div>
+
+        <!-- Section 5: Enrollment Status (Admin Only) -->
+        @if (PageState.Action == "Edit" && UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin))
+        {
+            <div class="card mb-3 border-primary">
+                <div class="card-header bg-primary text-white">
+                    <h5>@Localizer["Section.EnrollmentStatus"]</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <strong>@Localizer["Label.CurrentStatus"]:</strong>
+                        </div>
+                        <div class="col-md-8">
+                            <span class="badge @GetStatusBadgeClass() fs-6">
+                                @GetStatusText()
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="btn-group" role="group">
+                                @if (_enrollmentStatus != Models.EnrollmentStatus.Approved)
+                                {
+                                    <button type="button" class="btn btn-success" @onclick="ApproveEnrollment">
+                                        <i class="bi bi-check-circle"></i> @Localizer["Action.Approve"]
+                                    </button>
+                                }
+                                @if (_enrollmentStatus != Models.EnrollmentStatus.Pending)
+                                {
+                                    <button type="button" class="btn btn-warning" @onclick="SetPendingEnrollment">
+                                        <i class="bi bi-clock"></i> @Localizer["Action.SetPending"]
+                                    </button>
+                                }
+                                @if (_enrollmentStatus != Models.EnrollmentStatus.Rejected)
+                                {
+                                    <button type="button" class="btn btn-danger" @onclick="RejectEnrollment">
+                                        <i class="bi bi-x-circle"></i> @Localizer["Action.Reject"]
+                                    </button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
     </div>
     
     <button type="button" class="btn btn-success" @onclick="Save">@Localizer["Save"]</button>
@@ -274,7 +321,10 @@
     
     // Signature
     private string _signatureData;
-    
+
+    // Enrollment Status
+    private Models.EnrollmentStatus _enrollmentStatus = Models.EnrollmentStatus.Pending;
+
     // Audit fields
     private string _createdby;
     private DateTime _createdon;
@@ -334,6 +384,9 @@
 
                     // Signature
                     _signatureData = Enrollment.SignatureData;
+
+                    // Enrollment Status
+                    _enrollmentStatus = Enrollment.Status;
 
                     // Audit
                     _createdby = Enrollment.CreatedBy;
@@ -442,7 +495,10 @@
                     {
                         Enrollment.SignatureDate = DateTime.UtcNow;
                     }
-                    
+
+                    // Enrollment Status (preserve current status on regular updates)
+                    Enrollment.Status = _enrollmentStatus;
+
                     await EnrollmentService.UpdateEnrollmentAsync(Enrollment);
                     await logger.LogInformation("Enrollment Updated {Enrollment}", Enrollment);
                     AddModuleMessage(Localizer["Message.UpdateSuccess"], MessageType.Success);
@@ -459,5 +515,84 @@
             await logger.LogError(ex, "Error Saving Enrollment {Error}", ex.Message);
             AddModuleMessage(Localizer["Message.SaveError"], MessageType.Error);
         }
+    }
+
+    private async Task ApproveEnrollment()
+    {
+        try
+        {
+            _enrollmentStatus = Models.EnrollmentStatus.Approved;
+            var enrollment = await EnrollmentService.GetEnrollmentAsync(_id, ModuleState.ModuleId);
+            enrollment.Status = _enrollmentStatus;
+            await EnrollmentService.UpdateEnrollmentAsync(enrollment);
+            await logger.LogInformation("Enrollment {EnrollmentId} Approved", _id);
+            AddModuleMessage(Localizer["Message.Approved"], MessageType.Success);
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Approving Enrollment {EnrollmentId} {Error}", _id, ex.Message);
+            AddModuleMessage(Localizer["Message.StatusChangeError"], MessageType.Error);
+        }
+    }
+
+    private async Task RejectEnrollment()
+    {
+        try
+        {
+            _enrollmentStatus = Models.EnrollmentStatus.Rejected;
+            var enrollment = await EnrollmentService.GetEnrollmentAsync(_id, ModuleState.ModuleId);
+            enrollment.Status = _enrollmentStatus;
+            await EnrollmentService.UpdateEnrollmentAsync(enrollment);
+            await logger.LogInformation("Enrollment {EnrollmentId} Rejected", _id);
+            AddModuleMessage(Localizer["Message.Rejected"], MessageType.Warning);
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Rejecting Enrollment {EnrollmentId} {Error}", _id, ex.Message);
+            AddModuleMessage(Localizer["Message.StatusChangeError"], MessageType.Error);
+        }
+    }
+
+    private async Task SetPendingEnrollment()
+    {
+        try
+        {
+            _enrollmentStatus = Models.EnrollmentStatus.Pending;
+            var enrollment = await EnrollmentService.GetEnrollmentAsync(_id, ModuleState.ModuleId);
+            enrollment.Status = _enrollmentStatus;
+            await EnrollmentService.UpdateEnrollmentAsync(enrollment);
+            await logger.LogInformation("Enrollment {EnrollmentId} Set to Pending", _id);
+            AddModuleMessage(Localizer["Message.SetPending"], MessageType.Info);
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Setting Enrollment to Pending {EnrollmentId} {Error}", _id, ex.Message);
+            AddModuleMessage(Localizer["Message.StatusChangeError"], MessageType.Error);
+        }
+    }
+
+    private string GetStatusBadgeClass()
+    {
+        return _enrollmentStatus switch
+        {
+            Models.EnrollmentStatus.Pending => "bg-warning",
+            Models.EnrollmentStatus.Approved => "bg-success",
+            Models.EnrollmentStatus.Rejected => "bg-danger",
+            _ => "bg-secondary"
+        };
+    }
+
+    private string GetStatusText()
+    {
+        return _enrollmentStatus switch
+        {
+            Models.EnrollmentStatus.Pending => Localizer["EnrollmentStatus.Pending"],
+            Models.EnrollmentStatus.Approved => Localizer["EnrollmentStatus.Approved"],
+            Models.EnrollmentStatus.Rejected => Localizer["EnrollmentStatus.Rejected"],
+            _ => _enrollmentStatus.ToString()
+        };
     }
 }
