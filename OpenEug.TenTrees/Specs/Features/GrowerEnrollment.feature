@@ -2,7 +2,7 @@
 Feature: Grower Enrollment Submission
   As a tree mentor
   I want to submit grower enrollments digitally
-  So that enrollment data is captured accurately and linked to participants
+  So that enrollment data is captured accurately and linked to growers
 
   Background:
     Given I am a tree mentor logged into the system

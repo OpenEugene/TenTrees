@@ -2,7 +2,7 @@
 Feature: Photo Release Consent
   As a tree mentor
   I want to capture photo release preferences
-  So that the organization has proper consent for using participant photos
+  So that the organization has proper consent for using grower photos
 
   Scenario: Capture release form with full consent
     Given I have an approved enrollment for "Mary Nkuna"

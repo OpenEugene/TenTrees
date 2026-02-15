@@ -1,11 +1,11 @@
 @workflow-exit @priority-medium
-Feature: Participant Program Departure
+Feature: Grower Program Departure
   As Centre staff
-  I want to record when participants leave the program
+  I want to record when growers leave the program
   So that we maintain accurate program statistics
 
   Scenario: Record program exit with reason
-    Given participant "Grace Sithole" is active in the program
+    Given grower "Grace Sithole" is active in the program
     When I navigate to her record
     And I select "Mark as left program"
     And I select reason "Moved away"
@@ -25,7 +25,7 @@ Feature: Participant Program Departure
       | Non-compliance          |
       | Other                   |
 
-  Scenario: Exited participant excluded from active reports
-    Given participant "Grace Sithole" has exited the program
-    When I generate an "Active Participants" report
+  Scenario: Exited grower excluded from active reports
+    Given grower "Grace Sithole" has exited the program
+    When I generate an "Active Growers" report
     Then "Grace Sithole" should not appear in results

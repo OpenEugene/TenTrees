@@ -51,14 +51,14 @@ Feature: Tree Monitoring and Garden Health Assessment
     Then all problems should be recorded
     And help request flag should be set to true
 
-  Scenario: Assessment frequency for Year 1 participant
+  Scenario: Assessment frequency for Year 1 grower
     Given "Mary Nkuna" is in year 1 of the program
     And her last assessment was 10 days ago
     When I submit a new assessment
     Then the assessment should be accepted
     And the system should track that assessments are twice monthly
 
-  Scenario: Assessment frequency for Year 2 participant
+  Scenario: Assessment frequency for Year 2 grower
     Given "Grace Sithole" is in year 2 of the program
     And her last assessment was 20 days ago
     When I submit a new assessment

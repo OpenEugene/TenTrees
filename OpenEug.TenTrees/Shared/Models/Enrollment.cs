@@ -12,9 +12,9 @@ namespace OpenEug.TenTrees.Models
         public int EnrollmentId { get; set; }
         
         public int ModuleId { get; set; }
-        
-        // Participant Information (creates Participant record)
-        public int? ParticipantId { get; set; }
+
+        // Grower Information (creates Grower record)
+        public int? GrowerId { get; set; }
         
         [Required(ErrorMessage = "Grower name is required")]
         public string GrowerName { get; set; }

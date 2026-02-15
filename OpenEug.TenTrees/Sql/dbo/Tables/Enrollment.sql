@@ -1,7 +1,7 @@
 ﻿CREATE TABLE [dbo].[Enrollment] (
     [EnrollmentId]                INT            IDENTITY (1, 1) NOT NULL,
     [ModuleId]                    INT            NOT NULL,
-    [ParticipantId]               INT            NULL,
+    [GrowerId]                    INT            NULL,
     [GrowerName]                  NVARCHAR (MAX) NOT NULL,
     [VillageId]                   INT            NOT NULL,
     [HouseNumber]                 NVARCHAR (50)  NULL,

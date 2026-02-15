@@ -51,12 +51,12 @@ The following workflows have been identified from project documentation and stak
 
 | ID | Workflow Name | Description |
 |----|---------------|-------------|
-| WF-001 | Participant Enrollment | Complete enrollment process for new growers |
+| WF-001 | Grower Enrollment | Complete enrollment process for new growers |
 | WF-002 | Release Form Capture | Capture photo release consent with preference options |
 | WF-003 | Garden Site Mapping | Document garden location and existing resources |
 | WF-004 | Garden Assessment | Ongoing monitoring of tree health and garden practices |
-| WF-005 | Class Attendance | Track permaculture training participation |
-| WF-006 | Program Exit | Record participant departure with reason |
+| WF-005 | Class Attendance | Track permaculture training for growers |
+| WF-006 | Program Exit | Record grower departure with reason |
 | WF-007 | Village Data Management | Organize and filter data by village |
 | WF-008 | Reporting & Export | Generate reports and export data for grants |
 | WF-009 | User Administration | Manage mentors, staff access, impersonation |
@@ -67,7 +67,7 @@ The following workflows have been identified from project documentation and stak
 
 Features are organized by workflow and tagged for traceability. Each feature includes background context and scenarios with Given-When-Then steps.
 
-### 3.1 Participant Enrollment (WF-001)
+### 3.1 grower Enrollment (WF-001)
 
 **Tags:** `@workflow-enrollment` `@priority-high` `@mobile`
 
@@ -75,7 +75,7 @@ Features are organized by workflow and tagged for traceability. Each feature inc
 Feature: Grower Enrollment Submission
   As a tree mentor
   I want to submit grower enrollments digitally
-  So that enrollment data is captured accurately and linked to participants
+  So that enrollment data is captured accurately and linked to growers
 
   Background:
     Given I am a tree mentor logged into the system
@@ -140,7 +140,7 @@ Feature: Grower Enrollment Submission
 Feature: Photo Release Consent
   As a tree mentor
   I want to capture photo release preferences
-  So that the organization has proper consent for using participant photos
+  So that the organization has proper consent for using grower photos
 
   Scenario: Capture release form with full consent
     Given I have an approved enrollment for "Mary Nkuna"
@@ -267,14 +267,14 @@ Feature: Tree Monitoring and Garden Health Assessment
     Then all problems should be recorded
     And help request flag should be set to true
 
-  Scenario: Assessment frequency for Year 1 participant
+  Scenario: Assessment frequency for Year 1 grower
     Given "Mary Nkuna" is in year 1 of the program
     And her last assessment was 10 days ago
     When I submit a new assessment
     Then the assessment should be accepted
     And the system should track that assessments are twice monthly
 
-  Scenario: Assessment frequency for Year 2 participant
+  Scenario: Assessment frequency for Year 2 grower
     Given "Grace Sithole" is in year 2 of the program
     And her last assessment was 20 days ago
     When I submit a new assessment
@@ -289,7 +289,7 @@ Feature: Tree Monitoring and Garden Health Assessment
 ```gherkin
 Feature: Permaculture Training Attendance Tracking
   As Centre staff
-  I want to track class attendance for participants
+  I want to track class attendance for growers
   So that we know who is eligible to receive trees
 
   Scenario: Mark class attendance
@@ -299,13 +299,13 @@ Feature: Permaculture Training Attendance Tracking
     And her record should show "3 of 5 classes completed"
 
   Scenario: View attendance completion status
-    Given I am viewing participant "Mary Nkuna"
+    Given I am viewing grower "Mary Nkuna"
     When I check her attendance record
     Then I should see classes attended: "5 of 5"
     And status should show "Eligible for trees"
 
-  Scenario: Participant not eligible without required classes
-    Given participant "Grace Sithole" has attended 3 of 5 classes
+  Scenario: Grower not eligible without required classes
+    Given grower "Grace Sithole" has attended 3 of 5 classes
     When I check her eligibility status
     Then status should show "2 classes remaining"
     And she should not be marked as "Eligible for trees"
@@ -316,13 +316,13 @@ Feature: Permaculture Training Attendance Tracking
 **Tags:** `@workflow-exit` `@priority-medium`
 
 ```gherkin
-Feature: Participant Program Departure
+Feature: Grower Program Departure
   As Centre staff
-  I want to record when participants leave the program
+  I want to record when growers leave the program
   So that we maintain accurate program statistics
 
   Scenario: Record program exit with reason
-    Given participant "Grace Sithole" is active in the program
+    Given grower "Grace Sithole" is active in the program
     When I navigate to her record
     And I select "Mark as left program"
     And I select reason "Moved away"
@@ -342,9 +342,9 @@ Feature: Participant Program Departure
       | Non-compliance |
       | Other |
 
-  Scenario: Exited participant excluded from active reports
-    Given participant "Grace Sithole" has exited the program
-    When I generate an "Active Participants" report
+  Scenario: Exited grower excluded from active reports
+    Given grower "Grace Sithole" has exited the program
+    When I generate an "Active Growers" report
     Then "Grace Sithole" should not appear in results
 ```
 
@@ -518,12 +518,12 @@ Each workflow maps to one or more Oqtane modules. This mapping ensures complete 
 
 | Workflow | Primary Module | Supporting Modules | Oqtane Components |
 |----------|---------------|-------------------|-------------------|
-| WF-001 Enrollment | TenTrees.Enrollment | TenTrees.Participant | EditForm, ListView |
-| WF-002 Release | TenTrees.Release | TenTrees.Participant | EditForm |
-| WF-003 Mapping | TenTrees.Mapping | TenTrees.Participant, GPS Service | EditForm, MapView |
-| WF-004 Assessment | TenTrees.Assessment | TenTrees.Participant | EditForm, ListView |
-| WF-005 Attendance | TenTrees.Attendance | TenTrees.Participant | Checklist, GridView |
-| WF-006 Exit | TenTrees.Participant | - | EditForm, StatusUpdate |
+| WF-001 Enrollment | TenTrees.Enrollment | TenTrees.Grower | EditForm, ListView |
+| WF-002 Release | TenTrees.Release | TenTrees.Grower | EditForm |
+| WF-003 Mapping | TenTrees.Mapping | TenTrees.Grower, GPS Service | EditForm, MapView |
+| WF-004 Assessment | TenTrees.Assessment | TenTrees.Grower | EditForm, ListView |
+| WF-005 Attendance | TenTrees.Attendance | TenTrees.Grower | Checklist, GridView |
+| WF-006 Exit | TenTrees.Grower | - | EditForm, StatusUpdate |
 | WF-007 Village | TenTrees.Village | All modules | Filter, MultiTenant |
 | WF-008 Reporting | TenTrees.Reports | All data modules | ReportViewer, Export |
 | WF-009 Admin | TenTrees.Admin | Oqtane.Users | UserManagement |
@@ -531,7 +531,7 @@ Each workflow maps to one or more Oqtane modules. This mapping ensures complete 
 ### Module Dependencies
 
 ```
-TenTrees.Participant (Core entity - all modules depend on this)
+TenTrees.Grower (Core entity - all modules depend on this)
     ├── TenTrees.Enrollment
     ├── TenTrees.Release
     ├── TenTrees.Mapping
@@ -542,7 +542,7 @@ TenTrees.Village (Multi-tenant filter - applies to all)
     └── All modules filter by village
 
 TenTrees.Reports (Aggregates from all)
-    ├── TenTrees.Participant
+    ├── TenTrees.Grower
     ├── TenTrees.Enrollment
     ├── TenTrees.Mapping
     ├── TenTrees.Assessment
@@ -559,24 +559,24 @@ TenTrees.Admin (Cross-cutting)
 
 Detailed breakdown of actions each module must support, derived from BDD features.
 
-### 5.1 TenTrees.Participant Module
+### 5.1 TenTrees.grower Module
 
 | Action | Behavior | Input | Output | Source |
 |--------|----------|-------|--------|--------|
-| `CreateParticipant` | Create new grower record | ParticipantDto | ParticipantId | WF-001 |
-| `GetParticipant` | Retrieve participant by ID | int id | ParticipantDto | All |
-| `SearchParticipants` | Find by name, ID, village | SearchCriteria | List<ParticipantDto> | WF-003, WF-004 |
-| `GetByVillage` | List all in village | int villageId | List<ParticipantDto> | WF-007 |
-| `GetByMentor` | List assigned to mentor | int mentorId | List<ParticipantDto> | WF-004 |
+| `CreateGrower` | Create new grower record | GrowerDto | GrowerId | WF-001 |
+| `GetGrower` | Retrieve grower by ID | int id | GrowerDto | All |
+| `SearchGrowers` | Find by name, ID, village | SearchCriteria | List<GrowerDto> | WF-003, WF-004 |
+| `GetByVillage` | List all in village | int villageId | List<GrowerDto> | WF-007 |
+| `GetByMentor` | List assigned to mentor | int mentorId | List<GrowerDto> | WF-004 |
 | `UpdateStatus` | Change active/exited status | int id, Status | bool success | WF-006 |
 | `RecordExitReason` | Store exit date and reason | int id, ExitDto | bool success | WF-006 |
-| `GetLinkedRecords` | All forms for participant | int id | LinkedRecordsDto | WF-008 |
+| `GetLinkedRecords` | All forms for grower | int id | LinkedRecordsDto | WF-008 |
 
-**Entity: Participant**
+**Entity: grower**
 ```csharp
-public class Participant
+public class grower
 {
-    public int ParticipantId { get; set; }
+    public int GrowerId { get; set; }
     public int VillageId { get; set; }
     public int? MentorId { get; set; }
     public string GrowerName { get; set; }
@@ -585,7 +585,7 @@ public class Participant
     public DateTime? BirthDate { get; set; }
     public int HouseholdSize { get; set; }
     public bool OwnsHome { get; set; }
-    public ParticipantStatus Status { get; set; }
+    public GrowerStatus Status { get; set; }
     public DateTime? ExitDate { get; set; }
     public string ExitReason { get; set; }
     public DateTime CreatedOn { get; set; }
@@ -609,7 +609,7 @@ public class Participant
 public class Enrollment
 {
     public int EnrollmentId { get; set; }
-    public int ParticipantId { get; set; }
+    public int GrowerId { get; set; }
     public int MentorId { get; set; }
     public DateTime EnrollmentDate { get; set; }
     
@@ -643,15 +643,15 @@ public class Enrollment
 | `CaptureGPS` | Store lat/long | int mappingId, GpsCoords | bool success | WF-003 |
 | `UpdateGPS` | Staff updates GPS later | int mappingId, GpsCoords | bool success | WF-003 |
 | `RecordResources` | Document water, trees, etc. | int mappingId, ResourcesDto | bool success | WF-003 |
-| `LinkToParticipant` | Auto-fill from participant | int participantId | ParticipantInfo | WF-003 |
-| `GetByParticipant` | Get mapping for participant | int participantId | MappingDto | WF-008 |
+| `LinkToGrower` | Auto-fill from grower | int GrowerId | GrowerInfo | WF-003 |
+| `GetByGrower` | Get mapping for grower | int GrowerId | MappingDto | WF-008 |
 
 **Entity: GardenMapping**
 ```csharp
 public class GardenMapping
 {
     public int MappingId { get; set; }
-    public int ParticipantId { get; set; }
+    public int GrowerId { get; set; }
     public int MentorId { get; set; }
     public DateTime MappingDate { get; set; }
     
@@ -684,7 +684,7 @@ public class GardenMapping
 | `RecordDeadTrees` | Document which trees died | int assessmentId, string trees | bool success | WF-004 |
 | `TrackPermaculture` | Record practice responses | int assessmentId, PracticesDto | bool success | WF-004 |
 | `RequestHelp` | Flag for intervention | int assessmentId, bool needsHelp | bool success | WF-004 |
-| `GetHistory` | All assessments for participant | int participantId | List<AssessmentDto> | WF-008 |
+| `GetHistory` | All assessments for grower | int GrowerId | List<AssessmentDto> | WF-008 |
 | `GetByDateRange` | Filter by date | DateTime start, DateTime end | List<AssessmentDto> | WF-008 |
 
 **Entity: GardenAssessment**
@@ -692,7 +692,7 @@ public class GardenMapping
 public class GardenAssessment
 {
     public int AssessmentId { get; set; }
-    public int ParticipantId { get; set; }
+    public int GrowerId { get; set; }
     public int MentorId { get; set; }
     public DateTime AssessmentDate { get; set; }
     
@@ -812,7 +812,7 @@ Recommended organization for managing the 10 Trees project within a Claude Proje
 │   │   └── user-management.feature
 │
 ├── 03-Modules/
-│   ├── TenTrees.Participant.md
+│   ├── TenTrees.grower.md
 │   ├── TenTrees.Enrollment.md
 │   ├── TenTrees.Release.md
 │   ├── TenTrees.Mapping.md
@@ -852,7 +852,7 @@ Recommended organization for managing the 10 Trees project within a Claude Proje
 Each workflow file should contain:
 
 ```markdown
-# WF-001: Participant Enrollment
+# WF-001: grower Enrollment
 
 ## Metadata
 - **ID:** WF-001
@@ -877,7 +877,7 @@ Each workflow file should contain:
 3. [continued steps...]
 
 ## Alternate Flows
-### AF-1: Existing Participant
+### AF-1: Existing grower
 1. System detects duplicate
 2. [steps...]
 
@@ -891,7 +891,7 @@ Each workflow file should contain:
 
 ## Linked Modules
 - TenTrees.Enrollment
-- TenTrees.Participant
+- TenTrees.grower
 ```
 
 ### 6.4 Module Document Template
@@ -905,7 +905,7 @@ Each module file should contain:
 Handles grower enrollment submission and management.
 
 ## Dependencies
-- TenTrees.Participant (required)
+- TenTrees.grower (required)
 - TenTrees.Village (required)
 
 ## Entities
@@ -1069,10 +1069,10 @@ Requirements:
 Generate xUnit tests for GardenAssessmentService.
 
 Test all methods in /docs/modules/TenTrees.Assessment.md:
-- CreateAssessment: valid input, missing required fields, invalid participant
+- CreateAssessment: valid input, missing required fields, invalid grower
 - CalculateSurvival: all edge cases listed in spec
 - RecordProblems: single problem, multiple problems, no problems
-- GetHistory: participant with assessments, participant without assessments
+- GetHistory: grower with assessments, grower without assessments
 
 Use Moq for repository mocking. Follow AAA pattern (Arrange, Act, Assert).
 ```
@@ -1122,7 +1122,7 @@ Complete mapping from workflow to feature to module action.
 | WF-003 | @mapping | Complete mapping with GPS | Mapping | CreateMapping | High |
 | WF-003 | @mapping | Capture GPS | Mapping | CaptureGPS | High |
 | WF-003 | @mapping | Manual GPS by staff | Mapping | UpdateGPS | High |
-| WF-003 | @mapping | Link to participant | Mapping | LinkToParticipant | High |
+| WF-003 | @mapping | Link to grower | Mapping | LinkToGrower | High |
 | WF-004 | @assessment | Complete assessment | Assessment | CreateAssessment | High |
 | WF-004 | @assessment | Calculate survival | Assessment | CalculateSurvival | High |
 | WF-004 | @assessment | Record problems | Assessment | RecordProblems | High |
@@ -1131,8 +1131,8 @@ Complete mapping from workflow to feature to module action.
 | WF-004 | @assessment | Request help | Assessment | RequestHelp | High |
 | WF-005 | @attendance | Mark attendance | Attendance | MarkAttendance | Medium |
 | WF-005 | @attendance | View completion status | Attendance | GetAttendanceStatus | Medium |
-| WF-006 | @exit | Record exit | Participant | RecordExitReason | Medium |
-| WF-006 | @exit | Exit reasons dropdown | Participant | GetExitReasons | Medium |
+| WF-006 | @exit | Record exit | grower | RecordExitReason | Medium |
+| WF-006 | @exit | Exit reasons dropdown | grower | GetExitReasons | Medium |
 | WF-007 | @village | Mentor village scope | Village | FilterByVillage | High |
 | WF-007 | @village | Admin all villages | Village | GetAllVillages | High |
 | WF-007 | @village | Add new village | Village | CreateVillage | High |
@@ -1157,7 +1157,7 @@ Phased approach aligned with the 10 Trees Work Plan timeline.
 **Target:** Digital forms ready for testing by end of January
 
 **Modules:**
-- [ ] TenTrees.Participant - Core entity CRUD
+- [ ] TenTrees.grower - Core entity CRUD
 - [ ] TenTrees.Enrollment - Full enrollment form
 - [ ] TenTrees.Mapping - Garden documentation
 - [ ] TenTrees.Assessment - Tree monitoring
@@ -1333,3 +1333,5 @@ Assessment.Problems.NeedsHelp = "Do you need someone to come and help with a pro
 
 *Document generated by Claude for Open Eugene / 10 Trees Project*
 *For questions, contact Mark Davis, Principal Consultant*
+
+
