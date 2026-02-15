@@ -200,7 +200,6 @@ else
                 if (_grower == null)
                 {
                     await logger.LogWarning("Grower {Id} not found or unauthorized", Id);
-                    AddModuleMessage(Localizer["Message.GrowerNotFound"], MessageType.Warning);
                 }
             }
         }
