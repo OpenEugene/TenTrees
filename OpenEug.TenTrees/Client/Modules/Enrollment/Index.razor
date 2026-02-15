@@ -49,13 +49,13 @@ public override List<Resource> Resources => new List<Resource>()
         new Script(ModulePath() + "Module.js")
     };
 
-    List<Models.EnrollmentViewModel> _Enrollments;
+    List<Models.EnrollmentListViewModel> _Enrollments;
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            _Enrollments = await EnrollmentService.GetEnrollmentViewModelsAsync(ModuleState.ModuleId);
+            _Enrollments = await EnrollmentService.GetEnrollmentListViewModelsAsync(ModuleState.ModuleId);
         }
         catch (Exception ex)
         {
@@ -64,13 +64,13 @@ public override List<Resource> Resources => new List<Resource>()
         }
     }
 
-    private async Task Delete(Models.EnrollmentViewModel Enrollment)
+    private async Task Delete(Models.EnrollmentListViewModel Enrollment)
     {
         try
         {
             await EnrollmentService.DeleteEnrollmentAsync(Enrollment.EnrollmentId, ModuleState.ModuleId);
             await logger.LogInformation("Enrollment Deleted {Enrollment}", Enrollment);
-            _Enrollments = await EnrollmentService.GetEnrollmentViewModelsAsync(ModuleState.ModuleId);
+            _Enrollments = await EnrollmentService.GetEnrollmentListViewModelsAsync(ModuleState.ModuleId);
             StateHasChanged();
         }
         catch (Exception ex)

@@ -42,15 +42,15 @@ namespace OpenEug.TenTrees.Module.Enrollment.Services
             }
         }
 
-        public Task<List<EnrollmentViewModel>> GetEnrollmentViewModelsAsync(int moduleId)
+        public Task<List<EnrollmentListViewModel>> GetEnrollmentListViewModelsAsync(int moduleId)
         {
             if (_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.View))
             {
-                return Task.FromResult(_enrollmentRepository.GetEnrollmentViewModels(moduleId).ToList());
+                return Task.FromResult(_enrollmentRepository.GetEnrollmentListViewModels(moduleId).ToList());
             }
             else
             {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Enrollment ViewModel Get Attempt {ModuleId}", moduleId);
+                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Enrollment List ViewModel Get Attempt {ModuleId}", moduleId);
                 return null;
             }
         }

@@ -11,7 +11,7 @@ namespace OpenEug.TenTrees.Module.Enrollment.Services
     {
         Task<List<Models.Enrollment>> GetEnrollmentsAsync(int moduleId);
 
-        Task<List<Models.EnrollmentViewModel>> GetEnrollmentViewModelsAsync(int moduleId);
+        Task<List<Models.EnrollmentListViewModel>> GetEnrollmentListViewModelsAsync(int moduleId);
 
         Task<Models.Enrollment> GetEnrollmentAsync(int enrollmentId, int moduleId);
 
@@ -46,9 +46,9 @@ namespace OpenEug.TenTrees.Module.Enrollment.Services
             return enrollments.OrderBy(item => item.GrowerName).ToList();
         }
 
-        public async Task<List<Models.EnrollmentViewModel>> GetEnrollmentViewModelsAsync(int moduleId)
+        public async Task<List<Models.EnrollmentListViewModel>> GetEnrollmentListViewModelsAsync(int moduleId)
         {
-            List<Models.EnrollmentViewModel> viewModels = await GetJsonAsync<List<Models.EnrollmentViewModel>>(CreateAuthorizationPolicyUrl($"{Apiurl}/viewmodels?moduleid={moduleId}", EntityNames.Module, moduleId), Enumerable.Empty<Models.EnrollmentViewModel>().ToList());
+            List<Models.EnrollmentListViewModel> viewModels = await GetJsonAsync<List<Models.EnrollmentListViewModel>>(CreateAuthorizationPolicyUrl($"{Apiurl}/listviewmodels?moduleid={moduleId}", EntityNames.Module, moduleId), Enumerable.Empty<Models.EnrollmentListViewModel>().ToList());
             return viewModels.OrderBy(item => item.GrowerName).ToList();
         }
 
