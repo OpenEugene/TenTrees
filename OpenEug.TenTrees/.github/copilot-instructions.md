@@ -83,6 +83,16 @@ This is the 10 Trees Digital Platform - a Blazor WebAssembly application built o
 - No prefixes or schema qualifiers needed
 - **Database schema managed via SQL project only** (see Database Development section below)
 
+### Module Versioning
+- **ALWAYS version modules in ModuleInfo.cs** (e.g., `Client/Modules/[ModuleName]/ModuleInfo.cs`)
+- Update `Version` property: Use semantic versioning (e.g., "1.3.0")
+- Update `ReleaseVersions` property: Append new version to comma-separated list
+- **DO NOT modify project .csproj Version properties** - those stay at 1.0.0
+- Version bump guidelines:
+  - Patch (1.2.1 → 1.2.2): Bug fixes only
+  - Minor (1.2.1 → 1.3.0): New features, backward compatible
+  - Major (1.2.1 → 2.0.0): Breaking changes
+
 ### Client-Side Services
 - Register all services in consolidated `TenTreesClientStartup.cs`: `services.AddScoped<IService, ServiceImpl>()`
 - Use scoped lifetime for state services
