@@ -35,7 +35,7 @@
                     <Label Class="col-sm-4" For="villageid" ResourceKey="Village">Village:</Label>
                     <div class="col-sm-8">
                         <select id="villageid" class="form-select" @bind="@_villageId" required>
-                            <option value="">@Localizer["SelectVillage"]</option>
+                            <option value="0">@Localizer["SelectVillage"]</option>
                             @if (_villages != null)
                             {
                                 @foreach (var village in _villages)
@@ -286,7 +286,16 @@
         try
         {
             // Load villages for dropdown
-            _villages = await VillageService.GetActiveVillagesAsync();
+            // When editing, load all villages to include the current one even if inactive
+            // When adding, only load active villages
+            if (PageState.Action == "Edit")
+            {
+                _villages = await VillageService.GetVillagesAsync();
+            }
+            else
+            {
+                _villages = await VillageService.GetActiveVillagesAsync();
+            }
 
             // Auto-fill tree mentor name from current user
             _treeMentorName = PageState.User.DisplayName;

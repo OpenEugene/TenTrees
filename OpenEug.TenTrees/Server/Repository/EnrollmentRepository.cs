@@ -51,7 +51,7 @@ namespace OpenEug.TenTrees.Module.Enrollment.Repository
                                EnrollmentId = e.EnrollmentId,
                                GrowerName = e.GrowerName,
                                TreeMentorName = e.TreeMentorName,
-                               VillageName = v != null ? v.VillageName : "Unknown",
+                               VillageName = v != null ? v.VillageName : null,
                                Status = e.Status
                            };
             return viewModels.ToList();

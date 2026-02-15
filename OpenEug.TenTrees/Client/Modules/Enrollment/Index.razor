@@ -30,7 +30,7 @@ else
                 <td><ActionDialog Header="Delete Enrollment" Message="Are You Sure You Wish To Delete This Enrollment?" Action="Delete" Security="SecurityAccessLevel.Edit" Class="btn btn-danger" OnClick="@(async () => await Delete(context))" ResourceKey="Delete"  Id="@context.EnrollmentId.ToString()" /></td>
                 <td>@context.GrowerName</td>
                 <td>@context.TreeMentorName</td>
-                <td>@context.VillageName</td>
+                <td>@(string.IsNullOrEmpty(context.VillageName) ? Localizer["UnknownVillage"] : context.VillageName)</td>
                 <td>@context.Status</td>
             </Row>
         </Pager>
