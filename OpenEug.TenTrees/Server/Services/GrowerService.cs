@@ -86,9 +86,6 @@ namespace OpenEug.TenTrees.Module.Grower.Services
             else if (grower.Status == GrowerStatus.Inactive)
             {
                 grower.Status = GrowerStatus.Active;
-                // Clear exit data when reactivating
-                grower.ExitDate = null;
-                grower.ExitReason = null;
             }
             else
             {
@@ -130,15 +127,11 @@ namespace OpenEug.TenTrees.Module.Grower.Services
             grower.Status = GrowerStatus.Exited;
             grower.ExitDate = request.ExitDate;
             grower.ExitReason = request.ExitReason;
-            
-            if (!string.IsNullOrWhiteSpace(request.Notes))
-            {
-                grower.ExitReason = $"{request.ExitReason}|{request.Notes}";
-            }
+            grower.ExitNotes = request.Notes; // Store notes separately
 
             grower = _growerRepository.UpdateGrower(grower);
             _logger.Log(LogLevel.Information, this, LogFunction.Update, "Program Exit Recorded {GrowerId} Reason: {Reason}", growerId, request.ExitReason);
-            
+
             return Task.FromResult(grower);
         }
 

@@ -50,9 +50,20 @@ else
                             <strong>@Localizer["Label.ExitReason"]:</strong>
                         </div>
                         <div class="col-md-8">
-                            @GetExitReasonDisplay()
+                            @(_grower.ExitReason ?? "-")
                         </div>
                     </div>
+                    @if (!string.IsNullOrWhiteSpace(_grower.ExitNotes))
+                    {
+                        <div class="row mb-2">
+                            <div class="col-md-4">
+                                <strong>@Localizer["Label.ExitNotes"]:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                @_grower.ExitNotes
+                            </div>
+                        </div>
+                    }
                 }
             </div>
         </div>
@@ -296,19 +307,5 @@ else
             GrowerStatus.Exited => Localizer["Status.Exited"],
             _ => status.ToString()
         };
-    }
-
-    private string GetExitReasonDisplay()
-    {
-        if (string.IsNullOrEmpty(_grower.ExitReason))
-            return "-";
-
-        // Check if exit reason contains notes (separated by |)
-        var parts = _grower.ExitReason.Split('|');
-        if (parts.Length > 1)
-        {
-            return $"{parts[0]}: {parts[1]}";
-        }
-        return _grower.ExitReason;
     }
 }

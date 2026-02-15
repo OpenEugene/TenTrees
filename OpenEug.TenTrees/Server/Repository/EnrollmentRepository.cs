@@ -55,6 +55,7 @@ namespace OpenEug.TenTrees.Module.Enrollment.Repository
                                GrowerId = e.GrowerId,
                                GrowerName = e.GrowerName,
                                TreeMentorName = e.TreeMentorName,
+                               VillageId = e.VillageId,
                                VillageName = v != null ? v.VillageName : null,
                                EnrollmentStatus = e.Status,
                                GrowerStatus = g != null ? g.Status : GrowerStatus.Active
@@ -87,9 +88,23 @@ namespace OpenEug.TenTrees.Module.Enrollment.Repository
             // Set default status to Pending for new enrollments
             enrollment.Status = EnrollmentStatus.Pending;
 
-            // Check if grower already exists (by name and village)
-            var existingGrower = db.Grower
-                .FirstOrDefault(g => g.GrowerName == enrollment.GrowerName && g.VillageId == enrollment.VillageId);
+            // Check if grower already exists
+            // Priority: IdNumber (if available) > Name + Village
+            Models.Grower existingGrower = null;
+
+            if (!string.IsNullOrWhiteSpace(enrollment.IdNumber))
+            {
+                // Prefer IdNumber for uniqueness if available
+                existingGrower = db.Grower
+                    .FirstOrDefault(g => g.IdNumber == enrollment.IdNumber && g.VillageId == enrollment.VillageId);
+            }
+
+            if (existingGrower == null)
+            {
+                // Fall back to name + village matching
+                existingGrower = db.Grower
+                    .FirstOrDefault(g => g.GrowerName == enrollment.GrowerName && g.VillageId == enrollment.VillageId);
+            }
 
             if (existingGrower != null)
             {
@@ -189,9 +204,21 @@ namespace OpenEug.TenTrees.Module.Enrollment.Repository
 
                 foreach (var enrollment in enrollmentsWithoutGrower)
                 {
-                    // Check if grower already exists (by name and village)
-                    var existingGrower = db.Grower
-                        .FirstOrDefault(g => g.GrowerName == enrollment.GrowerName && g.VillageId == enrollment.VillageId);
+                    // Check if grower already exists
+                    // Priority: IdNumber (if available) > Name + Village
+                    Models.Grower existingGrower = null;
+
+                    if (!string.IsNullOrWhiteSpace(enrollment.IdNumber))
+                    {
+                        existingGrower = db.Grower
+                            .FirstOrDefault(g => g.IdNumber == enrollment.IdNumber && g.VillageId == enrollment.VillageId);
+                    }
+
+                    if (existingGrower == null)
+                    {
+                        existingGrower = db.Grower
+                            .FirstOrDefault(g => g.GrowerName == enrollment.GrowerName && g.VillageId == enrollment.VillageId);
+                    }
 
                     if (existingGrower != null)
                     {

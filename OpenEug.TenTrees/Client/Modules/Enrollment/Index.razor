@@ -197,10 +197,9 @@
         }
 
         // Apply village filter
-        if (!string.IsNullOrEmpty(_villageFilter))
+        if (!string.IsNullOrEmpty(_villageFilter) && int.TryParse(_villageFilter, out var villageId))
         {
-            int villageId = int.Parse(_villageFilter);
-            _Enrollments = _Enrollments.Where(e => e.VillageName == _villages.FirstOrDefault(v => v.VillageId == villageId)?.VillageName).ToList();
+            _Enrollments = _Enrollments.Where(e => e.VillageId == villageId).ToList();
         }
     }
 
