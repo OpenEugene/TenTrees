@@ -1,61 +1,169 @@
 @using OpenEug.TenTrees.Module.Enrollment.Services
+@using OpenEug.TenTrees.Module.Village.Services
+@using OpenEug.TenTrees.Models
 
 @namespace OpenEug.TenTrees.Module.Enrollment
 @inherits ModuleBase
 @inject IEnrollmentService EnrollmentService
+@inject IVillageService VillageService
 @inject NavigationManager NavigationManager
 @inject IStringLocalizer<Index> Localizer
 
-@if (_Enrollments == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <ActionLink Action="BasicInfo" Security="SecurityAccessLevel.Edit" Text="Add Enrollment" ResourceKey="Add" Class="btn btn-primary mb-3" />
-    <br />
-    @if (@_Enrollments.Count != 0)
+<div class="container">
+    <!-- Action Buttons -->
+    <div class="d-flex gap-2 mb-3">
+        <ActionLink Action="BasicInfo" Security="SecurityAccessLevel.Edit" Text="Add Enrollment" ResourceKey="Add" Class="btn btn-primary" />
+
+        @if (UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin))
+        {
+            <button class="btn btn-outline-secondary" @onclick="BackfillGrowers">
+                <i class="bi bi-people"></i> Sync Growers
+            </button>
+        }
+    </div>
+
+    <!-- Filter Section -->
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <label for="statusFilter">@Localizer["Filter.Status"]</label>
+            <select id="statusFilter" class="form-select" @bind="_statusFilter" @bind:after="LoadEnrollmentsAsync">
+                <option value="">@Localizer["Filter.AllStatuses"]</option>
+                <option value="@EnrollmentStatus.Pending">@Localizer["EnrollmentStatus.Pending"]</option>
+                <option value="@EnrollmentStatus.Approved">@Localizer["EnrollmentStatus.Approved"]</option>
+                <option value="@EnrollmentStatus.Rejected">@Localizer["EnrollmentStatus.Rejected"]</option>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label for="villageFilter">@Localizer["Filter.Village"]</label>
+            <select id="villageFilter" class="form-select" @bind="_villageFilter" @bind:after="LoadEnrollmentsAsync">
+                <option value="">@Localizer["Filter.AllVillages"]</option>
+                @if (_villages != null)
+                {
+                    @foreach (var village in _villages)
+                    {
+                        <option value="@village.VillageId">@village.VillageName</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="col-md-4 d-flex align-items-end">
+            <button class="btn btn-secondary w-100" @onclick="ClearFilters">@Localizer["Action.ClearFilters"]</button>
+        </div>
+    </div>
+
+    <!-- Status Summary -->
+    @if (_summary != null)
     {
-        <Pager Items="@_Enrollments">
-            <Header>
-                <th style="width: 1px;">&nbsp;</th>
-                <th style="width: 1px;">&nbsp;</th>
-                <th>@Localizer["Grower"]</th>
-                <th>@Localizer["TreeMentor"]</th>
-                <th>@Localizer["Village"]</th>
-                <th>@Localizer["Status"]</th>
-            </Header>
-            <Row>
-                <td><ActionLink Action="Edit" Parameters="@($"id=" + context.EnrollmentId.ToString())" ResourceKey="Edit"  /></td>
-                <td><ActionDialog Header="Delete Enrollment" Message="Are You Sure You Wish To Delete This Enrollment?" Action="Delete" Security="SecurityAccessLevel.Edit" Class="btn btn-danger" OnClick="@(async () => await Delete(context))" ResourceKey="Delete"  Id="@context.EnrollmentId.ToString()" /></td>
-                <td>@context.GrowerName</td>
-                <td>@context.TreeMentorName</td>
-                <td>@(string.IsNullOrEmpty(context.VillageName) ? Localizer["UnknownVillage"] : context.VillageName)</td>
-                <td>@context.Status</td>
-            </Row>
-        </Pager>
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <div class="card text-center bg-warning-subtle">
+                    <div class="card-body">
+                        <h5 class="card-title">@_summary.Pending</h5>
+                        <p class="card-text">@Localizer["EnrollmentStatus.Pending"]</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center bg-success-subtle">
+                    <div class="card-body">
+                        <h5 class="card-title">@_summary.Approved</h5>
+                        <p class="card-text">@Localizer["EnrollmentStatus.Approved"]</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center bg-danger-subtle">
+                    <div class="card-body">
+                        <h5 class="card-title">@_summary.Rejected</h5>
+                        <p class="card-text">@Localizer["EnrollmentStatus.Rejected"]</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center bg-primary-subtle">
+                    <div class="card-body">
+                        <h5 class="card-title">@_summary.Total</h5>
+                        <p class="card-text">@Localizer["Summary.Total"]</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     }
-    else
+
+    <!-- Enrollments List -->
+    @if (_Enrollments == null)
+    {
+        <p><em>@Localizer["Message.Loading"]</em></p>
+    }
+    else if (@_Enrollments.Count == 0)
     {
         <p>@Localizer["Message.DisplayNone"]</p>
     }
-}
+    else
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th style="width: 1px;">&nbsp;</th>
+                    <th style="width: 1px;">&nbsp;</th>
+                    <th>@Localizer["Grower"]</th>
+                    <th>@Localizer["TreeMentor"]</th>
+                    <th>@Localizer["Village"]</th>
+                    <th>@Localizer["Status"]</th>
+                    <th>@Localizer["Column.GrowerStatus"]</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var enrollment in _Enrollments)
+                {
+                    var rowClass = enrollment.EnrollmentStatus == EnrollmentStatus.Pending ? "table-warning" :
+                                   enrollment.EnrollmentStatus == EnrollmentStatus.Rejected ? "table-danger" : "";
+
+                    <tr class="@rowClass">
+                        <td><ActionLink Action="Edit" Parameters="@($"id={enrollment.EnrollmentId}")" ResourceKey="Edit" /></td>
+                        <td><ActionDialog Header="Delete Enrollment" Message="Are You Sure You Wish To Delete This Enrollment?" Action="Delete" Security="SecurityAccessLevel.Edit" Class="btn btn-danger" OnClick="@(async () => await Delete(enrollment))" ResourceKey="Delete" Id="@enrollment.EnrollmentId.ToString()" /></td>
+                        <td>@enrollment.GrowerName</td>
+                        <td>@enrollment.TreeMentorName</td>
+                        <td>@(string.IsNullOrEmpty(enrollment.VillageName) ? Localizer["UnknownVillage"] : enrollment.VillageName)</td>
+                        <td>
+                            <span class="badge @GetEnrollmentStatusBadgeClass(enrollment.EnrollmentStatus)">
+                                @GetEnrollmentStatusText(enrollment.EnrollmentStatus)
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge @GetGrowerStatusBadgeClass(enrollment.GrowerStatus)">
+                                @GetGrowerStatusText(enrollment.GrowerStatus)
+                            </span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
 
 @code {
-
-public override List<Resource> Resources => new List<Resource>()
+    public override List<Resource> Resources => new List<Resource>()
     {
         new Stylesheet(ModulePath() + "Module.css"),
         new Script(ModulePath() + "Module.js")
     };
 
-    List<Models.EnrollmentListViewModel> _Enrollments;
+    private List<Models.EnrollmentListViewModel> _Enrollments;
+    private List<Models.EnrollmentListViewModel> _allEnrollments;
+    private List<Models.Village> _villages;
+    private EnrollmentStatusSummary _summary;
+    private string _statusFilter = "";
+    private string _villageFilter = "";
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            _Enrollments = await EnrollmentService.GetEnrollmentListViewModelsAsync(ModuleState.ModuleId);
+            await LoadVillagesAsync();
+            _allEnrollments = await EnrollmentService.GetEnrollmentListViewModelsAsync(ModuleState.ModuleId);
+            ApplyFilters();
+            CalculateSummary();
         }
         catch (Exception ex)
         {
@@ -64,19 +172,128 @@ public override List<Resource> Resources => new List<Resource>()
         }
     }
 
+    private async Task LoadVillagesAsync()
+    {
+        _villages = await VillageService.GetVillagesAsync();
+    }
+
+    private async Task LoadEnrollmentsAsync()
+    {
+        _allEnrollments = await EnrollmentService.GetEnrollmentListViewModelsAsync(ModuleState.ModuleId);
+        ApplyFilters();
+        CalculateSummary();
+        StateHasChanged();
+    }
+
+    private void ApplyFilters()
+    {
+        _Enrollments = _allEnrollments;
+
+        // Apply status filter
+        if (!string.IsNullOrEmpty(_statusFilter))
+        {
+            var status = (EnrollmentStatus)Enum.Parse(typeof(EnrollmentStatus), _statusFilter);
+            _Enrollments = _Enrollments.Where(e => e.EnrollmentStatus == status).ToList();
+        }
+
+        // Apply village filter
+        if (!string.IsNullOrEmpty(_villageFilter))
+        {
+            int villageId = int.Parse(_villageFilter);
+            _Enrollments = _Enrollments.Where(e => e.VillageName == _villages.FirstOrDefault(v => v.VillageId == villageId)?.VillageName).ToList();
+        }
+    }
+
+    private void CalculateSummary()
+    {
+        _summary = new EnrollmentStatusSummary
+        {
+            Pending = _allEnrollments.Count(e => e.EnrollmentStatus == EnrollmentStatus.Pending),
+            Approved = _allEnrollments.Count(e => e.EnrollmentStatus == EnrollmentStatus.Approved),
+            Rejected = _allEnrollments.Count(e => e.EnrollmentStatus == EnrollmentStatus.Rejected),
+            Total = _allEnrollments.Count
+        };
+    }
+
+    private async Task ClearFilters()
+    {
+        _statusFilter = "";
+        _villageFilter = "";
+        ApplyFilters();
+        StateHasChanged();
+    }
+
     private async Task Delete(Models.EnrollmentListViewModel Enrollment)
     {
         try
         {
             await EnrollmentService.DeleteEnrollmentAsync(Enrollment.EnrollmentId, ModuleState.ModuleId);
             await logger.LogInformation("Enrollment Deleted {Enrollment}", Enrollment);
-            _Enrollments = await EnrollmentService.GetEnrollmentListViewModelsAsync(ModuleState.ModuleId);
-            StateHasChanged();
+            await LoadEnrollmentsAsync();
         }
         catch (Exception ex)
         {
             await logger.LogError(ex, "Error Deleting Enrollment {Enrollment} {Error}", Enrollment, ex.Message);
             AddModuleMessage(Localizer["Message.DeleteError"], MessageType.Error);
+        }
+    }
+
+    private string GetEnrollmentStatusBadgeClass(Models.EnrollmentStatus status)
+    {
+        return status switch
+        {
+            Models.EnrollmentStatus.Pending => "bg-warning",
+            Models.EnrollmentStatus.Approved => "bg-success",
+            Models.EnrollmentStatus.Rejected => "bg-danger",
+            _ => "bg-secondary"
+        };
+    }
+
+    private string GetEnrollmentStatusText(Models.EnrollmentStatus status)
+    {
+        return status switch
+        {
+            Models.EnrollmentStatus.Pending => Localizer["EnrollmentStatus.Pending"],
+            Models.EnrollmentStatus.Approved => Localizer["EnrollmentStatus.Approved"],
+            Models.EnrollmentStatus.Rejected => Localizer["EnrollmentStatus.Rejected"],
+            _ => status.ToString()
+        };
+    }
+
+    private string GetGrowerStatusBadgeClass(GrowerStatus status)
+    {
+        return status switch
+        {
+            GrowerStatus.Active => "bg-success",
+            GrowerStatus.Inactive => "bg-warning",
+            GrowerStatus.Exited => "bg-secondary",
+            _ => "bg-light"
+        };
+    }
+
+    private string GetGrowerStatusText(GrowerStatus status)
+    {
+        return status switch
+        {
+            GrowerStatus.Active => Localizer["GrowerStatus.Active"],
+            GrowerStatus.Inactive => Localizer["GrowerStatus.Inactive"],
+            GrowerStatus.Exited => Localizer["GrowerStatus.Exited"],
+            _ => status.ToString()
+        };
+    }
+
+    private async Task BackfillGrowers()
+    {
+        try
+        {
+            int count = await EnrollmentService.BackfillGrowersFromEnrollmentsAsync(ModuleState.ModuleId);
+            await logger.LogInformation("Backfilled {Count} Growers from Enrollments", count);
+            AddModuleMessage($"Successfully created {count} grower records from existing enrollments", MessageType.Success);
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Backfilling Growers {Error}", ex.Message);
+            AddModuleMessage("Error syncing growers from enrollments", MessageType.Error);
         }
     }
 }

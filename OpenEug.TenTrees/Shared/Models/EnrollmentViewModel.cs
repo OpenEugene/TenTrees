@@ -7,9 +7,11 @@ namespace OpenEug.TenTrees.Models
     public class EnrollmentListViewModel
     {
         public int EnrollmentId { get; set; }
+        public int? GrowerId { get; set; }
         public string GrowerName { get; set; }
         public string TreeMentorName { get; set; }
         public string VillageName { get; set; }
-        public EnrollmentStatus Status { get; set; }
+        public EnrollmentStatus EnrollmentStatus { get; set; }
+        public GrowerStatus GrowerStatus { get; set; }
     }
 }

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- Xitsonga translations needed - coordinate with Trygive/Quentan -->
+  <data name="Page.Title" xml:space="preserve">
+    <value>[XS] Manage Grower Status</value>
+  </data>
+  <data name="Action.MarkInactive" xml:space="preserve">
+    <value>[XS] Mark as Inactive</value>
+  </data>
+  <data name="Action.MarkActive" xml:space="preserve">
+    <value>[XS] Mark as Active</value>
+  </data>
+  <data name="Action.RecordExit" xml:space="preserve">
+    <value>[XS] Record Program Exit</value>
+  </data>
+  <!-- Add remaining translations matching Status.resx -->
+</root>

@@ -30,8 +30,9 @@ namespace OpenEug.TenTrees.Module.Enrollment.Services
 
         Task<List<Models.Enrollment>> GetByStatusAsync(int ModuleId, Models.EnrollmentStatus Status);
 
-
         Task<List<Models.Enrollment>> GetByVillageAsync(int villageId);
+
+        Task<int> BackfillGrowersFromEnrollmentsAsync(int moduleId);
     }
 
     public class EnrollmentService : ServiceBase, IEnrollmentService
@@ -97,8 +98,13 @@ namespace OpenEug.TenTrees.Module.Enrollment.Services
         {
             return await GetJsonAsync<List<Models.Enrollment>>($"{Apiurl}/village/{villageId}");
         }
+
+        public async Task<int> BackfillGrowersFromEnrollmentsAsync(int moduleId)
+        {
+            return await PostJsonAsync<object, int>(CreateAuthorizationPolicyUrl($"{Apiurl}/backfill-growers", EntityNames.Module, moduleId), null);
+        }
     }
-    
+
     public class ValidationResult
     {
         public bool IsValid { get; set; }

@@ -39,7 +39,7 @@ namespace OpenEug.TenTrees.Models
     public enum GrowerStatus
     {
         Active = 0,
-        Exited = 1,
-        Suspended = 2
+        Inactive = 1,
+        Exited = 2
     }
 }

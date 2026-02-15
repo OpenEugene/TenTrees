@@ -198,6 +198,23 @@ namespace OpenEug.TenTrees.Module.Enrollment.Controllers
         {
             return await _EnrollmentService.GetByVillageAsync(villageid);
         }
+
+        // POST api/<controller>/backfill-growers
+        [HttpPost("backfill-growers")]
+        [Authorize(Policy = PolicyNames.EditModule)]
+        public async Task<int> BackfillGrowers(int moduleId)
+        {
+            if (IsAuthorizedEntityId(EntityNames.Module, moduleId))
+            {
+                return await _EnrollmentService.BackfillGrowersFromEnrollmentsAsync(moduleId);
+            }
+            else
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Backfill Growers Attempt {ModuleId}", moduleId);
+                HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                return 0;
+            }
+        }
     }
     
     public class SignatureRequest

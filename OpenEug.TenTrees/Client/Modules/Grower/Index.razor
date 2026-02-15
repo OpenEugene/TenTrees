@@ -1,0 +1,217 @@
+@using OpenEug.TenTrees.Module.Grower.Services
+@using OpenEug.TenTrees.Module.Village.Services
+@using OpenEug.TenTrees.Models
+
+@namespace OpenEug.TenTrees.Module.Grower
+@inherits ModuleBase
+@inject IGrowerService GrowerService
+@inject IVillageService VillageService
+@inject NavigationManager NavigationManager
+@inject IStringLocalizer<Index> Localizer
+
+<div class="container">
+    <!-- Filter Section -->
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <label for="statusFilter">@Localizer["Filter.Status"]</label>
+            <select id="statusFilter" class="form-select" @bind="_statusFilter" @bind:after="LoadGrowersAsync">
+                <option value="">@Localizer["Filter.AllStatuses"]</option>
+                <option value="@GrowerStatus.Active">@Localizer["Status.Active"]</option>
+                <option value="@GrowerStatus.Inactive">@Localizer["Status.Inactive"]</option>
+                <option value="@GrowerStatus.Exited">@Localizer["Status.Exited"]</option>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label for="villageFilter">@Localizer["Filter.Village"]</label>
+            <select id="villageFilter" class="form-select" @bind="_villageFilter" @bind:after="LoadGrowersAsync">
+                <option value="">@Localizer["Filter.AllVillages"]</option>
+                @if (_villages != null)
+                {
+                    @foreach (var village in _villages)
+                    {
+                        <option value="@village.VillageId">@village.VillageName</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="col-md-4 d-flex align-items-end">
+            <button class="btn btn-secondary w-100" @onclick="ClearFilters">@Localizer["Action.ClearFilters"]</button>
+        </div>
+    </div>
+
+    <!-- Status Summary -->
+    @if (_summary != null)
+    {
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <div class="card text-center bg-success-subtle">
+                    <div class="card-body">
+                        <h5 class="card-title">@_summary.Active</h5>
+                        <p class="card-text">@Localizer["Status.Active"]</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center bg-warning-subtle">
+                    <div class="card-body">
+                        <h5 class="card-title">@_summary.Inactive</h5>
+                        <p class="card-text">@Localizer["Status.Inactive"]</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center bg-secondary-subtle">
+                    <div class="card-body">
+                        <h5 class="card-title">@_summary.Exited</h5>
+                        <p class="card-text">@Localizer["Status.Exited"]</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center bg-primary-subtle">
+                    <div class="card-body">
+                        <h5 class="card-title">@_summary.Total</h5>
+                        <p class="card-text">@Localizer["Summary.Total"]</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Growers List -->
+    @if (_growers == null)
+    {
+        <p><em>@Localizer["Message.Loading"]</em></p>
+    }
+    else if (_growers.Count == 0)
+    {
+        <p>@Localizer["Message.NoGrowers"]</p>
+    }
+    else
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>@Localizer["Column.GrowerName"]</th>
+                    <th>@Localizer["Column.Village"]</th>
+                    <th>@Localizer["Column.Status"]</th>
+                    <th>@Localizer["Column.ExitDate"]</th>
+                    <th>@Localizer["Column.Actions"]</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var grower in _growers)
+                {
+                    var rowClass = grower.Status == GrowerStatus.Inactive ? "table-warning" :
+                                   grower.Status == GrowerStatus.Exited ? "table-secondary" : "";
+                    
+                    <tr class="@rowClass">
+                        <td>@grower.GrowerName</td>
+                        <td>@GetVillageName(grower.VillageId)</td>
+                        <td>
+                            <span class="badge @GetStatusBadgeClass(grower.Status)">
+                                @GetStatusText(grower.Status)
+                            </span>
+                        </td>
+                        <td>@(grower.ExitDate?.ToString("yyyy-MM-dd") ?? "-")</td>
+                        <td>
+                            <ActionLink Action="Status" 
+                                       Parameters="@($"id={grower.GrowerId}")" 
+                                       Text="@Localizer["Action.ManageStatus"]" 
+                                       ResourceKey="ManageStatus" 
+                                       Class="btn btn-sm btn-primary" />
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+@code {
+    private List<Models.Grower> _growers;
+    private List<Models.Village> _villages;
+    private GrowerStatusSummary _summary;
+    private string _statusFilter = "";
+    private string _villageFilter = "";
+
+    public override SecurityAccessLevel SecurityAccessLevel => SecurityAccessLevel.View;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            await LoadVillagesAsync();
+            await LoadSummaryAsync();
+            await LoadGrowersAsync();
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Loading Growers {Error}", ex.Message);
+            AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
+        }
+    }
+
+    private async Task LoadVillagesAsync()
+    {
+        _villages = await VillageService.GetVillagesAsync();
+    }
+
+    private async Task LoadSummaryAsync()
+    {
+        int? villageId = string.IsNullOrEmpty(_villageFilter) ? null : int.Parse(_villageFilter);
+        _summary = await GrowerService.GetStatusSummaryAsync(ModuleState.ModuleId, villageId);
+    }
+
+    private async Task LoadGrowersAsync()
+    {
+        int? villageId = string.IsNullOrEmpty(_villageFilter) ? null : int.Parse(_villageFilter);
+
+        if (string.IsNullOrEmpty(_statusFilter))
+        {
+            _growers = await GrowerService.GetAllGrowersAsync(ModuleState.ModuleId, villageId);
+        }
+        else
+        {
+            var status = (GrowerStatus)Enum.Parse(typeof(GrowerStatus), _statusFilter);
+            _growers = await GrowerService.GetGrowersByStatusAsync(status, ModuleState.ModuleId, villageId);
+        }
+
+        await LoadSummaryAsync();
+        StateHasChanged();
+    }
+
+    private async Task ClearFilters()
+    {
+        _statusFilter = "";
+        _villageFilter = "";
+        await LoadGrowersAsync();
+    }
+
+    private string GetVillageName(int villageId)
+    {
+        return _villages?.FirstOrDefault(v => v.VillageId == villageId)?.VillageName ?? Localizer["UnknownVillage"];
+    }
+
+    private string GetStatusBadgeClass(GrowerStatus status)
+    {
+        return status switch
+        {
+            GrowerStatus.Active => "bg-success",
+            GrowerStatus.Inactive => "bg-warning",
+            GrowerStatus.Exited => "bg-secondary",
+            _ => "bg-light"
+        };
+    }
+
+    private string GetStatusText(GrowerStatus status)
+    {
+        return status switch
+        {
+            GrowerStatus.Active => Localizer["Status.Active"],
+            GrowerStatus.Inactive => Localizer["Status.Inactive"],
+            GrowerStatus.Exited => Localizer["Status.Exited"],
+            _ => status.ToString()
+        };
+    }
+}
