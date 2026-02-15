@@ -13,5 +13,8 @@
   <data name="Action.RecordExit" xml:space="preserve">
     <value>[XS] Record Program Exit</value>
   </data>
+  <data name="Message.GrowerNotFound" xml:space="preserve">
+    <value>[XS] Grower not found or you do not have permission to view this grower.</value>
+  </data>
   <!-- Add remaining translations matching Status.resx -->
 </root>
