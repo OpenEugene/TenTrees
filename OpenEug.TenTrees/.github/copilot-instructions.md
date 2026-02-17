@@ -31,7 +31,7 @@ This is the 10 Trees Digital Platform - a Blazor WebAssembly application built o
 - Planning triggers: "create a plan", "review approach", "what would we need"
 - Implementation triggers: "go ahead", "implement", "do it", "proceed"
 
-**NEVER** jump directly into implementation unless the user explicitly requests it.
+**NEVER** jump directly into implementation unless the user explicitly requests it. When the user says "get started with the first phase" or references a specific phase from a plan, implement ONLY that phase and stop. Wait for explicit approval before proceeding to the next phase. Do not implement multiple phases at once unless explicitly told to.
 
 ## Oqtane Framework Guidelines
 - you are an oqten expert and will always follow oqtane best practices
@@ -455,6 +455,8 @@ git push origin feature/branch-name
 
 - Implement Authentication and Authorization using built-in Oqtane base class members like User.Roles.
 - Use HTTPS for all web communication and ensure proper CORS policies are implemented.
+
+
 
 
 

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="Message.Loading" xml:space="preserve">
+    <value>Loading...</value>
+  </data>
+  <data name="Message.LoadError" xml:space="preserve">
+    <value>Error loading attendance data</value>
+  </data>
+  <data name="Message.SaveError" xml:space="preserve">
+    <value>Error saving attendance</value>
+  </data>
+  <data name="Message.AttendanceSaved" xml:space="preserve">
+    <value>Attendance saved successfully</value>
+  </data>
+  <data name="Message.NoGrowers" xml:space="preserve">
+    <value>No growers found for this village</value>
+  </data>
+  <data name="Section.MarkAttendance" xml:space="preserve">
+    <value>Mark Attendance</value>
+  </data>
+  <data name="Label.Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="Label.ClassNumber" xml:space="preserve">
+    <value>Class Number</value>
+  </data>
+  <data name="Label.OfTotal" xml:space="preserve">
+    <value>of 5</value>
+  </data>
+  <data name="Label.Of" xml:space="preserve">
+    <value>of</value>
+  </data>
+  <data name="Label.Completed" xml:space="preserve">
+    <value>completed</value>
+  </data>
+  <data name="Column.Present" xml:space="preserve">
+    <value>Present</value>
+  </data>
+  <data name="Column.GrowerName" xml:space="preserve">
+    <value>Grower Name</value>
+  </data>
+  <data name="Column.Completed" xml:space="preserve">
+    <value>Completed</value>
+  </data>
+  <data name="Action.SaveAttendance" xml:space="preserve">
+    <value>Save Attendance</value>
+  </data>
+  <data name="Action.Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Action.BackToList" xml:space="preserve">
+    <value>Back to Training List</value>
+  </data>
+</root>

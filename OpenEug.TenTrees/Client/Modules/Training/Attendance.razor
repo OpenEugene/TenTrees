@@ -1,0 +1,202 @@
+@using OpenEug.TenTrees.Module.Training.Services
+@using OpenEug.TenTrees.Module.Grower.Services
+@using OpenEug.TenTrees.Models
+
+@namespace OpenEug.TenTrees.Module.Training
+@inherits ModuleBase
+@inject ITrainingService TrainingService
+@inject IGrowerService GrowerService
+@inject NavigationManager NavigationManager
+@inject IStringLocalizer<Attendance> Localizer
+
+@if (_trainingClass == null)
+{
+    <p><em>@Localizer["Message.Loading"]</em></p>
+}
+else
+{
+    <div class="container">
+        <!-- Session Info Card -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5>@_trainingClass.ClassName</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-2">
+                    <div class="col-md-4">
+                        <strong>@Localizer["Label.Date"]:</strong>
+                    </div>
+                    <div class="col-md-8">
+                        @_trainingClass.ClassDate.ToString("yyyy-MM-dd")
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-4">
+                        <strong>@Localizer["Label.ClassNumber"]:</strong>
+                    </div>
+                    <div class="col-md-8">
+                        <span class="badge bg-info">@_trainingClass.ClassNumber @Localizer["Label.OfTotal"]</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mark Attendance Card -->
+        <div class="card mb-3">
+            <div class="card-header bg-primary text-white">
+                <h5>@Localizer["Section.MarkAttendance"]</h5>
+            </div>
+            <div class="card-body">
+                @if (_growerEntries == null || _growerEntries.Count == 0)
+                {
+                    <p>@Localizer["Message.NoGrowers"]</p>
+                }
+                else
+                {
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>@Localizer["Column.Present"]</th>
+                                <th>@Localizer["Column.GrowerName"]</th>
+                                <th>@Localizer["Column.Completed"]</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var entry in _growerEntries)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" @bind="entry.IsPresent"
+                                                   id="@($"grower_{entry.GrowerId}")"
+                                                   style="width: 24px; height: 24px;" />
+                                        </div>
+                                    </td>
+                                    <td>@entry.GrowerName</td>
+                                    <td>
+                                        <span class="badge @GetCompletedBadgeClass(entry)">
+                                            @entry.ClassesAttended @Localizer["Label.Of"] @entry.TotalRequired @Localizer["Label.Completed"]
+                                        </span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-success" @onclick="SaveAttendance">
+                            @Localizer["Action.SaveAttendance"]
+                        </button>
+                        <button type="button" class="btn btn-secondary" @onclick="NavigateToIndex">
+                            @Localizer["Action.Cancel"]
+                        </button>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Back Button -->
+        <button class="btn btn-secondary" @onclick="NavigateToIndex">
+            <i class="bi bi-arrow-left"></i> @Localizer["Action.BackToList"]
+        </button>
+    </div>
+}
+
+@code {
+    public override SecurityAccessLevel SecurityAccessLevel => SecurityAccessLevel.Edit;
+
+    private TrainingClass _trainingClass;
+    private List<GrowerAttendanceEntry> _growerEntries;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            if (PageState.QueryString.ContainsKey("id"))
+            {
+                int classId = int.Parse(PageState.QueryString["id"]);
+                _trainingClass = await TrainingService.GetTrainingClassAsync(classId, ModuleState.ModuleId);
+
+                if (_trainingClass != null)
+                {
+                    // Get active growers for this village
+                    var growers = await GrowerService.GetActiveGrowersAsync(ModuleState.ModuleId, _trainingClass.VillageId);
+
+                    // Get existing attendance for this class
+                    var existingAttendance = await TrainingService.GetAttendanceForClassAsync(classId, ModuleState.ModuleId);
+
+                    // Get attendance summaries for context
+                    var summaries = await TrainingService.GetAttendanceSummariesAsync(ModuleState.ModuleId, _trainingClass.VillageId);
+
+                    // Build entry list with existing attendance state
+                    _growerEntries = growers.Select(g =>
+                    {
+                        var existing = existingAttendance?.FirstOrDefault(a => a.GrowerId == g.GrowerId);
+                        var summary = summaries?.FirstOrDefault(s => s.GrowerId == g.GrowerId);
+                        return new GrowerAttendanceEntry
+                        {
+                            GrowerId = g.GrowerId,
+                            GrowerName = g.GrowerName,
+                            IsPresent = existing?.IsPresent ?? false,
+                            ClassesAttended = summary?.ClassesAttended ?? 0,
+                            TotalRequired = summary?.TotalRequired ?? 5
+                        };
+                    }).OrderBy(e => e.GrowerName).ToList();
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Loading Attendance {Error}", ex.Message);
+            AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
+        }
+    }
+
+    private async Task SaveAttendance()
+    {
+        try
+        {
+            var request = new MarkAttendanceRequest
+            {
+                TrainingClassId = _trainingClass.TrainingClassId,
+                ModuleId = ModuleState.ModuleId,
+                Entries = _growerEntries.Select(e => new AttendanceEntry
+                {
+                    GrowerId = e.GrowerId,
+                    IsPresent = e.IsPresent
+                }).ToList()
+            };
+
+            await TrainingService.MarkAttendanceAsync(request);
+            await logger.LogInformation("Attendance Saved for {ClassName}", _trainingClass.ClassName);
+            AddModuleMessage(Localizer["Message.AttendanceSaved"], MessageType.Success);
+            NavigationManager.NavigateTo(NavigateUrl());
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Saving Attendance {Error}", ex.Message);
+            AddModuleMessage(Localizer["Message.SaveError"], MessageType.Error);
+        }
+    }
+
+    private void NavigateToIndex()
+    {
+        NavigationManager.NavigateTo(NavigateUrl());
+    }
+
+    private string GetCompletedBadgeClass(GrowerAttendanceEntry entry)
+    {
+        if (entry.ClassesAttended >= entry.TotalRequired) return "bg-success";
+        if (entry.ClassesAttended > 0) return "bg-warning";
+        return "bg-secondary";
+    }
+
+    private class GrowerAttendanceEntry
+    {
+        public int GrowerId { get; set; }
+        public string GrowerName { get; set; }
+        public bool IsPresent { get; set; }
+        public int ClassesAttended { get; set; }
+        public int TotalRequired { get; set; }
+    }
+}
