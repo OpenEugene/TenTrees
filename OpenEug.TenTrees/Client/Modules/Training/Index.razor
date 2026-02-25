@@ -1,0 +1,260 @@
+@using OpenEug.TenTrees.Module.Training.Services
+@using OpenEug.TenTrees.Module.Village.Services
+@using OpenEug.TenTrees.Models
+
+@namespace OpenEug.TenTrees.Module.Training
+@inherits ModuleBase
+@inject ITrainingService TrainingService
+@inject IVillageService VillageService
+@inject NavigationManager NavigationManager
+@inject IStringLocalizer<Index> Localizer
+
+<div class="container">
+    <!-- Action Buttons -->
+    <div class="d-flex gap-2 mb-3">
+        <ActionLink Action="Edit" Security="SecurityAccessLevel.Edit" Text="@Localizer["Action.AddSession"]" ResourceKey="AddSession" Class="btn btn-primary" />
+    </div>
+
+    <!-- Filter Section -->
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <label for="villageFilter">@Localizer["Filter.Village"]</label>
+            <select id="villageFilter" class="form-select" @bind="_villageFilter" @bind:after="LoadDataAsync">
+                <option value="">@Localizer["Filter.AllVillages"]</option>
+                @if (_villages != null)
+                {
+                    @foreach (var village in _villages)
+                    {
+                        <option value="@village.VillageId">@village.VillageName</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="col-md-4 d-flex align-items-end">
+            <button class="btn btn-secondary w-100" @onclick="ClearFilters">@Localizer["Action.ClearFilters"]</button>
+        </div>
+    </div>
+
+    <!-- Status Summary -->
+    @if (_summary != null)
+    {
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <div class="card text-center bg-success-subtle">
+                    <div class="card-body">
+                        <h5 class="card-title">@_summary.Eligible</h5>
+                        <p class="card-text">@Localizer["Status.Eligible"]</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center bg-warning-subtle">
+                    <div class="card-body">
+                        <h5 class="card-title">@_summary.InProgress</h5>
+                        <p class="card-text">@Localizer["Status.InProgress"]</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center bg-secondary-subtle">
+                    <div class="card-body">
+                        <h5 class="card-title">@_summary.NotStarted</h5>
+                        <p class="card-text">@Localizer["Status.NotStarted"]</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center bg-primary-subtle">
+                    <div class="card-body">
+                        <h5 class="card-title">@_summary.Total</h5>
+                        <p class="card-text">@Localizer["Summary.Total"]</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Training Sessions List -->
+    @if (_classes == null)
+    {
+        <p><em>@Localizer["Message.Loading"]</em></p>
+    }
+    else
+    {
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5>@Localizer["Section.TrainingSessions"]</h5>
+            </div>
+            <div class="card-body">
+                @if (_classes.Count == 0)
+                {
+                    <p>@Localizer["Message.NoSessions"]</p>
+                }
+                else
+                {
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th style="width: 1px;">&nbsp;</th>
+                                <th style="width: 1px;">&nbsp;</th>
+                                <th>@Localizer["Column.ClassName"]</th>
+                                <th>@Localizer["Column.ClassNumber"]</th>
+                                <th>@Localizer["Column.Date"]</th>
+                                <th>@Localizer["Column.Village"]</th>
+                                <th>@Localizer["Column.Actions"]</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var tc in _classes)
+                            {
+                                <tr>
+                                    <td><ActionLink Action="Edit" Parameters="@($"id={tc.TrainingClassId}")" ResourceKey="Edit" /></td>
+                                    <td><ActionDialog Header="Delete Session" Message="@Localizer["Message.ConfirmDelete"]" Action="Delete" Security="SecurityAccessLevel.Edit" Class="btn btn-danger" OnClick="@(async () => await DeleteClass(tc))" ResourceKey="Delete" Id="@tc.TrainingClassId.ToString()" /></td>
+                                    <td>@tc.ClassName</td>
+                                    <td>
+                                        <span class="badge bg-info">@tc.ClassNumber @Localizer["Label.OfTotal"]</span>
+                                    </td>
+                                    <td>@tc.ClassDate.ToString("yyyy-MM-dd")</td>
+                                    <td>@GetVillageName(tc.VillageId)</td>
+                                    <td>
+                                        <ActionLink Action="Attendance"
+                                                   Parameters="@($"id={tc.TrainingClassId}")"
+                                                   Text="@Localizer["Action.MarkAttendance"]"
+                                                   ResourceKey="MarkAttendance"
+                                                   Class="btn btn-sm btn-primary" />
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    }
+
+    <!-- Grower Attendance Summary -->
+    @if (_attendanceSummaries != null)
+    {
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5>@Localizer["Section.GrowerAttendance"]</h5>
+            </div>
+            <div class="card-body">
+                @if (_attendanceSummaries.Count == 0)
+                {
+                    <p>@Localizer["Message.NoGrowers"]</p>
+                }
+                else
+                {
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>@Localizer["Column.GrowerName"]</th>
+                                <th>@Localizer["Column.Village"]</th>
+                                <th>@Localizer["Column.Attended"]</th>
+                                <th>@Localizer["Column.Status"]</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var summary in _attendanceSummaries)
+                            {
+                                var rowClass = summary.IsEligible ? "" :
+                                               summary.ClassesAttended > 0 ? "table-warning" : "";
+
+                                <tr class="@rowClass">
+                                    <td>@summary.GrowerName</td>
+                                    <td>@(summary.VillageName ?? Localizer["UnknownVillage"])</td>
+                                    <td>@summary.ClassesAttended @Localizer["Label.Of"] @summary.TotalRequired</td>
+                                    <td>
+                                        <span class="badge @GetEligibilityBadgeClass(summary)">
+                                            @GetEligibilityText(summary)
+                                        </span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    public override SecurityAccessLevel SecurityAccessLevel => SecurityAccessLevel.View;
+
+    private List<TrainingClass> _classes;
+    private List<AttendanceSummaryViewModel> _attendanceSummaries;
+    private List<Models.Village> _villages;
+    private TrainingStatusSummary _summary;
+    private string _villageFilter = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            await LoadVillagesAsync();
+            await LoadDataAsync();
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Loading Training {Error}", ex.Message);
+            AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
+        }
+    }
+
+    private async Task LoadVillagesAsync()
+    {
+        _villages = await VillageService.GetVillagesAsync();
+    }
+
+    private async Task LoadDataAsync()
+    {
+        int? villageId = string.IsNullOrEmpty(_villageFilter) ? null : int.Parse(_villageFilter);
+        _classes = await TrainingService.GetTrainingClassesAsync(ModuleState.ModuleId, villageId);
+        _attendanceSummaries = await TrainingService.GetAttendanceSummariesAsync(ModuleState.ModuleId, villageId);
+        _summary = await TrainingService.GetTrainingStatusSummaryAsync(ModuleState.ModuleId, villageId);
+        StateHasChanged();
+    }
+
+    private async Task ClearFilters()
+    {
+        _villageFilter = "";
+        await LoadDataAsync();
+    }
+
+    private async Task DeleteClass(TrainingClass trainingClass)
+    {
+        try
+        {
+            await TrainingService.DeleteTrainingClassAsync(trainingClass.TrainingClassId, ModuleState.ModuleId);
+            await logger.LogInformation("Training Class Deleted {TrainingClass}", trainingClass.ClassName);
+            await LoadDataAsync();
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Deleting Training Class {ClassName} {Error}", trainingClass.ClassName, ex.Message);
+            AddModuleMessage(Localizer["Message.DeleteError"], MessageType.Error);
+        }
+    }
+
+    private string GetVillageName(int villageId)
+    {
+        return _villages?.FirstOrDefault(v => v.VillageId == villageId)?.VillageName ?? Localizer["UnknownVillage"];
+    }
+
+    private string GetEligibilityBadgeClass(AttendanceSummaryViewModel summary)
+    {
+        if (summary.IsEligible) return "bg-success";
+        if (summary.ClassesAttended > 0) return "bg-warning";
+        return "bg-secondary";
+    }
+
+    private string GetEligibilityText(AttendanceSummaryViewModel summary)
+    {
+        if (summary.IsEligible) return Localizer["Status.EligibleForTrees"];
+        if (summary.ClassesAttended > 0)
+            return string.Format(Localizer["Status.ClassesRemaining"], summary.TotalRequired - summary.ClassesAttended);
+        return Localizer["Status.NotStarted"];
+    }
+}

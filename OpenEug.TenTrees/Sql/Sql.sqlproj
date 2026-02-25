@@ -97,6 +97,8 @@
     <Build Include="dbo\Tables\Alias.sql" />
     <Build Include="dbo\Tables\__EFMigrationsHistory.sql" />
     <Build Include="dbo\Tables\Grower.sql" />
+    <Build Include="dbo\Tables\TrainingClass.sql" />
+    <Build Include="dbo\Tables\ClassAttendance.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SqlSchemaCompare1.scmp" />

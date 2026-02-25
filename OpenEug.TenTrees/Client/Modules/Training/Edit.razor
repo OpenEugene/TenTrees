@@ -1,0 +1,169 @@
+@using Oqtane.Modules.Controls
+@using OpenEug.TenTrees.Module.Training.Services
+@using OpenEug.TenTrees.Module.Village.Services
+@using OpenEug.TenTrees.Models
+@using Oqtane.UI
+
+@namespace OpenEug.TenTrees.Module.Training
+@inherits ModuleBase
+@inject ITrainingService TrainingService
+@inject IVillageService VillageService
+@inject NavigationManager NavigationManager
+@inject IStringLocalizer<Edit> Localizer
+@inject IJSRuntime JSRuntime
+
+<form @ref="form" class="@(validated ? " was-validated" : "needs-validation" )" novalidate>
+    <div class="container">
+        <h3>@(_id > 0 ? Localizer["Title.EditSession"] : Localizer["Title.AddSession"])</h3>
+
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5>@Localizer["Section.SessionDetails"]</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-2">
+                    <Label Class="col-sm-4" For="classname" ResourceKey="ClassName">Class Name:</Label>
+                    <div class="col-sm-8">
+                        <input id="classname" class="form-control" @bind="@_className" required />
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <Label Class="col-sm-4" For="classdate" ResourceKey="ClassDate">Date:</Label>
+                    <div class="col-sm-8">
+                        <input id="classdate" type="date" class="form-control" @bind="@_classDate" required />
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <Label Class="col-sm-4" For="villageid" ResourceKey="Village">Village:</Label>
+                    <div class="col-sm-8">
+                        <select id="villageid" class="form-select" @bind="@_villageId" required>
+                            <option value="0">@Localizer["SelectVillage"]</option>
+                            @if (_villages != null)
+                            {
+                                @foreach (var village in _villages)
+                                {
+                                    <option value="@village.VillageId">@village.VillageName</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <Label Class="col-sm-4" For="classnumber" ResourceKey="ClassNumber">Class Number (1-5):</Label>
+                    <div class="col-sm-8">
+                        <select id="classnumber" class="form-select" @bind="@_classNumber" required>
+                            <option value="0">@Localizer["SelectClassNumber"]</option>
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                <option value="@i">@i</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <Label Class="col-sm-4" For="notes" ResourceKey="Notes">Notes:</Label>
+                    <div class="col-sm-8">
+                        <textarea id="notes" class="form-control" rows="3" @bind="@_notes"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex gap-2">
+            <button type="button" class="btn btn-success" @onclick="Save">@Localizer["Action.Save"]</button>
+            <button type="button" class="btn btn-secondary" @onclick="Cancel">@Localizer["Action.Cancel"]</button>
+        </div>
+    </div>
+</form>
+
+@code {
+    public override SecurityAccessLevel SecurityAccessLevel => SecurityAccessLevel.Edit;
+
+    private ElementReference form;
+    private bool validated = false;
+
+    private int _id;
+    private string _className = "";
+    private DateTime _classDate = DateTime.Today;
+    private int _villageId;
+    private int _classNumber;
+    private string _notes = "";
+    private List<Models.Village> _villages;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _villages = await VillageService.GetVillagesAsync();
+
+            if (PageState.QueryString.ContainsKey("id"))
+            {
+                _id = int.Parse(PageState.QueryString["id"]);
+                var trainingClass = await TrainingService.GetTrainingClassAsync(_id, ModuleState.ModuleId);
+                if (trainingClass != null)
+                {
+                    _className = trainingClass.ClassName;
+                    _classDate = trainingClass.ClassDate;
+                    _villageId = trainingClass.VillageId;
+                    _classNumber = trainingClass.ClassNumber;
+                    _notes = trainingClass.Notes ?? "";
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Loading Training Class {Error}", ex.Message);
+            AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
+        }
+    }
+
+    private async Task Save()
+    {
+        validated = true;
+        var interop = new Interop(JSRuntime);
+
+        if (await interop.FormValid(form))
+        {
+            try
+            {
+                if (_id > 0)
+                {
+                    var trainingClass = await TrainingService.GetTrainingClassAsync(_id, ModuleState.ModuleId);
+                    trainingClass.ClassName = _className;
+                    trainingClass.ClassDate = _classDate;
+                    trainingClass.VillageId = _villageId;
+                    trainingClass.ClassNumber = _classNumber;
+                    trainingClass.Notes = _notes;
+                    await TrainingService.UpdateTrainingClassAsync(trainingClass);
+                    await logger.LogInformation("Training Class Updated {ClassName}", _className);
+                }
+                else
+                {
+                    var trainingClass = new TrainingClass
+                    {
+                        ModuleId = ModuleState.ModuleId,
+                        ClassName = _className,
+                        ClassDate = _classDate,
+                        VillageId = _villageId,
+                        ClassNumber = _classNumber,
+                        Notes = _notes
+                    };
+                    await TrainingService.AddTrainingClassAsync(trainingClass);
+                    await logger.LogInformation("Training Class Added {ClassName}", _className);
+                }
+
+                NavigationManager.NavigateTo(NavigateUrl());
+            }
+            catch (Exception ex)
+            {
+                await logger.LogError(ex, "Error Saving Training Class {Error}", ex.Message);
+                AddModuleMessage(Localizer["Message.SaveError"], MessageType.Error);
+            }
+        }
+    }
+
+    private void Cancel()
+    {
+        NavigationManager.NavigateTo(NavigateUrl());
+    }
+}
