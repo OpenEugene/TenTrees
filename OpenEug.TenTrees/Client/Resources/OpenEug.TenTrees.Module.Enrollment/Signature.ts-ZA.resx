@@ -10,8 +10,9 @@
   <data name="Section.Signature" xml:space="preserve"><value>Kusayina</value></data>
   <data name="Signature" xml:space="preserve"><value>Kusayina:</value></data>
   <data name="Signature.Info" xml:space="preserve"><value>Kombela u langutisisa nhlamuselo ivi u nyika kusayina ku hetisa nkandziyiso</value></data>
-  <data name="Signature.Placeholder" xml:space="preserve"><value>Thayipa vito ra mulimi kumbe u dirowa kusayina</value></data>
-  <data name="Signature.Help" xml:space="preserve"><value>Kusayina hi e-signature swi nga va vito leri thayiperiweke kumbe kusayina loku diroweriweke</value></data>
+  <data name="Signature.Placeholder" xml:space="preserve"><value>Sayina laha</value></data>
+  <data name="Signature.Help" xml:space="preserve"><value>Dirowa kusayina ka wena hi xivomba xa wena kumbe mouse</value></data>
+  <data name="Signature.Clear" xml:space="preserve"><value>Susa</value></data>
   <data name="Signature.Confirm" xml:space="preserve"><value>Ndzi tiyisisa leswaku mahungu hinkwawo ma lulamile naswona mulimi u pfumela swiboho</value></data>
   <data name="Summary" xml:space="preserve"><value>Nhlamuselo</value></data>
   <data name="GrowerName" xml:space="preserve"><value>Vito ra Mulimi</value></data>
@@ -20,7 +21,7 @@
   <data name="Saving" xml:space="preserve"><value>Yi ri karhi yi hlayisa nkandziyiso...</value></data>
   <data name="Previous" xml:space="preserve"><value>Khale</value></data>
   <data name="Submit" xml:space="preserve"><value>Rhumela Nkandziyiso</value></data>
-  <data name="Message.SignatureRequired" xml:space="preserve"><value>Kusayina na pfumelo swi laveka</value></data>
+  <data name="Message.SignatureRequired" xml:space="preserve"><value>Kusayina swi laveka — kombela u dirowa kusayina ka wena laha henhla</value></data>
   <data name="Message.ValidationError" xml:space="preserve"><value>Khongela u nyika kusayina na ku tiyisisa leswaku mahungu hinkwawo ma lulamile</value></data>
   <data name="Message.Success" xml:space="preserve"><value>Nkandziyiso wu hlayisiwile hi ndlela</value></data>
   <data name="Message.Error" xml:space="preserve"><value>Xiphiqo xi humelele hi ku hlayisa nkandziyiso. Kombela u ringeta nakambe.</value></data>

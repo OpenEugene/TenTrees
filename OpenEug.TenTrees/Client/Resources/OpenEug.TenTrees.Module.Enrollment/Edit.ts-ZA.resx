@@ -96,4 +96,6 @@
   <data name="Commit.WomenChildren" xml:space="preserve">
     <value>U tiyimisela ku yimela vasati na vana handle ka ku hlundzukiwa</value>
   </data>
+  <data name="Signature.Collected" xml:space="preserve"><value>Kusayina ku koxiwile</value></data>
+  <data name="Signature.NotCollected" xml:space="preserve"><value>A ku na kusayina loku koxiweke eka nkandziyiso lowu</value></data>
 </root>

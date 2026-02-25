@@ -218,13 +218,26 @@
                 <h5>@Localizer["Section.Signature"]</h5>
             </div>
             <div class="card-body">
-                <div class="row mb-2">
-                    <Label Class="col-sm-4" For="signature" ResourceKey="Signature">Signature:</Label>
-                    <div class="col-sm-8">
-                        <textarea id="signature" class="form-control" @bind="@_signatureData" rows="3" placeholder="@Localizer["Signature.Placeholder"]"></textarea>
-                        <small class="form-text text-muted">@Localizer["Signature.Help"]</small>
+                @if (!string.IsNullOrWhiteSpace(_signatureData))
+                {
+                    <div class="border rounded p-1" style="background:#fff;">
+                        @if (_signatureData.StartsWith("<svg"))
+                        {
+                            @((MarkupString)_signatureData)
+                        }
+                        else
+                        {
+                            <img src="@_signatureData" alt="Signature" style="max-width:100%;height:auto;display:block;" />
+                        }
                     </div>
-                </div>
+                    <small class="form-text text-muted mt-1">@Localizer["Signature.Collected"]</small>
+                }
+                else
+                {
+                    <div class="alert alert-warning mb-0">
+                        <i class="bi bi-exclamation-triangle"></i> @Localizer["Signature.NotCollected"]
+                    </div>
+                }
             </div>
         </div>
 

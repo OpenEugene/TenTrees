@@ -6,6 +6,7 @@
 @inject IEnrollmentService EnrollmentService
 @inject IEnrollmentStateService StateService
 @inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
 @inject IStringLocalizer<Signature> Localizer
 
 <div class="mb-3">
@@ -27,9 +28,15 @@
         </div>
         
         <div class="mb-3">
-            <Label For="signature" ResourceKey="Signature" Class="form-label fw-bold">Signature: *</Label>
-            <textarea id="signature" class="form-control form-control-lg" @bind="@_signatureData" rows="4" 
-                      placeholder="@Localizer["Signature.Placeholder"]" required style="font-size: 18px;"></textarea>
+            <div class="d-flex justify-content-between align-items-center mb-1">
+                <Label For="signatureCanvas" ResourceKey="Signature" Class="form-label fw-bold mb-0">Signature: *</Label>
+                <button type="button" class="btn btn-sm btn-outline-secondary" @onclick="ClearSignature">
+                    <i class="bi bi-x-circle"></i> @Localizer["Signature.Clear"]
+                </button>
+            </div>
+            <div class="border rounded bg-white" style="touch-action: none;">
+                <canvas id="signatureCanvas" style="width: 100%; height: 180px; display: block; cursor: crosshair;"></canvas>
+            </div>
             <small class="form-text text-muted">@Localizer["Signature.Help"]</small>
         </div>
 
@@ -86,26 +93,46 @@
     public override SecurityAccessLevel SecurityAccessLevel => SecurityAccessLevel.Edit;
     public override string Actions => "Signature";
     public override string Title => "Enrollment - Signature";
+    public override List<Resource> Resources => new List<Resource>()
+    {
+        new Resource { ResourceType = ResourceType.Script, Url = ModulePath() + "Module.js" }
+    };
 
-    private string _signatureData;
     private bool _confirmed;
     private bool _isSaving;
+    private const string CanvasId = "signatureCanvas";
 
     protected override void OnInitialized()
     {
         if (StateService.CurrentDraft == null)
         {
             NavigationManager.NavigateTo(EditUrl("BasicInfo"));
-            return;
         }
-
-        // Restore from draft
-        _signatureData = StateService.CurrentDraft.SignatureData;
     }
 
-    private void PreviousStep()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        StateService.CurrentDraft.SignatureData = _signatureData;
+        if (firstRender && StateService.CurrentDraft != null)
+        {
+            // Ensure the script is loaded before calling it
+            await JSRuntime.InvokeVoidAsync("eval", "if (typeof OpenEug === 'undefined') { var script = document.createElement('script'); script.src = '/Modules/OpenEug.TenTrees.Module.Enrollment/Module.js'; document.head.appendChild(script); }");
+
+            // Wait a tiny bit for script to parse if it was just added
+            await Task.Delay(100);
+
+            await JSRuntime.InvokeVoidAsync("OpenEug.TenTrees.Enrollment.SignaturePad.init", CanvasId);
+        }
+    }
+
+    private async Task ClearSignature()
+    {
+        await JSRuntime.InvokeVoidAsync("OpenEug.TenTrees.Enrollment.SignaturePad.clear", CanvasId);
+    }
+
+    private async Task PreviousStep()
+    {
+        var data = await JSRuntime.InvokeAsync<string>("OpenEug.TenTrees.Enrollment.SignaturePad.getData", CanvasId);
+        StateService.CurrentDraft.SignatureData = data;
         NavigationManager.NavigateTo(EditUrl("Commitments"));
     }
 
@@ -113,21 +140,27 @@
     {
         try
         {
-            if (string.IsNullOrWhiteSpace(_signatureData) || !_confirmed)
+            if (!_confirmed)
             {
                 AddModuleMessage(Localizer["Message.ValidationError"], MessageType.Error);
                 return;
             }
 
+            var blank = await JSRuntime.InvokeAsync<bool>("OpenEug.TenTrees.Enrollment.SignaturePad.isBlank", CanvasId);
+            if (blank)
+            {
+                AddModuleMessage(Localizer["Message.SignatureRequired"], MessageType.Error);
+                return;
+            }
+
+            var signatureData = await JSRuntime.InvokeAsync<string>("OpenEug.TenTrees.Enrollment.SignaturePad.getData", CanvasId);
+
             _isSaving = true;
             StateHasChanged();
 
-            // Create enrollment from draft
             var enrollment = new Models.Enrollment
             {
                 ModuleId = ModuleState.ModuleId,
-                
-                // Basic Information
                 GrowerName = StateService.CurrentDraft.GrowerName,
                 VillageId = StateService.CurrentDraft.VillageId,
                 HouseNumber = StateService.CurrentDraft.HouseNumber,
@@ -138,38 +171,28 @@
                 EnrollmentDate = DateTime.UtcNow,
                 MentorId = StateService.CurrentDraft.MentorUsername ?? PageState.User.Username,
                 TreeMentorName = StateService.CurrentDraft.TreeMentorName,
-                
-                // Preferred Criteria
                 EnrolledInPE = StateService.CurrentDraft.EnrolledInPE,
                 PEGraduate = StateService.CurrentDraft.PEGraduate,
                 GardenPlantedAndTended = StateService.CurrentDraft.GardenPlantedAndTended,
                 ChildHeadedHousehold = StateService.CurrentDraft.ChildHeadedHousehold,
                 WomanHeadedHousehold = StateService.CurrentDraft.WomanHeadedHousehold,
                 EmptyYard = StateService.CurrentDraft.EmptyYard,
-                
-                // Commitments
                 CommitNoChemicals = StateService.CurrentDraft.CommitNoChemicals,
                 CommitAttendClasses = StateService.CurrentDraft.CommitAttendClasses,
                 CommitNoCuttingTrees = StateService.CurrentDraft.CommitNoCuttingTrees,
                 CommitStandForWomenChildren = StateService.CurrentDraft.CommitStandForWomenChildren,
                 CommitCareWhileAway = StateService.CurrentDraft.CommitCareWhileAway,
                 CommitAllowYardAccess = StateService.CurrentDraft.CommitAllowYardAccess,
-                
-                // Signature
-                SignatureData = _signatureData,
+                SignatureData = signatureData,
                 SignatureCollected = true,
                 SignatureDate = DateTime.UtcNow,
-                
                 Status = Models.EnrollmentStatus.Pending
             };
 
             var result = await EnrollmentService.AddEnrollmentAsync(enrollment);
             await logger.LogInformation("Enrollment Added {Enrollment}", result);
 
-            // Clear draft
             StateService.ClearDraft();
-
-            // Show success and navigate
             AddModuleMessage(Localizer["Message.Success"], MessageType.Success);
             NavigationManager.NavigateTo(NavigateUrl());
         }

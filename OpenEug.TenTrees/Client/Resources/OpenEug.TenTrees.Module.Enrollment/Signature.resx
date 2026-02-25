@@ -10,8 +10,9 @@
   <data name="Section.Signature" xml:space="preserve"><value>Signature</value></data>
   <data name="Signature" xml:space="preserve"><value>Signature:</value></data>
   <data name="Signature.Info" xml:space="preserve"><value>Please review the summary and provide a signature to complete the enrollment</value></data>
-  <data name="Signature.Placeholder" xml:space="preserve"><value>Type grower name or draw signature</value></data>
-  <data name="Signature.Help" xml:space="preserve"><value>E-signature can be typed name or drawn signature</value></data>
+  <data name="Signature.Placeholder" xml:space="preserve"><value>Sign here</value></data>
+  <data name="Signature.Help" xml:space="preserve"><value>Draw your signature using your finger or mouse</value></data>
+  <data name="Signature.Clear" xml:space="preserve"><value>Clear</value></data>
   <data name="Signature.Confirm" xml:space="preserve"><value>I confirm all information is correct and grower agrees to commitments</value></data>
   <data name="Summary" xml:space="preserve"><value>Summary</value></data>
   <data name="GrowerName" xml:space="preserve"><value>Grower Name</value></data>
@@ -20,7 +21,7 @@
   <data name="Saving" xml:space="preserve"><value>Saving enrollment...</value></data>
   <data name="Previous" xml:space="preserve"><value>Previous</value></data>
   <data name="Submit" xml:space="preserve"><value>Submit Enrollment</value></data>
-  <data name="Message.SignatureRequired" xml:space="preserve"><value>Signature and confirmation are required</value></data>
+  <data name="Message.SignatureRequired" xml:space="preserve"><value>Signature is required — please draw your signature above</value></data>
   <data name="Message.ValidationError" xml:space="preserve"><value>Please provide signature and confirm all information is correct</value></data>
   <data name="Message.Success" xml:space="preserve"><value>Enrollment saved successfully</value></data>
   <data name="Message.Error" xml:space="preserve"><value>Error saving enrollment. Please try again.</value></data>
