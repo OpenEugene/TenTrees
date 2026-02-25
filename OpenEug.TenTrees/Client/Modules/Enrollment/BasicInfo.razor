@@ -30,8 +30,18 @@
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
-                        <Label For="treementorname" ResourceKey="TreeMentorName" ResourceType="@resourceType" Class="form-label fw-bold">Tree Mentor Name:</Label>
-                        <input id="treementorname" class="form-control form-control-lg" @bind="@_treeMentorName" readonly />
+                        <Label For="treementorname" ResourceKey="TreeMentorName" ResourceType="@resourceType" Class="form-label fw-bold">Tree Mentor Name: *</Label>
+                        <select id="treementorname" class="form-select form-select-lg" @bind="@_mentorUsername" required>
+                            <option value="">@Localizer["Select"]</option>
+                            @if (_users != null)
+                            {
+                                @foreach (var user in _users.OrderBy(u => u.DisplayName))
+                                    {
+                                        <option value="@user.Username">@user.DisplayName</option>
+                                }
+                            }
+                        </select>
+                        <div class="invalid-feedback">@Localizer["Validation.Required"]</div>
                     </div>
 
                     <div class="mb-3">
@@ -123,8 +133,9 @@
     private ElementReference form;
     private bool validated = false;
     private List<Models.Village> _villages;
+    private List<UserInfo> _users;
 
-    private string _treeMentorName;
+    private string _mentorUsername;
     private string _growerName;
     private int _villageId;
     private string _houseNumber;
@@ -139,11 +150,12 @@
     {
         try
         {
-            _treeMentorName = PageState.User.DisplayName;
             resourceType = GetType().AssemblyQualifiedName;
 
-            // Load villages
+            // Load villages and users
             _villages = await VillageService.GetVillagesAsync();
+            _users = await EnrollmentService.GetSiteUsersAsync(ModuleState.ModuleId);
+            _mentorUsername = PageState.User.Username;
 
             // Initialize or restore draft
             if (StateService.CurrentDraft == null)
@@ -153,7 +165,7 @@
             else
             {
                 // Restore from draft
-                _treeMentorName = StateService.CurrentDraft.TreeMentorName ?? PageState.User.DisplayName;
+                _mentorUsername = StateService.CurrentDraft.MentorUsername ?? PageState.User.Username;
                 _growerName = StateService.CurrentDraft.GrowerName;
                 _villageId = StateService.CurrentDraft.VillageId;
                 _houseNumber = StateService.CurrentDraft.HouseNumber;
@@ -179,7 +191,8 @@
             if (await interop.FormValid(form))
             {
                 // Save to draft state
-                StateService.CurrentDraft.TreeMentorName = _treeMentorName;
+                StateService.CurrentDraft.MentorUsername = _mentorUsername;
+                StateService.CurrentDraft.TreeMentorName = _users?.FirstOrDefault(u => u.Username == _mentorUsername)?.DisplayName ?? _mentorUsername;
                 StateService.CurrentDraft.GrowerName = _growerName;
                 StateService.CurrentDraft.VillageId = _villageId;
                 StateService.CurrentDraft.HouseNumber = _houseNumber;

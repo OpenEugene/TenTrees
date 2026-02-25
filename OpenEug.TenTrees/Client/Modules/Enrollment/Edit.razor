@@ -22,7 +22,16 @@
                 <div class="row mb-2">
                     <Label Class="col-sm-4" For="treementorname" ResourceKey="TreeMentorName">Tree Mentor Name:</Label>
                     <div class="col-sm-8">
-                        <input id="treementorname" class="form-control" @bind="@_treeMentorName" readonly />
+                        <select id="treementorname" class="form-select" @bind="@_mentorUsername" required>
+                            <option value="">-- Select --</option>
+                            @if (_users != null)
+                            {
+                                @foreach (var user in _users.OrderBy(u => u.DisplayName))
+                                {
+                                    <option value="@user.Username">@user.DisplayName</option>
+                                }
+                            }
+                        </select>
                     </div>
                 </div>
                 <div class="row mb-2">
@@ -291,9 +300,10 @@
 
     // Villages for dropdown
     private List<Models.Village> _villages;
+    private List<UserInfo> _users;
 
     // Basic Information
-    private string _treeMentorName;
+    private string _mentorUsername;
     private string _growerName;
     private int _villageId;
     private string _houseNumber;
@@ -348,7 +358,8 @@
             }
 
             // Auto-fill tree mentor name from current user
-            _treeMentorName = PageState.User.DisplayName;
+            _users = await EnrollmentService.GetSiteUsersAsync(ModuleState.ModuleId);
+            _mentorUsername = PageState.User.Username;
 
             if (PageState.Action == "Edit")
             {
@@ -364,7 +375,7 @@
                     _householdSize = Enrollment.HouseholdSize;
                     _ownsHome = Enrollment.OwnsHome;
                     _enrollmentDate = Enrollment.EnrollmentDate.Date;
-                    _treeMentorName = Enrollment.TreeMentorName;
+                    _mentorUsername = Enrollment.MentorId ?? PageState.User.Username;
 
                     // Preferred Criteria
                     _enrolledInPE = Enrollment.EnrolledInPE;
@@ -425,8 +436,8 @@
                     Enrollment.HouseholdSize = _householdSize;
                     Enrollment.OwnsHome = _ownsHome;
                     Enrollment.EnrollmentDate = DateTime.UtcNow;
-                    Enrollment.MentorId = PageState.User.UserId;
-                    Enrollment.TreeMentorName = _treeMentorName;
+                    Enrollment.MentorId = _mentorUsername;
+                    Enrollment.TreeMentorName = _users?.FirstOrDefault(u => u.Username == _mentorUsername)?.DisplayName ?? _mentorUsername;
                     
                     // Preferred Criteria
                     Enrollment.EnrolledInPE = _enrolledInPE;
@@ -470,7 +481,8 @@
                     Enrollment.BirthDate = _birthDate;
                     Enrollment.HouseholdSize = _householdSize;
                     Enrollment.OwnsHome = _ownsHome;
-                    Enrollment.TreeMentorName = _treeMentorName;
+                    Enrollment.MentorId = _mentorUsername;
+                    Enrollment.TreeMentorName = _users?.FirstOrDefault(u => u.Username == _mentorUsername)?.DisplayName ?? _mentorUsername;
                     
                     // Preferred Criteria
                     Enrollment.EnrolledInPE = _enrolledInPE;

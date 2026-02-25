@@ -1,7 +1,7 @@
 CREATE TABLE [dbo].[Grower] (
     [GrowerId]      INT            IDENTITY (1, 1) NOT NULL,
     [VillageId]     INT            NOT NULL,
-    [MentorId]      INT            NULL,
+    [MentorId]      NVARCHAR (256) NULL,
     [GrowerName]    NVARCHAR (MAX) NOT NULL,
     [HouseNumber]   NVARCHAR (50)  NULL,
     [IdNumber]      NVARCHAR (50)  NULL,

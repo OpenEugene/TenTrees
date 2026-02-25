@@ -59,6 +59,24 @@ namespace OpenEug.TenTrees.Module.Enrollment.Controllers
             }
         }
 
+        // GET api/<controller>/users?moduleid=x
+        [HttpGet("users")]
+        [Authorize(Policy = PolicyNames.ViewModule)]
+        public async Task<IEnumerable<UserInfo>> GetUsers(string moduleid)
+        {
+            int ModuleId;
+            if (int.TryParse(moduleid, out ModuleId) && IsAuthorizedEntityId(EntityNames.Module, ModuleId))
+            {
+                return await _EnrollmentService.GetSiteUsersAsync(ModuleId);
+            }
+            else
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized GetUsers Attempt {ModuleId}", moduleid);
+                HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                return null;
+            }
+        }
+
         // GET api/<controller>/5
         [HttpGet("{id}/{moduleid}")]
         [Authorize(Policy = PolicyNames.ViewModule)]

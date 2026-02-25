@@ -28,11 +28,21 @@ Feature: Grower Enrollment Submission
     Then I should see validation error "Grower name is required"
     And the form should not be submitted
 
-  Scenario: Auto-populate mentor information
+  Scenario: Default tree mentor to current logged-in user
     Given I am logged in as mentor "Bondi"
     When I start a new enrollment
-    Then the tree mentor name should be pre-filled as "Bondi"
+    Then the tree mentor name dropdown should be pre-selected with "Bondi"
+    And the mentor ID should store the username "bondi"
     And the date should be set to today
+
+  Scenario: Select a different tree mentor from dropdown
+    Given I am logged in as "Educator A"
+    And I start a new enrollment
+    When I open the tree mentor name dropdown
+    Then I should see a list of registered site users
+    When I select "Bondi" from the tree mentor name dropdown
+    Then the tree mentor name should display "Bondi"
+    And the mentor ID should store the username "bondi"
 
   Scenario: Record preferred criteria responses
     Given I am completing an enrollment

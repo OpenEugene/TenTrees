@@ -136,7 +136,7 @@
                 HouseholdSize = StateService.CurrentDraft.HouseholdSize,
                 OwnsHome = StateService.CurrentDraft.OwnsHome,
                 EnrollmentDate = DateTime.UtcNow,
-                MentorId = PageState.User.UserId,
+                MentorId = StateService.CurrentDraft.MentorUsername ?? PageState.User.Username,
                 TreeMentorName = StateService.CurrentDraft.TreeMentorName,
                 
                 // Preferred Criteria

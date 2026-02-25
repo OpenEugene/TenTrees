@@ -9,20 +9,23 @@ using Oqtane.Security;
 using Oqtane.Shared;
 using OpenEug.TenTrees.Module.Enrollment.Repository;
 using OpenEug.TenTrees.Models;
+using Oqtane.Repository;
 
 namespace OpenEug.TenTrees.Module.Enrollment.Services
 {
     public class ServerEnrollmentService : IEnrollmentService
     {
         private readonly IEnrollmentRepository _enrollmentRepository;
+        private readonly IUserRoleRepository _userRoleRepository;
         private readonly IUserPermissions _userPermissions;
         private readonly ILogManager _logger;
         private readonly IHttpContextAccessor _accessor;
         private readonly Alias _alias;
 
-        public ServerEnrollmentService(IEnrollmentRepository enrollmentRepository, IUserPermissions userPermissions, ITenantManager tenantManager, ILogManager logger, IHttpContextAccessor accessor)
+        public ServerEnrollmentService(IEnrollmentRepository enrollmentRepository, IUserRoleRepository userRoleRepository, IUserPermissions userPermissions, ITenantManager tenantManager, ILogManager logger, IHttpContextAccessor accessor)
         {
             _enrollmentRepository = enrollmentRepository;
+            _userRoleRepository = userRoleRepository;
             _userPermissions = userPermissions;
             _logger = logger;
             _accessor = accessor;
@@ -160,13 +163,11 @@ namespace OpenEug.TenTrees.Module.Enrollment.Services
         
         public Task<MentorInfo> AutoFillMentorAsync(int UserId)
         {
-            // This would need to query the user repository and get mentor information
-            // For now, returning a placeholder implementation
             var mentorInfo = new MentorInfo
             {
-                MentorId = UserId,
-                TreeMentorName = "Mentor Name", // Would come from user profile
-                VillageId = 1 // Would come from user's village assignment
+                MentorId = UserId.ToString(),
+                TreeMentorName = "Mentor Name",
+                VillageId = 1
             };
             return Task.FromResult(mentorInfo);
         }
@@ -209,6 +210,26 @@ namespace OpenEug.TenTrees.Module.Enrollment.Services
             {
                 _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Backfill Attempt {ModuleId}", moduleId);
                 return Task.FromResult(0);
+            }
+        }
+
+        public Task<List<UserInfo>> GetSiteUsersAsync(int moduleId)
+        {
+            if (_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.View))
+            {
+                var userRoles = _userRoleRepository.GetUserRoles(_alias.SiteId)
+                    .Where(ur => ur.User != null && !ur.User.IsDeleted)
+                    .GroupBy(ur => ur.UserId)
+                    .Select(g => g.First().User)
+                    .Select(u => new UserInfo { Username = u.Username, DisplayName = u.DisplayName })
+                    .OrderBy(u => u.DisplayName)
+                    .ToList();
+                return Task.FromResult(userRoles);
+            }
+            else
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized GetSiteUsers Attempt {ModuleId}", moduleId);
+                return Task.FromResult(new List<UserInfo>());
             }
         }
     }
