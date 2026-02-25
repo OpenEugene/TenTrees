@@ -143,9 +143,6 @@ namespace OpenEug.TenTrees.Module.Training.Repository
             foreach (var s in result)
             {
                 s.IsEligible = s.ClassesAttended >= RequiredClasses;
-                s.StatusDisplay = s.IsEligible
-                    ? "Eligible for trees"
-                    : $"{RequiredClasses - s.ClassesAttended} classes remaining";
             }
 
             return result;
