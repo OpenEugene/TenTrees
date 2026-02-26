@@ -13,13 +13,6 @@
     <!-- Action Buttons -->
     <div class="d-flex gap-2 mb-3">
         <ActionLink Action="BasicInfo" Security="SecurityAccessLevel.Edit" Text="Add Enrollment" ResourceKey="Add" Class="btn btn-primary" />
-
-        @if (UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin))
-        {
-            <button class="btn btn-outline-secondary" @onclick="BackfillGrowers">
-                <i class="bi bi-people"></i> Sync Growers
-            </button>
-        }
     </div>
 
     <!-- Filter Section -->
@@ -279,20 +272,5 @@
             GrowerStatus.Exited => Localizer["GrowerStatus.Exited"],
             _ => status.ToString()
         };
-    }
-
-    private async Task BackfillGrowers()
-    {
-        try
-        {
-            int count = await EnrollmentService.BackfillGrowersFromEnrollmentsAsync(ModuleState.ModuleId);
-            await logger.LogInformation("Backfilled {Count} Growers from Enrollments", count);
-            AddModuleMessage($"Successfully created {count} grower records from existing enrollments", MessageType.Success);
-        }
-        catch (Exception ex)
-        {
-            await logger.LogError(ex, "Error Backfilling Growers {Error}", ex.Message);
-            AddModuleMessage("Error syncing growers from enrollments", MessageType.Error);
-        }
     }
 }
