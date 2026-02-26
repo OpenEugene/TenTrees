@@ -15,7 +15,7 @@ When adding custom JavaScript to an Oqtane module, calling `JSRuntime.InvokeVoid
 
 ## Context / Trigger Conditions
 - Building a custom Oqtane module (Blazor WebAssembly/Server).
-- Adding a custom `.js` file to `Server/wwwroot/Modules/[Module.Name]/`.
+- Adding a custom `.js` file to `Server/wwwroot/Modules/[Organization.Project.Module.Name]/` (e.g., `OpenEug.TenTrees.Module.Enrollment`).
 - Attempting to call JS functions from `OnAfterRenderAsync` in a `.razor` component.
 
 ## Solution
