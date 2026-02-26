@@ -111,32 +111,7 @@ namespace OpenEug.TenTrees.Module.Enrollment.Repository
                 // Link to existing grower
                 enrollment.GrowerId = existingGrower.GrowerId;
             }
-            else
-            {
-                // Create new Grower record from enrollment data
-                var grower = new Models.Grower
-                {
-                    GrowerName = enrollment.GrowerName,
-                    VillageId = enrollment.VillageId,
-                    MentorId = enrollment.MentorId,
-                    HouseNumber = enrollment.HouseNumber,
-                    IdNumber = enrollment.IdNumber,
-                    BirthDate = enrollment.BirthDate,
-                    HouseholdSize = enrollment.HouseholdSize,
-                    OwnsHome = enrollment.OwnsHome,
-                    Status = GrowerStatus.Active, // New growers are active by default
-                    CreatedBy = enrollment.CreatedBy,
-                    CreatedOn = enrollment.CreatedOn,
-                    ModifiedBy = enrollment.ModifiedBy,
-                    ModifiedOn = enrollment.ModifiedOn
-                };
-
-                db.Grower.Add(grower);
-                db.SaveChanges(); // Save to get GrowerId
-
-                // Link enrollment to new grower
-                enrollment.GrowerId = grower.GrowerId;
-            }
+            // We no longer create a new Grower here. It will be created when the enrollment is approved.
 
             db.Enrollment.Add(enrollment);
             db.SaveChanges();
@@ -146,6 +121,52 @@ namespace OpenEug.TenTrees.Module.Enrollment.Repository
         public Models.Enrollment UpdateEnrollment(Models.Enrollment enrollment)
         {
             using var db = _factory.CreateDbContext();
+
+            // If enrollment is approved but has no grower, create or link one
+            if (enrollment.Status == EnrollmentStatus.Approved && !enrollment.GrowerId.HasValue)
+            {
+                Models.Grower existingGrower = null;
+
+                if (!string.IsNullOrWhiteSpace(enrollment.IdNumber))
+                {
+                    existingGrower = db.Grower
+                        .FirstOrDefault(g => g.IdNumber == enrollment.IdNumber && g.VillageId == enrollment.VillageId);
+                }
+
+                if (existingGrower == null)
+                {
+                    existingGrower = db.Grower
+                        .FirstOrDefault(g => g.GrowerName == enrollment.GrowerName && g.VillageId == enrollment.VillageId);
+                }
+
+                if (existingGrower != null)
+                {
+                    enrollment.GrowerId = existingGrower.GrowerId;
+                }
+                else
+                {
+                    var grower = new Models.Grower
+                    {
+                        GrowerName = enrollment.GrowerName,
+                        VillageId = enrollment.VillageId,
+                        MentorId = enrollment.MentorId,
+                        HouseNumber = enrollment.HouseNumber,
+                        IdNumber = enrollment.IdNumber,
+                        BirthDate = enrollment.BirthDate,
+                        HouseholdSize = enrollment.HouseholdSize,
+                        OwnsHome = enrollment.OwnsHome,
+                        Status = GrowerStatus.Active,
+                        CreatedBy = !string.IsNullOrEmpty(enrollment.ModifiedBy) ? enrollment.ModifiedBy : enrollment.CreatedBy,
+                        CreatedOn = enrollment.ModifiedOn != System.DateTime.MinValue ? enrollment.ModifiedOn : enrollment.CreatedOn,
+                        ModifiedBy = enrollment.ModifiedBy,
+                        ModifiedOn = enrollment.ModifiedOn
+                    };
+
+                    db.Grower.Add(grower);
+                    db.SaveChanges(); // Save to get GrowerId
+                    enrollment.GrowerId = grower.GrowerId;
+                }
+            }
 
             // If enrollment is linked to a grower, update grower details too
             if (enrollment.GrowerId.HasValue)

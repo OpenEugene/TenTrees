@@ -93,10 +93,6 @@
     public override SecurityAccessLevel SecurityAccessLevel => SecurityAccessLevel.Edit;
     public override string Actions => "Signature";
     public override string Title => "Enrollment - Signature";
-    public override List<Resource> Resources => new List<Resource>()
-    {
-        new Resource { ResourceType = ResourceType.Script, Url = ModulePath() + "Module.js" }
-    };
 
     private bool _confirmed;
     private bool _isSaving;
