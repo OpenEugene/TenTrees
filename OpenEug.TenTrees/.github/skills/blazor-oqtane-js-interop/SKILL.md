@@ -75,3 +75,6 @@ See `Client/Modules/Enrollment/Signature.razor` and `Server/wwwroot/Modules/Open
 
 ## References
 - Oqtane Framework Module Development Documentation
+
+## Activation History
+[Append a line each time this skill is used: YYYY-MM-DD brief context]
