@@ -88,7 +88,7 @@
     private bool _commitCareWhileAway;
     private bool _commitAllowYardAccess;
 
-    protected override void OnInitialized()
+    protected override void OnParametersSet()
     {
         if (StateService.CurrentDraft == null)
         {

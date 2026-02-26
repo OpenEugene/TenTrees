@@ -340,7 +340,7 @@
 
     private int SurvivalRate => _treesPlanted > 0 ? (_treesAlive * 100 / _treesPlanted) : 0;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
         try
         {
@@ -590,6 +590,7 @@
                     await logger.LogInformation("Assessment Added {Assessment}", assessment);
                     await JSRuntime.InvokeVoidAsync("localStorage.removeItem", DraftKey);
                     AddModuleMessage(Localizer["Message.SaveSuccess"], MessageType.Success);
+                    NavigationManager.NavigateTo(NavigateUrl());
                 }
                 else
                 {
@@ -624,8 +625,8 @@
                     await logger.LogInformation("Assessment Updated {Assessment}", assessment);
                     await JSRuntime.InvokeVoidAsync("localStorage.removeItem", DraftKey);
                     AddModuleMessage(Localizer["Message.UpdateSuccess"], MessageType.Success);
+                    NavigationManager.NavigateTo(NavigateUrl());
                 }
-                NavigationManager.NavigateTo(NavigateUrl());
             }
             else
             {

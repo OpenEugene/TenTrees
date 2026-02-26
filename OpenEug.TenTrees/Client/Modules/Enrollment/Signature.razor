@@ -98,7 +98,7 @@
     private bool _isSaving;
     private const string CanvasId = "signatureCanvas";
 
-    protected override void OnInitialized()
+    protected override void OnParametersSet()
     {
         if (StateService.CurrentDraft == null)
         {
