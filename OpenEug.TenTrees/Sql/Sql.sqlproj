@@ -99,6 +99,7 @@
     <Build Include="dbo\Tables\Grower.sql" />
     <Build Include="dbo\Tables\TrainingClass.sql" />
     <Build Include="dbo\Tables\ClassAttendance.sql" />
+    <Build Include="Assessment.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SqlSchemaCompare1.scmp" />

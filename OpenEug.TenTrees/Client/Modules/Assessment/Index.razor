@@ -1,0 +1,102 @@
+@using OpenEug.TenTrees.Module.Assessment.Services
+@using OpenEug.TenTrees.Module.Grower.Services
+@using OpenEug.TenTrees.Models
+
+@namespace OpenEug.TenTrees.Module.Assessment
+@inherits ModuleBase
+@inject IAssessmentService AssessmentService
+@inject IGrowerService GrowerService
+@inject NavigationManager NavigationManager
+@inject IStringLocalizer<Index> Localizer
+
+<div class="container">
+    <div class="d-flex gap-2 mb-3">
+        <ActionLink Action="Add" Security="SecurityAccessLevel.Edit" Text="New Assessment" ResourceKey="Add" Class="btn btn-primary" />
+    </div>
+
+    @if (_assessments == null)
+    {
+        <p><em>@Localizer["Message.Loading"]</em></p>
+    }
+    else if (@_assessments.Count == 0)
+    {
+        <p>@Localizer["Message.DisplayNone"]</p>
+    }
+    else
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th style="width: 1px;">&nbsp;</th>
+                    <th style="width: 1px;">&nbsp;</th>
+                    <th>@Localizer["Column.Date"]</th>
+                    <th>@Localizer["Column.Grower"]</th>
+                    <th>@Localizer["Column.SurvivalRate"]</th>
+                    <th>@Localizer["Column.PermacultureScore"]</th>
+                    <th>@Localizer["Column.NeedsHelp"]</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var assessment in _assessments)
+                {
+                    var growerName = _growers?.FirstOrDefault(g => g.GrowerId == assessment.GrowerId)?.GrowerName ?? "Unknown";
+                    var survivalRate = assessment.TreesPlanted > 0 ? (assessment.TreesAlive * 100 / assessment.TreesPlanted) : 0;
+                    
+                    <tr>
+                        <td><ActionLink Action="Edit" Parameters="@($"id={assessment.AssessmentId}")" ResourceKey="Edit" /></td>
+                        <td><ActionDialog Header="Delete Assessment" Message="Are You Sure You Wish To Delete This Assessment?" Action="Delete" Security="SecurityAccessLevel.Edit" Class="btn btn-danger" OnClick="@(async () => await Delete(assessment))" ResourceKey="Delete" Id="@assessment.AssessmentId.ToString()" /></td>
+                        <td>@assessment.AssessmentDate.ToShortDateString()</td>
+                        <td>@growerName</td>
+                        <td>@survivalRate% (@assessment.TreesAlive / @assessment.TreesPlanted)</td>
+                        <td>@assessment.PermaculturePrinciplesCount / 9</td>
+                        <td>
+                            @if (assessment.NeedsHelp)
+                            {
+                                <span class="badge bg-danger">@Localizer["Yes"]</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success">@Localizer["No"]</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+@code {
+    private List<Models.Assessment> _assessments;
+    private List<Models.Grower> _growers;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _growers = await GrowerService.GetAllGrowersAsync(ModuleState.ModuleId);
+            _assessments = await AssessmentService.GetAssessmentsAsync(ModuleState.ModuleId);
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Loading Assessments {Error}", ex.Message);
+            AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
+        }
+    }
+
+    private async Task Delete(Models.Assessment assessment)
+    {
+        try
+        {
+            await AssessmentService.DeleteAssessmentAsync(assessment.AssessmentId, ModuleState.ModuleId);
+            await logger.LogInformation("Assessment Deleted {Assessment}", assessment);
+            _assessments = await AssessmentService.GetAssessmentsAsync(ModuleState.ModuleId);
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Deleting Assessment {Assessment} {Error}", assessment, ex.Message);
+            AddModuleMessage(Localizer["Message.DeleteError"], MessageType.Error);
+        }
+    }
+}

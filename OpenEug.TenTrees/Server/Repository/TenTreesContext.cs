@@ -15,6 +15,7 @@ namespace OpenEug.TenTrees.Repository
         public virtual DbSet<Models.Grower> Grower { get; set; }
         public virtual DbSet<Models.TrainingClass> TrainingClass { get; set; }
         public virtual DbSet<Models.ClassAttendance> ClassAttendance { get; set; }
+        public virtual DbSet<Models.Assessment> Assessment { get; set; }
 
         public TenTreesContext(IDBContextDependencies dependencies) : base(dependencies)
         {
@@ -30,6 +31,7 @@ namespace OpenEug.TenTrees.Repository
             modelBuilder.Entity<Models.Grower>().ToTable(ActiveDatabase.RewriteName("Grower"));
             modelBuilder.Entity<Models.TrainingClass>().ToTable(ActiveDatabase.RewriteName("TrainingClass"));
             modelBuilder.Entity<Models.ClassAttendance>().ToTable(ActiveDatabase.RewriteName("ClassAttendance"));
+            modelBuilder.Entity<Models.Assessment>().ToTable(ActiveDatabase.RewriteName("Assessment"));
         }
     }
 }

@@ -1,0 +1,641 @@
+@using Oqtane.Modules.Controls
+@using OpenEug.TenTrees.Module.Assessment.Services
+@using OpenEug.TenTrees.Module.Grower.Services
+@using OpenEug.TenTrees.Models
+
+@namespace OpenEug.TenTrees.Module.Assessment
+@inherits ModuleBase
+@inject IAssessmentService AssessmentService
+@inject IGrowerService GrowerService
+@inject NavigationManager NavigationManager
+@inject IStringLocalizer<Edit> Localizer
+
+<form @ref="form" class="@(validated ? " was-validated" : "needs-validation" )" novalidate>
+    <div class="container">
+        <h3>@Localizer["FormTitle"]</h3>
+
+        <div class="row">
+            <!-- Left Column -->
+            <div class="col-lg-6">
+                <!-- Section 1: Grower Selection -->
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h5>@Localizer["Section.GrowerInfo"]</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-2">
+                            <Label Class="col-sm-4" For="growerid" ResourceKey="Grower">Grower:</Label>
+                            <div class="col-sm-8">
+                                <select id="growerid" class="form-select" @bind="@_growerId" required disabled="@(_id > 0)">
+                                    <option value="0">@Localizer["SelectGrower"]</option>
+                                    @if (_growers != null)
+                                    {
+                                        @foreach (var grower in _growers)
+                                        {
+                                            <option value="@grower.GrowerId">@grower.GrowerName</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <Label Class="col-sm-4" For="assessmentdate" ResourceKey="Date">Assessment Date:</Label>
+                            <div class="col-sm-8">
+                                <input id="assessmentdate" type="date" class="form-control" @bind="@_assessmentDate" required />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 2: Tree Survival -->
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h5>@Localizer["Section.TreeSurvival"]</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-2">
+                            <Label Class="col-sm-4" For="treesplanted" ResourceKey="TreesPlanted">Trees Planted:</Label>
+                            <div class="col-sm-8">
+                                <input id="treesplanted" type="number" class="form-control" @bind="@_treesPlanted" required min="0" />
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <Label Class="col-sm-4" For="treesalive" ResourceKey="TreesAlive">Trees Still Alive:</Label>
+                            <div class="col-sm-8">
+                                <input id="treesalive" type="number" class="form-control" @bind="@_treesAlive" required min="0" max="@_treesPlanted" />
+                            </div>
+                        </div>
+
+                        @if (_treesAlive < _treesPlanted)
+                        {
+                            <div class="row mb-2">
+                                <Label Class="col-sm-4" For="deceasedtrees" ResourceKey="DeceasedTrees">If any died, which ones?</Label>
+                                <div class="col-sm-8">
+                                    <select id="deceasedtrees" class="form-select mb-2" @bind="@_deceasedTreeTypes">
+                                        <option value="">-- Select Tree Type --</option>
+                                        @foreach (var treeType in OpenEug.TenTrees.Shared.Constants.TreeTypes.List)
+                                        {
+                                            <option value="@treeType.Name">@treeType.Name</option>
+                                        }
+                                    </select>
+                                    <input class="form-control" @bind="@_deceasedTreeTypesOther" placeholder="Or enter free text (e.g., Mango, Avocado)" />
+                                </div>
+                            </div>
+                        }
+
+                        <div class="row mb-2">
+                            <div class="col-sm-4 fw-bold">@Localizer["SurvivalRate"]:</div>
+                            <div class="col-sm-8">
+                                <span class="badge bg-info fs-6">@SurvivalRate%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 3: Problems -->
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h5>@Localizer["Section.Problems"]</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>@Localizer["ProblemsPrompt"]</p>
+                        <div class="mb-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="prob_yellow" @bind="@_hasYellowLeaves" />
+                                <Label Class="form-check-label" For="prob_yellow" ResourceKey="Problem.YellowLeaves">The trees have yellow leaves</Label>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="prob_broken" @bind="@_hasBrokenBranches" />
+                                <Label Class="form-check-label" For="prob_broken" ResourceKey="Problem.BrokenBranches">The trees have broken branches</Label>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="prob_losing" @bind="@_hasLosingLeaves" />
+                                <Label Class="form-check-label" For="prob_losing" ResourceKey="Problem.LosingLeaves">The trees are losing their leaves</Label>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="prob_dry" @bind="@_hasLookDry" />
+                                <Label Class="form-check-label" For="prob_dry" ResourceKey="Problem.LookDry">The trees look dry</Label>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="prob_pests" @bind="@_hasPests" />
+                                <Label Class="form-check-label" For="prob_pests" ResourceKey="Problem.Pests">Pests eating the plant</Label>
+                            </div>
+                        </div>
+
+                        <hr />
+                        <div class="row mb-2">
+                            <Label Class="col-sm-6" For="needshelp" ResourceKey="NeedsHelp">Do you need someone to help with this problem?</Label>
+                            <div class="col-sm-6">
+                                <select id="needshelp" class="form-select" @bind="@_needsHelp">
+                                    <option value="false">@Localizer["No"]</option>
+                                    <option value="true">@Localizer["Yes"]</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="col-lg-6">
+                <!-- Section 4: Permaculture Practices -->
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h5>@Localizer["Section.Permaculture"]</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-2 align-items-center">
+                            <Label Class="col-sm-8 mb-0" For="prac_healthy" ResourceKey="Practice.Healthy">Do the trees look healthy?</Label>
+                            <div class="col-sm-4">
+                                <div class="btn-group w-100" role="group">
+                                    <input type="radio" class="btn-check" name="prac_healthy" id="prac_healthy_yes" autocomplete="off" checked="@(_treesLookHealthy == true)" @onchange="@(() => _treesLookHealthy = true)">
+                                    <label class="btn btn-outline-success" for="prac_healthy_yes">@Localizer["Yes"]</label>
+                                    <input type="radio" class="btn-check" name="prac_healthy" id="prac_healthy_no" autocomplete="off" checked="@(_treesLookHealthy == false)" @onchange="@(() => _treesLookHealthy = false)">
+                                    <label class="btn btn-outline-danger" for="prac_healthy_no">@Localizer["No"]</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-2 align-items-center">
+                            <Label Class="col-sm-8 mb-0" For="prac_chem" ResourceKey="Practice.Chemicals">Any chemical fertilizers?</Label>
+                            <div class="col-sm-4">
+                                <div class="btn-group w-100" role="group">
+                                    <input type="radio" class="btn-check" name="prac_chem" id="prac_chem_yes" autocomplete="off" checked="@(_hasChemicalFertilizers == true)" @onchange="@(() => _hasChemicalFertilizers = true)">
+                                    <label class="btn btn-outline-danger" for="prac_chem_yes">@Localizer["Yes"]</label>
+                                    <input type="radio" class="btn-check" name="prac_chem" id="prac_chem_no" autocomplete="off" checked="@(_hasChemicalFertilizers == false)" @onchange="@(() => _hasChemicalFertilizers = false)">
+                                    <label class="btn btn-outline-success" for="prac_chem_no">@Localizer["No"]</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-2 align-items-center">
+                            <Label Class="col-sm-8 mb-0" For="prac_pest" ResourceKey="Practice.Pesticides">Any pesticides used?</Label>
+                            <div class="col-sm-4">
+                                <div class="btn-group w-100" role="group">
+                                    <input type="radio" class="btn-check" name="prac_pest" id="prac_pest_yes" autocomplete="off" checked="@(_hasPesticides == true)" @onchange="@(() => _hasPesticides = true)">
+                                    <label class="btn btn-outline-danger" for="prac_pest_yes">@Localizer["Yes"]</label>
+                                    <input type="radio" class="btn-check" name="prac_pest" id="prac_pest_no" autocomplete="off" checked="@(_hasPesticides == false)" @onchange="@(() => _hasPesticides = false)">
+                                    <label class="btn btn-outline-success" for="prac_pest_no">@Localizer["No"]</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-2 align-items-center">
+                            <Label Class="col-sm-8 mb-0" For="prac_mulch" ResourceKey="Practice.Mulched">Are the trees mulched?</Label>
+                            <div class="col-sm-4">
+                                <div class="btn-group w-100" role="group">
+                                    <input type="radio" class="btn-check" name="prac_mulch" id="prac_mulch_yes" autocomplete="off" checked="@(_isMulched == true)" @onchange="@(() => _isMulched = true)">
+                                    <label class="btn btn-outline-success" for="prac_mulch_yes">@Localizer["Yes"]</label>
+                                    <input type="radio" class="btn-check" name="prac_mulch" id="prac_mulch_no" autocomplete="off" checked="@(_isMulched == false)" @onchange="@(() => _isMulched = false)">
+                                    <label class="btn btn-outline-danger" for="prac_mulch_no">@Localizer["No"]</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-2 align-items-center">
+                            <Label Class="col-sm-8 mb-0" For="prac_compost" ResourceKey="Practice.Compost">Are they making compost?</Label>
+                            <div class="col-sm-4">
+                                <div class="btn-group w-100" role="group">
+                                    <input type="radio" class="btn-check" name="prac_compost" id="prac_compost_yes" autocomplete="off" checked="@(_isMakingCompost == true)" @onchange="@(() => _isMakingCompost = true)">
+                                    <label class="btn btn-outline-success" for="prac_compost_yes">@Localizer["Yes"]</label>
+                                    <input type="radio" class="btn-check" name="prac_compost" id="prac_compost_no" autocomplete="off" checked="@(_isMakingCompost == false)" @onchange="@(() => _isMakingCompost = false)">
+                                    <label class="btn btn-outline-danger" for="prac_compost_no">@Localizer["No"]</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-2 align-items-center">
+                            <Label Class="col-sm-8 mb-0" For="prac_water" ResourceKey="Practice.CollectingWater">Are they collecting water?</Label>
+                            <div class="col-sm-4">
+                                <div class="btn-group w-100" role="group">
+                                    <input type="radio" class="btn-check" name="prac_water" id="prac_water_yes" autocomplete="off" checked="@(_isCollectingWater == true)" @onchange="@(() => _isCollectingWater = true)">
+                                    <label class="btn btn-outline-success" for="prac_water_yes">@Localizer["Yes"]</label>
+                                    <input type="radio" class="btn-check" name="prac_water" id="prac_water_no" autocomplete="off" checked="@(_isCollectingWater == false)" @onchange="@(() => _isCollectingWater = false)">
+                                    <label class="btn btn-outline-danger" for="prac_water_no">@Localizer["No"]</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-2 align-items-center">
+                            <Label Class="col-sm-8 mb-0" For="prac_leaks" ResourceKey="Practice.LeakyTaps">Any leaky taps visible?</Label>
+                            <div class="col-sm-4">
+                                <div class="btn-group w-100" role="group">
+                                    <input type="radio" class="btn-check" name="prac_leaks" id="prac_leaks_yes" autocomplete="off" checked="@(_hasLeakyTaps == true)" @onchange="@(() => _hasLeakyTaps = true)">
+                                    <label class="btn btn-outline-danger" for="prac_leaks_yes">@Localizer["Yes"]</label>
+                                    <input type="radio" class="btn-check" name="prac_leaks" id="prac_leaks_no" autocomplete="off" checked="@(_hasLeakyTaps == false)" @onchange="@(() => _hasLeakyTaps = false)">
+                                    <label class="btn btn-outline-success" for="prac_leaks_no">@Localizer["No"]</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-2 align-items-center">
+                            <Label Class="col-sm-8 mb-0" For="prac_design" ResourceKey="Practice.GardenDesign">Is the garden designed to capture water?</Label>
+                            <div class="col-sm-4">
+                                <div class="btn-group w-100" role="group">
+                                    <input type="radio" class="btn-check" name="prac_design" id="prac_design_yes" autocomplete="off" checked="@(_isGardenDesignedToCaptureWater == true)" @onchange="@(() => _isGardenDesignedToCaptureWater = true)">
+                                    <label class="btn btn-outline-success" for="prac_design_yes">@Localizer["Yes"]</label>
+                                    <input type="radio" class="btn-check" name="prac_design" id="prac_design_no" autocomplete="off" checked="@(_isGardenDesignedToCaptureWater == false)" @onchange="@(() => _isGardenDesignedToCaptureWater = false)">
+                                    <label class="btn btn-outline-danger" for="prac_design_no">@Localizer["No"]</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-2 align-items-center">
+                            <Label Class="col-sm-8 mb-0" For="prac_grey" ResourceKey="Practice.Greywater">Are they using greywater?</Label>
+                            <div class="col-sm-4">
+                                <div class="btn-group w-100" role="group">
+                                    <input type="radio" class="btn-check" name="prac_grey" id="prac_grey_yes" autocomplete="off" checked="@(_isUsingGreywater == true)" @onchange="@(() => _isUsingGreywater = true)">
+                                    <label class="btn btn-outline-success" for="prac_grey_yes">@Localizer["Yes"]</label>
+                                    <input type="radio" class="btn-check" name="prac_grey" id="prac_grey_no" autocomplete="off" checked="@(_isUsingGreywater == false)" @onchange="@(() => _isUsingGreywater = false)">
+                                    <label class="btn btn-outline-danger" for="prac_grey_no">@Localizer["No"]</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 5: Notes -->
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h5>@Localizer["Section.Notes"]</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-2">
+                            <div class="col-sm-12">
+                                <textarea id="notes" class="form-control" @bind="@_notes" rows="4" placeholder="@Localizer["NotesPlaceholder"]"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <button type="button" class="btn btn-success" @onclick="Save">@Localizer["Save"]</button>
+    <button type="button" class="btn btn-outline-secondary" @onclick="SaveDraft">@Localizer["SaveDraft"]</button>
+    @if (_hasDraft)
+    {
+        <button type="button" class="btn btn-outline-info" @onclick="LoadDraft">@Localizer["LoadDraft"]</button>
+    }
+    <NavLink class="btn btn-secondary" href="@NavigateUrl()">@Localizer["Cancel"]</NavLink>
+    <br /><br />
+    @if (PageState.Action == "Edit")
+    {
+        <AuditInfo CreatedBy="@_createdby" CreatedOn="@_createdon" ModifiedBy="@_modifiedby" ModifiedOn="@_modifiedon"></AuditInfo>
+    }
+</form>
+
+@code {
+    public override SecurityAccessLevel SecurityAccessLevel => SecurityAccessLevel.Edit;
+    public override string Actions => "Add,Edit";
+    public override string Title => "Manage Assessment";
+    public override bool UseAdminContainer => false;
+
+    private ElementReference form;
+    private bool validated = false;
+
+    private int _id;
+    private List<Models.Grower> _growers;
+
+    // Basic Info
+    private int _growerId;
+    private DateTime _assessmentDate = DateTime.Today;
+
+    // Tree Survival
+    private int _treesPlanted;
+    private int _treesAlive;
+    private string _deceasedTreeTypes;
+    private string _deceasedTreeTypesOther;
+
+    // Problems
+    private bool _hasBrokenBranches;
+    private bool _hasYellowLeaves;
+    private bool _hasLosingLeaves;
+    private bool _hasLookDry;
+    private bool _hasPests;
+    private bool _needsHelp;
+
+    // Permaculture Practices
+    private bool _treesLookHealthy;
+    private bool _hasChemicalFertilizers;
+    private bool _hasPesticides;
+    private bool _isMulched;
+    private bool _isMakingCompost;
+    private bool _isCollectingWater;
+    private bool _hasLeakyTaps;
+    private bool _isGardenDesignedToCaptureWater;
+    private bool _isUsingGreywater;
+
+    // Notes
+    private string _notes;
+
+    // Audit fields
+    private string _createdby;
+    private DateTime _createdon;
+    private string _modifiedby;
+    private DateTime _modifiedon;
+
+    private bool _hasDraft = false;
+    private const string DraftKey = "TenTrees_Assessment_Draft";
+
+    private int SurvivalRate => _treesPlanted > 0 ? (_treesAlive * 100 / _treesPlanted) : 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var allGrowers = await GrowerService.GetActiveGrowersAsync(ModuleState.ModuleId);
+
+            if (UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin))
+            {
+                _growers = allGrowers;
+            }
+            else
+            {
+                _growers = allGrowers.Where(g => g.MentorId == PageState.User.Username).ToList();
+            }
+
+            if (PageState.Action == "Edit")
+            {
+                if (PageState.QueryString.ContainsKey("id"))
+                {
+                    _id = Int32.Parse(PageState.QueryString["id"]);
+                    Models.Assessment assessment = await AssessmentService.GetAssessmentAsync(_id, ModuleState.ModuleId);
+                    if (assessment != null)
+                    {
+                        _growerId = assessment.GrowerId;
+                        _assessmentDate = assessment.AssessmentDate;
+
+                        _treesPlanted = assessment.TreesPlanted;
+                        _treesAlive = assessment.TreesAlive;
+
+                        if (!string.IsNullOrEmpty(assessment.DeceasedTreeTypes))
+                        {
+                            if (OpenEug.TenTrees.Shared.Constants.TreeTypes.List.Any(t => t.Name == assessment.DeceasedTreeTypes))
+                            {
+                                _deceasedTreeTypes = assessment.DeceasedTreeTypes;
+                            }
+                            else
+                            {
+                                _deceasedTreeTypesOther = assessment.DeceasedTreeTypes;
+                            }
+                        }
+
+                        _hasBrokenBranches = assessment.HasBrokenBranches;
+                        _hasYellowLeaves = assessment.HasYellowLeaves;
+                        _hasLosingLeaves = assessment.HasLosingLeaves;
+                        _hasLookDry = assessment.HasLookDry;
+                        _hasPests = assessment.HasPests;
+                        _needsHelp = assessment.NeedsHelp;
+
+                        _treesLookHealthy = assessment.TreesLookHealthy;
+                        _hasChemicalFertilizers = assessment.HasChemicalFertilizers;
+                        _hasPesticides = assessment.HasPesticides;
+                        _isMulched = assessment.IsMulched;
+                        _isMakingCompost = assessment.IsMakingCompost;
+                        _isCollectingWater = assessment.IsCollectingWater;
+                        _hasLeakyTaps = assessment.HasLeakyTaps;
+                        _isGardenDesignedToCaptureWater = assessment.IsGardenDesignedToCaptureWater;
+                        _isUsingGreywater = assessment.IsUsingGreywater;
+
+                        _notes = assessment.Notes;
+
+                        _createdby = assessment.CreatedBy;
+                        _createdon = assessment.CreatedOn;
+                        _modifiedby = assessment.ModifiedBy;
+                        _modifiedon = assessment.ModifiedOn;
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Loading Assessment {AssessmentId} {Error}", _id, ex.Message);
+            AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try
+            {
+                var draft = await JSRuntime.InvokeAsync<string>("localStorage.getItem", DraftKey);
+                if (!string.IsNullOrEmpty(draft))
+                {
+                    _hasDraft = true;
+                    StateHasChanged();
+                }
+            }
+            catch
+            {
+                // Ignore JS interop errors during prerendering
+            }
+        }
+    }
+
+    private async Task SaveDraft()
+    {
+        try
+        {
+            var draft = new Models.Assessment
+            {
+                GrowerId = _growerId,
+                AssessmentDate = _assessmentDate,
+                TreesPlanted = _treesPlanted,
+                TreesAlive = _treesAlive,
+                DeceasedTreeTypes = !string.IsNullOrEmpty(_deceasedTreeTypesOther) ? _deceasedTreeTypesOther : _deceasedTreeTypes,
+                HasBrokenBranches = _hasBrokenBranches,
+                HasYellowLeaves = _hasYellowLeaves,
+                HasLosingLeaves = _hasLosingLeaves,
+                HasLookDry = _hasLookDry,
+                HasPests = _hasPests,
+                NeedsHelp = _needsHelp,
+                TreesLookHealthy = _treesLookHealthy,
+                HasChemicalFertilizers = _hasChemicalFertilizers,
+                HasPesticides = _hasPesticides,
+                IsMulched = _isMulched,
+                IsMakingCompost = _isMakingCompost,
+                IsCollectingWater = _isCollectingWater,
+                HasLeakyTaps = _hasLeakyTaps,
+                IsGardenDesignedToCaptureWater = _isGardenDesignedToCaptureWater,
+                IsUsingGreywater = _isUsingGreywater,
+                Notes = _notes
+            };
+
+            var json = System.Text.Json.JsonSerializer.Serialize(draft);
+            await JSRuntime.InvokeVoidAsync("localStorage.setItem", DraftKey, json);
+            _hasDraft = true;
+            AddModuleMessage(Localizer["Message.DraftSaved"], MessageType.Success);
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Saving Draft {Error}", ex.Message);
+            AddModuleMessage(Localizer["Message.SaveError"], MessageType.Error);
+        }
+    }
+
+    private async Task LoadDraft()
+    {
+        try
+        {
+            var json = await JSRuntime.InvokeAsync<string>("localStorage.getItem", DraftKey);
+            if (!string.IsNullOrEmpty(json))
+            {
+                var draft = System.Text.Json.JsonSerializer.Deserialize<Models.Assessment>(json);
+                if (draft != null)
+                {
+                    _growerId = draft.GrowerId;
+                    _assessmentDate = draft.AssessmentDate;
+                    _treesPlanted = draft.TreesPlanted;
+                    _treesAlive = draft.TreesAlive;
+
+                    if (!string.IsNullOrEmpty(draft.DeceasedTreeTypes))
+                    {
+                        if (OpenEug.TenTrees.Shared.Constants.TreeTypes.List.Any(t => t.Name == draft.DeceasedTreeTypes))
+                        {
+                            _deceasedTreeTypes = draft.DeceasedTreeTypes;
+                        }
+                        else
+                        {
+                            _deceasedTreeTypesOther = draft.DeceasedTreeTypes;
+                        }
+                    }
+                    _hasBrokenBranches = draft.HasBrokenBranches;
+                    _hasYellowLeaves = draft.HasYellowLeaves;
+                    _hasLosingLeaves = draft.HasLosingLeaves;
+                    _hasLookDry = draft.HasLookDry;
+                    _hasPests = draft.HasPests;
+                    _needsHelp = draft.NeedsHelp;
+                    _treesLookHealthy = draft.TreesLookHealthy;
+                    _hasChemicalFertilizers = draft.HasChemicalFertilizers;
+                    _hasPesticides = draft.HasPesticides;
+                    _isMulched = draft.IsMulched;
+                    _isMakingCompost = draft.IsMakingCompost;
+                    _isCollectingWater = draft.IsCollectingWater;
+                    _hasLeakyTaps = draft.HasLeakyTaps;
+                    _isGardenDesignedToCaptureWater = draft.IsGardenDesignedToCaptureWater;
+                    _isUsingGreywater = draft.IsUsingGreywater;
+                    _notes = draft.Notes;
+
+                    AddModuleMessage(Localizer["Message.DraftLoaded"], MessageType.Success);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Loading Draft {Error}", ex.Message);
+            AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
+        }
+    }
+
+    private async Task Save()
+    {
+        try
+        {
+            validated = true;
+            var interop = new Oqtane.UI.Interop(JSRuntime);
+            if (await interop.FormValid(form))
+            {
+                if (_growerId == 0)
+                {
+                    AddModuleMessage(Localizer["Message.SelectGrower"], MessageType.Warning);
+                    return;
+                }
+
+                if (PageState.Action == "Add")
+                {
+                    // Check frequency rules
+                    bool canSubmit = await AssessmentService.CanSubmitAssessmentAsync(_growerId, ModuleState.ModuleId);
+                    if (!canSubmit)
+                    {
+                        AddModuleMessage(Localizer["Message.FrequencyError"], MessageType.Warning);
+                        return;
+                    }
+
+                    Models.Assessment assessment = new Models.Assessment();
+                    assessment.ModuleId = ModuleState.ModuleId;
+                    
+                    assessment.GrowerId = _growerId;
+                    assessment.AssessmentDate = _assessmentDate;
+
+                    assessment.TreesPlanted = _treesPlanted;
+                    assessment.TreesAlive = _treesAlive;
+                    assessment.DeceasedTreeTypes = !string.IsNullOrEmpty(_deceasedTreeTypesOther) ? _deceasedTreeTypesOther : _deceasedTreeTypes;
+
+                    assessment.HasBrokenBranches = _hasBrokenBranches;
+                    assessment.HasYellowLeaves = _hasYellowLeaves;
+                    assessment.HasLosingLeaves = _hasLosingLeaves;
+                    assessment.HasLookDry = _hasLookDry;
+                    assessment.HasPests = _hasPests;
+                    assessment.NeedsHelp = _needsHelp;
+
+                    assessment.TreesLookHealthy = _treesLookHealthy;
+                    assessment.HasChemicalFertilizers = _hasChemicalFertilizers;
+                    assessment.HasPesticides = _hasPesticides;
+                    assessment.IsMulched = _isMulched;
+                    assessment.IsMakingCompost = _isMakingCompost;
+                    assessment.IsCollectingWater = _isCollectingWater;
+                    assessment.HasLeakyTaps = _hasLeakyTaps;
+                    assessment.IsGardenDesignedToCaptureWater = _isGardenDesignedToCaptureWater;
+                    assessment.IsUsingGreywater = _isUsingGreywater;
+
+                    assessment.Notes = _notes;
+                    
+                    assessment.SubmittedBy = PageState.User.Username;
+                    assessment.EnteredByAdmin = UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin);
+                    
+                    assessment = await AssessmentService.AddAssessmentAsync(assessment);
+                    await logger.LogInformation("Assessment Added {Assessment}", assessment);
+                    await JSRuntime.InvokeVoidAsync("localStorage.removeItem", DraftKey);
+                    AddModuleMessage(Localizer["Message.SaveSuccess"], MessageType.Success);
+                }
+                else
+                {
+                    Models.Assessment assessment = await AssessmentService.GetAssessmentAsync(_id, ModuleState.ModuleId);
+
+                    assessment.AssessmentDate = _assessmentDate;
+
+                    assessment.TreesPlanted = _treesPlanted;
+                    assessment.TreesAlive = _treesAlive;
+                    assessment.DeceasedTreeTypes = !string.IsNullOrEmpty(_deceasedTreeTypesOther) ? _deceasedTreeTypesOther : _deceasedTreeTypes;
+
+                    assessment.HasBrokenBranches = _hasBrokenBranches;
+                    assessment.HasYellowLeaves = _hasYellowLeaves;
+                    assessment.HasLosingLeaves = _hasLosingLeaves;
+                    assessment.HasLookDry = _hasLookDry;
+                    assessment.HasPests = _hasPests;
+                    assessment.NeedsHelp = _needsHelp;
+
+                    assessment.TreesLookHealthy = _treesLookHealthy;
+                    assessment.HasChemicalFertilizers = _hasChemicalFertilizers;
+                    assessment.HasPesticides = _hasPesticides;
+                    assessment.IsMulched = _isMulched;
+                    assessment.IsMakingCompost = _isMakingCompost;
+                    assessment.IsCollectingWater = _isCollectingWater;
+                    assessment.HasLeakyTaps = _hasLeakyTaps;
+                    assessment.IsGardenDesignedToCaptureWater = _isGardenDesignedToCaptureWater;
+                    assessment.IsUsingGreywater = _isUsingGreywater;
+
+                    assessment.Notes = _notes;
+
+                    await AssessmentService.UpdateAssessmentAsync(assessment);
+                    await logger.LogInformation("Assessment Updated {Assessment}", assessment);
+                    await JSRuntime.InvokeVoidAsync("localStorage.removeItem", DraftKey);
+                    AddModuleMessage(Localizer["Message.UpdateSuccess"], MessageType.Success);
+                }
+                NavigationManager.NavigateTo(NavigateUrl());
+            }
+            else
+            {
+                AddModuleMessage(Localizer["Message.SaveValidation"], MessageType.Warning);
+            }
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Saving Assessment {Error}", ex.Message);
+            AddModuleMessage(Localizer["Message.SaveError"], MessageType.Error);
+        }
+    }
+}
