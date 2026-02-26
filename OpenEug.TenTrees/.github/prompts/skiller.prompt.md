@@ -43,6 +43,7 @@ Review this session for extractable knowledge worth preserving as reusable skill
    ## Example
    ## Notes
    ## References
+   ## Activation History
    ```
 
 5. **Summarize**: Report what skills were created or updated and why.
