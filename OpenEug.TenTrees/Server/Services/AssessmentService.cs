@@ -56,6 +56,17 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
         {
             if (_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.View))
             {
+                bool isAdmin = _accessor.HttpContext.User.IsInRole(RoleNames.Admin);
+                if (!isAdmin)
+                {
+                    var currentUser = _accessor.HttpContext.User.Identity.Name;
+                    var assignedGrowerIds = _growerRepository.GetGrowersByMentor(currentUser)
+                        .Select(g => g.GrowerId)
+                        .ToHashSet();
+                    return Task.FromResult(_assessmentRepository.GetAssessments(moduleId)
+                        .Where(a => assignedGrowerIds.Contains(a.GrowerId))
+                        .ToList());
+                }
                 return Task.FromResult(_assessmentRepository.GetAssessments(moduleId).ToList());
             }
             else
@@ -69,6 +80,16 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
         {
             if (_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.View))
             {
+                bool isAdmin = _accessor.HttpContext.User.IsInRole(RoleNames.Admin);
+                if (!isAdmin)
+                {
+                    var grower = _growerRepository.GetGrower(growerId);
+                    if (grower == null || grower.MentorId != _accessor.HttpContext.User.Identity.Name)
+                    {
+                        _logger.Log(LogLevel.Error, this, LogFunction.Security, "User {User} is not assigned to grower {GrowerId}", _accessor.HttpContext.User.Identity.Name, growerId);
+                        return Task.FromResult<List<Models.Assessment>>(null);
+                    }
+                }
                 return Task.FromResult(_assessmentRepository.GetAssessmentsByGrower(growerId, moduleId).ToList());
             }
             else

@@ -52,7 +52,7 @@ Feature: Tree Monitoring and Garden Health Assessment
       | Is the garden designed to capture water? | Yes      |
       | Are they using greywater?                | Yes      |
     Then each individual response should be saved
-    And the total permaculture principles in use should be recorded as "5"
+    And the total permaculture principles in use should be recorded as "9"
     And the principles not in use should be identifiable from the record
 
   # ─── PROBLEMS ───────────────────────────────────────────────────────────────
