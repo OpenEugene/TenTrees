@@ -78,6 +78,9 @@
   <data name="Message.LoadError" xml:space="preserve">
     <value>Error loading grower</value>
   </data>
+  <data name="Message.GrowerNotFound" xml:space="preserve">
+    <value>Grower not found or you do not have permission to view this grower.</value>
+  </data>
   <data name="Message.StatusUpdated" xml:space="preserve">
     <value>Grower status updated successfully</value>
   </data>
