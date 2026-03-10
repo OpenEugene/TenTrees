@@ -45,33 +45,6 @@ Oqtane's dynamic module loading means scripts registered in `ModuleInfo.cs` migh
 3. **Avoid Redundant Resource Registrations:**
    Do not register the same script in both `ModuleInfo.cs` and the component's `Resources` property. Rely on `ModuleInfo.cs` for module-wide scripts. Redundant registrations are unnecessary and can complicate debugging.
 
-4. **Ensure the script is loaded before invoking (The Fix):**
-   In `OnAfterRenderAsync`, dynamically ensure the script is attached to the DOM, then poll until the namespace is available before invoking the function.
-   ```csharp
-   protected override async Task OnAfterRenderAsync(bool firstRender)
-   {
-       if (firstRender)
-       {
-           // Ensure the script is loaded before calling it
-           await JSRuntime.InvokeVoidAsync("eval", "if (typeof YourNamespace === 'undefined') { var script = document.createElement('script'); script.src = '/Modules/Your.Module.Name/Module.js'; document.head.appendChild(script); }");
-
-           // Poll until the namespace is available or timeout after 5 seconds
-           const int maxWaitMs = 5000;
-           const int pollIntervalMs = 50;
-           int elapsed = 0;
-           while (elapsed < maxWaitMs)
-           {
-               var isDefined = await JSRuntime.InvokeAsync<bool>("eval", "typeof YourNamespace !== 'undefined'");
-               if (isDefined) break;
-               await Task.Delay(pollIntervalMs);
-               elapsed += pollIntervalMs;
-           }
-
-           await JSRuntime.InvokeVoidAsync("YourNamespace.YourModule.YourFeature.init", "elementId");
-       }
-   }
-   ```
-
 ## Verification
 The Blazor component successfully invokes the JS function without throwing `JSException: Could not find '[Function]' ('[Namespace]' was undefined)`.
 
