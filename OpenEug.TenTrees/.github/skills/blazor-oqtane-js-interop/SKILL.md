@@ -15,7 +15,7 @@ When adding custom JavaScript to an Oqtane module, calling `JSRuntime.InvokeVoid
 
 ## Context / Trigger Conditions
 - Building a custom Oqtane module (Blazor WebAssembly/Server).
-- Adding a custom `.js` file to `Server/wwwroot/Modules/[Module.Name]/`.
+- Adding a custom `.js` file to `Server/wwwroot/Modules/[Organization.Project.Module.Name]/` (e.g., `OpenEug.TenTrees.Module.Enrollment`).
 - Attempting to call JS functions from `OnAfterRenderAsync` in a `.razor` component.
 
 ## Solution
@@ -45,24 +45,6 @@ Oqtane's dynamic module loading means scripts registered in `ModuleInfo.cs` migh
 3. **Avoid Redundant Resource Registrations:**
    Do not register the same script in both `ModuleInfo.cs` and the component's `Resources` property. Rely on `ModuleInfo.cs` for module-wide scripts. Redundant registrations are unnecessary and can complicate debugging.
 
-4. **Ensure the script is loaded before invoking (The Fix):**
-   In `OnAfterRenderAsync`, dynamically ensure the script is attached to the DOM and wait briefly before invoking the function.
-   ```csharp
-   protected override async Task OnAfterRenderAsync(bool firstRender)
-   {
-       if (firstRender)
-       {
-           // Ensure the script is loaded before calling it
-           await JSRuntime.InvokeVoidAsync("eval", "if (typeof YourNamespace === 'undefined') { var script = document.createElement('script'); script.src = '/Modules/Your.Module.Name/Module.js'; document.head.appendChild(script); }");
-
-           // Wait a tiny bit for script to parse if it was just added
-           await Task.Delay(100);
-
-           await JSRuntime.InvokeVoidAsync("YourNamespace.YourModule.YourFeature.init", "elementId");
-       }
-   }
-   ```
-
 ## Verification
 The Blazor component successfully invokes the JS function without throwing `JSException: Could not find '[Function]' ('[Namespace]' was undefined)`.
 
@@ -71,7 +53,6 @@ See `Client/Modules/Enrollment/Signature.razor` and `Server/wwwroot/Modules/Open
 
 ## Notes
 - Avoid using `IJSObjectReference` and `import("./script.js")` in Oqtane modules, as the framework's routing and static file serving handles module assets differently than standard standalone Blazor apps.
-- The `eval` workaround is necessary because Oqtane's resource manager loads scripts asynchronously, creating a race condition with `OnAfterRenderAsync`.
 
 ## References
 - Oqtane Framework Module Development Documentation
