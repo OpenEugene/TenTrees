@@ -119,21 +119,29 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
             return Task.FromResult(assessment);
         }
 
+        private int CalculatePermaculturePrinciplesCount(Models.Assessment assessment)
+        {
+            var count = 0;
+
+            if (assessment.TreesLookHealthy) count++;
+            if (!assessment.HasChemicalFertilizers) count++;
+            if (!assessment.HasPesticides) count++;
+            if (assessment.IsMulched) count++;
+            if (assessment.IsMakingCompost) count++;
+            if (assessment.IsCollectingWater) count++;
+            if (!assessment.HasLeakyTaps) count++;
+            if (assessment.IsGardenDesignedToCaptureWater) count++;
+            if (assessment.IsUsingGreywater) count++;
+
+            return count;
+        }
+
         public Task<Models.Assessment> UpdateAssessmentAsync(Models.Assessment assessment)
         {
             if (_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, assessment.ModuleId, PermissionNames.Edit))
             {
                 // Calculate Permaculture Principles Count
-                assessment.PermaculturePrinciplesCount = 0;
-                if (assessment.TreesLookHealthy) assessment.PermaculturePrinciplesCount++;
-                if (!assessment.HasChemicalFertilizers) assessment.PermaculturePrinciplesCount++;
-                if (!assessment.HasPesticides) assessment.PermaculturePrinciplesCount++;
-                if (assessment.IsMulched) assessment.PermaculturePrinciplesCount++;
-                if (assessment.IsMakingCompost) assessment.PermaculturePrinciplesCount++;
-                if (assessment.IsCollectingWater) assessment.PermaculturePrinciplesCount++;
-                if (!assessment.HasLeakyTaps) assessment.PermaculturePrinciplesCount++;
-                if (assessment.IsGardenDesignedToCaptureWater) assessment.PermaculturePrinciplesCount++;
-                if (assessment.IsUsingGreywater) assessment.PermaculturePrinciplesCount++;
+                assessment.PermaculturePrinciplesCount = CalculatePermaculturePrinciplesCount(assessment);
 
                 assessment = _assessmentRepository.UpdateAssessment(assessment);
                 _logger.Log(LogLevel.Information, this, LogFunction.Update, "Assessment Updated {Assessment}", assessment);
