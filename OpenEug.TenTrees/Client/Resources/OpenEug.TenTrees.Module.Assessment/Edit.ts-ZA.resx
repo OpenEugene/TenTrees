@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="FormTitle" xml:space="preserve">
+    <value>[XS] Garden Assessment</value>
+  </data>
+  <data name="Section.GrowerInfo" xml:space="preserve">
+    <value>[XS] Grower Information</value>
+  </data>
+  <data name="Grower" xml:space="preserve">
+    <value>[XS] Grower</value>
+  </data>
+  <data name="SelectGrower" xml:space="preserve">
+    <value>[XS] -- Select Grower --</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>[XS] Assessment Date</value>
+  </data>
+  <data name="Section.TreeSurvival" xml:space="preserve">
+    <value>[XS] Tree Survival</value>
+  </data>
+  <data name="TreesPlanted" xml:space="preserve">
+    <value>[XS] Trees Planted</value>
+  </data>
+  <data name="TreesAlive" xml:space="preserve">
+    <value>[XS] Trees Still Alive</value>
+  </data>
+  <data name="DeceasedTrees" xml:space="preserve">
+    <value>[XS] If any died, which ones?</value>
+  </data>
+  <data name="SurvivalRate" xml:space="preserve">
+    <value>[XS] Survival Rate</value>
+  </data>
+  <data name="Section.Problems" xml:space="preserve">
+    <value>[XS] Problems</value>
+  </data>
+  <data name="ProblemsPrompt" xml:space="preserve">
+    <value>[XS] Which problems do you observe?</value>
+  </data>
+  <data name="Problem.YellowLeaves" xml:space="preserve">
+    <value>[XS] The trees have yellow leaves</value>
+  </data>
+  <data name="Problem.BrokenBranches" xml:space="preserve">
+    <value>[XS] The trees have broken branches</value>
+  </data>
+  <data name="Problem.LosingLeaves" xml:space="preserve">
+    <value>[XS] The trees are losing their leaves</value>
+  </data>
+  <data name="Problem.LookDry" xml:space="preserve">
+    <value>[XS] The trees look dry</value>
+  </data>
+  <data name="Problem.Pests" xml:space="preserve">
+    <value>[XS] Pests eating the plant</value>
+  </data>
+  <data name="NeedsHelp" xml:space="preserve">
+    <value>[XS] Do you need someone to help with this problem?</value>
+  </data>
+  <data name="Section.Permaculture" xml:space="preserve">
+    <value>[XS] Permaculture Practices</value>
+  </data>
+  <data name="Practice.Healthy" xml:space="preserve">
+    <value>[XS] Do the trees look healthy?</value>
+  </data>
+  <data name="Practice.Chemicals" xml:space="preserve">
+    <value>[XS] Any chemical fertilizers?</value>
+  </data>
+  <data name="Practice.Pesticides" xml:space="preserve">
+    <value>[XS] Any pesticides used?</value>
+  </data>
+  <data name="Practice.Mulched" xml:space="preserve">
+    <value>[XS] Are the trees mulched?</value>
+  </data>
+  <data name="Practice.Compost" xml:space="preserve">
+    <value>[XS] Are they making compost?</value>
+  </data>
+  <data name="Practice.CollectingWater" xml:space="preserve">
+    <value>[XS] Are they collecting water?</value>
+  </data>
+  <data name="Practice.LeakyTaps" xml:space="preserve">
+    <value>[XS] Any leaky taps visible?</value>
+  </data>
+  <data name="Practice.GardenDesign" xml:space="preserve">
+    <value>[XS] Is the garden designed to capture water?</value>
+  </data>
+  <data name="Practice.Greywater" xml:space="preserve">
+    <value>[XS] Are they using greywater?</value>
+  </data>
+  <data name="Section.Notes" xml:space="preserve">
+    <value>[XS] Notes</value>
+  </data>
+  <data name="NotesPlaceholder" xml:space="preserve">
+    <value>[XS] Enter any additional notes here...</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>[XS] Save</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>[XS] Cancel</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>[XS] Yes</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>[XS] No</value>
+  </data>
+  <data name="Message.SelectGrower" xml:space="preserve">
+    <value>[XS] Please select a grower.</value>
+  </data>
+  <data name="Message.FrequencyError" xml:space="preserve">
+    <value>[XS] An assessment was submitted too recently for this grower.</value>
+  </data>
+  <data name="Message.SaveSuccess" xml:space="preserve">
+    <value>[XS] Your assessment has been saved.</value>
+  </data>
+  <data name="Message.UpdateSuccess" xml:space="preserve">
+    <value>[XS] Assessment updated successfully.</value>
+  </data>
+  <data name="Message.SaveValidation" xml:space="preserve">
+    <value>[XS] Please correct the errors on the form.</value>
+  </data>
+  <data name="Message.SaveError" xml:space="preserve">
+    <value>[XS] Error saving assessment.</value>
+  </data>
+  <data name="Message.LoadError" xml:space="preserve">
+    <value>[XS] Error loading assessment.</value>
+  </data>
+  <data name="SaveDraft" xml:space="preserve">
+    <value>[XS] Save Draft</value>
+  </data>
+  <data name="LoadDraft" xml:space="preserve">
+    <value>[XS] Load Draft</value>
+  </data>
+  <data name="Message.DraftSaved" xml:space="preserve">
+    <value>[XS] Draft saved locally.</value>
+  </data>
+  <data name="Message.DraftLoaded" xml:space="preserve">
+    <value>[XS] Draft loaded.</value>
+  </data>
+</root>

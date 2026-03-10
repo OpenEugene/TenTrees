@@ -1,16 +1,13 @@
 <Solution>
   <Folder Name="/Solution Items/">
+    <File Path="../.github/copilot.instructions.md" />
     <File Path="../10_Trees_BDD_Project_Plan.md" />
     <File Path="../README.md" />
-    <File Path=".github/copilot-instructions.md" />
     <File Path=".mcp.json" />
   </Folder>
   <Project Path="Client/OpenEug.TenTrees.Client.csproj" />
   <Project Path="Server/OpenEug.TenTrees.Server.csproj" />
   <Project Path="Shared/OpenEug.TenTrees.Shared.csproj" />
-  <Project Path="Specs/Specs.csproj" Id="5b806d71-db94-4c68-90d9-832c1760dce6">
-    <Build Solution="Debug|*" Project="false" />
-  </Project>
   <Project Path="Sql/Sql.sqlproj" Id="54aef72d-f821-4e0b-acca-cab49fbfaa54">
     <Build Solution="Release|*" />
     <Deploy />

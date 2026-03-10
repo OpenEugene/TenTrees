@@ -88,7 +88,7 @@
     private bool _womanHeadedHousehold;
     private bool _emptyYard;
 
-    protected override void OnInitialized()
+    protected override void OnParametersSet()
     {
         if (StateService.CurrentDraft == null)
         {
