@@ -9,9 +9,18 @@
 @inject IStringLocalizer<Status> Localizer
 @inject IJSRuntime JSRuntime
 
-@if (_grower == null)
+@if (_isLoading)
 {
     <p><em>@Localizer["Message.Loading"]</em></p>
+}
+else if (_grower == null)
+{
+    <div class="alert alert-danger">
+        <i class="bi bi-exclamation-triangle"></i> @Localizer["Message.GrowerNotFound"]
+    </div>
+    <button class="btn btn-secondary" @onclick="NavigateToIndex">
+        <i class="bi bi-arrow-left"></i> @Localizer["Action.BackToList"]
+    </button>
 }
 else
 {
@@ -165,6 +174,7 @@ else
 
 @code {
     private Models.Grower _grower;
+    private bool _isLoading = true;
     private bool _showExitForm = false;
     private DateTime _exitDate = DateTime.Today;
     private string _exitReason = "";
@@ -183,14 +193,24 @@ else
         {
             if (!string.IsNullOrEmpty(Id))
             {
+                _isLoading = true;
                 int growerId = int.Parse(Id);
                 _grower = await GrowerService.GetGrowerAsync(growerId, ModuleState.ModuleId);
+                
+                if (_grower == null)
+                {
+                    await logger.LogWarning("Grower {Id} not found or unauthorized", Id);
+                }
             }
         }
         catch (Exception ex)
         {
             await logger.LogError(ex, "Error Loading Grower {Id} {Error}", Id, ex.Message);
             AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
+        }
+        finally
+        {
+            _isLoading = false;
         }
     }
 
