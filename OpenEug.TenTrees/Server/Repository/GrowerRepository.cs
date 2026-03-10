@@ -12,6 +12,7 @@ namespace OpenEug.TenTrees.Module.Grower.Repository
         Models.Grower GetGrower(int growerId, bool tracking);
         IEnumerable<Models.Grower> GetAllGrowers(int? villageId = null);
         IEnumerable<Models.Grower> GetGrowersByVillage(int villageId);
+        IEnumerable<Models.Grower> GetGrowersByMentor(string mentorId);
         IEnumerable<Models.Grower> GetGrowersByStatus(GrowerStatus status, int? villageId = null);
         IEnumerable<Models.Grower> GetActiveGrowers(int? villageId = null);
         Models.Grower AddGrower(Models.Grower grower);
@@ -64,6 +65,12 @@ namespace OpenEug.TenTrees.Module.Grower.Repository
         {
             using var db = _factory.CreateDbContext();
             return db.Grower.Where(g => g.VillageId == villageId).ToList();
+        }
+
+        public IEnumerable<Models.Grower> GetGrowersByMentor(string mentorId)
+        {
+            using var db = _factory.CreateDbContext();
+            return db.Grower.Where(g => g.MentorId == mentorId).ToList();
         }
 
         public IEnumerable<Models.Grower> GetGrowersByStatus(GrowerStatus status, int? villageId = null)
