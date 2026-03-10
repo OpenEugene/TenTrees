@@ -9,7 +9,7 @@
   </SourceModelProvider>
   <TargetModelProvider>
     <ConnectionBasedModelProvider>
-      <ConnectionString>Data Source=db38494.public.databaseasp.net;Initial Catalog=db38494;Persist Security Info=True;User ID=db38494;Pooling=False;Multiple Active Result Sets=False;Connect Timeout=60;Encrypt=False;Trust Server Certificate=False;Command Timeout=0</ConnectionString>
+      <ConnectionString>Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=TenTrees;Integrated Security=True</ConnectionString>
     </ConnectionBasedModelProvider>
   </TargetModelProvider>
   <SchemaCompareSettingsService>
