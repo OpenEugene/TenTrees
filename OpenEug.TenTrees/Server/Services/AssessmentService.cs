@@ -140,6 +140,20 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
         {
             if (_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, assessment.ModuleId, PermissionNames.Edit))
             {
+                var grower = _growerRepository.GetGrower(assessment.GrowerId);
+                if (grower == null)
+                {
+                    _logger.Log(LogLevel.Error, this, LogFunction.Update, "Grower not found {GrowerId}", assessment.GrowerId);
+                    return Task.FromResult<Models.Assessment>(null);
+                }
+
+                bool isAdmin = _accessor.HttpContext.User.IsInRole(RoleNames.Admin);
+                if (!isAdmin && grower.MentorId != _accessor.HttpContext.User.Identity.Name)
+                {
+                    _logger.Log(LogLevel.Error, this, LogFunction.Security, "User {User} is not assigned to grower {GrowerId}", _accessor.HttpContext.User.Identity.Name, assessment.GrowerId);
+                    return Task.FromResult<Models.Assessment>(null);
+                }
+
                 // Calculate Permaculture Principles Count
                 assessment.PermaculturePrinciplesCount = CalculatePermaculturePrinciplesCount(assessment);
 
