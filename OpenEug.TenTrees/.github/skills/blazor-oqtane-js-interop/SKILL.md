@@ -53,9 +53,6 @@ See `Client/Modules/Enrollment/Signature.razor` and `Server/wwwroot/Modules/Open
 
 ## Notes
 - Avoid using `IJSObjectReference` and `import("./script.js")` in Oqtane modules, as the framework's routing and static file serving handles module assets differently than standard standalone Blazor apps.
-- The `eval` workaround is necessary because Oqtane's resource manager loads scripts asynchronously, creating a race condition with `OnAfterRenderAsync`.
-- The polling mechanism (checking `typeof YourNamespace !== 'undefined'` in a loop) is more reliable than a fixed `Task.Delay` because it responds as soon as the namespace is ready rather than waiting an arbitrary amount of time. The 5-second timeout prevents infinite loops in error conditions. If the namespace is still undefined after 5 seconds, the subsequent `InvokeVoidAsync` call will throw a `JSException`; handle this case if graceful degradation is needed.
-- Oqtane does not currently expose resource loading completion events for module scripts, making this polling pattern the recommended workaround for the race condition.
 
 ## References
 - Oqtane Framework Module Development Documentation
