@@ -17,8 +17,11 @@
     [TwoFactorCode]     NVARCHAR (6)   NULL,
     [TwoFactorExpiry]   DATETIME2 (7)  NULL,
     [TimeZoneId]        NVARCHAR (50)  NULL,
+    [CultureCode]       NVARCHAR (10)  NULL,
     CONSTRAINT [PK_User] PRIMARY KEY CLUSTERED ([UserId] ASC)
 );
+
+
 
 
 GO

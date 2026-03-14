@@ -23,13 +23,13 @@
     [VisitorTracking]      BIT             NULL,
     [CaptureBrokenUrls]    BIT             NULL,
     [Version]              NVARCHAR (50)   NULL,
-    [HomePageId]           INT             NULL,
     [HeadContent]          NVARCHAR (4000) NULL,
     [BodyContent]          NVARCHAR (4000) NULL,
     [Prerender]            BIT             NULL,
     [Hybrid]               BIT             NULL,
     [TimeZoneId]           NVARCHAR (50)   NULL,
     [EnhancedNavigation]   BIT             NULL,
+    [CultureCode]          NVARCHAR (10)   NULL,
     CONSTRAINT [PK_Site] PRIMARY KEY CLUSTERED ([SiteId] ASC)
 );
 
