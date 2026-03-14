@@ -419,3 +419,6 @@ FodyWeavers.xsd
 *.msp
 /OpenEug.TenTrees/.playwright-mcp
 /OpenEug.TenTrees/Server/appsettings.Production.json
+
+# Oqtane framework reference clone (local dev tool, never committed)
+.oqtane-ref/
