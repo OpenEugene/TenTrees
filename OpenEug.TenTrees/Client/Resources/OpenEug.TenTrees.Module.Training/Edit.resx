@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="Title.AddSession" xml:space="preserve">
+    <value>Add Training Session</value>
+  </data>
+  <data name="Title.EditSession" xml:space="preserve">
+    <value>Edit Training Session</value>
+  </data>
+  <data name="Section.SessionDetails" xml:space="preserve">
+    <value>Session Details</value>
+  </data>
+  <data name="ClassName" xml:space="preserve">
+    <value>Class Name:</value>
+  </data>
+  <data name="ClassDate" xml:space="preserve">
+    <value>Date:</value>
+  </data>
+  <data name="Village" xml:space="preserve">
+    <value>Village:</value>
+  </data>
+  <data name="ClassNumber" xml:space="preserve">
+    <value>Class Number (1-5):</value>
+  </data>
+  <data name="Notes" xml:space="preserve">
+    <value>Notes:</value>
+  </data>
+  <data name="SelectVillage" xml:space="preserve">
+    <value>-- Select Village --</value>
+  </data>
+  <data name="SelectClassNumber" xml:space="preserve">
+    <value>-- Select --</value>
+  </data>
+  <data name="Action.Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Action.Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Message.LoadError" xml:space="preserve">
+    <value>Error loading training session</value>
+  </data>
+  <data name="Message.SaveError" xml:space="preserve">
+    <value>Error saving training session</value>
+  </data>
+</root>
