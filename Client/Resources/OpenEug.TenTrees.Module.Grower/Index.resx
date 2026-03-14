@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="Filter.Status" xml:space="preserve">
+    <value>Filter by Status</value>
+  </data>
+  <data name="Filter.AllStatuses" xml:space="preserve">
+    <value>All Statuses</value>
+  </data>
+  <data name="Filter.Village" xml:space="preserve">
+    <value>Filter by Village</value>
+  </data>
+  <data name="Filter.AllVillages" xml:space="preserve">
+    <value>All Villages</value>
+  </data>
+  <data name="Action.ClearFilters" xml:space="preserve">
+    <value>Clear Filters</value>
+  </data>
+  <data name="Status.Active" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="Status.Inactive" xml:space="preserve">
+    <value>Inactive</value>
+  </data>
+  <data name="Status.Exited" xml:space="preserve">
+    <value>Exited</value>
+  </data>
+  <data name="Summary.Total" xml:space="preserve">
+    <value>Total</value>
+  </data>
+  <data name="Message.Loading" xml:space="preserve">
+    <value>Loading...</value>
+  </data>
+  <data name="Message.NoGrowers" xml:space="preserve">
+    <value>No growers found</value>
+  </data>
+  <data name="Message.LoadError" xml:space="preserve">
+    <value>Error loading growers</value>
+  </data>
+  <data name="Column.GrowerName" xml:space="preserve">
+    <value>Grower Name</value>
+  </data>
+  <data name="Column.Village" xml:space="preserve">
+    <value>Village</value>
+  </data>
+  <data name="Column.Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="Column.ExitDate" xml:space="preserve">
+    <value>Exit Date</value>
+  </data>
+  <data name="Column.Actions" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="Action.ManageStatus" xml:space="preserve">
+    <value>Manage Status</value>
+  </data>
+  <data name="UnknownVillage" xml:space="preserve">
+    <value>Unknown Village</value>
+  </data>
+</root>

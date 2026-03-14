@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="Add" xml:space="preserve">
+    <value>[XS] New Assessment</value>
+  </data>
+  <data name="Message.Loading" xml:space="preserve">
+    <value>[XS] Loading...</value>
+  </data>
+  <data name="Message.DisplayNone" xml:space="preserve">
+    <value>[XS] No assessments found.</value>
+  </data>
+  <data name="Column.Date" xml:space="preserve">
+    <value>[XS] Date</value>
+  </data>
+  <data name="Column.Grower" xml:space="preserve">
+    <value>[XS] Grower</value>
+  </data>
+  <data name="Column.SurvivalRate" xml:space="preserve">
+    <value>[XS] Survival Rate</value>
+  </data>
+  <data name="Column.PermacultureScore" xml:space="preserve">
+    <value>[XS] Permaculture Score</value>
+  </data>
+  <data name="Column.NeedsHelp" xml:space="preserve">
+    <value>[XS] Needs Help</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>[XS] Yes</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>[XS] No</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>[XS] Edit</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>[XS] Delete</value>
+  </data>
+  <data name="Message.LoadError" xml:space="preserve">
+    <value>[XS] Error loading assessments.</value>
+  </data>
+  <data name="Message.DeleteError" xml:space="preserve">
+    <value>[XS] Error deleting assessment.</value>
+  </data>
+</root>
