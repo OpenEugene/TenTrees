@@ -29,7 +29,7 @@ Feature: Village-Scoped Data Access
       | Contact Phone | 082 555 1234           |
       | Contact Email | sipho@example.com      |
       | Notes         | Near main tar road     |
-      | Is Active     | Yes                    |
+      | Is Active     | true                   |
     Then the village should be saved with all contact details
     And it should appear in the village selection dropdown for enrollment
 
