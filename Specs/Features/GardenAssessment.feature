@@ -8,6 +8,20 @@ Feature: Tree Monitoring and Garden Health Assessment
     Given I am a tree mentor assigned to households in my village
     And I am conducting a garden visit
 
+  # ─── SUBMISSION GUARD ───────────────────────────────────────────────────────
+
+  Scenario: Prevent assessment submission for an exited grower
+    Given grower "Grace Sithole" has status "Exited"
+    When I attempt to navigate to a new assessment for "Grace Sithole"
+    Then I should be blocked from submitting
+    And I should see a message indicating the grower is no longer active in the program
+
+  Scenario: System verifies submission eligibility before loading assessment form
+    Given grower "Mary Nkuna" is active in the program
+    When I navigate to a new assessment for "Mary Nkuna"
+    Then the system should confirm she is eligible to receive a new assessment
+    And the assessment form should load normally
+
   # ─── FORM LINKING ───────────────────────────────────────────────────────────
 
   Scenario: Assessment auto-fills grower details from application form

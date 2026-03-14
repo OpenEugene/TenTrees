@@ -8,6 +8,46 @@ Feature: Grower Enrollment Submission
     Given I am a tree mentor logged into the system
     And I am at a grower's household
 
+  # ─── ENROLLMENT LIST ────────────────────────────────────────────────────────
+
+  Scenario: View enrollment list with status summary dashboard
+    Given I navigate to the enrollments list
+    Then I should see four summary cards:
+      | Card     | Colour  |
+      | Pending  | Yellow  |
+      | Approved | Green   |
+      | Rejected | Red     |
+      | Total    | Blue    |
+    And each card should display the count of enrollments in that state
+
+  Scenario: Enrollment list shows both enrollment status and grower status
+    Given enrollments exist with varying states
+    When I view the enrollment list
+    Then each row should show an "Enrollment Status" badge (Pending / Approved / Rejected)
+    And each row should show a "Grower Status" badge (Active / Inactive / Exited)
+    And rows with Pending enrollment status should be highlighted in yellow
+    And rows with Rejected enrollment status should be highlighted in red
+
+  Scenario: Filter enrollment list by enrollment status
+    Given I am viewing the enrollment list
+    When I select status filter "Pending"
+    Then I should only see enrollments with status "Pending"
+    When I select status filter "Approved"
+    Then I should only see enrollments with status "Approved"
+
+  Scenario: Filter enrollment list by village
+    Given I am viewing the enrollment list as admin
+    When I select village "Orpen Gate Village" from the village filter
+    Then I should only see enrollments from "Orpen Gate Village"
+
+  Scenario: Clear filters to restore full enrollment list
+    Given I have applied a status filter and a village filter
+    When I click "Clear Filters"
+    Then both filters should reset
+    And all enrollments should be visible again
+
+  # ─── ENROLLMENT CREATION ────────────────────────────────────────────────────
+
   Scenario: Submit new grower enrollment
     Given I navigate to "New Enrollment"
     When I select the village "Orpen Gate Village"
@@ -104,3 +144,12 @@ Feature: Grower Enrollment Submission
     When I press my finger on the canvas and drag to draw
     Then the signature line should follow my finger
     And the page should not scroll while I am drawing on the canvas
+
+  # ─── ADMIN MAINTENANCE ──────────────────────────────────────────────────────
+
+  Scenario: Admin backfills grower records from existing enrollments
+    Given I am logged in as administrator
+    And some approved enrollments do not yet have linked Grower records
+    When I trigger "Backfill Growers" from the admin panel
+    Then a Grower record should be created for each approved enrollment that lacked one
+    And the count of newly created Grower records should be returned
