@@ -58,7 +58,7 @@ Feature: Permaculture Training Attendance Tracking
     Given grower "Grace Sithole" has attended 3 of 5 classes
     When I check her eligibility status
     Then status should show "2 classes remaining"
-    And "IsEligible" should be false
+    And "Is Eligible" should be false
     And she should not be marked as "Eligible for trees"
 
   # ─── VILLAGE TRAINING STATUS SUMMARY ────────────────────────────────────────
