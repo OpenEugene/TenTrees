@@ -1,3 +1,6 @@
+implement-grower-enrollment-module
+implement-class-attendance-training-module
+implement-village-management-module
 implement-tree-monitoring-garden-assessment-module
 add-notes-comments-field-to-garden-assessment-feature
 implement-problem-type-reference-data-hardcoded-crud-module
