@@ -32,7 +32,8 @@ This document provides a comprehensive Behavior-Driven Development (BDD) project
 ### 1.1 Key Stakeholders
 
 - **Tree Mentors (17 total):** Field staff collecting data on smartphones
-- **Centre Staff:** Admin, Project Manager, Educator, Executive Director
+- **Centre Staff:** 10 Trees Admin, Project Manager, Educator (permaculture educator; final role title TBD — Rebecca to confirm with Tri)
+  *(Note: there is no Executive Director. The organisation uses a distributed leadership model. Tri — Director of Permaculture Education and Community Development — leads permaculture work; a new administrator is being hired.)*
 - **Growers:** Women in the community receiving trees and training
 - **External Villages:** Future partner organizations using the 10 Trees brand
 
