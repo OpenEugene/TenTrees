@@ -1,0 +1,3110 @@
+WEBVTT
+
+00:04:54.000 --> 00:04:56.000
+Kimberlee Noel: companion here.
+
+00:04:57.000 --> 00:05:00.000
+mark: your fancy AI companion.
+
+00:05:11.000 --> 00:05:13.000
+rebeccaharmon: Hello!
+
+00:05:13.000 --> 00:05:17.000
+Kimberlee Noel: Hi, Becky. Do you prefer Rebecca or Becky?
+
+00:05:17.000 --> 00:05:19.000
+rebeccaharmon: Becky's good.
+
+00:05:18.000 --> 00:05:20.000
+Kimberlee Noel: Okay, hi Becky!
+
+00:05:19.000 --> 00:05:22.000
+rebeccaharmon: Hi, Kimberly! Hello, Mark!
+
+00:05:23.000 --> 00:05:25.000
+mark: Hey, good to see you again.
+
+00:05:25.000 --> 00:05:27.000
+rebeccaharmon: You too!
+
+00:05:26.000 --> 00:05:28.000
+Kimberlee Noel: Nice to meet you!
+
+00:05:27.000 --> 00:05:30.000
+rebeccaharmon: Yeah, nice to meet you too. Sorry, I lost that link.
+
+00:05:30.000 --> 00:05:32.000
+Kimberlee Noel: That's okay, things get buried.
+
+00:05:32.000 --> 00:05:36.000
+rebeccaharmon: I get inundated with stuff, as I know you guys do, too, and thenâ€¦
+
+00:05:35.000 --> 00:05:37.000
+Kimberlee Noel: Mhm.
+
+00:05:37.000 --> 00:05:41.000
+mark: You look like you're very comfy in your hoodie there, that's nice.
+
+00:05:40.000 --> 00:05:44.000
+rebeccaharmon: I am, I've got my, uh, tie-dyed hoodie on.
+
+00:05:44.000 --> 00:05:46.000
+mark: Fancy.
+
+00:05:45.000 --> 00:05:52.000
+rebeccaharmon: Some, um, Africanâ€¦ some young African woman made this.
+
+00:05:52.000 --> 00:05:54.000
+Kimberlee Noel: Oh, nice.
+
+00:05:52.000 --> 00:05:55.000
+rebeccaharmon: And I brought it back from South Africa, and I just love it.
+
+00:05:56.000 --> 00:05:58.000
+Kimberlee Noel: It looks comfy, and you look very tropical, Mark.
+
+00:05:56.000 --> 00:05:58.000
+mark: That's cool.
+
+00:05:59.000 --> 00:06:01.000
+Kimberlee Noel: Is thatâ€¦
+
+00:05:59.000 --> 00:06:01.000
+rebeccaharmon: Yes, you do.
+
+00:05:59.000 --> 00:06:07.000
+mark: I'm reâ€¦ yeah, I reâ€¦ recently back from Hawaii, and we went to the thrift stores, and I got some shirts.
+
+00:06:07.000 --> 00:06:09.000
+rebeccaharmon: Oh, nice!
+
+00:06:08.000 --> 00:06:10.000
+mark: On the cheap, I guess that's the way to do it.
+
+00:06:11.000 --> 00:06:14.000
+rebeccaharmon: How was the trip?
+
+00:06:11.000 --> 00:06:13.000
+Kimberlee Noel: Mhm.
+
+00:06:14.000 --> 00:06:19.000
+mark: Oh, it was great. Tarn is there. Our son Tarn is there with hisâ€¦
+
+00:06:19.000 --> 00:06:21.000
+mark: partner, Alice, andâ€¦
+
+00:06:21.000 --> 00:06:26.000
+mark: They're being, like, poor students living near the college, andâ€¦
+
+00:06:27.000 --> 00:06:31.000
+mark: But, you know, but they're in Hawaii, so how cool is that? Soâ€¦
+
+00:06:30.000 --> 00:06:32.000
+rebeccaharmon: Really? Great.
+
+00:06:30.000 --> 00:06:32.000
+Kimberlee Noel: Yeah.
+
+00:06:31.000 --> 00:06:34.000
+mark: So, uh, we hung out with them, andâ€¦
+
+00:06:34.000 --> 00:06:39.000
+mark: Jove around the island a bunch, and snorkeled every day, andâ€¦
+
+00:06:39.000 --> 00:06:41.000
+rebeccaharmon: Nice.
+
+00:06:39.000 --> 00:06:45.000
+mark: Heather saw turtles 6 times, I think that's her record for her, soâ€¦
+
+00:06:40.000 --> 00:06:42.000
+Kimberlee Noel: Mile.
+
+00:06:43.000 --> 00:06:45.000
+rebeccaharmon: Wowâ€¦
+
+00:06:46.000 --> 00:06:47.000
+rebeccaharmon: Beautiful.
+
+00:06:48.000 --> 00:06:50.000
+Kimberlee Noel: Sounds like you had fun.
+
+00:06:50.000 --> 00:06:52.000
+Kimberlee Noel: So, umâ€¦
+
+00:06:50.000 --> 00:06:52.000
+mark: Yeah.
+
+00:06:53.000 --> 00:06:56.000
+Kimberlee Noel: We're finally here to discuss, um.
+
+00:06:56.000 --> 00:06:59.000
+Kimberlee Noel: This project, um, building this platform forâ€¦
+
+00:06:59.000 --> 00:07:02.000
+Kimberlee Noel: Um, countries.
+
+00:07:02.000 --> 00:07:04.000
+Kimberlee Noel: And, umâ€¦
+
+00:07:04.000 --> 00:07:06.000
+Kimberlee Noel: Where should we start?
+
+00:07:08.000 --> 00:07:13.000
+mark: Well, we talked about 10 trees in person, and you had some great documents.
+
+00:07:12.000 --> 00:07:14.000
+Kimberlee Noel: Mhm.
+
+00:07:13.000 --> 00:07:16.000
+mark: And then Iâ€¦ and then I built a, uhâ€¦
+
+00:07:16.000 --> 00:07:19.000
+mark: Uh, and then I built, like, a broken prototype.
+
+00:07:20.000 --> 00:07:22.000
+mark: To kind of give a feel forâ€¦
+
+00:07:22.000 --> 00:07:25.000
+mark: What it could look like as a live site.
+
+00:07:26.000 --> 00:07:31.000
+mark: And then Becky gave some feedback on that.
+
+00:07:31.000 --> 00:07:34.000
+mark: And I think you've coalesced that into thisâ€¦
+
+00:07:35.000 --> 00:07:37.000
+mark: document.
+
+00:07:35.000 --> 00:07:37.000
+Kimberlee Noel: Yes.
+
+00:07:36.000 --> 00:07:38.000
+rebeccaharmon: Yeah, she did.
+
+00:07:38.000 --> 00:07:41.000
+Kimberlee Noel: And I sent that over toâ€¦ so you did receive that, Becky. Great.
+
+00:07:41.000 --> 00:07:42.000
+rebeccaharmon: I got it.
+
+00:07:41.000 --> 00:07:46.000
+Kimberlee Noel: And, um, I'm not sure if Mark had a chance to fully review it before we, um.
+
+00:07:47.000 --> 00:07:53.000
+Kimberlee Noel: Got into this meeting, so maybe we can go over it now, and just make sure everything, um, looks good on it, and is accurate.
+
+00:07:54.000 --> 00:07:59.000
+Kimberlee Noel: Um, so I'll just start at the top for the main idea for this project is to build.
+
+00:08:00.000 --> 00:08:04.000
+Kimberlee Noel: Um, around, uh, build digital forms, um.
+
+00:08:05.000 --> 00:08:07.000
+Kimberlee Noel: To be used by mentors in the field.
+
+00:08:08.000 --> 00:08:12.000
+Kimberlee Noel: Um, the mentors collect the data on their smartphones.
+
+00:08:12.000 --> 00:08:17.000
+Kimberlee Noel: And upload it, um, when connected to a central web-based database accessible.
+
+00:08:17.000 --> 00:08:20.000
+Kimberlee Noel: accessible to the Tentrees team.
+
+00:08:21.000 --> 00:08:28.000
+Kimberlee Noel: Um, the admin, project manager, and educator are the ones that can, um, not only view, but download data as needed.
+
+00:08:29.000 --> 00:08:31.000
+rebeccaharmon: Correctamundo.
+
+00:08:31.000 --> 00:08:33.000
+Kimberlee Noel: Okay.
+
+00:08:33.000 --> 00:08:35.000
+Kimberlee Noel: Um, so I guess we could justâ€¦
+
+00:08:35.000 --> 00:08:42.000
+Kimberlee Noel: go down the list here, and Mark, please jump in, um, if we get into the, like, technical stuff that you're dealing with.
+
+00:08:42.000 --> 00:08:44.000
+mark: Darn.
+
+00:08:42.000 --> 00:08:44.000
+Kimberlee Noel: Uh, umâ€¦
+
+00:08:44.000 --> 00:08:49.000
+Kimberlee Noel: So, the core components are, um, the users and the devices, soâ€¦
+
+00:08:49.000 --> 00:08:52.000
+Kimberlee Noel: Um, from what I understand, you currently haveâ€¦
+
+00:08:52.000 --> 00:08:56.000
+Kimberlee Noel: 17 tree mentors, or is that just in oneâ€¦ is that total?
+
+00:08:57.000 --> 00:09:01.000
+rebeccaharmon: Well, we're in one village right now with 10 trees.
+
+00:09:01.000 --> 00:09:04.000
+rebeccaharmon: And we have 17 tree mentors in that village.
+
+00:09:01.000 --> 00:09:03.000
+Kimberlee Noel: Okay.
+
+00:09:04.000 --> 00:09:07.000
+rebeccaharmon: And then we're getting ready toâ€¦
+
+00:09:07.000 --> 00:09:09.000
+rebeccaharmon: Um, launched this hugeâ€¦
+
+00:09:10.000 --> 00:09:12.000
+rebeccaharmon: Matching Grant Campaign.
+
+00:09:13.000 --> 00:09:15.000
+rebeccaharmon: And, umâ€¦
+
+00:09:15.000 --> 00:09:20.000
+rebeccaharmon: The main purpose of that matching grant campaign is to be able to.
+
+00:09:20.000 --> 00:09:24.000
+rebeccaharmon: Initiate 10 Trees in the second village we work in.
+
+00:09:24.000 --> 00:09:26.000
+Kimberlee Noel: Okay.
+
+00:09:25.000 --> 00:09:30.000
+rebeccaharmon: And, um, so then there will be, initially.
+
+00:09:30.000 --> 00:09:32.000
+rebeccaharmon: Five tree mentors in that village.
+
+00:09:33.000 --> 00:09:37.000
+rebeccaharmon: Because we're starting with 55 households.
+
+00:09:37.000 --> 00:09:39.000
+Kimberlee Noel: Mhm.
+
+00:09:37.000 --> 00:09:39.000
+rebeccaharmon: And then, umâ€¦
+
+00:09:39.000 --> 00:09:43.000
+rebeccaharmon: we have a third village. We are justâ€¦
+
+00:09:44.000 --> 00:09:52.000
+rebeccaharmon: This week, finished up a big grant proposal, and if that gets funded, then we'll be moving to a third village, and then there's a fourth village.
+
+00:09:52.000 --> 00:09:54.000
+rebeccaharmon: That we're in conversation with. Soâ€¦
+
+00:09:54.000 --> 00:09:56.000
+Kimberlee Noel: So it's growing, andâ€¦
+
+00:09:55.000 --> 00:09:57.000
+rebeccaharmon: It's growing.
+
+00:09:56.000 --> 00:10:00.000
+Kimberlee Noel: Yeah, it'sâ€¦ and it wouldn't really be sustainable to keep.
+
+00:10:00.000 --> 00:10:03.000
+Kimberlee Noel: Doing the things the way that they're currently.
+
+00:10:04.000 --> 00:10:06.000
+Kimberlee Noel: Happening with paper and pencil, soâ€¦
+
+00:10:06.000 --> 00:10:14.000
+Kimberlee Noel: Um, I see it's important that, you know, we have something that's easy for people to use, and umâ€¦
+
+00:10:15.000 --> 00:10:18.000
+Kimberlee Noel: Uh, keeps all the data in one place.
+
+00:10:18.000 --> 00:10:20.000
+rebeccaharmon: Yeah.
+
+00:10:18.000 --> 00:10:20.000
+Kimberlee Noel: Um, okay.
+
+00:10:20.000 --> 00:10:22.000
+Kimberlee Noel: Um, soâ€¦
+
+00:10:23.000 --> 00:10:26.000
+Kimberlee Noel: And they're currently using smartphones.
+
+00:10:26.000 --> 00:10:30.000
+Kimberlee Noel: um, mixed brands, like Nokia or off-brand.
+
+00:10:30.000 --> 00:10:34.000
+Kimberlee Noel: Um, and those devices are working okay.
+
+00:10:34.000 --> 00:10:36.000
+Kimberlee Noel: Um, what'd you say?
+
+00:10:36.000 --> 00:10:38.000
+rebeccaharmon: Well, umâ€¦
+
+00:10:39.000 --> 00:10:43.000
+rebeccaharmon: They mainly useâ€¦ they don't do any forms on those phones.
+
+00:10:42.000 --> 00:10:44.000
+Kimberlee Noel: Mhm.
+
+00:10:43.000 --> 00:10:46.000
+rebeccaharmon: Um, they mainly use them to take.
+
+00:10:46.000 --> 00:10:48.000
+rebeccaharmon: photos and upload them to WhatsApp.
+
+00:10:49.000 --> 00:10:53.000
+rebeccaharmon: Or we communicate. We have a WhatsApp group for all the tree mentors.
+
+00:10:53.000 --> 00:10:56.000
+rebeccaharmon: And we communicate things like.
+
+00:10:56.000 --> 00:11:02.000
+rebeccaharmon: Um, if they're having a problem in somebody's household, they would send us a message on WhatsApp for that.
+
+00:11:02.000 --> 00:11:07.000
+rebeccaharmon: If we're gonna have a big meeting with the tree mentors, we send out a message on WhatsApp.
+
+00:11:07.000 --> 00:11:12.000
+rebeccaharmon: So, mainly what they're using it for in relation to 10 Trees is, um.
+
+00:11:12.000 --> 00:11:15.000
+rebeccaharmon: To upload photos, and then communication.
+
+00:11:15.000 --> 00:11:17.000
+Kimberlee Noel: Okay, butâ€¦
+
+00:11:18.000 --> 00:11:21.000
+Kimberlee Noel: The goal is to also be able to fill out forms.
+
+00:11:22.000 --> 00:11:24.000
+Kimberlee Noel: Using the smartphone? Is thatâ€¦
+
+00:11:23.000 --> 00:11:28.000
+rebeccaharmon: Yes, well, we want them to be able to fill out the forms on the phones.
+
+00:11:28.000 --> 00:11:30.000
+Kimberlee Noel: Mhm.
+
+00:11:29.000 --> 00:11:33.000
+rebeccaharmon: Um, and then we upload those to the centralâ€¦
+
+00:11:33.000 --> 00:11:38.000
+rebeccaharmon: whatever you call it, I don't know, I call it database, you might call it something else, but.
+
+00:11:38.000 --> 00:11:41.000
+rebeccaharmon: So that we basically haveâ€¦
+
+00:11:42.000 --> 00:11:46.000
+rebeccaharmon: Whatever they've put into their phones, upload it into the main database.
+
+00:11:46.000 --> 00:11:51.000
+Kimberlee Noel: And the reason we can't really do that in real time is because of theâ€¦
+
+00:11:51.000 --> 00:11:53.000
+Kimberlee Noel: Wi-Fi issue.
+
+00:11:53.000 --> 00:11:57.000
+rebeccaharmon: Yeah, um, I mean, nobody out there has.
+
+00:11:57.000 --> 00:11:59.000
+rebeccaharmon: um, internet.
+
+00:11:59.000 --> 00:12:00.000
+Kimberlee Noel: Mhm, mhm.
+
+00:12:00.000 --> 00:12:04.000
+rebeccaharmon: And so, we buy them a data package every month.
+
+00:12:04.000 --> 00:12:10.000
+rebeccaharmon: That's minimal, because all we're really doing is just uploading photos and messages.
+
+00:12:06.000 --> 00:12:07.000
+Kimberlee Noel: Mhm.
+
+00:12:10.000 --> 00:12:13.000
+rebeccaharmon: Uh, so they get about a half a gig of data.
+
+00:12:13.000 --> 00:12:15.000
+rebeccaharmon: per month.
+
+00:12:14.000 --> 00:12:16.000
+Kimberlee Noel: Mhm.
+
+00:12:15.000 --> 00:12:18.000
+rebeccaharmon: Umâ€¦ butâ€¦
+
+00:12:18.000 --> 00:12:23.000
+rebeccaharmon: you know, the only place out in that village where there's Wi-Fi is at our center.
+
+00:12:23.000 --> 00:12:29.000
+Kimberlee Noel: Mm-hmm. And are the mentors, do they visit the center regularly, orâ€¦ They do, okay.
+
+00:12:29.000 --> 00:12:34.000
+rebeccaharmon: Yeah. Well, they have toâ€¦ right now, they have to come turn in their garden assessment.
+
+00:12:33.000 --> 00:12:35.000
+Kimberlee Noel: Mm-hmm, mhm.
+
+00:12:34.000 --> 00:12:43.000
+rebeccaharmon: two weeks. And so it would be the same thing. They would have to come, but instead of having the paper to turn in, they would bring their phone and upload it to.
+
+00:12:43.000 --> 00:12:45.000
+Kimberlee Noel: Mhm.
+
+00:12:44.000 --> 00:12:48.000
+rebeccaharmon: you know, theâ€¦ what do you all call it? Is it a database, or is it something else?
+
+00:12:48.000 --> 00:12:53.000
+mark: Sure, I mean, we can call it a database. It's basically, it's an onlineâ€¦
+
+00:12:53.000 --> 00:12:57.000
+mark: data. You know, the forms are online, the data's online.
+
+00:12:57.000 --> 00:12:59.000
+mark: The tricky part withâ€¦
+
+00:13:00.000 --> 00:13:03.000
+mark: Letting theâ€¦ with having it work offline.
+
+00:13:04.000 --> 00:13:06.000
+mark: isâ€¦
+
+00:13:06.000 --> 00:13:09.000
+mark: You know, does that mean we're installing an app on their phone?
+
+00:13:09.000 --> 00:13:13.000
+mark: You know, it's almost like you need, umâ€¦
+
+00:13:13.000 --> 00:13:15.000
+mark: an internet connection.
+
+00:13:15.000 --> 00:13:19.000
+mark: to even get started, right? Like, to, like, go to the webpage or whatever.
+
+00:13:19.000 --> 00:13:21.000
+rebeccaharmon: Right.
+
+00:13:19.000 --> 00:13:23.000
+mark: Kind of, once you're on the webpage, we can do someâ€¦
+
+00:13:23.000 --> 00:13:29.000
+mark: You know, hold onto the data locally, you know, upload it sort of thing, butâ€¦
+
+00:13:31.000 --> 00:13:36.000
+mark: It would be reallyâ€¦ it would be reallyâ€¦ it would be really nice toâ€¦ toâ€¦ to just say.
+
+00:13:31.000 --> 00:13:33.000
+rebeccaharmon: So you certainly haveâ€¦
+
+00:13:36.000 --> 00:13:41.000
+mark: Weâ€¦ it needs to be online, because it'sâ€¦ to make it, likeâ€¦
+
+00:13:41.000 --> 00:13:46.000
+mark: Install an app on the phone, and sync it up, and all this stuff is, like.
+
+00:13:46.000 --> 00:13:49.000
+mark: Just a different level ofâ€¦
+
+00:13:50.000 --> 00:13:57.000
+mark: Having to work with the phones, and, you know, hands-on stuff, and sideloading, andâ€¦
+
+00:13:58.000 --> 00:14:00.000
+mark: So if weâ€¦ if we can have aâ€¦
+
+00:14:00.000 --> 00:14:03.000
+mark: Minimum constraint that says they're online.
+
+00:14:03.000 --> 00:14:05.000
+mark: That'll make this a lot.
+
+00:14:06.000 --> 00:14:08.000
+mark: easier. So they might have toâ€¦
+
+00:14:09.000 --> 00:14:15.000
+mark: If they have to visit the center to get online, they might still have to be taking some notes.
+
+00:14:15.000 --> 00:14:17.000
+mark: you knowâ€¦
+
+00:14:17.000 --> 00:14:21.000
+rebeccaharmon: Well, Iâ€¦ I guess the question isâ€¦
+
+00:14:17.000 --> 00:14:19.000
+mark: Offload somehow.
+
+00:14:21.000 --> 00:14:24.000
+rebeccaharmon: If we did it online.
+
+00:14:25.000 --> 00:14:29.000
+rebeccaharmon: And they had data, so they could connect.
+
+00:14:29.000 --> 00:14:31.000
+rebeccaharmon: to the network.
+
+00:14:32.000 --> 00:14:33.000
+mark: Yeah.
+
+00:14:32.000 --> 00:14:34.000
+rebeccaharmon: Um, thenâ€¦
+
+00:14:35.000 --> 00:14:37.000
+rebeccaharmon: I mean, right now, they're connectingâ€¦
+
+00:14:37.000 --> 00:14:39.000
+rebeccaharmon: online via WhatsApp.
+
+00:14:39.000 --> 00:14:47.000
+mark: Yeah, yeah, and the amount of data that we're moving around for the forms is miniscule compared to even one photo.
+
+00:14:47.000 --> 00:14:49.000
+rebeccaharmon: Yeah.
+
+00:14:47.000 --> 00:14:53.000
+mark: Right? And so, if they're able to do photos without visiting.
+
+00:14:47.000 --> 00:14:49.000
+Kimberlee Noel: Mhm.
+
+00:14:53.000 --> 00:14:57.000
+mark: the center. They're able to do photos in the field.
+
+00:14:54.000 --> 00:14:56.000
+rebeccaharmon: Yep.
+
+00:14:57.000 --> 00:14:59.000
+rebeccaharmon: Yep.
+
+00:14:57.000 --> 00:15:00.000
+mark: They'll be able to do this as well, I'm sure.
+
+00:15:00.000 --> 00:15:02.000
+rebeccaharmon: Okay, well, that makes sense.
+
+00:15:03.000 --> 00:15:05.000
+rebeccaharmon: Um, and I thinkâ€¦
+
+00:15:05.000 --> 00:15:08.000
+rebeccaharmon: it's possible, I mean, we'll just have to look atâ€¦
+
+00:15:08.000 --> 00:15:12.000
+rebeccaharmon: How much data it's gonna take for them to do this.
+
+00:15:13.000 --> 00:15:15.000
+rebeccaharmon: And adjust accordingly.
+
+00:15:16.000 --> 00:15:19.000
+rebeccaharmon: Um, right now, I think per person.
+
+00:15:19.000 --> 00:15:22.000
+rebeccaharmon: Um, we spendâ€¦
+
+00:15:23.000 --> 00:15:25.000
+rebeccaharmon: Let's see, uhâ€¦
+
+00:15:30.000 --> 00:15:31.000
+rebeccaharmon: It's aboutâ€¦ oops.
+
+00:15:33.000 --> 00:15:35.000
+rebeccaharmon: Umâ€¦
+
+00:15:36.000 --> 00:15:39.000
+rebeccaharmon: It's about $3.25 a month.
+
+00:15:40.000 --> 00:15:42.000
+rebeccaharmon: Per person for their data.
+
+00:15:42.000 --> 00:15:44.000
+mark: Yeah.
+
+00:15:45.000 --> 00:15:47.000
+mark: Well, and we can make it, uhâ€¦
+
+00:15:47.000 --> 00:15:54.000
+mark: Yeah, we've got some tricks up our sleeve, too. Like, you can have them, when they visit the center, tell them to go to the website and.
+
+00:15:54.000 --> 00:16:00.000
+mark: log in and get them started, right? What that'll do is that'll put a bunch of stuff on their phone.
+
+00:15:57.000 --> 00:15:59.000
+rebeccaharmon: Yep.
+
+00:16:01.000 --> 00:16:04.000
+mark: And so when they go to visit the site again.
+
+00:16:04.000 --> 00:16:06.000
+mark: It won't be trying toâ€¦
+
+00:16:07.000 --> 00:16:14.000
+mark: get all the stuff. Like, it'll be like, oh, you know, it's like, I got most of the stuff I need, just put in the stuff, and so we're justâ€¦
+
+00:16:09.000 --> 00:16:11.000
+rebeccaharmon: Right.
+
+00:16:14.000 --> 00:16:17.000
+mark: At that point, we're just kind of moving data around.
+
+00:16:17.000 --> 00:16:21.000
+mark: Uh, not the app, not the UI and stuff, soâ€¦
+
+00:16:21.000 --> 00:16:27.000
+Kimberlee Noel: Well, and we can add it to their phone as an icon too, right?
+
+00:16:27.000 --> 00:16:29.000
+Kimberlee Noel: Hmm. Umâ€¦
+
+00:16:28.000 --> 00:16:30.000
+mark: Turn.
+
+00:16:29.000 --> 00:16:31.000
+Kimberlee Noel: So, it'sâ€¦ even though it's not an app.
+
+00:16:31.000 --> 00:16:34.000
+Kimberlee Noel: It wouldâ€¦ there would be, like, an icon that looks very app-like.
+
+00:16:34.000 --> 00:16:36.000
+rebeccaharmon: Yeah.
+
+00:16:34.000 --> 00:16:37.000
+Kimberlee Noel: But once they click it, it would just take them to the site, right?
+
+00:16:37.000 --> 00:16:44.000
+mark: Yeah, and everybody's gonna have some sortâ€¦ there's gonna be some sort of onboarding checklist that they need to do, because they also need an account.
+
+00:16:41.000 --> 00:16:43.000
+Kimberlee Noel: Mhm, mhm.
+
+00:16:45.000 --> 00:16:49.000
+mark: Right? And so, they need an email address to go with that.
+
+00:16:45.000 --> 00:16:47.000
+rebeccaharmon: Right.
+
+00:16:50.000 --> 00:16:55.000
+mark: And they need to basicallyâ€¦ they'll probably have to have somebody walk them through getting set up the first time.
+
+00:16:55.000 --> 00:16:57.000
+rebeccaharmon: Yes.
+
+00:16:55.000 --> 00:17:02.000
+mark: And then once you're all thumbs up, then it's like, okay, don't forget your password, and good luck, you know.
+
+00:17:02.000 --> 00:17:04.000
+rebeccaharmon: Yeah.
+
+00:17:02.000 --> 00:17:05.000
+mark: you know, good luck. And so I think that'll be fine.
+
+00:17:03.000 --> 00:17:05.000
+Kimberlee Noel: Mhm.
+
+00:17:06.000 --> 00:17:08.000
+rebeccaharmon: Yeah, I think that's doable. I mean.
+
+00:17:09.000 --> 00:17:12.000
+rebeccaharmon: You know, we're dealing with people.
+
+00:17:12.000 --> 00:17:14.000
+rebeccaharmon: whoâ€¦
+
+00:17:14.000 --> 00:17:18.000
+rebeccaharmon: Some people are illiterate in every language.
+
+00:17:18.000 --> 00:17:20.000
+Kimberlee Noel: Mhm.
+
+00:17:18.000 --> 00:17:24.000
+rebeccaharmon: We have some people that are literate in Schengen or Sapeti, but not English.
+
+00:17:24.000 --> 00:17:27.000
+rebeccaharmon: And then we have someâ€¦ but we've taught them how toâ€¦
+
+00:17:28.000 --> 00:17:31.000
+rebeccaharmon: fill out the forms. You know, you saw the forms are in two languages.
+
+00:17:31.000 --> 00:17:33.000
+Kimberlee Noel: Mhm.
+
+00:17:32.000 --> 00:17:34.000
+mark: Yeah.
+
+00:17:32.000 --> 00:17:35.000
+rebeccaharmon: And so, we've spent a lot of time.
+
+00:17:35.000 --> 00:17:39.000
+rebeccaharmon: Training them to fill out the forms, and they can do that now.
+
+00:17:39.000 --> 00:17:43.000
+rebeccaharmon: So it's really just a matter of getting them to be comfortable with.
+
+00:17:43.000 --> 00:17:47.000
+rebeccaharmon: Doing those forms on their phone versusâ€¦
+
+00:17:46.000 --> 00:17:53.000
+Kimberlee Noel: Mm-hmm. Well, we'llâ€¦ we'll want to make sure that it's a very, um, visually.
+
+00:17:47.000 --> 00:17:49.000
+rebeccaharmon: on a paper.
+
+00:17:53.000 --> 00:17:56.000
+Kimberlee Noel: Similar to the paper forms, very simple.
+
+00:17:57.000 --> 00:17:59.000
+rebeccaharmon: Yep.
+
+00:17:57.000 --> 00:18:01.000
+Kimberlee Noel: Um, and use all the, you know, same language that they'reâ€¦
+
+00:18:01.000 --> 00:18:04.000
+Kimberlee Noel: Um, uhâ€¦
+
+00:18:05.000 --> 00:18:07.000
+Kimberlee Noel: That is already on theâ€¦
+
+00:18:07.000 --> 00:18:11.000
+Kimberlee Noel: Um, forms, soâ€¦ the only newâ€¦ real new part about it will.
+
+00:18:12.000 --> 00:18:14.000
+Kimberlee Noel: Be the digital part.
+
+00:18:14.000 --> 00:18:16.000
+Kimberlee Noel: And, you know, the process.
+
+00:18:16.000 --> 00:18:19.000
+Kimberlee Noel: Um, of filling out the form.
+
+00:18:19.000 --> 00:18:21.000
+rebeccaharmon: Yep.
+
+00:18:19.000 --> 00:18:25.000
+mark: Yeah, and there's kind of a couple of different ways to approach the multi-language, uh.
+
+00:18:25.000 --> 00:18:27.000
+mark: requirement. One of them is.
+
+00:18:28.000 --> 00:18:30.000
+mark: To have a language picker?
+
+00:18:30.000 --> 00:18:32.000
+mark: And so, when you're in the app, you, like.
+
+00:18:33.000 --> 00:18:40.000
+mark: Poke theâ€¦ typically, it's like a little flag or something, and then you can switch between languages, and all of the text changes.
+
+00:18:40.000 --> 00:18:42.000
+rebeccaharmon: Oh. Okay.
+
+00:18:41.000 --> 00:18:44.000
+mark: Right, that's one way to do it.
+
+00:18:44.000 --> 00:18:49.000
+mark: The other way to do it is, if you know you just want the prompts in two languages.
+
+00:18:49.000 --> 00:18:51.000
+mark: We can just make all the prompts.
+
+00:18:51.000 --> 00:18:53.000
+Kimberlee Noel: Mhm.
+
+00:18:52.000 --> 00:18:55.000
+mark: in both, right? And soâ€¦
+
+00:18:55.000 --> 00:18:59.000
+mark: it's kind of up to us how we want to do it. One of them would support.
+
+00:18:59.000 --> 00:19:02.000
+mark: Doing additional languages.
+
+00:19:02.000 --> 00:19:08.000
+mark: Umâ€¦ but, you know, and then people kind of have to know how to change it.
+
+00:19:03.000 --> 00:19:05.000
+rebeccaharmon: Oh, okay.
+
+00:19:08.000 --> 00:19:10.000
+mark: Right? And so if they seeâ€¦
+
+00:19:10.000 --> 00:19:12.000
+mark: The form, and it's inâ€¦
+
+00:19:12.000 --> 00:19:16.000
+mark: English, they'd have to know, oh, I have to click up here.
+
+00:19:16.000 --> 00:19:19.000
+mark: To switch it intoâ€¦
+
+00:19:19.000 --> 00:19:21.000
+mark: what'd you say, Sungali?
+
+00:19:21.000 --> 00:19:23.000
+rebeccaharmon: Shangan.
+
+00:19:22.000 --> 00:19:26.000
+mark: Shong Gong. And then, uh, anyway, so there'sâ€¦
+
+00:19:26.000 --> 00:19:29.000
+mark: A little bit more of a cognitive load if we use the switcher.
+
+00:19:30.000 --> 00:19:31.000
+rebeccaharmon: Yep.
+
+00:19:30.000 --> 00:19:34.000
+mark: But it's also more flexible if we wanted to add.
+
+00:19:34.000 --> 00:19:37.000
+mark: Any other language, we could add any other language.
+
+00:19:35.000 --> 00:19:45.000
+Kimberlee Noel: Now, is that something we could also implement in the future? So, like, justâ€¦ if we just start off with the way the forms are now in the two languages.
+
+00:19:45.000 --> 00:19:48.000
+Kimberlee Noel: Just putting, you know, just so it's a veryâ€¦
+
+00:19:48.000 --> 00:19:50.000
+Kimberlee Noel: Familiar experience, and thenâ€¦
+
+00:19:51.000 --> 00:19:54.000
+Kimberlee Noel: You know, as 10 trees grow.
+
+00:19:54.000 --> 00:19:56.000
+Kimberlee Noel: You know, and branches out.
+
+00:19:56.000 --> 00:19:59.000
+Kimberlee Noel: um, incorporating.
+
+00:19:59.000 --> 00:20:04.000
+Kimberlee Noel: The more, umâ€¦ or is this something you want to consider from the very beginning?
+
+00:20:04.000 --> 00:20:08.000
+mark: It's good to know in the beginning, because it's kind of an either-or choice.
+
+00:20:06.000 --> 00:20:08.000
+Kimberlee Noel: Okay. Okay.
+
+00:20:08.000 --> 00:20:11.000
+mark: Because once we go down theâ€¦
+
+00:20:11.000 --> 00:20:15.000
+mark: It's called localization. Once you go down the localization route.
+
+00:20:15.000 --> 00:20:22.000
+mark: The entire app knows what language it's in, and it actually can detect it from the device.
+
+00:20:18.000 --> 00:20:20.000
+Kimberlee Noel: Mhm.
+
+00:20:22.000 --> 00:20:24.000
+rebeccaharmon: Oh, okay.
+
+00:20:23.000 --> 00:20:28.000
+mark: And so, if they'reâ€¦ if they'reâ€¦ if they've picked the language on their device.
+
+00:20:28.000 --> 00:20:30.000
+mark: We can pick that up.
+
+00:20:30.000 --> 00:20:32.000
+mark: And then we can do our best.
+
+00:20:32.000 --> 00:20:42.000
+mark: Uh, to do that. If we always know that we want to show two languages, we basically don't do localization, we ignore what's on the device.
+
+00:20:42.000 --> 00:20:46.000
+mark: And we just kind of, like, hardcode the prompts in.
+
+00:20:46.000 --> 00:20:48.000
+mark: Right.
+
+00:20:47.000 --> 00:20:52.000
+rebeccaharmon: But then, if we move to, like, I mean, 10 Trees is gonna grow.
+
+00:20:47.000 --> 00:20:49.000
+Kimberlee Noel: Mhm.
+
+00:20:52.000 --> 00:20:54.000
+Kimberlee Noel: Mhm.
+
+00:20:52.000 --> 00:20:54.000
+mark: Right.
+
+00:20:52.000 --> 00:20:57.000
+rebeccaharmon: So, Shangan is the local language in the village that we're in now.
+
+00:20:57.000 --> 00:21:06.000
+rebeccaharmon: But, um, the language over where Londozzi is, I don't think is Shangon, I think it's Sepeti or something else.
+
+00:21:06.000 --> 00:21:09.000
+mark: Then we should do localization so that we can.
+
+00:21:08.000 --> 00:21:11.000
+rebeccaharmon: That's what I thought, too. So we canâ€¦
+
+00:21:08.000 --> 00:21:10.000
+Kimberlee Noel: Mhm.
+
+00:21:10.000 --> 00:21:13.000
+mark: Yeah, let's doâ€¦ let's do that from the get-go.
+
+00:21:13.000 --> 00:21:15.000
+rebeccaharmon: And then it'll also shorten.
+
+00:21:15.000 --> 00:21:19.000
+rebeccaharmon: The forms, if there's only one language on the form.
+
+00:21:18.000 --> 00:21:20.000
+Kimberlee Noel: Mhm.
+
+00:21:19.000 --> 00:21:27.000
+rebeccaharmon: two. So, in terms of what they're looking at, they'll see the question with one language, and they'll answer it, versus.
+
+00:21:27.000 --> 00:21:29.000
+rebeccaharmon: the English and theâ€¦
+
+00:21:29.000 --> 00:21:31.000
+Kimberlee Noel: Mhm.
+
+00:21:30.000 --> 00:21:32.000
+rebeccaharmon: Sangha, or the Shangan.
+
+00:21:32.000 --> 00:21:34.000
+Kimberlee Noel: Yep.
+
+00:21:34.000 --> 00:21:36.000
+rebeccaharmon: Is that right, Mark?
+
+00:21:36.000 --> 00:21:42.000
+mark: Absolutely, yeah, because they'll just have the one prompt, and it won't be this slash that, slash, you know.
+
+00:21:37.000 --> 00:21:39.000
+rebeccaharmon: Okay.
+
+00:21:43.000 --> 00:21:45.000
+rebeccaharmon: I think it wouldâ€¦
+
+00:21:43.000 --> 00:21:47.000
+mark: Uh, theâ€¦ the main thing we'll need is, uhâ€¦
+
+00:21:47.000 --> 00:21:49.000
+mark: We'll do everythingâ€¦
+
+00:21:49.000 --> 00:21:53.000
+mark: Uh, we'll make all the English prompts, the way we understand it, because we're English speakers.
+
+00:21:53.000 --> 00:21:56.000
+mark: And then we'll need somebody else to go in andâ€¦
+
+00:21:54.000 --> 00:21:55.000
+rebeccaharmon: Yep.
+
+00:21:56.000 --> 00:21:58.000
+mark: you know, uhâ€¦
+
+00:21:59.000 --> 00:22:02.000
+mark: Put in the other prompts, you know?
+
+00:22:01.000 --> 00:22:03.000
+rebeccaharmon: Now, I sent Kimberly the form.
+
+00:22:02.000 --> 00:22:03.000
+Kimberlee Noel: Well, yeah.
+
+00:22:02.000 --> 00:22:05.000
+mark: We'll have a tool that'll let you do it.
+
+00:22:04.000 --> 00:22:10.000
+Kimberlee Noel: We, we, um, we have the current forms in both languages, so it's just any additional.
+
+00:22:10.000 --> 00:22:12.000
+mark: Okay, cool.
+
+00:22:10.000 --> 00:22:17.000
+Kimberlee Noel: um, stuff that would be added that we would need help with the translation. So, we can work with what's currently.
+
+00:22:18.000 --> 00:22:21.000
+Kimberlee Noel: Um, available, because we do have both languages.
+
+00:22:21.000 --> 00:22:23.000
+rebeccaharmon: Okay.
+
+00:22:22.000 --> 00:22:26.000
+mark: Great. Yeah, and then testing, of course, too, that's the otherâ€¦
+
+00:22:25.000 --> 00:22:27.000
+Kimberlee Noel: Mhm.
+
+00:22:26.000 --> 00:22:30.000
+mark: gap we have is I won't be able to look at it and know that it's wrong.
+
+00:22:30.000 --> 00:22:36.000
+rebeccaharmon: Yeah, well, we've got peopleâ€¦ Quinton and TriGive can definitely do the testing on it.
+
+00:22:32.000 --> 00:22:33.000
+Kimberlee Noel: Mhm.
+
+00:22:36.000 --> 00:22:42.000
+mark: Oh, great. Yeah, we just needâ€¦ yeah, theâ€¦ that's awesome. They just need English and whatever the other language is, so that they canâ€¦
+
+00:22:43.000 --> 00:22:45.000
+mark: To go back and forth and make sure it'sâ€¦
+
+00:22:44.000 --> 00:22:49.000
+rebeccaharmon: Well, and they know these forms inside out, because they work with them all the time, so I don't think it'llâ€¦
+
+00:22:48.000 --> 00:22:50.000
+Kimberlee Noel: Mhm.
+
+00:22:49.000 --> 00:22:51.000
+mark: Right?
+
+00:22:50.000 --> 00:22:51.000
+rebeccaharmon: A stretch for them, yeah.
+
+00:22:52.000 --> 00:22:54.000
+Kimberlee Noel: And so, umâ€¦
+
+00:22:52.000 --> 00:22:54.000
+mark: Great.
+
+00:22:54.000 --> 00:22:59.000
+Kimberlee Noel: There are 3 main forms, right, from what I understand, with the application.
+
+00:22:59.000 --> 00:23:01.000
+Kimberlee Noel: Which is the first thing that somebody wouldâ€¦
+
+00:23:01.000 --> 00:23:04.000
+Kimberlee Noel: fill out. Umâ€¦
+
+00:23:02.000 --> 00:23:04.000
+rebeccaharmon: Yep.
+
+00:23:04.000 --> 00:23:07.000
+Kimberlee Noel: The mapping form, and the garden assessment.
+
+00:23:08.000 --> 00:23:12.000
+Kimberlee Noel: Um, so, in which order wouldâ€¦
+
+00:23:12.000 --> 00:23:16.000
+Kimberlee Noel: The mapping form and garden assessment, um, come after the application.
+
+00:23:17.000 --> 00:23:20.000
+rebeccaharmon: Um, I'm pulling up myâ€¦
+
+00:23:20.000 --> 00:23:22.000
+rebeccaharmon: That right now on myâ€¦
+
+00:23:22.000 --> 00:23:26.000
+rebeccaharmon: So, we have the application form.
+
+00:23:28.000 --> 00:23:30.000
+rebeccaharmon: That's the first one.
+
+00:23:31.000 --> 00:23:33.000
+rebeccaharmon: And thenâ€¦
+
+00:23:36.000 --> 00:23:38.000
+rebeccaharmon: Let's seeâ€¦
+
+00:23:40.000 --> 00:23:43.000
+rebeccaharmon: And then we have the mapping form.
+
+00:23:46.000 --> 00:23:48.000
+rebeccaharmon: And then there is aâ€¦
+
+00:23:48.000 --> 00:23:50.000
+rebeccaharmon: Umâ€¦
+
+00:23:51.000 --> 00:23:53.000
+rebeccaharmon: release form.
+
+00:23:54.000 --> 00:23:59.000
+rebeccaharmon: that they have to sign. I don'tâ€¦ I can't remember if I sent thatâ€¦
+
+00:23:58.000 --> 00:24:01.000
+Kimberlee Noel: I don't think we have that one, so, umâ€¦
+
+00:24:01.000 --> 00:24:04.000
+rebeccaharmon: Send those to you. They're not long.
+
+00:24:04.000 --> 00:24:08.000
+rebeccaharmon: It's really just, you know, giving us permission to.
+
+00:24:08.000 --> 00:24:10.000
+rebeccaharmon: use their photos.
+
+00:24:10.000 --> 00:24:14.000
+rebeccaharmon: Umâ€¦ that's all the release forms are, and thenâ€¦
+
+00:24:14.000 --> 00:24:16.000
+rebeccaharmon: Umâ€¦
+
+00:24:18.000 --> 00:24:20.000
+rebeccaharmon: I'm looking at thisâ€¦
+
+00:24:21.000 --> 00:24:24.000
+rebeccaharmon: Where theyâ€¦ yep, they signed that, okay.
+
+00:24:24.000 --> 00:24:28.000
+rebeccaharmon: And then the garden assessment would be the last one.
+
+00:24:28.000 --> 00:24:31.000
+Kimberlee Noel: Okay. Um, so we have the application.
+
+00:24:31.000 --> 00:24:34.000
+Kimberlee Noel: Form mapping form and garden assessment, so we justâ€¦
+
+00:24:35.000 --> 00:24:37.000
+Kimberlee Noel: Need the release form.
+
+00:24:36.000 --> 00:24:38.000
+rebeccaharmon: Yep.
+
+00:24:37.000 --> 00:24:40.000
+Kimberlee Noel: Um, and then they, they take some classes.
+
+00:24:40.000 --> 00:24:42.000
+Kimberlee Noel: Before? Okay. Andâ€¦
+
+00:24:40.000 --> 00:24:42.000
+rebeccaharmon: Yep. Umâ€¦
+
+00:24:43.000 --> 00:24:45.000
+Kimberlee Noel: Go ahead.
+
+00:24:44.000 --> 00:24:47.000
+rebeccaharmon: You know, um, we can keep.
+
+00:24:47.000 --> 00:24:49.000
+rebeccaharmon: the class attendanceâ€¦
+
+00:24:49.000 --> 00:24:57.000
+rebeccaharmon: just on an Excel spreadsheet, if we, you know, we don't have to have that in the database. It's really justâ€¦
+
+00:24:57.000 --> 00:25:01.000
+rebeccaharmon: a tool. We keep track of it because they're required.
+
+00:25:01.000 --> 00:25:03.000
+Kimberlee Noel: Mhm.
+
+00:25:02.000 --> 00:25:05.000
+rebeccaharmon: To attend the classes in order to get their trees.
+
+00:25:04.000 --> 00:25:06.000
+Kimberlee Noel: Mhm.
+
+00:25:06.000 --> 00:25:13.000
+rebeccaharmon: So, once we getâ€¦ and we also like to keep track of how many people are coming to the additional classes.
+
+00:25:12.000 --> 00:25:14.000
+Kimberlee Noel: Mhm.
+
+00:25:13.000 --> 00:25:15.000
+rebeccaharmon: Um, because we give outâ€¦
+
+00:25:15.000 --> 00:25:23.000
+rebeccaharmon: some awards and have competitions and things like that. But that doesn't have to be in the database in terms of.
+
+00:25:23.000 --> 00:25:30.000
+rebeccaharmon: Um, you know, adding it in, because we'd have to fill in a date for each class.
+
+00:25:30.000 --> 00:25:32.000
+Kimberlee Noel: Mhm.
+
+00:25:30.000 --> 00:25:34.000
+rebeccaharmon: And, you know, I don't know how difficult that is.
+
+00:25:34.000 --> 00:25:41.000
+mark: Well, and we can, you know, it's always good to scope it in a way that will give you the most success.
+
+00:25:41.000 --> 00:25:45.000
+mark: And then, if we're successful.
+
+00:25:45.000 --> 00:25:52.000
+mark: you know, add additional stuff to it. But if the class attendance isn't currently a pain point, because it's all in person.
+
+00:25:52.000 --> 00:25:54.000
+mark: Thenâ€¦
+
+00:25:54.000 --> 00:25:57.000
+rebeccaharmon: Well, they all sign a, umâ€¦
+
+00:25:57.000 --> 00:25:59.000
+rebeccaharmon: A sign-in sheet every class.
+
+00:26:00.000 --> 00:26:02.000
+rebeccaharmon: And then we go into the masterâ€¦
+
+00:26:03.000 --> 00:26:06.000
+rebeccaharmon: Excel spreadsheet that we have, and we create a column.
+
+00:26:06.000 --> 00:26:10.000
+rebeccaharmon: For that class, and then they just get a tick box if they were.
+
+00:26:10.000 --> 00:26:14.000
+rebeccaharmon: you know, at that class, or an A if they were absent.
+
+00:26:14.000 --> 00:26:18.000
+mark: Yeah, and if that doesn't feel onerous.
+
+00:26:18.000 --> 00:26:20.000
+rebeccaharmon: Yeah.
+
+00:26:19.000 --> 00:26:23.000
+mark: At the moment, you might want to just keep doing that for a little bit.
+
+00:26:23.000 --> 00:26:25.000
+rebeccaharmon: Yeah, we can.
+
+00:26:26.000 --> 00:26:29.000
+Kimberlee Noel: Okay, so we'll keep that, umâ€¦
+
+00:26:29.000 --> 00:26:32.000
+Kimberlee Noel: As it is for now. Umâ€¦
+
+00:26:32.000 --> 00:26:34.000
+Kimberlee Noel: And soâ€¦
+
+00:26:35.000 --> 00:26:38.000
+Kimberlee Noel: The data that, uh, will be recorded.
+
+00:26:38.000 --> 00:26:43.000
+Kimberlee Noel: Um, are things like the total trees planted, tree survival rate.
+
+00:26:43.000 --> 00:26:46.000
+Kimberlee Noel: And use of permaculture principles. Umâ€¦
+
+00:26:47.000 --> 00:26:49.000
+Kimberlee Noel: So these things, umâ€¦
+
+00:26:50.000 --> 00:26:53.000
+Kimberlee Noel: Areâ€¦ are tracked, and, umâ€¦
+
+00:26:53.000 --> 00:26:56.000
+Kimberlee Noel: These are, umâ€¦
+
+00:26:56.000 --> 00:27:00.000
+Kimberlee Noel: exported as Excel or CSV.
+
+00:27:00.000 --> 00:27:02.000
+Kimberlee Noel: Um, does that soundâ€¦
+
+00:27:02.000 --> 00:27:04.000
+Kimberlee Noel: Accurate.
+
+00:27:05.000 --> 00:27:07.000
+rebeccaharmon: Umâ€¦
+
+00:27:07.000 --> 00:27:10.000
+rebeccaharmon: Yeah, they are tracked on the garden assessment form.
+
+00:27:10.000 --> 00:27:12.000
+Kimberlee Noel: Mhm.
+
+00:27:11.000 --> 00:27:13.000
+rebeccaharmon: And then, umâ€¦
+
+00:27:14.000 --> 00:27:16.000
+rebeccaharmon: Right now, you know, we justâ€¦
+
+00:27:18.000 --> 00:27:23.000
+rebeccaharmon: At the moment, what we're doing, and it would be better if we could do this a little moreâ€¦
+
+00:27:23.000 --> 00:27:30.000
+rebeccaharmon: Um, deliberately. What we do is we justâ€¦ we go along the garden assessment form.
+
+00:27:30.000 --> 00:27:34.000
+rebeccaharmon: And we have 5 basic permaculture principles.
+
+00:27:34.000 --> 00:27:38.000
+rebeccaharmon: That we want to know if they're using those 5.
+
+00:27:38.000 --> 00:27:40.000
+Kimberlee Noel: Mhm.
+
+00:27:39.000 --> 00:27:42.000
+rebeccaharmon: There's some additional things, too, but those are the main five.
+
+00:27:42.000 --> 00:27:45.000
+rebeccaharmon: And so then they put aâ€¦
+
+00:27:45.000 --> 00:27:51.000
+rebeccaharmon: There's a thing that says how many permaculture principles are they using?
+
+00:27:51.000 --> 00:27:54.000
+rebeccaharmon: You know, 3, 2, 4, 5, whatever.
+
+00:27:54.000 --> 00:27:56.000
+rebeccaharmon: But it doesn't tell usâ€¦
+
+00:27:56.000 --> 00:27:58.000
+rebeccaharmon: Unless we look at the paper.
+
+00:27:58.000 --> 00:28:01.000
+rebeccaharmon: Which ones they're not using.
+
+00:28:01.000 --> 00:28:03.000
+Kimberlee Noel: Mhm.
+
+00:28:01.000 --> 00:28:03.000
+mark: Would we like to know?
+
+00:28:03.000 --> 00:28:08.000
+rebeccaharmon: Yeah, we would, actually. I mean, that's what I say, if weâ€¦ if we had the 5 on there.
+
+00:28:08.000 --> 00:28:10.000
+mark: Sure.
+
+00:28:09.000 --> 00:28:13.000
+rebeccaharmon: And they could do, yes, yes, yes, no, no, no, whatever.
+
+00:28:13.000 --> 00:28:17.000
+rebeccaharmon: And then that could beâ€¦ we could look at that, and we could say, oh, you know, we've gotâ€¦
+
+00:28:18.000 --> 00:28:20.000
+rebeccaharmon: Out of these 210 people.
+
+00:28:21.000 --> 00:28:25.000
+rebeccaharmon: Only 50% of them are doing mulching, for example.
+
+00:28:24.000 --> 00:28:26.000
+Kimberlee Noel: Mhm.
+
+00:28:25.000 --> 00:28:27.000
+mark: Right.
+
+00:28:25.000 --> 00:28:30.000
+rebeccaharmon: And so we know that we need to, like, be really working with people on mulching.
+
+00:28:32.000 --> 00:28:35.000
+mark: Yeah, that sounds reasonable. These are just checkboxes.
+
+00:28:34.000 --> 00:28:36.000
+rebeccaharmon: Yep, that's all they are.
+
+00:28:35.000 --> 00:28:37.000
+Kimberlee Noel: Mhm.
+
+00:28:36.000 --> 00:28:39.000
+rebeccaharmon: And then, you know, weâ€¦ if it can calculate.
+
+00:28:40.000 --> 00:28:43.000
+rebeccaharmon: How many they're using out of the five, great.
+
+00:28:43.000 --> 00:28:45.000
+rebeccaharmon: You know, how many yeses?
+
+00:28:45.000 --> 00:28:50.000
+mark: Yeah, we can do both. We canâ€¦ we can hold on to the number and also theâ€¦ the details.
+
+00:28:51.000 --> 00:28:56.000
+rebeccaharmon: Yeah, theâ€¦ but theâ€¦ actually being able to see which ones they're not using.
+
+00:28:56.000 --> 00:29:00.000
+rebeccaharmon: It's like aâ€¦ it's a monitoring tool for us, really.
+
+00:29:02.000 --> 00:29:04.000
+mark: Yeah, that sounds good.
+
+00:29:03.000 --> 00:29:05.000
+rebeccaharmon: Yeah.
+
+00:29:05.000 --> 00:29:10.000
+Kimberlee Noel: Mark, I've actually lost my document. I'm having some technical issues at the moment. Umâ€¦
+
+00:29:09.000 --> 00:29:11.000
+mark: Oh, no.
+
+00:29:10.000 --> 00:29:13.000
+Kimberlee Noel: So I don't know if you have it in front of you to just see whereâ€¦
+
+00:29:12.000 --> 00:29:14.000
+mark: I do, I'm editing it right now.
+
+00:29:13.000 --> 00:29:15.000
+Kimberlee Noel: Okay.
+
+00:29:19.000 --> 00:29:22.000
+mark: I'll just put a note in here, and hopefully you'll be able toâ€¦
+
+00:29:22.000 --> 00:29:25.000
+mark: Know what'sâ€¦ what I'm talking about.
+
+00:29:29.000 --> 00:29:33.000
+Kimberlee Noel: So I think we have a pretty good understanding of, um, what's needed.
+
+00:29:34.000 --> 00:29:37.000
+Kimberlee Noel: Um, so at this point.
+
+00:29:37.000 --> 00:29:41.000
+Kimberlee Noel: Um, I know, Mark, you were working onâ€¦
+
+00:29:41.000 --> 00:29:44.000
+Kimberlee Noel: Um, I'm not sure if it was decided if we're fixing the brokenâ€¦
+
+00:29:45.000 --> 00:29:47.000
+Kimberlee Noel: Umâ€¦
+
+00:29:48.000 --> 00:29:54.000
+Kimberlee Noel: the broken platform that you built, or starting new, I thinkâ€¦ I think we decided we were starting fresh.
+
+00:29:55.000 --> 00:29:57.000
+Kimberlee Noel: But I could be wrong.
+
+00:29:55.000 --> 00:30:04.000
+mark: Um, it'sâ€¦ Yeah, we didn't reallyâ€¦ we won't really lose anything. There's no sunk costs in that. That was, like, a longâ€¦ that was, like, aâ€¦
+
+00:30:01.000 --> 00:30:03.000
+Kimberlee Noel: Right.
+
+00:30:05.000 --> 00:30:09.000
+mark: you know, caffeine-addled weekend, you know, like.
+
+00:30:09.000 --> 00:30:15.000
+mark: Kind of throw something out there so we had something to hold onto, so we weren't just talking about ideas, you know?
+
+00:30:10.000 --> 00:30:12.000
+Kimberlee Noel: Mhm.
+
+00:30:15.000 --> 00:30:17.000
+Kimberlee Noel: Right.
+
+00:30:16.000 --> 00:30:18.000
+mark: And then, uh, soâ€¦
+
+00:30:18.000 --> 00:30:24.000
+mark: You know, ifâ€¦ if, uh, a lot of that wasâ€¦ was, uh, was good, great.
+
+00:30:24.000 --> 00:30:28.000
+mark: Uh, we'll bring it allâ€¦ we'll bring those pieces forward.
+
+00:30:28.000 --> 00:30:34.000
+mark: Uh, but I'm gonnaâ€¦ I'm gonna start fresh. Time has passed, there's new versions of things, andâ€¦
+
+00:30:31.000 --> 00:30:33.000
+Kimberlee Noel: Mhm.
+
+00:30:34.000 --> 00:30:37.000
+mark: You know, so I'll start fresh.
+
+00:30:38.000 --> 00:30:40.000
+mark: Uh, just cause I don't want to beâ€¦
+
+00:30:40.000 --> 00:30:44.000
+mark: I don't want to be locked into any decisions I made that weekend.
+
+00:30:44.000 --> 00:30:46.000
+mark: You knowâ€¦
+
+00:30:44.000 --> 00:30:51.000
+rebeccaharmon: Yeah, um, I had a few things that I just jotted down as I read through your excellent summary.
+
+00:30:49.000 --> 00:30:51.000
+Kimberlee Noel: Mhm.
+
+00:30:52.000 --> 00:30:59.000
+rebeccaharmon: Um, and I thought maybe it would be a good time to just chuck those out here, since we're talking about the creation.
+
+00:30:57.000 --> 00:30:59.000
+mark: Sure.
+
+00:30:59.000 --> 00:31:01.000
+rebeccaharmon: So, when we add these villages.
+
+00:31:02.000 --> 00:31:06.000
+rebeccaharmon: We want those villages to only be able to see their data.
+
+00:31:06.000 --> 00:31:08.000
+mark: Okay, yeah.
+
+00:31:07.000 --> 00:31:14.000
+rebeccaharmon: So, if Londelozzi's coming on, then we want them to be able to log in and just do the Londelozzi.
+
+00:31:16.000 --> 00:31:19.000
+rebeccaharmon: So, each village will have its own separate, kind of.
+
+00:31:16.000 --> 00:31:18.000
+mark: Yeah.
+
+00:31:19.000 --> 00:31:21.000
+rebeccaharmon: Walls around it, but thenâ€¦
+
+00:31:22.000 --> 00:31:25.000
+rebeccaharmon: At an admin level, we'll be able to see all of it.
+
+00:31:25.000 --> 00:31:28.000
+mark: Yeah, admins can see all data.
+
+00:31:28.000 --> 00:31:31.000
+rebeccaharmon: Okay. And then, umâ€¦
+
+00:31:32.000 --> 00:31:35.000
+rebeccaharmon: You know, we want to be able to, out ofâ€¦
+
+00:31:35.000 --> 00:31:40.000
+rebeccaharmon: this data. We want to be able to generate reports to them.
+
+00:31:41.000 --> 00:31:44.000
+rebeccaharmon: Uh, for us and them, or to funders or whoever.
+
+00:31:44.000 --> 00:31:50.000
+rebeccaharmon: And so we would say, basically, to Lundelozzi, okay, well, umâ€¦
+
+00:31:50.000 --> 00:31:52.000
+rebeccaharmon: for the month of November.
+
+00:31:52.000 --> 00:31:55.000
+rebeccaharmon: Your tree survival rate was this.
+
+00:31:56.000 --> 00:32:13.000
+rebeccaharmon: Um, and this is how many people were using permaculture principles, and these are the principles that people don't seem to be groking yet, and so we need to do some work with that. And so that Iâ€¦ it's like a carrot to get them to fill out the data.
+
+00:32:13.000 --> 00:32:17.000
+rebeccaharmon: Is that we'll be able to generate a report back to them.
+
+00:32:13.000 --> 00:32:15.000
+mark: Right.
+
+00:32:17.000 --> 00:32:21.000
+rebeccaharmon: And it also helps us to kind of keep the brand integrity.
+
+00:32:21.000 --> 00:32:25.000
+rebeccaharmon: Because 10 Trees is our brand, and.
+
+00:32:25.000 --> 00:32:30.000
+rebeccaharmon: We have kind of a brand agreement that they're gonna have to sign in order to use the brand.
+
+00:32:30.000 --> 00:32:32.000
+mark: Mhm.
+
+00:32:31.000 --> 00:32:35.000
+rebeccaharmon: But being able to say to them, you know, once a month.
+
+00:32:35.000 --> 00:32:40.000
+rebeccaharmon: We'll generate a report back to you so you could see what happened in this month.
+
+00:32:40.000 --> 00:32:43.000
+rebeccaharmon: Is gonna be a big carrot for them toâ€¦
+
+00:32:44.000 --> 00:32:46.000
+rebeccaharmon: Uh, keep their data clean.
+
+00:32:47.000 --> 00:32:52.000
+mark: Yeah, and this is the good principles that they're following, areas that could use improvement.
+
+00:32:52.000 --> 00:32:53.000
+rebeccaharmon: Yep.
+
+00:32:52.000 --> 00:32:54.000
+mark: Treesâ€¦ tree survival rates.
+
+00:32:54.000 --> 00:32:56.000
+rebeccaharmon: Yes.
+
+00:32:55.000 --> 00:32:59.000
+mark: Stuff like that. Do you have examples of those reports today, or do you do those.
+
+00:32:59.000 --> 00:33:02.000
+mark: Like, in an email from spreadsheets or something.
+
+00:33:01.000 --> 00:33:03.000
+rebeccaharmon: I don't have, uhâ€¦
+
+00:33:03.000 --> 00:33:05.000
+rebeccaharmon: Examples of those, because.
+
+00:33:06.000 --> 00:33:10.000
+rebeccaharmon: Um, we're just keeping all that stuff on an Excel spreadsheet.
+
+00:33:10.000 --> 00:33:14.000
+rebeccaharmon: And then, um, and I think I sent you the link to that sheet, Mark.
+
+00:33:10.000 --> 00:33:12.000
+mark: Yeah.
+
+00:33:15.000 --> 00:33:17.000
+mark: Oh, probably.
+
+00:33:15.000 --> 00:33:17.000
+rebeccaharmon: Uh, andâ€¦
+
+00:33:17.000 --> 00:33:20.000
+rebeccaharmon: So then we go through and we justâ€¦
+
+00:33:20.000 --> 00:33:27.000
+rebeccaharmon: Like, for example, if we have a funder, and the funder says, you know, what's your tree survival rate?
+
+00:33:27.000 --> 00:33:31.000
+rebeccaharmon: We just go in and look at what we've manually calculated in there.
+
+00:33:31.000 --> 00:33:34.000
+rebeccaharmon: And we say, okay, well, you know.
+
+00:33:34.000 --> 00:33:39.000
+rebeccaharmon: as ofâ€¦ from June 2023 to current.
+
+00:33:39.000 --> 00:33:43.000
+rebeccaharmon: All the trees we've planted, we have a tree survival rate ofâ€¦
+
+00:33:43.000 --> 00:33:46.000
+rebeccaharmon: 91% or whatever it is.
+
+00:33:46.000 --> 00:33:48.000
+rebeccaharmon: You know? Umâ€¦
+
+00:33:47.000 --> 00:33:49.000
+mark: Yeah.
+
+00:33:48.000 --> 00:33:56.000
+rebeccaharmon: So, all of that stuff is just being manually tabulated now out of that spreadsheet.
+
+00:33:58.000 --> 00:34:02.000
+mark: How manyâ€¦ and we've gotâ€¦ we're moving into our second village now.
+
+00:34:03.000 --> 00:34:06.000
+mark: How many villages are you gonna have inâ€¦
+
+00:34:06.000 --> 00:34:08.000
+mark: 5 years.
+
+00:34:07.000 --> 00:34:10.000
+rebeccaharmon: Well, that's a very good question. I don't know.
+
+00:34:11.000 --> 00:34:14.000
+rebeccaharmon: Um, I think within the next year.
+
+00:34:14.000 --> 00:34:17.000
+rebeccaharmon: We will probably have 4.
+
+00:34:17.000 --> 00:34:19.000
+mark: Okay.
+
+00:34:18.000 --> 00:34:22.000
+rebeccaharmon: Um, and there's so many things that are sort ofâ€¦
+
+00:34:23.000 --> 00:34:26.000
+rebeccaharmon: In the works right now, we don't really know what's gonna happen.
+
+00:34:27.000 --> 00:34:28.000
+mark: Okay.
+
+00:34:27.000 --> 00:34:29.000
+rebeccaharmon: There isâ€¦ there's aâ€¦
+
+00:34:30.000 --> 00:34:34.000
+rebeccaharmon: village in the Amazon rainforest that wants 10 trees.
+
+00:34:34.000 --> 00:34:36.000
+mark: Okay.
+
+00:34:35.000 --> 00:34:37.000
+rebeccaharmon: So, I mean, that's a whole differentâ€¦
+
+00:34:37.000 --> 00:34:40.000
+rebeccaharmon: like, thing. You know, we're talkingâ€¦
+
+00:34:39.000 --> 00:34:42.000
+mark: That sounds very offline.
+
+00:34:42.000 --> 00:34:52.000
+rebeccaharmon: Yeah, I think it is. Uh, so, but that'sâ€¦ I mean, we need to get these other three villages in our area up and going first.
+
+00:34:52.000 --> 00:34:54.000
+mark: Yeah.
+
+00:34:53.000 --> 00:34:57.000
+rebeccaharmon: Then we can, you know, entertain how weâ€¦
+
+00:34:57.000 --> 00:35:01.000
+rebeccaharmon: Bring on these places from other countries and that kind of thing.
+
+00:35:01.000 --> 00:35:06.000
+mark: Yeah, for sure. Yeah, that reminds me of some, uhâ€¦
+
+00:35:06.000 --> 00:35:12.000
+mark: projects, uh, I was a part of with the Mozilla Foundation, where they were.
+
+00:35:12.000 --> 00:35:15.000
+mark: They'd have, like, Raspberry Pis on a littleâ€¦
+
+00:35:15.000 --> 00:35:23.000
+mark: you know, 3D printed thing, and they'd be sending them out into the field, and they'd Wi-Fi, and they'd, you know, like, do all these, like, complicated things to try to.
+
+00:35:23.000 --> 00:35:25.000
+mark: Deal withâ€¦ without connectivity.
+
+00:35:25.000 --> 00:35:29.000
+mark: Uh, there's solutions to it, for sure, butâ€¦
+
+00:35:25.000 --> 00:35:27.000
+rebeccaharmon: Yes.
+
+00:35:29.000 --> 00:35:32.000
+mark: It's, uh, it's a different kind of project.
+
+00:35:32.000 --> 00:35:37.000
+rebeccaharmon: Yeah, it is. Um, and then, whenâ€¦ once theyâ€¦
+
+00:35:38.000 --> 00:35:43.000
+rebeccaharmon: Connectâ€¦ once their garden assessment forms, for example.
+
+00:35:43.000 --> 00:35:47.000
+rebeccaharmon: Get moved into the central database.
+
+00:35:47.000 --> 00:35:52.000
+rebeccaharmon: Does that data then get deleted off of their phones, or is thatâ€¦
+
+00:35:52.000 --> 00:35:55.000
+rebeccaharmon: I'm just thinking about, as they.
+
+00:35:55.000 --> 00:36:00.000
+rebeccaharmon: Log on, andâ€¦ are they gonna have toâ€¦
+
+00:36:00.000 --> 00:36:05.000
+rebeccaharmon: Will all that data have to load for them, or can that beâ€¦
+
+00:36:05.000 --> 00:36:08.000
+rebeccaharmon: Sort of erased, and then they're just loading.
+
+00:36:08.000 --> 00:36:12.000
+rebeccaharmon: the form's basically for the current data. Do you know what I mean?
+
+00:36:12.000 --> 00:36:15.000
+mark: Yeah, so eachâ€¦ well, we can, uhâ€¦
+
+00:36:15.000 --> 00:36:21.000
+mark: Each time they do a form, we can blank everything out, if it's better to start with a blank form.
+
+00:36:21.000 --> 00:36:23.000
+mark: We can alsoâ€¦
+
+00:36:23.000 --> 00:36:30.000
+mark: You know, jumpstart the form with, you know, whatever stuff we want to carry forward from the last time that they.
+
+00:36:30.000 --> 00:36:35.000
+mark: entered it. But if they want to, like, if they wanted to run a report.
+
+00:36:36.000 --> 00:36:41.000
+mark: They could. I mean, we could let theâ€¦ you know, it depends on who wants to run the reports. Is this aâ€¦
+
+00:36:41.000 --> 00:36:45.000
+mark: admin-only thing? Do you run the report, you know?
+
+00:36:43.000 --> 00:36:45.000
+rebeccaharmon: Yeah, it is.
+
+00:36:45.000 --> 00:36:47.000
+rebeccaharmon: It's an admin-only thing for reporting.
+
+00:36:48.000 --> 00:36:50.000
+mark: Okay.
+
+00:36:49.000 --> 00:36:54.000
+rebeccaharmon: Yeah, they don'tâ€¦ I mean, you know, we'reâ€¦ it'll be a big, uhâ€¦
+
+00:36:54.000 --> 00:36:56.000
+rebeccaharmon: stretchâ€¦
+
+00:36:56.000 --> 00:36:59.000
+rebeccaharmon: To get them doing this online.
+
+00:36:59.000 --> 00:37:01.000
+mark: Sure.
+
+00:37:00.000 --> 00:37:07.000
+rebeccaharmon: So, if we, you know, we're gonna have to doâ€¦ it was a lot of training just to get them to the point where they couldâ€¦
+
+00:37:07.000 --> 00:37:09.000
+rebeccaharmon: You know, fill out the forms.
+
+00:37:10.000 --> 00:37:16.000
+mark: So do you want to, umâ€¦ do you want to help them fill out the forms by, like.
+
+00:37:16.000 --> 00:37:21.000
+mark: When they do a new form, pull stuff forward from the previous one, so thatâ€¦
+
+00:37:21.000 --> 00:37:26.000
+mark: They don't have to do quite as much data entry, or you want to blank it all out to make them.
+
+00:37:26.000 --> 00:37:28.000
+mark: Type it in.
+
+00:37:27.000 --> 00:37:29.000
+rebeccaharmon: Well, I think they would need a clean form.
+
+00:37:30.000 --> 00:37:32.000
+rebeccaharmon: With all the questions and everything on it.
+
+00:37:30.000 --> 00:37:32.000
+mark: Okay.
+
+00:37:32.000 --> 00:37:35.000
+rebeccaharmon: But I'm just thinking in terms of.
+
+00:37:35.000 --> 00:37:37.000
+rebeccaharmon: How much, once they log on.
+
+00:37:37.000 --> 00:37:41.000
+rebeccaharmon: How much data has to load before they're ready to.
+
+00:37:41.000 --> 00:37:45.000
+rebeccaharmon: fill out their garden assessments. I don't know if I'm saying that correctly.
+
+00:37:44.000 --> 00:37:50.000
+mark: Yeah, no, no, it should be nothing, right? Once they log in, they can justâ€¦
+
+00:37:50.000 --> 00:37:52.000
+mark: Do their garden assessment, andâ€¦
+
+00:37:52.000 --> 00:37:56.000
+mark: And if they areâ€¦ have been logged in before.
+
+00:37:56.000 --> 00:37:59.000
+mark: It'll just kind of all be there. It'll hold on to a lot.
+
+00:37:59.000 --> 00:38:01.000
+mark: Right? Like, it'llâ€¦
+
+00:38:00.000 --> 00:38:04.000
+rebeccaharmon: But it'll go to that individual, so, like.
+
+00:38:04.000 --> 00:38:06.000
+mark: Yeah.
+
+00:38:04.000 --> 00:38:08.000
+rebeccaharmon: If Bondi's at, you know, Mary's house.
+
+00:38:07.000 --> 00:38:09.000
+mark: Yeah.
+
+00:38:08.000 --> 00:38:12.000
+rebeccaharmon: She can pull up Mary, and Mary's information will pull up, right?
+
+00:38:12.000 --> 00:38:14.000
+mark: Yes.
+
+00:38:13.000 --> 00:38:15.000
+rebeccaharmon: Okay.
+
+00:38:17.000 --> 00:38:19.000
+Kimberlee Noel: Soâ€¦
+
+00:38:19.000 --> 00:38:21.000
+Kimberlee Noel: A mentor may be filling out.
+
+00:38:22.000 --> 00:38:24.000
+Kimberlee Noel: um, severalâ€¦
+
+00:38:24.000 --> 00:38:26.000
+Kimberlee Noel: Umâ€¦
+
+00:38:26.000 --> 00:38:28.000
+Kimberlee Noel: assessment formsâ€¦
+
+00:38:28.000 --> 00:38:30.000
+Kimberlee Noel: Um, beforeâ€¦
+
+00:38:30.000 --> 00:38:33.000
+Kimberlee Noel: They even go to the center to upload the data.
+
+00:38:34.000 --> 00:38:36.000
+rebeccaharmon: Yes, but what Markâ€¦
+
+00:38:35.000 --> 00:38:37.000
+Kimberlee Noel: Okay.
+
+00:38:35.000 --> 00:38:37.000
+mark: Yeah, so they'll be moving from house to house.
+
+00:38:37.000 --> 00:38:39.000
+Kimberlee Noel: Mhm, mhm. Okay.
+
+00:38:38.000 --> 00:38:40.000
+rebeccaharmon: They'll go from house to house.
+
+00:38:40.000 --> 00:38:42.000
+rebeccaharmon: And the mostâ€¦
+
+00:38:43.000 --> 00:38:51.000
+rebeccaharmon: We've got a few tree minters that have 15 households. Most householdâ€¦ most of the tree minters have 10 households.
+
+00:38:52.000 --> 00:38:58.000
+mark: You know what would be nice to hear is the, you know, the day in the life of a mentor, right? Like, what they'reâ€¦
+
+00:38:57.000 --> 00:38:59.000
+Kimberlee Noel: Mhm.
+
+00:38:58.000 --> 00:39:00.000
+mark: What their day looks like.
+
+00:39:00.000 --> 00:39:02.000
+mark: They start here, they go thereâ€¦
+
+00:39:03.000 --> 00:39:07.000
+mark: Uh, you know, how thatâ€¦ how that works, because if they're gonna beâ€¦
+
+00:39:08.000 --> 00:39:10.000
+mark: 100% on the phone.
+
+00:39:11.000 --> 00:39:17.000
+mark: What happens when they go to one house and there's no connectivity at all? Does that ever happen?
+
+00:39:17.000 --> 00:39:19.000
+mark: Maybe, you know.
+
+00:39:18.000 --> 00:39:22.000
+rebeccaharmon: Well, the whole network will go down, is what will happen.
+
+00:39:22.000 --> 00:39:24.000
+mark: Right, so then their phone's dead.
+
+00:39:25.000 --> 00:39:28.000
+mark: And then they'd have to probably do something to fall back to paper.
+
+00:39:25.000 --> 00:39:27.000
+rebeccaharmon: Yep.
+
+00:39:28.000 --> 00:39:32.000
+rebeccaharmon: I mean, that's what we'd have to do, is have a paper backup.
+
+00:39:31.000 --> 00:39:33.000
+mark: Yeah.
+
+00:39:32.000 --> 00:39:35.000
+rebeccaharmon: They could bring those to the center.
+
+00:39:36.000 --> 00:39:38.000
+rebeccaharmon: And, you know, we'd have to justâ€¦
+
+00:39:38.000 --> 00:39:40.000
+rebeccaharmon: Go in and fill in the forms.
+
+00:39:41.000 --> 00:39:43.000
+rebeccaharmon: Um, on theâ€¦
+
+00:39:42.000 --> 00:39:47.000
+mark: And at that point, it's just data entry. So you might actuallyâ€¦ admin folks might.
+
+00:39:48.000 --> 00:39:51.000
+mark: Need the ability to use the app as someone else.
+
+00:39:52.000 --> 00:39:54.000
+rebeccaharmon: Yeah, that's right.
+
+00:39:53.000 --> 00:40:02.000
+mark: Right? Like, I'm going to be, you know, mentor, uh, mentor A, or I'm going to be mentor B, because I'm doing data entry for them.
+
+00:39:54.000 --> 00:39:56.000
+rebeccaharmon: Yep.
+
+00:40:02.000 --> 00:40:05.000
+rebeccaharmon: That's right. Yeah, that's right.
+
+00:40:03.000 --> 00:40:06.000
+mark: Okay. I'm gonna make a note about that.
+
+00:40:06.000 --> 00:40:10.000
+rebeccaharmon: It's just the network out there is quite unstable.
+
+00:40:10.000 --> 00:40:12.000
+rebeccaharmon: And, umâ€¦
+
+00:40:13.000 --> 00:40:18.000
+rebeccaharmon: And so, you know, if there's a big storm, then the network goes down.
+
+00:40:18.000 --> 00:40:20.000
+mark: Right.
+
+00:40:19.000 --> 00:40:22.000
+rebeccaharmon: you know, it's just, I mean, it's rural.
+
+00:40:22.000 --> 00:40:24.000
+rebeccaharmon: South Africa.
+
+00:40:24.000 --> 00:40:29.000
+rebeccaharmon: And so, you know, we do the best we can do, but there are days when.
+
+00:40:30.000 --> 00:40:32.000
+rebeccaharmon: We don't have any connectivity for anybody.
+
+00:40:33.000 --> 00:40:35.000
+mark: Right. You know?
+
+00:40:34.000 --> 00:40:36.000
+rebeccaharmon: You can't even make a phone call.
+
+00:40:37.000 --> 00:40:43.000
+mark: And so, is a particular house always assigned to one mentor, or do mentors kind of doâ€¦
+
+00:40:41.000 --> 00:40:43.000
+rebeccaharmon: Yeah.
+
+00:40:43.000 --> 00:40:46.000
+rebeccaharmon: Now, each mentor has their 10 households.
+
+00:40:46.000 --> 00:40:48.000
+mark: Okay.
+
+00:40:47.000 --> 00:40:49.000
+rebeccaharmon: And they don't change.
+
+00:40:49.000 --> 00:40:52.000
+rebeccaharmon: Um, unless somebody dies, or moves, orâ€¦
+
+00:40:52.000 --> 00:40:54.000
+rebeccaharmon: you knowâ€¦
+
+00:40:53.000 --> 00:40:55.000
+mark: Yeah, that sounds extreme.
+
+00:40:55.000 --> 00:40:57.000
+rebeccaharmon: Yeah, you knowâ€¦
+
+00:40:58.000 --> 00:41:02.000
+mark: Because, you know, we've got similar problems in Lane County when we go out toâ€¦
+
+00:41:02.000 --> 00:41:04.000
+mark: You know, work on the bridges.
+
+00:41:04.000 --> 00:41:09.000
+mark: there isn't connectivity, right? So they have to, likeâ€¦ so we print upâ€¦
+
+00:41:09.000 --> 00:41:16.000
+mark: We print up the work orders so that they can go out into the field and still see what they're supposed to do.
+
+00:41:16.000 --> 00:41:18.000
+mark: And then, uhâ€¦
+
+00:41:18.000 --> 00:41:21.000
+mark: Somebody's at my door, hold on a second.
+
+00:41:21.000 --> 00:41:23.000
+rebeccaharmon: Okay.
+
+00:41:22.000 --> 00:41:25.000
+mark: Wanna make sure it's just packages.
+
+00:41:26.000 --> 00:41:28.000
+rebeccaharmon: Are you in Eugene, Kimberly?
+
+00:41:28.000 --> 00:41:30.000
+Kimberlee Noel: I am, mhm.
+
+00:41:29.000 --> 00:41:31.000
+rebeccaharmon: Okay.
+
+00:41:30.000 --> 00:41:32.000
+Kimberlee Noel: Where, where are you?
+
+00:41:31.000 --> 00:41:33.000
+rebeccaharmon: I'm in Portland.
+
+00:41:32.000 --> 00:41:34.000
+Kimberlee Noel: Okay.
+
+00:41:34.000 --> 00:41:36.000
+rebeccaharmon: Yeah.
+
+00:41:36.000 --> 00:41:41.000
+rebeccaharmon: I've gotâ€¦ I've got friends in Eugene. I'm getting ready to probably make a little.
+
+00:41:36.000 --> 00:41:38.000
+Kimberlee Noel: Yep.
+
+00:41:41.000 --> 00:41:44.000
+rebeccaharmon: Trip down there next week to see them.
+
+00:41:43.000 --> 00:41:45.000
+mark: Relax me about.
+
+00:41:44.000 --> 00:41:46.000
+Kimberlee Noel: Nice.
+
+00:41:45.000 --> 00:41:46.000
+rebeccaharmon: Yeah, I love Eugene.
+
+00:41:47.000 --> 00:41:48.000
+Kimberlee Noel: I do too.
+
+00:41:49.000 --> 00:41:51.000
+Kimberlee Noel: How often do you get over to Africa?
+
+00:41:52.000 --> 00:41:53.000
+rebeccaharmon: Well, I used toâ€¦
+
+00:41:54.000 --> 00:41:58.000
+rebeccaharmon: be there most of the time, and come back to Portland for, like, 8 or 10 weeks.
+
+00:41:58.000 --> 00:42:03.000
+rebeccaharmon: And now I've flipped it, so I'm in Portland, and I go back over there for 3 or 4 months.
+
+00:42:05.000 --> 00:42:06.000
+Kimberlee Noel: It's a good amount of time.
+
+00:42:05.000 --> 00:42:08.000
+rebeccaharmon: So, I'll probably be back over thereâ€¦
+
+00:42:09.000 --> 00:42:11.000
+rebeccaharmon: March or April, something like that.
+
+00:42:11.000 --> 00:42:13.000
+rebeccaharmon: Till end of June or July.
+
+00:42:13.000 --> 00:42:15.000
+Kimberlee Noel: No, perfect. We shouldâ€¦
+
+00:42:15.000 --> 00:42:17.000
+Kimberlee Noel: Be able to be testing stuff.
+
+00:42:17.000 --> 00:42:19.000
+rebeccaharmon: I know, I saw yourâ€¦
+
+00:42:19.000 --> 00:42:27.000
+rebeccaharmon: hoping to have it going by March, and I thought, oh, that'll be good, because then I'll be over there, and we can do the training, andâ€¦
+
+00:42:24.000 --> 00:42:27.000
+Kimberlee Noel: Mhm. Mm-hmm.
+
+00:42:27.000 --> 00:42:30.000
+rebeccaharmon: Actually get people up to speed and make sure.
+
+00:42:30.000 --> 00:42:32.000
+rebeccaharmon: It's all going well.
+
+00:42:33.000 --> 00:42:35.000
+Kimberlee Noel: That's our goal.
+
+00:42:34.000 --> 00:42:36.000
+rebeccaharmon: Yeah.
+
+00:42:36.000 --> 00:42:40.000
+mark: Well, luckily there was nobody real at the door, it was just packages.
+
+00:42:40.000 --> 00:42:42.000
+rebeccaharmon: Oh, okay.
+
+00:42:41.000 --> 00:42:45.000
+mark: Sometimes they ring the doorbell, I don't know why they do that.
+
+00:42:45.000 --> 00:42:48.000
+rebeccaharmon: I know, sometimes they do, and sometimes they don't.
+
+00:42:47.000 --> 00:42:51.000
+mark: It's like, just to wake up the dogs, in case they were sleeping.
+
+00:42:55.000 --> 00:43:02.000
+mark: Okay, yeah, thisâ€¦ I'm adding notes to the bottom here about the admins beingâ€¦ needing to be able to impersonate.
+
+00:43:02.000 --> 00:43:04.000
+mark: mentorsâ€¦
+
+00:43:04.000 --> 00:43:06.000
+mark: Andâ€¦
+
+00:43:05.000 --> 00:43:09.000
+rebeccaharmon: Now, one other question I have is aboutâ€¦
+
+00:43:09.000 --> 00:43:12.000
+rebeccaharmon: The screen sizes of the phones.
+
+00:43:12.000 --> 00:43:14.000
+mark: Yeah.
+
+00:43:13.000 --> 00:43:16.000
+rebeccaharmon: So, you knowâ€¦
+
+00:43:17.000 --> 00:43:23.000
+rebeccaharmon: I mean, we have every variety of smartphone that the women have.
+
+00:43:24.000 --> 00:43:28.000
+rebeccaharmon: Because a lot of them have their own phones, and we have everything from iPhones.
+
+00:43:29.000 --> 00:43:36.000
+rebeccaharmon: all the way to the little Nokia smartphones that are, you know, probably 6 inches.
+
+00:43:37.000 --> 00:43:39.000
+mark: Right, well, they have to be aâ€¦
+
+00:43:39.000 --> 00:43:43.000
+mark: Smartphone, so they gotta be able to see the web.
+
+00:43:41.000 --> 00:43:43.000
+rebeccaharmon: Yep.
+
+00:43:43.000 --> 00:43:45.000
+rebeccaharmon: Right.
+
+00:43:44.000 --> 00:43:49.000
+mark: Um, properly a touch screen so they can move between the fields.
+
+00:43:49.000 --> 00:43:53.000
+mark: But if you want to send us all the model numbers, you can.
+
+00:43:53.000 --> 00:43:58.000
+mark: You know, we'll try and test it on all those screen sizes, because.
+
+00:43:53.000 --> 00:43:55.000
+rebeccaharmon: Okay.
+
+00:43:58.000 --> 00:44:01.000
+mark: You have to, you know, basicallyâ€¦
+
+00:44:01.000 --> 00:44:08.000
+mark: it's a combination of the size of the screen and the resolution, too, right? And soâ€¦
+
+00:44:08.000 --> 00:44:12.000
+mark: You know, and we can do our best to make it.
+
+00:44:12.000 --> 00:44:14.000
+mark: Fit on everything.
+
+00:44:14.000 --> 00:44:18.000
+mark: But there's just, like, physical limitations.
+
+00:44:19.000 --> 00:44:22.000
+mark: Uhâ€¦ sometimes.
+
+00:44:22.000 --> 00:44:25.000
+rebeccaharmon: Well, I guess what I'm thinking about isâ€¦
+
+00:44:25.000 --> 00:44:28.000
+rebeccaharmon: Whether or not we need toâ€¦
+
+00:44:29.000 --> 00:44:31.000
+rebeccaharmon: Um, set aâ€¦
+
+00:44:31.000 --> 00:44:36.000
+rebeccaharmon: Minimum screen size and a minimum resolution.
+
+00:44:36.000 --> 00:44:40.000
+rebeccaharmon: That would be necessary for this to work well.
+
+00:44:40.000 --> 00:44:43.000
+rebeccaharmon: And then, if weâ€¦
+
+00:44:43.000 --> 00:44:50.000
+rebeccaharmon: Uh, and brand probably doesn't matter as much as knowing the screen size and the resolution.
+
+00:44:51.000 --> 00:44:53.000
+mark: Yeah.
+
+00:44:51.000 --> 00:44:53.000
+rebeccaharmon: And then, if weâ€¦
+
+00:44:53.000 --> 00:44:56.000
+rebeccaharmon: Because that would give us some uniformity.
+
+00:44:56.000 --> 00:45:02.000
+rebeccaharmon: Across, um, tree mentors, and if we needed to raise money.
+
+00:45:02.000 --> 00:45:04.000
+rebeccaharmon: To buy phones for people.
+
+00:45:05.000 --> 00:45:07.000
+rebeccaharmon: Um, so that everybody hadâ€¦
+
+00:45:07.000 --> 00:45:09.000
+rebeccaharmon: A screen size that it was at.
+
+00:45:09.000 --> 00:45:13.000
+rebeccaharmon: At least this big, and had a resolution at least thisâ€¦
+
+00:45:13.000 --> 00:45:15.000
+rebeccaharmon: Hi.
+
+00:45:14.000 --> 00:45:16.000
+mark: Yeah.
+
+00:45:16.000 --> 00:45:17.000
+Kimberlee Noel: Mhm.
+
+00:45:16.000 --> 00:45:18.000
+rebeccaharmon: Then, umâ€¦
+
+00:45:18.000 --> 00:45:21.000
+rebeccaharmon: Because, you know, people over there, they have no money. I mean.
+
+00:45:21.000 --> 00:45:27.000
+rebeccaharmon: Allâ€¦ almost all the people we work with are well below extreme poverty.
+
+00:45:22.000 --> 00:45:24.000
+mark: Right.
+
+00:45:27.000 --> 00:45:29.000
+rebeccaharmon: So we're talking aboutâ€¦
+
+00:45:27.000 --> 00:45:29.000
+mark: Yeah.
+
+00:45:29.000 --> 00:45:32.000
+rebeccaharmon: People living on $30 a month.
+
+00:45:32.000 --> 00:45:34.000
+Kimberlee Noel: Mhm.
+
+00:45:32.000 --> 00:45:34.000
+rebeccaharmon: And so, umâ€¦
+
+00:45:34.000 --> 00:45:45.000
+rebeccaharmon: If they manage to sell some produce or something like that, and they save up money, well, then they're gonna buy the cheapest smartphone that they can buy, because that's justâ€¦
+
+00:45:45.000 --> 00:45:47.000
+rebeccaharmon: That's all they can do.
+
+00:45:48.000 --> 00:45:53.000
+mark: Yeah, and I didn't know whatâ€¦ I'm only familiar with, like, the North American market.
+
+00:45:48.000 --> 00:45:50.000
+rebeccaharmon: Soâ€¦
+
+00:45:54.000 --> 00:45:56.000
+mark: Um, I'm assuming that there'sâ€¦
+
+00:45:56.000 --> 00:46:01.000
+mark: all those phones are gonna be, like, Android phones, the cheap ones.
+
+00:46:01.000 --> 00:46:04.000
+rebeccaharmon: Yeah, the cheap ones areâ€¦ they're mostly Androids.
+
+00:46:01.000 --> 00:46:03.000
+mark: Andâ€¦
+
+00:46:05.000 --> 00:46:09.000
+mark: I could do some research and see what's, you know, what's popular.
+
+00:46:10.000 --> 00:46:13.000
+rebeccaharmon: The, the moreâ€¦ the popular brands over there.
+
+00:46:10.000 --> 00:46:12.000
+mark: in the effort.
+
+00:46:13.000 --> 00:46:16.000
+rebeccaharmon: areâ€¦ Samsung.
+
+00:46:17.000 --> 00:46:19.000
+mark: Yeah.
+
+00:46:17.000 --> 00:46:19.000
+rebeccaharmon: Ooh, why?
+
+00:46:20.000 --> 00:46:22.000
+rebeccaharmon: Nokiaâ€¦
+
+00:46:23.000 --> 00:46:26.000
+rebeccaharmon: Umâ€¦ and then there's someâ€¦
+
+00:46:26.000 --> 00:46:29.000
+rebeccaharmon: Kind of weird, off-brand things.
+
+00:46:30.000 --> 00:46:33.000
+rebeccaharmon: Um, I think most of our team now.
+
+00:46:33.000 --> 00:46:36.000
+rebeccaharmon: like, Quentin andâ€¦
+
+00:46:36.000 --> 00:46:40.000
+rebeccaharmon: try-give, uh, 3 or 4 of us have iPhones.
+
+00:46:41.000 --> 00:46:46.000
+rebeccaharmon: Um, but that's ourâ€¦ that's our staff, not the tree mentors. I don't thinkâ€¦
+
+00:46:46.000 --> 00:46:48.000
+rebeccaharmon: Any of the tree mentors have an iPhone.
+
+00:46:48.000 --> 00:46:55.000
+mark: And are thoseâ€¦ we used to test on the iPhone SE, because it was, like, the smallest iPhone screen.
+
+00:46:54.000 --> 00:46:56.000
+rebeccaharmon: Right.
+
+00:46:55.000 --> 00:46:58.000
+mark: Um, it's pretty small.
+
+00:46:57.000 --> 00:46:59.000
+rebeccaharmon: Yeah, it is.
+
+00:46:58.000 --> 00:47:03.000
+mark: Target, are you guys using iPhone SEs, or, like, a regular-sized iPhone?
+
+00:47:03.000 --> 00:47:08.000
+rebeccaharmon: I think they're usingâ€¦ like, I have an iPhone 13.
+
+00:47:08.000 --> 00:47:10.000
+mark: Okay.
+
+00:47:08.000 --> 00:47:11.000
+rebeccaharmon: And that's what Tri just bought.
+
+00:47:11.000 --> 00:47:13.000
+mark: Okay.
+
+00:47:11.000 --> 00:47:17.000
+rebeccaharmon: And I'm not sure which one Quintin's is, but it's probably somewhere around the size of a 13.
+
+00:47:18.000 --> 00:47:20.000
+mark: Yeah, I think they stopped making the SE.
+
+00:47:20.000 --> 00:47:22.000
+mark: Soâ€¦
+
+00:47:22.000 --> 00:47:24.000
+mark: Yeah, I just have to figure out whatâ€¦
+
+00:47:25.000 --> 00:47:32.000
+mark: what screensâ€¦ basically, you're asking me a question I don't know the answer to, which is, like, what's theâ€¦ what's the size of the screen? What resolution?
+
+00:47:28.000 --> 00:47:30.000
+rebeccaharmon: Okay.
+
+00:47:32.000 --> 00:47:34.000
+mark: is, like, the bare minimum. And soâ€¦
+
+00:47:33.000 --> 00:47:35.000
+rebeccaharmon: That's what I need, yeah.
+
+00:47:35.000 --> 00:47:37.000
+mark: Yeah, so I'm gonna try to seeâ€¦
+
+00:47:38.000 --> 00:47:45.000
+mark: I'm gonna try to do a little bit of research. There's, like, a bell curve of, you know, in different markets of what.
+
+00:47:45.000 --> 00:47:49.000
+mark: Phones are popular, and you try to hit for the middle of the.
+
+00:47:49.000 --> 00:47:51.000
+rebeccaharmon: Yep.
+
+00:47:49.000 --> 00:47:56.000
+mark: you know, bell curve, so I'll have to do a little bit of research to see what's going on there. And thenâ€¦
+
+00:47:56.000 --> 00:47:59.000
+mark: you know, Samsung will have certainâ€¦
+
+00:47:59.000 --> 00:48:05.000
+mark: models that they sell in North America that they don't sell in Africa, that they don't, you know, and they do sell in India, soâ€¦
+
+00:48:02.000 --> 00:48:04.000
+rebeccaharmon: That's right.
+
+00:48:05.000 --> 00:48:07.000
+rebeccaharmon: That's right.
+
+00:48:06.000 --> 00:48:08.000
+mark: Um, we'll have to see what's going on there.
+
+00:48:09.000 --> 00:48:11.000
+rebeccaharmon: But I can probablyâ€¦
+
+00:48:11.000 --> 00:48:16.000
+rebeccaharmon: like, getâ€¦ try-give toâ€¦ there's a store, a chain of stores there called PEP.
+
+00:48:17.000 --> 00:48:20.000
+rebeccaharmon: And a lot of people buy their phones at PEP because they're cheaper.
+
+00:48:20.000 --> 00:48:24.000
+rebeccaharmon: And so I could probably get him to go to PEP.
+
+00:48:24.000 --> 00:48:26.000
+rebeccaharmon: And take some photos.
+
+00:48:26.000 --> 00:48:28.000
+rebeccaharmon: of the falls.
+
+00:48:26.000 --> 00:48:29.000
+mark: Yeah, the popular phones, yeah, totally.
+
+00:48:29.000 --> 00:48:34.000
+rebeccaharmon: And the price points of them, and then at least you'd be able to see.
+
+00:48:34.000 --> 00:48:38.000
+rebeccaharmon: Kind of what model numbers they are, and what brands they are.
+
+00:48:39.000 --> 00:48:44.000
+mark: Yeah, because I was surprised, really. I was working with a team that wasâ€¦
+
+00:48:44.000 --> 00:48:46.000
+mark: getting, uhâ€¦
+
+00:48:46.000 --> 00:48:58.000
+mark: cell phones in the hands of homeless folks in Eugene, and I was totally surprised at the size and the resolution of the screens that they were able to hand out.
+
+00:48:58.000 --> 00:49:00.000
+rebeccaharmon: Mm.
+
+00:49:00.000 --> 00:49:13.000
+mark: Yeah, because they'reâ€¦ anyway, they seem capable, like, more capable than I would have expected, so hopefully, maybe we'll get a nice surprise when he takes some pictures, and I can look those up, maybe.
+
+00:49:13.000 --> 00:49:15.000
+mark: Maybe things are better than we think they are.
+
+00:49:15.000 --> 00:49:20.000
+rebeccaharmon: Okay, well, I hope so. But anyway, that wasâ€¦ that was my last thing that I hadâ€¦
+
+00:49:20.000 --> 00:49:24.000
+rebeccaharmon: written down there, because I just want to make sure that.
+
+00:49:24.000 --> 00:49:26.000
+rebeccaharmon: You know, we haveâ€¦
+
+00:49:26.000 --> 00:49:28.000
+rebeccaharmon: The right tools for them.
+
+00:49:28.000 --> 00:49:31.000
+rebeccaharmon: It's gonna be challenging enough to get them on thisâ€¦
+
+00:49:31.000 --> 00:49:36.000
+rebeccaharmon: Using this, but if we have the wrong tools for them, then it'sâ€¦
+
+00:49:36.000 --> 00:49:39.000
+rebeccaharmon: It'll be impossible, you know?
+
+00:49:37.000 --> 00:49:39.000
+Kimberlee Noel: Yeah.
+
+00:49:37.000 --> 00:49:39.000
+mark: Right.
+
+00:49:39.000 --> 00:49:41.000
+mark: Yeah, you only getâ€¦ you only get, uhâ€¦
+
+00:49:41.000 --> 00:49:45.000
+mark: You know, one chance for somebody to think it's okay.
+
+00:49:45.000 --> 00:49:49.000
+mark: Right? Like, you know, it's hard, it's hard if it's justâ€¦
+
+00:49:46.000 --> 00:49:48.000
+rebeccaharmon: Right.
+
+00:49:50.000 --> 00:49:53.000
+mark: totally unworkable. It's really hard to ask them to.
+
+00:49:53.000 --> 00:49:55.000
+rebeccaharmon: Oh, I see you got that, Kimberly.
+
+00:49:53.000 --> 00:49:55.000
+mark: Try it again, again.
+
+00:49:55.000 --> 00:49:57.000
+rebeccaharmon: You put that in there.
+
+00:49:55.000 --> 00:49:58.000
+Kimberlee Noel: Yeah, I found their website, soâ€¦
+
+00:49:57.000 --> 00:50:00.000
+rebeccaharmon: Excellent. Well, that gives you a really good idea of.
+
+00:50:00.000 --> 00:50:02.000
+Kimberlee Noel: Mhm.
+
+00:50:00.000 --> 00:50:04.000
+rebeccaharmon: Kind of the main brands and things that people are buying there.
+
+00:50:05.000 --> 00:50:12.000
+rebeccaharmon: And the rand is somewhereâ€¦ I usually, right now, I calculate about 17 rand to the dollar.
+
+00:50:12.000 --> 00:50:18.000
+rebeccaharmon: so you can see, I mean, you can go into the currency converter, but I think if you use 17.
+
+00:50:14.000 --> 00:50:16.000
+Kimberlee Noel: Mhm.
+
+00:50:18.000 --> 00:50:22.000
+rebeccaharmon: Sometimes it's 17 and a half, sometimes it's 18.
+
+00:50:22.000 --> 00:50:27.000
+rebeccaharmon: But that'll give you an idea of what the cost is if you use 17 to the dollar.
+
+00:50:28.000 --> 00:50:30.000
+mark: Okay.
+
+00:50:29.000 --> 00:50:32.000
+rebeccaharmon: Yeah. And then if we need toâ€¦
+
+00:50:32.000 --> 00:50:34.000
+rebeccaharmon: Buy phones for people.
+
+00:50:35.000 --> 00:50:40.000
+rebeccaharmon: You know, we can just do a little campaign and say to people.
+
+00:50:40.000 --> 00:50:47.000
+rebeccaharmon: you know, $20 will buy a phone for somebody that needs, you know, one of the tree mentors, andâ€¦
+
+00:50:47.000 --> 00:50:49.000
+rebeccaharmon: Just have, like, aâ€¦
+
+00:50:49.000 --> 00:50:51.000
+rebeccaharmon: a pain.
+
+00:50:49.000 --> 00:50:52.000
+mark: Yeah, we could even do a campaign here for that, right?
+
+00:50:52.000 --> 00:50:54.000
+rebeccaharmon: Yeah, we could, that's what I'm saying, andâ€¦
+
+00:50:52.000 --> 00:50:54.000
+Kimberlee Noel: Mhm.
+
+00:50:53.000 --> 00:50:55.000
+mark: Yeah.
+
+00:50:54.000 --> 00:51:04.000
+rebeccaharmon: say, you know, here's Tondi, want to buy Tondi a phone? $25, or whatever it is, and then it shows Tondi got her phone, you know.
+
+00:51:04.000 --> 00:51:06.000
+mark: Yeah.
+
+00:51:05.000 --> 00:51:14.000
+rebeccaharmon: Here's Gracious, okay, buy a phone for Gracious, here's 25 bucks for Gracious's phone. I don't think it would be that difficult to get people to donate for the phones.
+
+00:51:16.000 --> 00:51:17.000
+mark: Yeah, I think that's a great idea.
+
+00:51:19.000 --> 00:51:23.000
+mark: The onlyâ€¦ I'm ready to get, uh, going on this one. Theâ€¦
+
+00:51:23.000 --> 00:51:27.000
+mark: One part of it I'm a little light on is.
+
+00:51:27.000 --> 00:51:31.000
+mark: The, uh, the exact details of the reports.
+
+00:51:31.000 --> 00:51:37.000
+mark: And so, kind of my escape hatch on that is you'll be able to download everything as a spreadsheet.
+
+00:51:37.000 --> 00:51:41.000
+mark: So that you can, you know, do the reporting you need.
+
+00:51:41.000 --> 00:51:43.000
+rebeccaharmon: Yep.
+
+00:51:42.000 --> 00:51:45.000
+mark: But I think that thereâ€¦ I think when we initially launched this.
+
+00:51:45.000 --> 00:51:47.000
+mark: The reports are gonna be eitherâ€¦
+
+00:51:47.000 --> 00:51:49.000
+mark: Light, or kindaâ€¦
+
+00:51:49.000 --> 00:51:53.000
+mark: Non-existent, and we'll have to work with it.
+
+00:51:53.000 --> 00:51:59.000
+mark: We'll have to go through an iteration of, like, okay, great, this is what I really need the report to look like.
+
+00:51:59.000 --> 00:52:03.000
+mark: And then we'llâ€¦ we'll come back and do some more, so I just wannaâ€¦
+
+00:51:59.000 --> 00:52:01.000
+rebeccaharmon: Yup.
+
+00:52:03.000 --> 00:52:05.000
+rebeccaharmon: Okay.
+
+00:52:03.000 --> 00:52:05.000
+mark: Sit, set that up front.
+
+00:52:06.000 --> 00:52:12.000
+mark: The reports are vague. A lot of the other stuff seems pretty well understood as far as the input of the data.
+
+00:52:12.000 --> 00:52:14.000
+rebeccaharmon: Right.
+
+00:52:12.000 --> 00:52:15.000
+mark: The output of the data is still a little light on, soâ€¦
+
+00:52:15.000 --> 00:52:17.000
+rebeccaharmon: Well, I don't think about that too, Mark.
+
+00:52:18.000 --> 00:52:20.000
+rebeccaharmon: Um, and I can talk toâ€¦
+
+00:52:21.000 --> 00:52:25.000
+rebeccaharmon: one of our sites, like Galondolozzi, I could talk to Jessica and say.
+
+00:52:25.000 --> 00:52:29.000
+rebeccaharmon: You know, what would you like to have come back to you?
+
+00:52:29.000 --> 00:52:34.000
+rebeccaharmon: You know, what would be useful to you when weâ€¦ when we report to you?
+
+00:52:35.000 --> 00:52:40.000
+mark: Yeah, and they can even draw pictures, and, you know, it's like, I need a thing like this, andâ€¦
+
+00:52:40.000 --> 00:52:44.000
+mark: You know, just draw it on a page, like, this would be really useful, you know, and justâ€¦
+
+00:52:44.000 --> 00:52:48.000
+mark: Um, because we can make PDFs, and we can doâ€¦
+
+00:52:48.000 --> 00:52:54.000
+mark: We can do stuff. It's not the capability, it's knowing what to produce.
+
+00:52:53.000 --> 00:52:55.000
+rebeccaharmon: Right, I gotcha.
+
+00:52:55.000 --> 00:52:57.000
+rebeccaharmon: Okay.
+
+00:52:57.000 --> 00:53:00.000
+mark: But you'll always be able to get to the spreadsheet, so that's nice.
+
+00:53:01.000 --> 00:53:03.000
+rebeccaharmon: Okay, good.
+
+00:53:03.000 --> 00:53:08.000
+rebeccaharmon: And, um, when we hang up, Kimberly, I'll send the release form.
+
+00:53:08.000 --> 00:53:11.000
+rebeccaharmon: That's in two languages to you.
+
+00:53:11.000 --> 00:53:14.000
+Kimberlee Noel: Perfect. Yeah, because I think we have everything else, soâ€¦
+
+00:53:12.000 --> 00:53:14.000
+rebeccaharmon: So you haveâ€¦
+
+00:53:15.000 --> 00:53:17.000
+rebeccaharmon: And I'll lookâ€¦ I'll double check and make sure that.
+
+00:53:18.000 --> 00:53:20.000
+rebeccaharmon: You have everything.
+
+00:53:20.000 --> 00:53:22.000
+Kimberlee Noel: Okay.
+
+00:53:20.000 --> 00:53:24.000
+mark: Yeah, I was just gonna say, now's a good time to send the whole packet.
+
+00:53:24.000 --> 00:53:26.000
+rebeccaharmon: Yep.
+
+00:53:24.000 --> 00:53:28.000
+mark: Like, here's, like, here's the latest of absolutely everything we've got.
+
+00:53:28.000 --> 00:53:30.000
+rebeccaharmon: Okay, I can do that.
+
+00:53:30.000 --> 00:53:34.000
+mark: Um, and a lot of it might be duplicative, but it's nice.
+
+00:53:34.000 --> 00:53:36.000
+rebeccaharmon: I'll send you the whole packet.
+
+00:53:35.000 --> 00:53:38.000
+mark: Send us the wholeâ€¦ the whole thing, yeah.
+
+00:53:36.000 --> 00:53:38.000
+Kimberlee Noel: Sounds good.
+
+00:53:39.000 --> 00:53:41.000
+rebeccaharmon: Will do.
+
+00:53:39.000 --> 00:53:41.000
+mark: That way we can double-check everything.
+
+00:53:41.000 --> 00:53:43.000
+rebeccaharmon: Okay.
+
+00:53:41.000 --> 00:53:43.000
+Kimberlee Noel: Mhm.
+
+00:53:43.000 --> 00:53:45.000
+Kimberlee Noel: Alright, well, I feel, umâ€¦
+
+00:53:45.000 --> 00:53:47.000
+Kimberlee Noel: That we're in a good spot.
+
+00:53:48.000 --> 00:53:50.000
+rebeccaharmon: No, do you guysâ€¦
+
+00:53:48.000 --> 00:53:50.000
+mark: I feel kicked off.
+
+00:53:50.000 --> 00:53:55.000
+rebeccaharmon: You guys need some money soon? Whenâ€¦ you knowâ€¦
+
+00:53:55.000 --> 00:53:59.000
+Kimberlee Noel: Uh, whenâ€¦ when would it be better for, um, you?
+
+00:53:56.000 --> 00:53:58.000
+rebeccaharmon: Honey.
+
+00:53:59.000 --> 00:54:01.000
+Kimberlee Noel: Umâ€¦
+
+00:54:00.000 --> 00:54:03.000
+rebeccaharmon: Well, here's what I'm thinking about, is, umâ€¦
+
+00:54:04.000 --> 00:54:07.000
+rebeccaharmon: You know, we're getting ready to do thisâ€¦
+
+00:54:07.000 --> 00:54:10.000
+rebeccaharmon: Matching Grant Campaign for 10 Trees.
+
+00:54:10.000 --> 00:54:12.000
+Kimberlee Noel: Mhm.
+
+00:54:11.000 --> 00:54:19.000
+rebeccaharmon: And most of those donations are going to come through, um, either PayPal on our site.
+
+00:54:19.000 --> 00:54:22.000
+rebeccaharmon: Or they're gonna come throughâ€¦
+
+00:54:22.000 --> 00:54:25.000
+rebeccaharmon: Project Biome.
+
+00:54:25.000 --> 00:54:27.000
+rebeccaharmon: Who's our partner in this.
+
+00:54:27.000 --> 00:54:34.000
+rebeccaharmon: is setting up the whole campaign, and they have the campaign through some classy website? I don't know what it is.
+
+00:54:34.000 --> 00:54:36.000
+Kimberlee Noel: Mhm.
+
+00:54:34.000 --> 00:54:40.000
+rebeccaharmon: Uh, so the donations will either go to them, they're a U.S.-based nonprofit.
+
+00:54:40.000 --> 00:54:42.000
+rebeccaharmon: Or they will come to us.
+
+00:54:42.000 --> 00:54:45.000
+rebeccaharmon: via our PayPal account in the U.S.
+
+00:54:46.000 --> 00:54:49.000
+rebeccaharmon: And so, we couldâ€¦
+
+00:54:50.000 --> 00:54:55.000
+rebeccaharmon: We could send you money from our U.S. PayPal account.
+
+00:54:55.000 --> 00:55:04.000
+rebeccaharmon: Um, or we could have Project Biome send you money once we start getting money in from the matching grant campaign.
+
+00:55:04.000 --> 00:55:08.000
+rebeccaharmon: And that's gonna happen within the next couple weeks.
+
+00:55:08.000 --> 00:55:13.000
+mark: Well, yeah, and we can send you an invoice for, like, the first third of it, or something.
+
+00:55:12.000 --> 00:55:14.000
+rebeccaharmon: Yeah, why don't you do that?
+
+00:55:13.000 --> 00:55:15.000
+Kimberlee Noel: Okay, I'll do that.
+
+00:55:14.000 --> 00:55:20.000
+mark: And then you canâ€¦ whoever can figure out how to pay it online, they can figure out how to pay it online.
+
+00:55:21.000 --> 00:55:25.000
+mark: And, uh, that way, that sounds a little bit less complicated.
+
+00:55:25.000 --> 00:55:27.000
+rebeccaharmon: Okay, yeah, I just know that, like.
+
+00:55:27.000 --> 00:55:32.000
+rebeccaharmon: to try to get money from our South African bank account to you isâ€¦
+
+00:55:32.000 --> 00:55:34.000
+rebeccaharmon: near impossible.
+
+00:55:34.000 --> 00:55:35.000
+Kimberlee Noel: Mhm.
+
+00:55:34.000 --> 00:55:36.000
+mark: Yeah.
+
+00:55:34.000 --> 00:55:40.000
+rebeccaharmon: I mean, the banks over there justâ€¦ they just don'tâ€¦ it's justâ€¦
+
+00:55:41.000 --> 00:55:49.000
+rebeccaharmon: we'veâ€¦ we've tried many times, and it just doesn't work. But we do get monthly donations into ourâ€¦
+
+00:55:44.000 --> 00:55:46.000
+mark: Yeah.
+
+00:55:49.000 --> 00:55:54.000
+rebeccaharmon: um, PayPal account, and if people are gonna donate off our website.
+
+00:55:54.000 --> 00:55:57.000
+rebeccaharmon: That'll come into our PayPal account.
+
+00:55:57.000 --> 00:56:02.000
+rebeccaharmon: And so then we can just generate a payment for you from PayPal.
+
+00:55:57.000 --> 00:55:59.000
+mark: Okay, cool.
+
+00:56:02.000 --> 00:56:04.000
+rebeccaharmon: into your backup account.
+
+00:56:03.000 --> 00:56:12.000
+mark: Yeah, and weâ€¦ yeah, we usually just do it in thirds. We do it, like, a third to start, a third at some major milestone, and, like, a third at the end, or something.
+
+00:56:12.000 --> 00:56:15.000
+rebeccaharmon: Okay. Well, you just let me know, and then I will figure out.
+
+00:56:15.000 --> 00:56:17.000
+rebeccaharmon: How to get the money to you.
+
+00:56:17.000 --> 00:56:19.000
+mark: Okay.
+
+00:56:17.000 --> 00:56:20.000
+Kimberlee Noel: That sounds good. I'll send an invoice over.
+
+00:56:20.000 --> 00:56:23.000
+rebeccaharmon: Okay. Great.
+
+00:56:20.000 --> 00:56:22.000
+Kimberlee Noel: Um, by the end of this week.
+
+00:56:23.000 --> 00:56:25.000
+Kimberlee Noel: Okay.
+
+00:56:24.000 --> 00:56:26.000
+rebeccaharmon: Oh, I just want to say one thing.
+
+00:56:26.000 --> 00:56:28.000
+rebeccaharmon: I'm immensely grateful.
+
+00:56:28.000 --> 00:56:31.000
+rebeccaharmon: To you all for taking this project on.
+
+00:56:32.000 --> 00:56:33.000
+rebeccaharmon: And, umâ€¦
+
+00:56:34.000 --> 00:56:36.000
+rebeccaharmon: I wish I could share, like.
+
+00:56:37.000 --> 00:56:40.000
+rebeccaharmon: Even 10% of the stories with you.
+
+00:56:40.000 --> 00:56:43.000
+rebeccaharmon: about the impact that 10 Trees is having.
+
+00:56:43.000 --> 00:56:48.000
+rebeccaharmon: Butâ€¦ and I don't say this lightly because, you know, I'm old.
+
+00:56:48.000 --> 00:56:52.000
+rebeccaharmon: And I've been working in human services for 40 years.
+
+00:56:52.000 --> 00:56:56.000
+rebeccaharmon: But this program is life-changing for people.
+
+00:56:56.000 --> 00:56:59.000
+rebeccaharmon: And when you look atâ€¦
+
+00:56:59.000 --> 00:57:15.000
+rebeccaharmon: women in rural South Africa, they're at the bottom of the food chain. There's only two groups of people that are below rural women on the food chain, and that's people with disabilities who are in rural areas, and orphan children.
+
+00:57:04.000 --> 00:57:06.000
+Kimberlee Noel: Mhm.
+
+00:57:15.000 --> 00:57:17.000
+rebeccaharmon: But other than that, rural women.
+
+00:57:18.000 --> 00:57:23.000
+rebeccaharmon: Theyâ€¦ and especially where we work, there's nobody else out there working.
+
+00:57:24.000 --> 00:57:29.000
+rebeccaharmon: But the model that we use, and the way that we approach our work with people.
+
+00:57:30.000 --> 00:57:36.000
+rebeccaharmon: Itâ€¦ their lives change in ways that are way beyond just being able to grow food.
+
+00:57:37.000 --> 00:57:39.000
+rebeccaharmon: Um, and soâ€¦
+
+00:57:39.000 --> 00:57:48.000
+rebeccaharmon: I have no problem, like, asking people for money for our programs, because I see what they're doing, and I see the impact that they're having.
+
+00:57:48.000 --> 00:57:50.000
+Kimberlee Noel: Mhm.
+
+00:57:49.000 --> 00:57:57.000
+rebeccaharmon: And so, I just want you all toâ€¦ I'm saying that because I want you all to know that what you're giving us and doing.
+
+00:57:57.000 --> 00:57:59.000
+rebeccaharmon: has big impact.
+
+00:57:58.000 --> 00:58:00.000
+Kimberlee Noel: Mhm.
+
+00:57:59.000 --> 00:58:03.000
+rebeccaharmon: And I just want to thank you so much for being willing to do it.
+
+00:58:03.000 --> 00:58:05.000
+rebeccaharmon: Because, umâ€¦
+
+00:58:05.000 --> 00:58:14.000
+rebeccaharmon: It's going to make it possible for us to grow this project, and we wouldn't be able to do it if we stick with this paper model that we're doing.
+
+00:58:13.000 --> 00:58:15.000
+Kimberlee Noel: Mhm.
+
+00:58:15.000 --> 00:58:17.000
+rebeccaharmon: So, I just wanted to say that to you.
+
+00:58:17.000 --> 00:58:19.000
+Kimberlee Noel: Well, thank you, Becky, and.
+
+00:58:19.000 --> 00:58:23.000
+Kimberlee Noel: Um, you know, I'veâ€¦ ever since learning about the project, there was noâ€¦
+
+00:58:23.000 --> 00:58:27.000
+Kimberlee Noel: Hesitation, um, as far as, you know.
+
+00:58:27.000 --> 00:58:30.000
+Kimberlee Noel: would I want to work on something like this? It was absolutelyâ€¦
+
+00:58:30.000 --> 00:58:33.000
+Kimberlee Noel: Um, yes. Umâ€¦
+
+00:58:33.000 --> 00:58:35.000
+Kimberlee Noel: you know, I hope that we canâ€¦
+
+00:58:36.000 --> 00:58:38.000
+Kimberlee Noel: Make it as simple.
+
+00:58:39.000 --> 00:58:41.000
+Kimberlee Noel: And, umâ€¦
+
+00:58:41.000 --> 00:58:49.000
+Kimberlee Noel: As useful as possible, so that it does make your efforts to expand the project, um, easy.
+
+00:58:49.000 --> 00:58:52.000
+rebeccaharmon: Yeah, thank you. I have noâ€¦
+
+00:58:50.000 --> 00:58:52.000
+Kimberlee Noel: Yeah, I justâ€¦
+
+00:58:53.000 --> 00:58:56.000
+rebeccaharmon: qualms about it at all. I'm sure they'll be brilliant.
+
+00:58:54.000 --> 00:58:56.000
+Kimberlee Noel: Mhm.
+
+00:58:56.000 --> 00:58:58.000
+rebeccaharmon: and beautiful.
+
+00:58:59.000 --> 00:59:02.000
+Kimberlee Noel: Alright, well, it was nice meeting you, Becky.
+
+00:58:59.000 --> 00:59:01.000
+mark: Awesome.
+
+00:59:00.000 --> 00:59:03.000
+rebeccaharmon: Yeah. Yeah, thank you so much, guys.
+
+00:59:03.000 --> 00:59:05.000
+Kimberlee Noel: Alright, talk to you later.
+
+00:59:04.000 --> 00:59:07.000
+rebeccaharmon: Alright. Give Heather, my love.
+
+00:59:05.000 --> 00:59:07.000
+mark: Bye-bye.
+
+00:59:05.000 --> 00:59:07.000
+Kimberlee Noel: Nope, bye.
+

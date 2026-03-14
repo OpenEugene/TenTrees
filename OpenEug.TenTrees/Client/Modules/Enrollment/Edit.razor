@@ -1,0 +1,623 @@
+@using Oqtane.Modules.Controls
+@using OpenEug.TenTrees.Module.Enrollment.Services
+@using OpenEug.TenTrees.Module.Village.Services
+
+@namespace OpenEug.TenTrees.Module.Enrollment
+@inherits ModuleBase
+@inject IEnrollmentService EnrollmentService
+@inject IVillageService VillageService
+@inject NavigationManager NavigationManager
+@inject IStringLocalizer<Edit> Localizer
+
+<form @ref="form" class="@(validated ? " was-validated" : "needs-validation" )" novalidate>
+    <div class="container">
+        <h3>@Localizer["FormTitle"]</h3>
+        
+        <!-- Section 1: Basic Information -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5>@Localizer["Section.BasicInfo"]</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-2">
+                    <Label Class="col-sm-4" For="treementorname" ResourceKey="TreeMentorName">Tree Mentor Name:</Label>
+                    <div class="col-sm-8">
+                        <select id="treementorname" class="form-select" @bind="@_mentorUsername" required>
+                            <option value="">-- Select --</option>
+                            @if (_users != null)
+                            {
+                                @foreach (var user in _users.OrderBy(u => u.DisplayName))
+                                {
+                                    <option value="@user.Username">@user.DisplayName</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <Label Class="col-sm-4" For="growername" ResourceKey="GrowerName">Grower Name:</Label>
+                    <div class="col-sm-8">
+                        <input id="growername" class="form-control" @bind="@_growerName" required />
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <Label Class="col-sm-4" For="villageid" ResourceKey="Village">Village:</Label>
+                    <div class="col-sm-8">
+                        <select id="villageid" class="form-select" @bind="@_villageId" required>
+                            <option value="0">@Localizer["SelectVillage"]</option>
+                            @if (_villages != null)
+                            {
+                                @foreach (var village in _villages)
+                                {
+                                    <option value="@village.VillageId">@village.VillageName</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <Label Class="col-sm-4" For="housenumber" ResourceKey="HouseNumber">House Number:</Label>
+                    <div class="col-sm-8">
+                        <input id="housenumber" class="form-control" @bind="@_houseNumber" />
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <Label Class="col-sm-4" For="idnumber" ResourceKey="IdNumber">ID Number:</Label>
+                    <div class="col-sm-8">
+                        <input id="idnumber" class="form-control" @bind="@_idNumber" />
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <Label Class="col-sm-4" For="birthdate" ResourceKey="BirthDate">Birth Date:</Label>
+                    <div class="col-sm-8">
+                        <input id="birthdate" type="date" class="form-control" @bind="@_birthDate" />
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <Label Class="col-sm-4" For="ownshome" ResourceKey="OwnsHome">Do they own their home?</Label>
+                    <div class="col-sm-8">
+                        <select id="ownshome" class="form-select" @bind="@_ownsHome">
+                            <option value="">@Localizer["Select"]</option>
+                            <option value="true">@Localizer["Yes"]</option>
+                            <option value="false">@Localizer["No"]</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <Label Class="col-sm-4" For="householdsize" ResourceKey="HouseholdSize">Household Size:</Label>
+                    <div class="col-sm-8">
+                        <input id="householdsize" type="number" class="form-control" @bind="@_householdSize" required />
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <Label Class="col-sm-4" For="enrollmentdate" ResourceKey="Date">Date:</Label>
+                    <div class="col-sm-8">
+                        <input id="enrollmentdate" type="date" class="form-control" @bind="@_enrollmentDate" readonly />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Preferred Criteria -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5>@Localizer["Section.PreferredCriteria"]</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="enrolledinpe" @bind="@_enrolledInPE" />
+                        <Label Class="form-check-label" For="enrolledinpe" ResourceKey="Criteria.EnrolledInPE">
+                            Are they currently enrolled in PE with a garden growing?
+                        </Label>
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="pegraduate" @bind="@_peGraduate" />
+                        <Label Class="form-check-label" For="pegraduate" ResourceKey="Criteria.PEGraduate">
+                            Are they a graduate of PE in the past?
+                        </Label>
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="gardenplanted" @bind="@_gardenPlantedAndTended" />
+                        <Label Class="form-check-label" For="gardenplanted" ResourceKey="Criteria.GardenPlanted">
+                            If so, is their garden planted and tended?
+                        </Label>
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="childheaded" @bind="@_childHeadedHousehold" />
+                        <Label Class="form-check-label" For="childheaded" ResourceKey="Criteria.ChildHeaded">
+                            Child headed household?
+                        </Label>
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="womanheaded" @bind="@_womanHeadedHousehold" />
+                        <Label Class="form-check-label" For="womanheaded" ResourceKey="Criteria.WomanHeaded">
+                            Woman headed household?
+                        </Label>
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="emptyyard" @bind="@_emptyYard" />
+                        <Label Class="form-check-label" For="emptyyard" ResourceKey="Criteria.EmptyYard">
+                            Empty or nearly empty yard?
+                        </Label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: Commitments -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5>@Localizer["Section.Commitments"]</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="commitchemicals" @bind="@_commitNoChemicals" />
+                        <Label Class="form-check-label" For="commitchemicals" ResourceKey="Commit.NoChemicals">
+                            Committed to not using chemicals or pesticides
+                        </Label>
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="commitclasses" @bind="@_commitAttendClasses" />
+                        <Label Class="form-check-label" For="commitclasses" ResourceKey="Commit.AttendClasses">
+                            Committed to attend five permaculture training classes
+                        </Label>
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="commitcutting" @bind="@_commitNoCuttingTrees" />
+                        <Label Class="form-check-label" For="commitcutting" ResourceKey="Commit.NoCutting">
+                            Committed not to cut trees
+                        </Label>
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="commitwomen" @bind="@_commitStandForWomenChildren" />
+                        <Label Class="form-check-label" For="commitwomen" ResourceKey="Commit.WomenChildren">
+                            Committed to standing for women and children with no abuse
+                        </Label>
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="commitcare" @bind="@_commitCareWhileAway" />
+                        <Label Class="form-check-label" For="commitcare" ResourceKey="Commit.CareWhileAway">
+                            Agree to care for trees while away from home
+                        </Label>
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="commitaccess" @bind="@_commitAllowYardAccess" />
+                        <Label Class="form-check-label" For="commitaccess" ResourceKey="Commit.YardAccess">
+                            Give permission for mentor to enter yard
+                        </Label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 4: Signature -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5>@Localizer["Section.Signature"]</h5>
+            </div>
+            <div class="card-body">
+                @if (!string.IsNullOrWhiteSpace(_signatureData))
+                {
+                    <div class="border rounded p-1" style="background:#fff;">
+                        @if (_signatureData.StartsWith("<svg"))
+                        {
+                            @((MarkupString)_signatureData)
+                        }
+                        else
+                        {
+                            <img src="@_signatureData" alt="Signature" style="max-width:100%;height:auto;display:block;" />
+                        }
+                    </div>
+                    <small class="form-text text-muted mt-1">@Localizer["Signature.Collected"]</small>
+                }
+                else
+                {
+                    <div class="alert alert-warning mb-0">
+                        <i class="bi bi-exclamation-triangle"></i> @Localizer["Signature.NotCollected"]
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Section 5: Enrollment Status (Admin Only) -->
+        @if (PageState.Action == "Edit" && UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin))
+        {
+            <div class="card mb-3 border-primary">
+                <div class="card-header bg-primary text-white">
+                    <h5>@Localizer["Section.EnrollmentStatus"]</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <strong>@Localizer["Label.CurrentStatus"]:</strong>
+                        </div>
+                        <div class="col-md-8">
+                            <span class="badge @GetStatusBadgeClass() fs-6">
+                                @GetStatusText()
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="btn-group" role="group">
+                                @if (_enrollmentStatus != Models.EnrollmentStatus.Approved)
+                                {
+                                    <button type="button" class="btn btn-success" @onclick="ApproveEnrollment">
+                                        <i class="bi bi-check-circle"></i> @Localizer["Action.Approve"]
+                                    </button>
+                                }
+                                @if (_enrollmentStatus != Models.EnrollmentStatus.Pending)
+                                {
+                                    <button type="button" class="btn btn-warning" @onclick="SetPendingEnrollment">
+                                        <i class="bi bi-clock"></i> @Localizer["Action.SetPending"]
+                                    </button>
+                                }
+                                @if (_enrollmentStatus != Models.EnrollmentStatus.Rejected)
+                                {
+                                    <button type="button" class="btn btn-danger" @onclick="RejectEnrollment">
+                                        <i class="bi bi-x-circle"></i> @Localizer["Action.Reject"]
+                                    </button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    
+    <button type="button" class="btn btn-success" @onclick="Save">@Localizer["Save"]</button>
+    <NavLink class="btn btn-secondary" href="@NavigateUrl()">@Localizer["Cancel"]</NavLink>
+    <br /><br />
+    @if (PageState.Action == "Edit")
+    {
+        <AuditInfo CreatedBy="@_createdby" CreatedOn="@_createdon" ModifiedBy="@_modifiedby" ModifiedOn="@_modifiedon"></AuditInfo>
+    }
+</form>
+
+@code {
+    public override SecurityAccessLevel SecurityAccessLevel => SecurityAccessLevel.Edit;
+
+    public override string Actions => "Add,Edit";
+
+    public override string Title => "Manage Enrollment";
+    public override bool UseAdminContainer => false;
+
+    private ElementReference form;
+    private bool validated = false;
+
+    private int _id;
+
+    // Villages for dropdown
+    private List<Models.Village> _villages;
+    private List<UserInfo> _users;
+
+    // Basic Information
+    private string _mentorUsername;
+    private string _growerName;
+    private int _villageId;
+    private string _houseNumber;
+    private string _idNumber;
+    private DateTime? _birthDate;
+    private bool _ownsHome;
+    private int _householdSize = 1;
+    private DateTime _enrollmentDate = DateTime.Today;
+    
+    // Preferred Criteria
+    private bool _enrolledInPE;
+    private bool _peGraduate;
+    private bool _gardenPlantedAndTended;
+    private bool _childHeadedHousehold;
+    private bool _womanHeadedHousehold;
+    private bool _emptyYard;
+    
+    // Commitments
+    private bool _commitNoChemicals;
+    private bool _commitAttendClasses;
+    private bool _commitNoCuttingTrees;
+    private bool _commitStandForWomenChildren;
+    private bool _commitCareWhileAway;
+    private bool _commitAllowYardAccess;
+    
+    // Signature
+    private string _signatureData;
+
+    // Enrollment Status
+    private Models.EnrollmentStatus _enrollmentStatus = Models.EnrollmentStatus.Pending;
+
+    // Audit fields
+    private string _createdby;
+    private DateTime _createdon;
+    private string _modifiedby;
+    private DateTime _modifiedon;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        try
+        {
+            // Load villages for dropdown
+            // When editing, load all villages to include the current one even if inactive
+            // When adding, only load active villages
+            if (PageState.Action == "Edit")
+            {
+                _villages = await VillageService.GetVillagesAsync();
+            }
+            else
+            {
+                _villages = await VillageService.GetActiveVillagesAsync();
+            }
+
+            // Auto-fill tree mentor name from current user
+            _users = await EnrollmentService.GetSiteUsersAsync(ModuleState.ModuleId);
+            _mentorUsername = PageState.User.Username;
+
+            if (PageState.Action == "Edit")
+            {
+                _id = Int32.Parse(PageState.QueryString["id"]);
+                Models.Enrollment Enrollment = await EnrollmentService.GetEnrollmentAsync(_id, ModuleState.ModuleId);
+                if (Enrollment != null)
+                {
+                    _growerName = Enrollment.GrowerName;
+                    _villageId = Enrollment.VillageId;
+                    _houseNumber = Enrollment.HouseNumber;
+                    _idNumber = Enrollment.IdNumber;
+                    _birthDate = Enrollment.BirthDate;
+                    _householdSize = Enrollment.HouseholdSize;
+                    _ownsHome = Enrollment.OwnsHome;
+                    _enrollmentDate = Enrollment.EnrollmentDate.Date;
+                    _mentorUsername = Enrollment.MentorId ?? PageState.User.Username;
+
+                    // Preferred Criteria
+                    _enrolledInPE = Enrollment.EnrolledInPE;
+                    _peGraduate = Enrollment.PEGraduate;
+                    _gardenPlantedAndTended = Enrollment.GardenPlantedAndTended;
+                    _childHeadedHousehold = Enrollment.ChildHeadedHousehold;
+                    _womanHeadedHousehold = Enrollment.WomanHeadedHousehold;
+                    _emptyYard = Enrollment.EmptyYard;
+
+                    // Commitments
+                    _commitNoChemicals = Enrollment.CommitNoChemicals;
+                    _commitAttendClasses = Enrollment.CommitAttendClasses;
+                    _commitNoCuttingTrees = Enrollment.CommitNoCuttingTrees;
+                    _commitStandForWomenChildren = Enrollment.CommitStandForWomenChildren;
+                    _commitCareWhileAway = Enrollment.CommitCareWhileAway;
+                    _commitAllowYardAccess = Enrollment.CommitAllowYardAccess;
+
+                    // Signature
+                    _signatureData = Enrollment.SignatureData;
+
+                    // Enrollment Status
+                    _enrollmentStatus = Enrollment.Status;
+
+                    // Audit
+                    _createdby = Enrollment.CreatedBy;
+                    _createdon = Enrollment.CreatedOn;
+                    _modifiedby = Enrollment.ModifiedBy;
+                    _modifiedon = Enrollment.ModifiedOn;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Loading Enrollment {EnrollmentId} {Error}", _id, ex.Message);
+            AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
+        }
+    }
+
+    private async Task Save()
+    {
+        try
+        {
+            validated = true;
+            var interop = new Oqtane.UI.Interop(JSRuntime);
+            if (await interop.FormValid(form))
+            {
+                if (PageState.Action == "Add")
+                {
+                    Models.Enrollment Enrollment = new Models.Enrollment();
+                    Enrollment.ModuleId = ModuleState.ModuleId;
+                    
+                    // Basic Information
+                    Enrollment.GrowerName = _growerName;
+                    Enrollment.VillageId = _villageId;
+                    Enrollment.HouseNumber = _houseNumber;
+                    Enrollment.IdNumber = _idNumber;
+                    Enrollment.BirthDate = _birthDate;
+                    Enrollment.HouseholdSize = _householdSize;
+                    Enrollment.OwnsHome = _ownsHome;
+                    Enrollment.EnrollmentDate = DateTime.UtcNow;
+                    Enrollment.MentorId = _mentorUsername;
+                    Enrollment.TreeMentorName = _users?.FirstOrDefault(u => u.Username == _mentorUsername)?.DisplayName ?? _mentorUsername;
+                    
+                    // Preferred Criteria
+                    Enrollment.EnrolledInPE = _enrolledInPE;
+                    Enrollment.PEGraduate = _peGraduate;
+                    Enrollment.GardenPlantedAndTended = _gardenPlantedAndTended;
+                    Enrollment.ChildHeadedHousehold = _childHeadedHousehold;
+                    Enrollment.WomanHeadedHousehold = _womanHeadedHousehold;
+                    Enrollment.EmptyYard = _emptyYard;
+                    
+                    // Commitments
+                    Enrollment.CommitNoChemicals = _commitNoChemicals;
+                    Enrollment.CommitAttendClasses = _commitAttendClasses;
+                    Enrollment.CommitNoCuttingTrees = _commitNoCuttingTrees;
+                    Enrollment.CommitStandForWomenChildren = _commitStandForWomenChildren;
+                    Enrollment.CommitCareWhileAway = _commitCareWhileAway;
+                    Enrollment.CommitAllowYardAccess = _commitAllowYardAccess;
+                    
+                    // Signature
+                    Enrollment.SignatureData = _signatureData;
+                    Enrollment.SignatureCollected = !string.IsNullOrWhiteSpace(_signatureData);
+                    if (Enrollment.SignatureCollected)
+                    {
+                        Enrollment.SignatureDate = DateTime.UtcNow;
+                    }
+                    
+                    Enrollment.Status = Models.EnrollmentStatus.Pending;
+                    
+                    Enrollment = await EnrollmentService.AddEnrollmentAsync(Enrollment);
+                    await logger.LogInformation("Enrollment Added {Enrollment}", Enrollment);
+                    AddModuleMessage(Localizer["Message.SaveSuccess"], MessageType.Success);
+                }
+                else
+                {
+                    Models.Enrollment Enrollment = await EnrollmentService.GetEnrollmentAsync(_id, ModuleState.ModuleId);
+                    
+                    // Basic Information
+                    Enrollment.GrowerName = _growerName;
+                    Enrollment.VillageId = _villageId;
+                    Enrollment.HouseNumber = _houseNumber;
+                    Enrollment.IdNumber = _idNumber;
+                    Enrollment.BirthDate = _birthDate;
+                    Enrollment.HouseholdSize = _householdSize;
+                    Enrollment.OwnsHome = _ownsHome;
+                    Enrollment.MentorId = _mentorUsername;
+                    Enrollment.TreeMentorName = _users?.FirstOrDefault(u => u.Username == _mentorUsername)?.DisplayName ?? _mentorUsername;
+                    
+                    // Preferred Criteria
+                    Enrollment.EnrolledInPE = _enrolledInPE;
+                    Enrollment.PEGraduate = _peGraduate;
+                    Enrollment.GardenPlantedAndTended = _gardenPlantedAndTended;
+                    Enrollment.ChildHeadedHousehold = _childHeadedHousehold;
+                    Enrollment.WomanHeadedHousehold = _womanHeadedHousehold;
+                    Enrollment.EmptyYard = _emptyYard;
+                    
+                    // Commitments
+                    Enrollment.CommitNoChemicals = _commitNoChemicals;
+                    Enrollment.CommitAttendClasses = _commitAttendClasses;
+                    Enrollment.CommitNoCuttingTrees = _commitNoCuttingTrees;
+                    Enrollment.CommitStandForWomenChildren = _commitStandForWomenChildren;
+                    Enrollment.CommitCareWhileAway = _commitCareWhileAway;
+                    Enrollment.CommitAllowYardAccess = _commitAllowYardAccess;
+                    
+                    // Signature
+                    Enrollment.SignatureData = _signatureData;
+                    Enrollment.SignatureCollected = !string.IsNullOrWhiteSpace(_signatureData);
+                    if (Enrollment.SignatureCollected && !Enrollment.SignatureDate.HasValue)
+                    {
+                        Enrollment.SignatureDate = DateTime.UtcNow;
+                    }
+
+                    // Enrollment Status (preserve current status on regular updates)
+                    Enrollment.Status = _enrollmentStatus;
+
+                    await EnrollmentService.UpdateEnrollmentAsync(Enrollment);
+                    await logger.LogInformation("Enrollment Updated {Enrollment}", Enrollment);
+                    AddModuleMessage(Localizer["Message.UpdateSuccess"], MessageType.Success);
+                }
+                NavigationManager.NavigateTo(NavigateUrl());
+            }
+            else
+            {
+                AddModuleMessage(Localizer["Message.SaveValidation"], MessageType.Warning);
+            }
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Saving Enrollment {Error}", ex.Message);
+            AddModuleMessage(Localizer["Message.SaveError"], MessageType.Error);
+        }
+    }
+
+    private async Task ApproveEnrollment()
+    {
+        try
+        {
+            _enrollmentStatus = Models.EnrollmentStatus.Approved;
+            var enrollment = await EnrollmentService.GetEnrollmentAsync(_id, ModuleState.ModuleId);
+            enrollment.Status = _enrollmentStatus;
+            await EnrollmentService.UpdateEnrollmentAsync(enrollment);
+            await logger.LogInformation("Enrollment {EnrollmentId} Approved", _id);
+            AddModuleMessage(Localizer["Message.Approved"], MessageType.Success);
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Approving Enrollment {EnrollmentId} {Error}", _id, ex.Message);
+            AddModuleMessage(Localizer["Message.StatusChangeError"], MessageType.Error);
+        }
+    }
+
+    private async Task RejectEnrollment()
+    {
+        try
+        {
+            _enrollmentStatus = Models.EnrollmentStatus.Rejected;
+            var enrollment = await EnrollmentService.GetEnrollmentAsync(_id, ModuleState.ModuleId);
+            enrollment.Status = _enrollmentStatus;
+            await EnrollmentService.UpdateEnrollmentAsync(enrollment);
+            await logger.LogInformation("Enrollment {EnrollmentId} Rejected", _id);
+            AddModuleMessage(Localizer["Message.Rejected"], MessageType.Warning);
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Rejecting Enrollment {EnrollmentId} {Error}", _id, ex.Message);
+            AddModuleMessage(Localizer["Message.StatusChangeError"], MessageType.Error);
+        }
+    }
+
+    private async Task SetPendingEnrollment()
+    {
+        try
+        {
+            _enrollmentStatus = Models.EnrollmentStatus.Pending;
+            var enrollment = await EnrollmentService.GetEnrollmentAsync(_id, ModuleState.ModuleId);
+            enrollment.Status = _enrollmentStatus;
+            await EnrollmentService.UpdateEnrollmentAsync(enrollment);
+            await logger.LogInformation("Enrollment {EnrollmentId} Set to Pending", _id);
+            AddModuleMessage(Localizer["Message.SetPending"], MessageType.Info);
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Setting Enrollment to Pending {EnrollmentId} {Error}", _id, ex.Message);
+            AddModuleMessage(Localizer["Message.StatusChangeError"], MessageType.Error);
+        }
+    }
+
+    private string GetStatusBadgeClass()
+    {
+        return _enrollmentStatus switch
+        {
+            Models.EnrollmentStatus.Pending => "bg-warning",
+            Models.EnrollmentStatus.Approved => "bg-success",
+            Models.EnrollmentStatus.Rejected => "bg-danger",
+            _ => "bg-secondary"
+        };
+    }
+
+    private string GetStatusText()
+    {
+        return _enrollmentStatus switch
+        {
+            Models.EnrollmentStatus.Pending => Localizer["EnrollmentStatus.Pending"],
+            Models.EnrollmentStatus.Approved => Localizer["EnrollmentStatus.Approved"],
+            Models.EnrollmentStatus.Rejected => Localizer["EnrollmentStatus.Rejected"],
+            _ => _enrollmentStatus.ToString()
+        };
+    }
+}
