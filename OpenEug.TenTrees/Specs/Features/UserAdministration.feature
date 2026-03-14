@@ -29,7 +29,7 @@ Feature: User and Access Management
     When I set "Bondi" as the MentorId on grower records for households in her care
     Then she should only see grower records where she is the assigned mentor
     And growers assigned to a different mentor should not appear in her view
-    Note: Mentor assignment is stored per grower record (MentorId field), not as a household number range
+    # Note: Mentor assignment is stored per grower record (MentorId field), not as a household number range
 
   Scenario: Create new mentor account
     Given I am an administrator
