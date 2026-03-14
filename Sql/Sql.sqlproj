@@ -100,6 +100,9 @@
     <Build Include="dbo\Tables\TrainingClass.sql" />
     <Build Include="dbo\Tables\ClassAttendance.sql" />
     <Build Include="dbo\Tables\Assessment.sql" />
+    <Build Include="dbo\Tables\SiteTask.sql" />
+    <Build Include="dbo\Tables\SiteGroupMember.sql" />
+    <Build Include="dbo\Tables\SiteGroup.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SqlSchemaCompare1.scmp" />
