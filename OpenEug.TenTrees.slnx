@@ -4,6 +4,7 @@
     <File Path="../10_Trees_BDD_Project_Plan.md" />
     <File Path="../README.md" />
     <File Path=".mcp.json" />
+    <File Path="agent.md" />
   </Folder>
   <Project Path="Client/OpenEug.TenTrees.Client.csproj" />
   <Project Path="Server/OpenEug.TenTrees.Server.csproj" />

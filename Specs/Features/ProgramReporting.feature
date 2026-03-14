@@ -5,7 +5,7 @@ Feature: Program Reports and Data Export
   So that I can track program outcomes and report to funders
 
   Background:
-    Given I am Centre staff (Admin, PM, or ED)
+    Given I am Centre staff (10 Trees Admin or Project Manager)
     And I have access to reporting functions
 
   Scenario: Generate tree survival report
@@ -54,3 +54,27 @@ Feature: Program Reports and Data Export
       | Active Assessments         | Count completed           |
       | Permaculture Compliance    | Practice percentages      |
       | Areas for Improvement      | Identified gaps           |
+
+  Scenario: Generate home visit count report for funders
+    When I select report "Home Visits"
+    And I filter by staff member "Joel"
+    And I set date range "2025-03-01" to "2025-03-31"
+    Then I should see:
+      | Metric                | Value |
+      | Staff member          | Joel  |
+      | Total home visits     | 25    |
+    And I should be able to export the results
+
+  Scenario: Generate home visit report for all staff in a month
+    When I select report "Home Visits"
+    And I set date range "2025-03-01" to "2025-03-31"
+    Then I should see a row per staff member showing their visit count for that month
+
+  Scenario: Generate cohort comparison report
+    When I select report "Cohort Comparison"
+    Then I should see a list of cohorts including:
+      | Cohort Name              | Households |
+      | Orpen Gate Village 2023  | 153        |
+      | Open Gate Village 2024   | 57         |
+      | Roebuck 1 2026           | 55         |
+    And I can filter survival and compliance metrics by cohort
