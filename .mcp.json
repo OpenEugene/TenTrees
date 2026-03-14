@@ -1,0 +1,12 @@
+{
+  "servers": {
+    "github": {
+      "url": "https://api.githubcopilot.com/mcp/"
+    },
+    "playwright": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [ "@playwright/mcp@latest" ]
+    }
+  }
+}

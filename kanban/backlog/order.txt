@@ -1,0 +1,14 @@
+not-all-the-resx-files-are-getting-deployed
+tech-grower-status-management-minor-improvements-and-refinements
+add-mobile-device-compatibility-and-low-bandwidth-performance-requirements
+add-self-registration-and-email-verification-scenarios-to-useradministration
+consider-in-app-feedback-communication-for-field-team
+add-cohort-group-management-for-organizing-growers-within-villages
+design-create-logo-and-favicon-for-10-trees-platform
+bug-smtp-email-sender-not-populating-notification-fromemail-field
+implement-user-auto-registration-with-email-verification
+deploy-10-trees-platform-to-codechops-monsterasp
+implement-garden-location-mapping-module
+implement-program-reporting-data-export-module
+implement-user-administration-role-management
+implement-photo-release-consent-module

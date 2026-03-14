@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- Xitsonga translations needed - coordinate with Trygive/Quentan -->
+  <data name="Filter.Status" xml:space="preserve">
+    <value>[XS] Filter by Status</value>
+  </data>
+  <data name="Filter.AllStatuses" xml:space="preserve">
+    <value>[XS] All Statuses</value>
+  </data>
+  <data name="Status.Active" xml:space="preserve">
+    <value>[XS] Active</value>
+  </data>
+  <data name="Status.Inactive" xml:space="preserve">
+    <value>[XS] Inactive</value>
+  </data>
+  <data name="Status.Exited" xml:space="preserve">
+    <value>[XS] Exited</value>
+  </data>
+  <!-- Add remaining translations matching Index.resx -->
+</root>

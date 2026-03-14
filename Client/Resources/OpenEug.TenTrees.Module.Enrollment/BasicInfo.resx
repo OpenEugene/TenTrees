@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="FormTitle" xml:space="preserve">
+    <value>Grower Enrollment</value>
+  </data>
+  <data name="Step" xml:space="preserve">
+    <value>Step</value>
+  </data>
+  <data name="Of" xml:space="preserve">
+    <value>of</value>
+  </data>
+  <data name="Section.BasicInfo" xml:space="preserve">
+    <value>Basic Information</value>
+  </data>
+  <data name="Section.ParticipantInfo" xml:space="preserve">
+    <value>Participant Information</value>
+  </data>
+  <data name="Section.HouseholdInfo" xml:space="preserve">
+    <value>Household Information</value>
+  </data>
+  <data name="TreeMentorName.Text" xml:space="preserve">
+    <value>Tree Mentor Name:</value>
+  </data>
+  <data name="GrowerName.Text" xml:space="preserve">
+    <value>Grower Name:</value>
+  </data>
+  <data name="Village.Text" xml:space="preserve">
+    <value>Village:</value>
+  </data>
+  <data name="HouseNumber.Text" xml:space="preserve">
+    <value>House Number:</value>
+  </data>
+  <data name="IdNumber.Text" xml:space="preserve">
+    <value>ID Number:</value>
+  </data>
+  <data name="BirthDate.Text" xml:space="preserve">
+    <value>Birth Date:</value>
+  </data>
+  <data name="BirthDate.Help" xml:space="preserve">
+    <value>Enter if ID number not available</value>
+  </data>
+  <data name="OwnsHome.Text" xml:space="preserve">
+    <value>Do they own their home?</value>
+  </data>
+  <data name="HouseholdSize.Text" xml:space="preserve">
+    <value>Household Size:</value>
+  </data>
+  <data name="Date.Text" xml:space="preserve">
+    <value>Date:</value>
+  </data>
+  <data name="Select" xml:space="preserve">
+    <value>-- Select --</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Validation.Required" xml:space="preserve">
+    <value>This field is required</value>
+  </data>
+  <data name="Message.Validation" xml:space="preserve">
+    <value>Please fill in all required fields</value>
+  </data>
+  <data name="Message.ValidationError" xml:space="preserve">
+    <value>Please fix the validation errors below</value>
+  </data>
+  <data name="Message.Error" xml:space="preserve">
+    <value>An error occurred. Please try again.</value>
+  </data>
+</root>
