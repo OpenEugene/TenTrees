@@ -164,3 +164,35 @@ Feature: Tree Monitoring and Garden Health Assessment
     When I navigate to a submitted assessment for "Mary Nkuna"
     Then I should be able to view all assessment data
     And I should not see an edit option
+
+  # ─── HOME VISITS ────────────────────────────────────────────────────────────
+  # Home visits are recorded separately from regular assessments.
+  # Funders need a monthly count of visits per staff member.
+  # Multiple staff members may record visits and notes for the same grower.
+
+  Scenario: Record a home visit with notes on a grower record
+    Given I am logged in as an Educator
+    When I navigate to grower "Mary Nkuna"
+    And I tap "Record Home Visit"
+    And I enter visit notes "Checked on mango tree — leaves look healthy, new growth visible"
+    And I confirm the visit date as today
+    Then the visit should be saved against "Mary Nkuna"'s record
+    And my name should be recorded as the visiting staff member
+
+  Scenario: Multiple staff can record separate home visits on the same grower
+    Given I am logged in as "Joel"
+    And "Trygive" has already recorded a visit for "Mary Nkuna" this month
+    When I record a new home visit for "Mary Nkuna"
+    Then both visits should appear in "Mary Nkuna"'s visit history
+    And each entry should show the visiting staff member's name
+
+  Scenario: Home visit count is available for monthly reporting
+    Given the following home visits were recorded in March 2026:
+      | Staff Member | Grower          |
+      | Joel         | Mary Nkuna      |
+      | Joel         | Grace Sithole   |
+      | Joel         | Thandi Nkosi    |
+      | Trygive      | Mary Nkuna      |
+    When I generate the "Home Visits" report for March 2026
+    Then Joel should show 3 visits
+    And Trygive should show 1 visit
