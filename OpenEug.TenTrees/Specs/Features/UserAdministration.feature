@@ -24,11 +24,12 @@ Feature: User and Access Management
     Then she should only see data for "Orpen Gate Village"
     And her village assignment should be recorded
 
-  Scenario: Assign mentor to specific households
+  Scenario: Assign mentor to individual grower households
     Given mentor "Bondi" is assigned to "Orpen Gate Village"
-    When I assign households 1-10 to "Bondi"
-    Then she should see those 10 households in her list
-    And other mentors should not see those households assigned
+    When I set "Bondi" as the MentorId on grower records for households in her care
+    Then she should only see grower records where she is the assigned mentor
+    And growers assigned to a different mentor should not appear in her view
+    Note: Mentor assignment is stored per grower record (MentorId field), not as a household number range
 
   Scenario: Create new mentor account
     Given I am an administrator

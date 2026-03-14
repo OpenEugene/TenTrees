@@ -19,13 +19,30 @@ Feature: Village-Scoped Data Access
     When I select "Orpen Gate Village"
     Then I should only see growers from "Orpen Gate Village"
 
-  Scenario: Add new village
+  Scenario: Add new village with contact information
     Given I am an administrator
     When I navigate to village management
-    And I add village "Londelozzi"
-    And I set village contact information
-    Then the village should be available for assignment
-    And mentors can be assigned to it
+    And I create a new village with:
+      | Field         | Value                  |
+      | Village Name  | Londelozzi             |
+      | Contact Name  | Sipho Dlamini          |
+      | Contact Phone | 082 555 1234           |
+      | Contact Email | sipho@example.com      |
+      | Notes         | Near main tar road     |
+      | Is Active     | Yes                    |
+    Then the village should be saved with all contact details
+    And it should appear in the village selection dropdown for enrollment
+
+  Scenario: Edit existing village contact details
+    Given village "Orpen Gate Village" already exists
+    When I update the contact phone to "083 999 0000"
+    Then the village record should reflect the new phone number
+
+  Scenario: Deactivate a village
+    Given village "Old Site" is active
+    When I set its "Is Active" flag to false
+    Then "Old Site" should no longer appear in the active village dropdown
+    And existing grower records linked to it should remain intact
 
   Scenario: Village data isolation
     Given "Orpen Gate Village" has 50 growers
