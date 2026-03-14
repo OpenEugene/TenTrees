@@ -41,13 +41,14 @@ Implement comprehensive user administration including role management, village a
 - [ ] Village assignment recorded in profile
 - [ ] Cannot change own village (admin only)
 
-#### ✅ Assign Mentor to Specific Households
-- [ ] Mentor "Bondi" assigned to "Orpen Gate Village"
-- [ ] Assign households 1-10 to "Bondi"
-- [ ] Bondi sees those 10 households in her list
-- [ ] Other mentors in same village do NOT see those households
-- [ ] Household assignments recorded
-- [ ] Allow reassignment between mentors
+#### ✅ Assign Mentor to Individual Grower Records
+**Note:** Mentor assignment is stored per `Grower` record as a `MentorId` (user ID string),
+not as a numeric household-number range.
+- [ ] Admin can set `MentorId` on each `Grower` record to assign it to a mentor
+- [ ] Mentor only sees grower records where `Grower.MentorId == currentUserId`
+- [ ] Growers assigned to a different mentor are not visible to other mentors
+- [ ] Admin can reassign a grower from one mentor to another (update `MentorId`)
+- [ ] Mentor assignment is also captured at enrollment time (auto-fill from logged-in user)
 
 #### ✅ Create New Mentor Account
 - [ ] Navigate to user creation interface
