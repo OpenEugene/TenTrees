@@ -46,6 +46,15 @@ Feature: User and Access Management
   # Community Development". The chief admin role is "10 Trees Admin" (NOT "center admin").
   # The correct term for the permaculture educator role is still under discussion
   # (Rebecca to confirm with Tri).
+  #
+  # OPEN QUESTION (March 2026 check-in): Whether the Educator role should be able to
+  # edit grower record data (beyond adding notes) is unresolved. Current spec treats
+  # the Educator as view + notes only. Pending final confirmation from Rebecca.
+  #
+  # PLATFORM ADMIN NOTE: The Oqtane platform has a system-level admin role that can
+  # add/remove pages and manage site structure. This is SEPARATE from the "10 Trees Admin"
+  # programme role. Role names in the UI should be prefixed to avoid confusion
+  # (e.g. "10 Trees Admin" vs "Platform Admin"). See scenarios below.
   Scenario: Staff role permissions
     Given the following roles exist:
       | Role              | Can Submit Forms | Can View All Villages | Can Add Notes | Can Export | Can Manage Users |
@@ -68,3 +77,30 @@ Feature: User and Access Management
     Then I should be able to view her full record
     And I should be able to add a home visit note
     But I should not see an option to edit her enrollment or assessment data
+
+  # ─── PLATFORM ADMIN vs PROGRAMME ADMIN ─────────────────────────────────────
+  # The Oqtane platform admin (system-level) can add/remove pages and manage site
+  # structure. The 10 Trees Admin (programme-level) manages data, villages, and users.
+  # These are separate roles. Both may be held by the same person but must be
+  # distinguished in the UI and documentation to prevent accidental site changes.
+
+  Scenario: Platform admin role is separate from 10 Trees programme admin role
+    Given the system has the following distinct admin roles:
+      | Role            | Manages Programme Data | Can Add / Remove Pages | Can Manage Site Settings |
+      | 10 Trees Admin  | Yes                    | No                     | No                       |
+      | Platform Admin  | No                     | Yes                    | Yes                      |
+    When a user holds only the "10 Trees Admin" role
+    Then they should be able to create, edit, and assign programme records
+    But they should not see options to add or remove pages or change site settings
+    When a user holds only the "Platform Admin" role
+    Then they should be able to manage pages and site settings
+    But they should not have elevated access to programme data
+
+  Scenario: Programme director has full data access without requiring platform admin rights
+    Given I am logged in as programme director "Rebecca"
+    And my role is "10 Trees Admin"
+    When I view the grower list
+    Then I should see growers from all villages
+    And I should be able to create, edit, and assign programme records
+    But I should not see site management options such as "Add Page" or "Manage Modules"
+    And my actions should not be able to inadvertently alter site structure
