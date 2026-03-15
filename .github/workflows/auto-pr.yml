@@ -37,4 +37,6 @@ jobs:
             echo "PR #$PR_NUMBER already exists for branch: $BRANCH"
           fi
           # Request Copilot review via API
-          gh pr edit --add-reviewer copilot
+          gh pr edit "$PR_NUMBER" --add-reviewer copilot \
+            || echo "Copilot review request failed (may not be enabled on this repo)"
+
