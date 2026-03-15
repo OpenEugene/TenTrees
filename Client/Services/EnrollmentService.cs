@@ -35,6 +35,8 @@ namespace OpenEug.TenTrees.Module.Enrollment.Services
         Task<int> BackfillGrowersFromEnrollmentsAsync(int moduleId);
 
         Task<List<UserInfo>> GetSiteUsersAsync(int moduleId);
+
+        Task<bool> CapturePhotoConsentAsync(int enrollmentId, int moduleId, Models.PhotoConsentLevel consentLevel, string signatureData);
     }
 
     public class EnrollmentService : ServiceBase, IEnrollmentService
@@ -110,6 +112,13 @@ namespace OpenEug.TenTrees.Module.Enrollment.Services
         {
             return await GetJsonAsync<List<UserInfo>>(CreateAuthorizationPolicyUrl($"{Apiurl}/users?moduleid={moduleId}", EntityNames.Module, moduleId));
         }
+
+        public async Task<bool> CapturePhotoConsentAsync(int enrollmentId, int moduleId, Models.PhotoConsentLevel consentLevel, string signatureData)
+        {
+            return await PostJsonAsync<PhotoConsentRequest, bool>(
+                CreateAuthorizationPolicyUrl($"{Apiurl}/{enrollmentId}/photoconsent", EntityNames.Module, moduleId),
+                new PhotoConsentRequest { ModuleId = moduleId, ConsentLevel = consentLevel, SignatureData = signatureData });
+        }
     }
 
     public class ValidationResult
@@ -134,6 +143,13 @@ namespace OpenEug.TenTrees.Module.Enrollment.Services
     public class SignatureRequest
     {
         public int ModuleId { get; set; }
+        public string SignatureData { get; set; }
+    }
+
+    public class PhotoConsentRequest
+    {
+        public int ModuleId { get; set; }
+        public Models.PhotoConsentLevel ConsentLevel { get; set; }
         public string SignatureData { get; set; }
     }
 }

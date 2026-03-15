@@ -105,6 +105,8 @@
                     <th>@Localizer["Village"]</th>
                     <th>@Localizer["Status"]</th>
                     <th>@Localizer["Column.GrowerStatus"]</th>
+                    <th>@Localizer["Column.PhotoConsent"]</th>
+                    <th style="width: 1px;">&nbsp;</th>
                 </tr>
             </thead>
             <tbody>
@@ -128,6 +130,19 @@
                             <span class="badge @GetGrowerStatusBadgeClass(enrollment.GrowerStatus)">
                                 @GetGrowerStatusText(enrollment.GrowerStatus)
                             </span>
+                        </td>
+                        <td>
+                            <span class="badge @GetPhotoConsentBadgeClass(enrollment.PhotoConsentLevel)">
+                                @GetPhotoConsentText(enrollment.PhotoConsentLevel)
+                            </span>
+                        </td>
+                        <td>
+                            @if (enrollment.EnrollmentStatus == EnrollmentStatus.Approved)
+                            {
+                                <ActionLink Action="PhotoConsent"
+                                            Parameters="@($"id={enrollment.EnrollmentId}")"
+                                            ResourceKey="PhotoConsent" />
+                            }
                         </td>
                     </tr>
                 }
@@ -272,6 +287,28 @@
             GrowerStatus.Inactive => Localizer["GrowerStatus.Inactive"],
             GrowerStatus.Exited => Localizer["GrowerStatus.Exited"],
             _ => status.ToString()
+        };
+    }
+
+    private string GetPhotoConsentBadgeClass(PhotoConsentLevel level)
+    {
+        return level switch
+        {
+            PhotoConsentLevel.Full    => "bg-success",
+            PhotoConsentLevel.Limited => "bg-warning text-dark",
+            PhotoConsentLevel.None    => "bg-danger",
+            _                         => "bg-secondary"
+        };
+    }
+
+    private string GetPhotoConsentText(PhotoConsentLevel level)
+    {
+        return level switch
+        {
+            PhotoConsentLevel.Full    => Localizer["ConsentLevel.Full"],
+            PhotoConsentLevel.Limited => Localizer["ConsentLevel.Limited"],
+            PhotoConsentLevel.None    => Localizer["ConsentLevel.None"],
+            _                         => Localizer["ConsentLevel.NotCaptured"]
         };
     }
 }
