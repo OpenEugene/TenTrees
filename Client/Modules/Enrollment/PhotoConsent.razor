@@ -163,6 +163,7 @@ else
     private bool _confirmed;
     private bool _isSaving;
     private PhotoConsentLevel _selectedConsent = PhotoConsentLevel.NotCaptured;
+    private bool _padInitialized = false;
     private const string CanvasId = "photoConsentSignatureCanvas";
 
     [Parameter]
@@ -216,8 +217,9 @@ else
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender && _enrollment != null)
+        if (!_padInitialized && _enrollment != null && !_isLoading)
         {
+            _padInitialized = true;
             await JSRuntime.InvokeVoidAsync(
                 "eval",
                 "if (typeof OpenEug === 'undefined') { " +
