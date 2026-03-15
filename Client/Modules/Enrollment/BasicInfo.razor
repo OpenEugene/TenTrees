@@ -1,6 +1,7 @@
 @using OpenEug.TenTrees.Module.Enrollment.Services
 @using OpenEug.TenTrees.Module.Village.Services
 @using Oqtane.Modules.Controls
+@using System.Linq
 
 @namespace OpenEug.TenTrees.Module.Enrollment
 @inherits ModuleBase
@@ -152,8 +153,10 @@
         {
             resourceType = GetType().AssemblyQualifiedName;
 
-            // Load villages and users
-            _villages = await VillageService.GetVillagesAsync();
+            // Load villages and users — new enrollment only shows active villages
+            _villages = (await VillageService.GetActiveVillagesAsync())
+                .OrderBy(v => v.VillageName)
+                .ToList();
             _users = await EnrollmentService.GetSiteUsersAsync(ModuleState.ModuleId);
             _mentorUsername = PageState.User.Username;
 
