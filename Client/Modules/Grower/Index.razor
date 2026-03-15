@@ -191,20 +191,24 @@
         NavigationManager.NavigateTo(NavigateUrl());
     }
 
-    private void NavigateWithFilters()
+    private string BuildFilterQueryString()
     {
         var parts = new List<string>();
         if (!string.IsNullOrEmpty(_statusFilter))  parts.Add($"status={Uri.EscapeDataString(_statusFilter)}");
         if (!string.IsNullOrEmpty(_villageFilter)) parts.Add($"villageId={Uri.EscapeDataString(_villageFilter)}");
-        NavigationManager.NavigateTo(NavigateUrl(PageState.Page.Path, string.Join("&", parts)));
+        return string.Join("&", parts);
+    }
+
+    private void NavigateWithFilters()
+    {
+        var queryString = BuildFilterQueryString();
+        NavigationManager.NavigateTo(NavigateUrl(PageState.Page.Path, queryString));
     }
 
     private string GetReturnUrl()
     {
-        var parts = new List<string>();
-        if (!string.IsNullOrEmpty(_statusFilter))  parts.Add($"status={Uri.EscapeDataString(_statusFilter)}");
-        if (!string.IsNullOrEmpty(_villageFilter)) parts.Add($"villageId={Uri.EscapeDataString(_villageFilter)}");
-        return NavigateUrl(PageState.Page.Path, string.Join("&", parts));
+        var queryString = BuildFilterQueryString();
+        return NavigateUrl(PageState.Page.Path, queryString);
     }
 
     private string GetVillageName(int villageId)
