@@ -157,15 +157,15 @@
     {
         try
         {
-            // Edit mode loads all villages so the current village shows even if inactive;
-            // Add mode loads active only
-            _villages = PageState.Action == "Edit"
-                ? await VillageService.GetVillagesAsync()
-                : await VillageService.GetActiveVillagesAsync();
+            var isEditAction = PageState.Action == "Edit";
+            int trainingClassId = 0;
+            var hasId = PageState.QueryString.ContainsKey("id") && int.TryParse(PageState.QueryString["id"], out trainingClassId);
 
-            if (PageState.Action == "Edit")
+            _villages = await VillageService.GetVillagesAsync();
+
+            if (isEditAction && hasId)
             {
-                _id = int.Parse(PageState.QueryString["id"]);
+                _id = trainingClassId;
                 var trainingClass = await TrainingService.GetTrainingClassAsync(_id, ModuleState.ModuleId);
                 if (trainingClass != null)
                 {
@@ -178,6 +178,10 @@
                 _linkedCohorts = await CohortService.GetCohortsForClassAsync(_id);
                 _allCohorts = await CohortService.GetCohortsAsync();
                 await RefreshAvailableCohortsAsync();
+            }
+            else
+            {
+                _id = 0;
             }
         }
         catch (Exception ex)
