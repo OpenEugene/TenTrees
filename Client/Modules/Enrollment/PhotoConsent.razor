@@ -166,9 +166,6 @@ else
     private bool _padInitialized = false;
     private const string CanvasId = "photoConsentSignatureCanvas";
 
-    [Parameter]
-    public string Id { get; set; }
-
     public override SecurityAccessLevel SecurityAccessLevel => SecurityAccessLevel.View;
     public override string Actions => "PhotoConsent";
     public override string Title => "Photo Release Consent";
@@ -178,19 +175,19 @@ else
         try
         {
             _isLoading = true;
-            if (!string.IsNullOrEmpty(Id) && int.TryParse(Id, out int enrollmentId))
+            if (PageState.QueryString.ContainsKey("id") && int.TryParse(PageState.QueryString["id"], out int enrollmentId))
             {
                 _enrollment = await EnrollmentService.GetEnrollmentAsync(enrollmentId, ModuleState.ModuleId);
 
                 if (_enrollment == null)
                 {
-                    await logger.LogWarning("Enrollment {Id} not found or unauthorized", Id);
+                    await logger.LogWarning("Enrollment {id} not found or unauthorized", PageState.QueryString["id"]);
                     return;
                 }
 
                 if (_enrollment.Status != EnrollmentStatus.Approved)
                 {
-                    await logger.LogWarning("PhotoConsent accessed for non-Approved enrollment {Id}", Id);
+                    await logger.LogWarning("PhotoConsent accessed for non-Approved enrollment {id}", PageState.QueryString["id"]);
                     NavigationManager.NavigateTo(NavigateUrl());
                     return;
                 }
@@ -206,7 +203,7 @@ else
         }
         catch (Exception ex)
         {
-            await logger.LogError(ex, "Error Loading Enrollment for PhotoConsent {Id} {Error}", Id, ex.Message);
+            await logger.LogError(ex, "Error Loading Enrollment for PhotoConsent {id} {Error}", PageState.QueryString.GetValueOrDefault("id"), ex.Message);
             AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
         }
         finally
