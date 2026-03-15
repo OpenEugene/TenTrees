@@ -3,17 +3,17 @@ priority: high
 tags: [mentor, admin, security, workflow-admin]
 ---
 
-# Implement Tree Mentor Management Module
+# Implement Mentor Management Module
 
 ## Overview
 
-Build a Tree Mentor management UI for admins to create, edit, and deactivate
+Build a Mentor management UI for admins to create, edit, and deactivate
 mentor accounts, assign mentors to villages, and assign growers to mentors.
-Mentors are standard Oqtane users in the "Tree Mentor" role. The module also
+Mentors are standard Oqtane users in the "Mentor" role. The module also
 enforces data isolation so mentors only see their own assigned growers and village.
 
 ### Spec Reference
-`Specs/Features/TreeMentorManagement.feature`
+`Specs/Features/MentorManagement.feature`
 
 ### Related Specs (cross-cutting)
 - `Specs/Features/UserAdministration.feature` — role permissions matrix, impersonation
@@ -24,9 +24,9 @@ enforces data isolation so mentors only see their own assigned growers and villa
 
 ## Module Requirements
 
-- Create `Client/Modules/TreeMentor/` with `Index.razor` (list) and `Edit.razor` (create/edit)
-- Create `Server/Controllers/TreeMentorController.cs`
-- Create `Server/Repository/ITreeMentorRepository.cs` + `TreeMentorRepository.cs`
+- Create `Client/Modules/Mentor/` with `Index.razor` (list) and `Edit.razor` (create/edit)
+- Create `Server/Controllers/MentorController.cs`
+- Create `Server/Repository/IMentorRepository.cs` + `MentorRepository.cs`
 - Create `Shared/Models/MentorProfile.cs` (village assignment, grower count)
 - No new DB table required for role — use Oqtane's built-in user/role tables
 - Add `VillageId` to a `MentorProfile` table (UserId FK, VillageId FK) if not already present from UserAdmin work
@@ -37,7 +37,7 @@ enforces data isolation so mentors only see their own assigned growers and villa
 ## Checklist
 
 ### Mentor List (Index.razor)
-- [ ] Display all Oqtane users in the "Tree Mentor" role
+- [ ] Display all Oqtane users in the "Mentor" role
 - [ ] Columns: Name, Username, Email, Assigned Village, Grower Count, Active status
 - [ ] Filter by village
 - [ ] Search by name
@@ -48,7 +48,7 @@ enforces data isolation so mentors only see their own assigned growers and villa
 
 ### Create / Edit Mentor (Edit.razor)
 - [ ] Fields: Display Name, Email, Username, Village (dropdown — active only)
-- [ ] On create: call Oqtane user creation API, assign "Tree Mentor" role, save MentorProfile
+- [ ] On create: call Oqtane user creation API, assign "Mentor" role, save MentorProfile
 - [ ] On edit: update village assignment and display name
 - [ ] Validation: Email required, Username required and unique
 - [ ] Per-field `is-invalid` / `aria-invalid` on validation failure (accessibility skill)
@@ -62,18 +62,18 @@ enforces data isolation so mentors only see their own assigned growers and villa
 - [ ] Grower count updates immediately after assignment change
 
 ### Data Isolation (server-enforced)
-- [ ] All grower list and detail endpoints filter by `Grower.MentorId == User.Identity.Name` (mentor username) for Tree Mentor role
+- [ ] All grower list and detail endpoints filter by `Grower.MentorId == User.Identity.Name` (mentor username) for Mentor role
 - [ ] Admin and Educator roles bypass the filter (see all)
 - [ ] Direct URL access to a grower not assigned to the logged-in mentor (by username in `Grower.MentorId`) returns 403
 - [ ] Village-scoped dropdowns return active-only villages filtered to mentor's assigned village
 
 ### Mentor Auto-Assignment at Enrollment
-- [ ] When a Tree Mentor submits a new enrollment, `Grower.MentorId` is set to their username (e.g., `User.Identity.Name`) automatically
+- [ ] When a Mentor submits a new enrollment, `Grower.MentorId` is set to their username (e.g., `User.Identity.Name`) automatically
 - [ ] Staff submitting on behalf of a mentor can override the MentorId field (mentor username)
 
 ### Permissions
 - [ ] Module only visible/accessible to users with Admin role
-- [ ] Tree Mentor role: enforce read/write isolation in all controllers (growers, assessments, enrollments)
+- [ ] Mentor role: enforce read/write isolation in all controllers (growers, assessments, enrollments)
 - [ ] API-level role checks match the permissions table in the feature spec
 
 ---
@@ -98,7 +98,7 @@ enforces data isolation so mentors only see their own assigned growers and villa
 
 ## Acceptance Criteria
 
-- [ ] Admin can create a Tree Mentor account and assign a village
+- [ ] Admin can create a Mentor account and assign a village
 - [ ] Admin can edit village assignment and deactivate/reactivate a mentor
 - [ ] Admin can assign and reassign growers between mentors
 - [ ] Mentor logs in and sees only their assigned growers

@@ -128,20 +128,42 @@ Feature: Tree Monitoring and Garden Health Assessment
     Then I should see a confirmation message "Your assessment has been saved"
 
   # ─── ASSESSMENT FREQUENCY ───────────────────────────────────────────────────
+  # Assessment frequency is determined by how long ago the grower's most recently
+  # activated cohort was activated (ActivatedOn date), not the grower's own
+  # enrollment or creation date.
+  #   Year 1 (cohort activated ≤365 days ago): minimum 14 days between assessments
+  #   Year 2+  (cohort activated >365 days ago): minimum 30 days between assessments
 
-  Scenario: Accept assessment for Year 1 grower within twice-monthly schedule
-    Given "Mary Nkuna" is in year 1 of the program
+  Scenario: Accept assessment for grower whose cohort was activated within the past year
+    Given cohort "Roebuck 1 2026" was activated 180 days ago
+    And "Mary Nkuna" is a member of cohort "Roebuck 1 2026"
     And her last assessment was 14 days ago
     When I submit a new assessment
     Then the assessment should be accepted
-    And the system should record the assessment as twice-monthly frequency
+    And the system should apply the twice-monthly (14-day) minimum frequency
 
-  Scenario: Accept assessment for Year 2 grower within monthly schedule
-    Given "Grace Sithole" is in year 2 of the program
+  Scenario: Reject assessment submitted too soon for a Year 1 grower
+    Given cohort "Roebuck 1 2026" was activated 180 days ago
+    And "Mary Nkuna" is a member of cohort "Roebuck 1 2026"
+    And her last assessment was 10 days ago
+    When I submit a new assessment
+    Then the assessment should be rejected
+    And I should see a message indicating it is too soon to submit
+
+  Scenario: Accept assessment for grower whose cohort was activated more than a year ago
+    Given cohort "Orpen Gate Village 2023" was activated 400 days ago
+    And "Grace Sithole" is a member of cohort "Orpen Gate Village 2023"
     And her last assessment was 30 days ago
     When I submit a new assessment
     Then the assessment should be accepted
-    And the system should record the assessment as monthly frequency
+    And the system should apply the monthly (30-day) minimum frequency
+
+  Scenario: Grower with no cohort defaults to monthly assessment frequency
+    Given "Peter Mthembu" is not a member of any cohort
+    And his last assessment was 30 days ago
+    When I submit a new assessment
+    Then the assessment should be accepted
+    And the system should apply the monthly (30-day) minimum frequency
 
   # ─── ACCESS CONTROL ─────────────────────────────────────────────────────────
 
