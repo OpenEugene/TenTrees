@@ -9,7 +9,10 @@ Feature: Tree Mentor Management
   # separate TreeMentor database table. The MentorProfile table extends the Oqtane
   # user record with 10 Trees-specific fields (VillageId, etc.) using UserId as the
   # foreign key. Deactivating a mentor means disabling the Oqtane user account;
-  # grower assignments (Grower.MentorId = UserId) are preserved.
+  # grower assignments are preserved. Currently, Grower.MentorId stores the mentor's
+  # username (User.Identity.Name / PageState.User.Username), not the numeric UserId.
+  # If we later migrate Grower.MentorId to use UserId instead of username, the
+  # feature scenarios and implementation should be updated together.
 
   Background:
     Given the "Mentor" role exists in Oqtane
@@ -111,7 +114,7 @@ Feature: Tree Mentor Management
   Scenario: Mentor is auto-assigned at enrollment time
     Given I am logged in as tree mentor "Bondi"
     When I submit an enrollment for a new grower
-    Then the new grower record should have MentorId set to "Bondi"'s user ID
+    Then the new grower record should have MentorId set to "Bondi"'s username
     And the grower should appear in "Bondi"'s assigned grower list
 
   # ─── MENTOR DATA ISOLATION ───────────────────────────────────────────────────
