@@ -1,0 +1,307 @@
+@using OpenEug.TenTrees.Module.Mentor.Services
+@using OpenEug.TenTrees.Module.Village.Services
+@using OpenEug.TenTrees.Module.Grower.Services
+@using OpenEug.TenTrees.Models
+
+@namespace OpenEug.TenTrees.Module.Mentor
+@inherits ModuleBase
+@inject IMentorService MentorService
+@inject IVillageService VillageService
+@inject IGrowerService GrowerService
+@inject NavigationManager NavigationManager
+
+@if (!_isLoaded)
+{
+    <p role="status"><em>Loading...</em></p>
+}
+else
+{
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4>
+                <span class="oi oi-person me-2" aria-hidden="true"></span>
+                @(_isCreate ? "Add Mentor" : $"Edit Mentor — {_model.DisplayName}")
+            </h4>
+            <NavLink href="@NavigateUrl()" class="btn btn-outline-secondary btn-sm">
+                <span class="oi oi-arrow-left me-1" aria-hidden="true"></span> Back to Mentors
+            </NavLink>
+        </div>
+
+        <!-- Mentor form -->
+        <div class="card mb-4">
+            <div class="card-header">Account Details</div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label" for="displayName">Display Name</label>
+                        <input id="displayName" type="text"
+                               class="form-control @(_invalidFields.Contains("DisplayName") ? "is-invalid" : "")"
+                               @bind="_model.DisplayName"
+                               aria-required="true"
+                               aria-invalid="@(_invalidFields.Contains("DisplayName") ? "true" : null)" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="username">Username</label>
+                        <input id="username" type="text"
+                               class="form-control @(_invalidFields.Contains("Username") ? "is-invalid" : "")"
+                               @bind="_model.Username"
+                               disabled="@(!_isCreate)"
+                               aria-required="true"
+                               aria-invalid="@(_invalidFields.Contains("Username") ? "true" : null)" />
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label" for="email">Email</label>
+                        <input id="email" type="email"
+                               class="form-control @(_invalidFields.Contains("Email") ? "is-invalid" : "")"
+                               @bind="_model.Email"
+                               aria-required="true"
+                               aria-invalid="@(_invalidFields.Contains("Email") ? "true" : null)" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="village">Village</label>
+                        <select id="village"
+                                class="form-select @(_invalidFields.Contains("VillageId") ? "is-invalid" : "")"
+                                @bind="_model.VillageId"
+                                aria-required="true"
+                                aria-invalid="@(_invalidFields.Contains("VillageId") ? "true" : null)">
+                            <option value="0">— Select village —</option>
+                            @foreach (var v in _villages)
+                            {
+                                <option value="@v.VillageId">@v.VillageName</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                @if (_isCreate)
+                {
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label" for="password">Password (optional)</label>
+                            <input id="password" type="password"
+                                   class="form-control"
+                                   @bind="_model.Password"
+                                   autocomplete="new-password" />
+                            <div class="form-text">Leave blank to auto-generate a temporary password.</div>
+                        </div>
+                        <div class="col-md-6 d-flex align-items-end">
+                            <div class="form-check mb-3">
+                                <input id="emailConfirmed" type="checkbox" class="form-check-input" @bind="_model.EmailConfirmed" />
+                                <label class="form-check-label" for="emailConfirmed">Mark email as verified</label>
+                            </div>
+                        </div>
+                    </div>
+                }
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-primary" @onclick="Save" disabled="@_isSaving">
+                        @if (_isSaving)
+                        {
+                            <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                            <span>Saving…</span>
+                        }
+                        else
+                        {
+                            <span class="oi oi-check me-1" aria-hidden="true"></span>
+                            <span>Save</span>
+                        }
+                    </button>
+                    <NavLink href="@NavigateUrl()" class="btn btn-outline-secondary">Cancel</NavLink>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grower assignment panel — only in edit mode -->
+        @if (!_isCreate)
+        {
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span>Assigned Growers (@_assignedGrowers.Count)</span>
+                    <button type="button" class="btn btn-sm btn-outline-primary" @onclick="ToggleAssignPanel">
+                        <span class="oi oi-plus me-1" aria-hidden="true"></span> Assign Grower
+                    </button>
+                </div>
+                <div class="card-body">
+                    @if (_showAssignPanel)
+                    {
+                        <div class="row g-2 mb-3 p-2 border rounded bg-light">
+                            <div class="col-md-8">
+                                <label class="form-label" for="growerSelect">Grower to assign</label>
+                                <select id="growerSelect" class="form-select" @bind="_selectedGrowerId">
+                                    <option value="0">— Select grower —</option>
+                                    @foreach (var g in _availableGrowers)
+                                    {
+                                        <option value="@g.GrowerId">
+                                            @g.GrowerName@(g.MentorId != null ? $" (currently: {g.MentorId})" : "")
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-4 d-flex align-items-end">
+                                <button type="button" class="btn btn-primary w-100"
+                                        disabled="@(_selectedGrowerId == 0)"
+                                        @onclick="AssignGrower">
+                                    Assign
+                                </button>
+                            </div>
+                        </div>
+                    }
+
+                    @if (!_assignedGrowers.Any())
+                    {
+                        <p class="text-muted">No growers currently assigned to this mentor.</p>
+                    }
+                    else
+                    {
+                        <table class="table table-sm align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Grower</th>
+                                    <th>Village</th>
+                                    <th>Status</th>
+                                    <th><span class="visually-hidden">Actions</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var g in _assignedGrowers)
+                                {
+                                    <tr>
+                                        <td>@g.GrowerName</td>
+                                        <td>@(_villageNames.TryGetValue(g.VillageId, out var vn) ? vn : "—")</td>
+                                        <td>@g.Status</td>
+                                        <td>
+                                            <button type="button"
+                                                    class="btn btn-sm btn-outline-danger"
+                                                    aria-label="@($"Unassign {g.GrowerName}")"
+                                                    @onclick="@(() => UnassignGrower(g))">
+                                                <span class="oi oi-x" aria-hidden="true"></span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private MentorViewModel _model = new();
+    private List<Village> _villages = new();
+    private List<Models.Grower> _allGrowers = new();
+    private List<Models.Grower> _assignedGrowers = new();
+    private List<Models.Grower> _availableGrowers = new();
+    private Dictionary<int, string> _villageNames = new();
+
+    private bool _isLoaded;
+    private bool _isCreate;
+    private bool _isSaving;
+    private bool _showAssignPanel;
+    private int _selectedGrowerId;
+    private HashSet<string> _invalidFields = new();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _villages = await VillageService.GetVillagesAsync() ?? new List<Village>();
+        _villageNames = _villages.ToDictionary(v => v.VillageId, v => v.VillageName);
+
+        if (PageState.QueryString.ContainsKey("username"))
+        {
+            var username = Uri.UnescapeDataString(PageState.QueryString["username"]);
+            _model = await MentorService.GetMentorAsync(username, ModuleState.ModuleId)
+                     ?? new MentorViewModel();
+            _isCreate = false;
+            await LoadGrowers();
+        }
+        else
+        {
+            _model = new MentorViewModel();
+            _isCreate = true;
+        }
+
+        _isLoaded = true;
+    }
+
+    private async Task LoadGrowers()
+    {
+        _allGrowers = await GrowerService.GetAllGrowersAsync(ModuleState.ModuleId) ?? new List<Models.Grower>();
+        _assignedGrowers = _allGrowers.Where(g => g.MentorId == _model.Username).ToList();
+        _availableGrowers = _allGrowers.Where(g => g.MentorId != _model.Username).OrderBy(g => g.GrowerName).ToList();
+    }
+
+    private async Task Save()
+    {
+        ClearModuleMessage();
+        _invalidFields.Clear();
+
+        var missing = new List<string>();
+        if (string.IsNullOrWhiteSpace(_model.DisplayName)) { _invalidFields.Add("DisplayName"); missing.Add("Display Name"); }
+        if (_isCreate && string.IsNullOrWhiteSpace(_model.Username)) { _invalidFields.Add("Username"); missing.Add("Username"); }
+        if (string.IsNullOrWhiteSpace(_model.Email)) { _invalidFields.Add("Email"); missing.Add("Email"); }
+        if (_model.VillageId == 0) { _invalidFields.Add("VillageId"); missing.Add("Village"); }
+
+        if (missing.Count > 0)
+        {
+            AddModuleMessage($"Required: {string.Join(", ", missing)}", MessageType.Warning);
+            await ScrollToPageTop();
+            return;
+        }
+
+        _isSaving = true;
+        try
+        {
+            if (_isCreate)
+            {
+                var result = await MentorService.CreateMentorAsync(_model, ModuleState.ModuleId);
+                if (result == null)
+                {
+                    AddModuleMessage("Could not create mentor. The username may already be taken.", MessageType.Error);
+                    await ScrollToPageTop();
+                    return;
+                }
+                NavigationManager.NavigateTo(NavigateUrl());
+            }
+            else
+            {
+                var result = await MentorService.UpdateMentorProfileAsync(_model, ModuleState.ModuleId);
+                if (result == null)
+                {
+                    AddModuleMessage("Could not update mentor profile.", MessageType.Error);
+                    await ScrollToPageTop();
+                    return;
+                }
+                AddModuleMessage("Mentor profile updated.", MessageType.Success);
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error saving mentor {Username}", _model.Username);
+            AddModuleMessage("An unexpected error occurred. Please try again.", MessageType.Error);
+            await ScrollToPageTop();
+        }
+        finally
+        {
+            _isSaving = false;
+        }
+    }
+
+    private void ToggleAssignPanel() => _showAssignPanel = !_showAssignPanel;
+
+    private async Task AssignGrower()
+    {
+        if (_selectedGrowerId == 0) return;
+        await MentorService.ReassignGrowerAsync(_selectedGrowerId, _model.Username, ModuleState.ModuleId);
+        _selectedGrowerId = 0;
+        _showAssignPanel = false;
+        await LoadGrowers();
+    }
+
+    private async Task UnassignGrower(Models.Grower grower)
+    {
+        await MentorService.ReassignGrowerAsync(grower.GrowerId, null, ModuleState.ModuleId);
+        await LoadGrowers();
+    }
+}
