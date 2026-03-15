@@ -1,12 +1,12 @@
 @workflow-admin @priority-high @security
-Feature: Tree Mentor Management
+Feature: Mentor Management
   As a 10 Trees Admin
   I want to manage tree mentor accounts, village assignments, and grower assignments
   So that mentors can access exactly the data they need and no more
 
   # Data model note:
-  # A Tree Mentor is an Oqtane user assigned the "Mentor" role — there is no
-  # separate TreeMentor database table. The MentorProfile table extends the Oqtane
+  # A Mentor is an Oqtane user assigned the "Mentor" role — there is no
+  # separate Mentor database table. The MentorProfile table extends the Oqtane
   # user record with 10 Trees-specific fields (VillageId, etc.) using UserId as the
   # foreign key. Deactivating a mentor means disabling the Oqtane user account;
   # grower assignments are preserved. Currently, Grower.MentorId stores the mentor's
@@ -22,7 +22,7 @@ Feature: Tree Mentor Management
 
   Scenario: Admin views the tree mentor list
     Given I am logged in as a 10 Trees Admin
-    When I navigate to the Tree Mentor management page
+    When I navigate to the Mentor management page
     Then I should see a list of all users with the "Mentor" role
     And each row should show:
       | Column          |
@@ -39,7 +39,7 @@ Feature: Tree Mentor Management
     Then I should only see mentors assigned to "Orpen Gate Village"
 
   Scenario: Admin searches mentor list by name
-    Given I am on the Tree Mentor management page
+    Given I am on the Mentor management page
     When I type "Bondi" in the search box
     Then the list should filter to show only mentors whose name contains "Bondi"
 
@@ -93,6 +93,20 @@ Feature: Tree Mentor Management
     Then she should be able to log in again
     And her previous village and grower assignments should be restored
 
+  # ─── COHORT ASSIGNMENT ───────────────────────────────────────────────────────
+
+  Scenario: Admin assigns a mentor to a cohort
+    Given I am logged in as a 10 Trees Admin
+    And cohort "Roebuck 1 2026" exists
+    When I edit cohort "Roebuck 1 2026"
+    And I assign mentor "Bondi" to the cohort
+    Then "Bondi" should appear in the assigned mentors list for "Roebuck 1 2026"
+
+  Scenario: Admin removes a mentor from a cohort
+    Given mentor "Bondi" is assigned to cohort "Roebuck 1 2026"
+    When I remove "Bondi" from cohort "Roebuck 1 2026" via the cohort edit screen
+    Then "Bondi" should no longer appear in the assigned mentors list
+
   # ─── GROWER ASSIGNMENT ───────────────────────────────────────────────────────
 
   Scenario: Admin assigns growers to a mentor
@@ -112,21 +126,31 @@ Feature: Tree Mentor Management
     And "Mary Nkuna" should appear in "Trygive"'s grower list
 
   Scenario: Mentor is auto-assigned at enrollment time
-    Given I am logged in as tree mentor "Bondi"
+    Given I am logged in as mentor "Bondi"
     When I submit an enrollment for a new grower
     Then the new grower record should have MentorId set to "Bondi"'s username
     And the grower should appear in "Bondi"'s assigned grower list
 
   # ─── MENTOR DATA ISOLATION ───────────────────────────────────────────────────
+  # Mentors are scoped to growers via cohort membership. A mentor sees all growers
+  # who belong to any cohort the mentor is assigned to. If a mentor has no cohort
+  # assignments, they fall back to seeing all growers in their assigned village.
 
-  Scenario: Mentor sees only her assigned growers
-    Given I am logged in as tree mentor "Bondi" with 10 assigned growers
+  Scenario: Mentor sees only growers from their assigned cohorts
+    Given I am logged in as mentor "Bondi"
+    And "Bondi" is assigned to cohort "Roebuck 1 2026" with 15 grower members
     When I navigate to the grower list
-    Then I should see exactly 10 growers
-    And I should not see growers assigned to other mentors
+    Then I should see exactly 15 growers
+    And I should not see growers who are not members of "Roebuck 1 2026"
+
+  Scenario: Mentor assigned to multiple cohorts sees growers from all of them
+    Given "Bondi" is assigned to cohorts "Roebuck 1 2026" and "Orpen Gate Village 2024"
+    And "Roebuck 1 2026" has 15 growers and "Orpen Gate Village 2024" has 10 growers (no overlap)
+    When I navigate to the grower list as "Bondi"
+    Then I should see 25 growers total
 
   Scenario: Mentor cannot access another mentor's grower record
-    Given I am logged in as tree mentor "Bondi"
+    Given I am logged in as mentor "Bondi"
     And grower "Peter Mthembu" is assigned to mentor "Trygive"
     When I attempt to navigate directly to Peter's record
     Then I should be denied access
@@ -147,7 +171,7 @@ Feature: Tree Mentor Management
   # ─── MENTOR PROFILE (SELF-VIEW) ──────────────────────────────────────────────
 
   Scenario: Mentor views their own profile
-    Given I am logged in as tree mentor "Bondi"
+    Given I am logged in as mentor "Bondi"
     When I navigate to my profile
     Then I should see:
       | Field            | Value              |
@@ -158,8 +182,8 @@ Feature: Tree Mentor Management
 
   # ─── PERMISSIONS ─────────────────────────────────────────────────────────────
 
-  Scenario: Tree Mentor role permissions
-    Given the following permission rules apply to Tree Mentors:
+  Scenario: Mentor role permissions
+    Given the following permission rules apply to Mentors:
       | Permission             | Allowed |
       | Submit enrollment form | Yes     |
       | Submit assessment form | Yes     |
@@ -170,11 +194,11 @@ Feature: Tree Mentor Management
       | Export data            | No      |
       | Manage users           | No      |
       | Access admin panel     | No      |
-    When a user with role "Tree Mentor" logs in
+    When a user with role "Mentor" logs in
     Then the UI should show and hide features according to the table above
     And the API should enforce the same restrictions
 
-  Scenario: Non-admin cannot access Tree Mentor management page
-    Given I am logged in as tree mentor "Bondi"
-    When I attempt to navigate to the Tree Mentor management page
+  Scenario: Non-admin cannot access Mentor management page
+    Given I am logged in as mentor "Bondi"
+    When I attempt to navigate to the Mentor management page
     Then I should be redirected or shown an "Access Denied" message

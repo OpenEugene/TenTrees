@@ -35,7 +35,7 @@ Feature: User and Access Management
     When I create new user:
       | Field   | Value                |
       | Name    | Thandi Nkosi         |
-      | Role    | Tree Mentor          |
+      | Role    | Mentor          |
       | Village | Orpen Gate Village   |
       | Email   | thandi@example.com   |
     Then the account should be created
@@ -58,12 +58,12 @@ Feature: User and Access Management
   Scenario: Staff role permissions
     Given the following roles exist:
       | Role              | Can Submit Forms | Can View All Villages | Can Add Notes | Can Export | Can Manage Users |
-      | Tree Mentor       | Yes              | No                    | No            | No         | No               |
+      | Mentor       | Yes              | No                    | No            | No         | No               |
       | Educator          | No               | Yes                   | Yes           | No         | No               |
       | Project Manager   | No               | Yes                   | Yes           | Yes        | No               |
       | 10 Trees Admin    | Yes              | Yes                   | Yes           | Yes        | Yes              |
-    When a user logs in with role "Tree Mentor"
-    Then they should have permissions matching the Tree Mentor row
+    When a user logs in with role "Mentor"
+    Then they should have permissions matching the Mentor row
 
   Scenario: Tree mentor sees only their 10 assigned households
     Given I am tree mentor "Bondi" with 10 assigned households

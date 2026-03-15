@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Oqtane.Infrastructure;
 using OpenEug.TenTrees.Module.Assessment.Repository;
 using OpenEug.TenTrees.Module.Assessment.Services;
+using OpenEug.TenTrees.Module.Cohort.Repository;
 
 namespace OpenEug.TenTrees.Module.Assessment.Startup
 {
@@ -23,6 +24,7 @@ namespace OpenEug.TenTrees.Module.Assessment.Startup
         {
             services.AddTransient<IAssessmentService, ServerAssessmentService>();
             services.AddTransient<IAssessmentRepository, AssessmentRepository>();
+            services.AddTransient<ICohortRepository, CohortRepository>();
         }
     }
 }

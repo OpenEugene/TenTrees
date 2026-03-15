@@ -145,6 +145,33 @@ Feature: Grower Enrollment Submission
     Then the signature line should follow my finger
     And the page should not scroll while I am drawing on the canvas
 
+  # ─── COHORT SELECTION AT ENROLLMENT ─────────────────────────────────────────
+
+  Scenario: Cohort picker appears when active cohorts exist for the selected village
+    Given cohort "Roebuck 1 2026" is "Active" for village "Roebuck"
+    When I select village "Roebuck" during enrollment
+    Then a cohort picker should appear
+    And "Roebuck 1 2026" should be listed as an option
+    And a "none" option should also be available
+
+  Scenario: Cohort picker is hidden when no active cohorts exist for the village
+    Given no active cohorts exist for village "Londelozzi"
+    When I select village "Londelozzi" during enrollment
+    Then the cohort picker should not be shown
+
+  Scenario: Enrolling without selecting a cohort is permitted
+    Given I am completing a new enrollment for village "Roebuck"
+    And cohort "Roebuck 1 2026" is available
+    When I leave the cohort picker on "none"
+    And I complete and submit the enrollment
+    Then the enrollment should be saved
+    And no cohort membership should be created for the grower
+
+  Scenario: Grower is added to selected cohort when enrollment is approved
+    Given I enrolled "Nomsa Dlamini" with cohort "Roebuck 1 2026" selected
+    When an admin approves the enrollment
+    Then a GrowerCohort record should be created for "Nomsa Dlamini" in "Roebuck 1 2026"
+
   # ─── ADMIN MAINTENANCE ──────────────────────────────────────────────────────
 
   Scenario: Admin backfills grower records from existing enrollments

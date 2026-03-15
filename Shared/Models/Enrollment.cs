@@ -37,7 +37,7 @@ namespace OpenEug.TenTrees.Models
         [Required]
         public string MentorId { get; set; }
         
-        public string TreeMentorName { get; set; }
+        public string MentorName { get; set; }
         
         public DateTime EnrollmentDate { get; set; }
         
@@ -74,6 +74,9 @@ namespace OpenEug.TenTrees.Models
         
         public string SignatureData { get; set; }
         
+        // Cohort
+        public int? CohortId { get; set; }
+
         // Status
         public EnrollmentStatus Status { get; set; }
 

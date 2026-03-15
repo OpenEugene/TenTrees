@@ -1,5 +1,6 @@
 @using OpenEug.TenTrees.Module.Training.Services
 @using OpenEug.TenTrees.Module.Village.Services
+@using OpenEug.TenTrees.Module.Cohort.Services
 @using OpenEug.TenTrees.Models
 @page "/training"
 
@@ -7,6 +8,7 @@
 @inherits ModuleBase
 @inject ITrainingService TrainingService
 @inject IVillageService VillageService
+@inject ICohortService CohortService
 @inject NavigationManager NavigationManager
 @inject IStringLocalizer<Index> Localizer
 
@@ -102,6 +104,7 @@
                                 <th>@Localizer["Column.ClassNumber"]</th>
                                 <th>@Localizer["Column.Date"]</th>
                                 <th>@Localizer["Column.Village"]</th>
+                                <th>Cohorts</th>
                                 <th>@Localizer["Column.Actions"]</th>
                             </tr>
                         </thead>
@@ -117,6 +120,15 @@
                                     </td>
                                     <td>@tc.ClassDate.ToString("yyyy-MM-dd")</td>
                                     <td>@GetVillageName(tc.VillageId)</td>
+                                    <td>
+                                        @if (_classCohorts.TryGetValue(tc.TrainingClassId, out var cohorts))
+                                        {
+                                            @foreach (var name in cohorts)
+                                            {
+                                                <span class="badge bg-primary me-1">@name</span>
+                                            }
+                                        }
+                                    </td>
                                     <td>
                                         <ActionLink Action="Attendance"
                                                    Parameters="@($"id={tc.TrainingClassId}")"
@@ -189,6 +201,8 @@
     private List<Models.Village> _villages;
     private TrainingStatusSummary _summary;
     private string _villageFilter = "";
+    // classId → ordered list of cohort names
+    private Dictionary<int, List<string>> _classCohorts = new();
 
     protected override async Task OnParametersSetAsync()
     {
@@ -217,6 +231,22 @@
         _classes = await TrainingService.GetTrainingClassesAsync(ModuleState.ModuleId, villageId);
         _attendanceSummaries = await TrainingService.GetAttendanceSummariesAsync(ModuleState.ModuleId, villageId);
         _summary = await TrainingService.GetTrainingStatusSummaryAsync(ModuleState.ModuleId, villageId);
+
+        // Load cohort names for each class (admin users only, to avoid calling edit-only endpoints for viewers)
+        _classCohorts = new();
+        if (UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin))
+        {
+            var allCohorts = await CohortService.GetCohortsAsync();
+            var cohortById = allCohorts.ToDictionary(c => c.CohortId, c => c.Name);
+            foreach (var tc in _classes)
+            {
+                var links = await CohortService.GetCohortsForClassAsync(tc.TrainingClassId);
+                _classCohorts[tc.TrainingClassId] = links
+                    .Select(l => cohortById.GetValueOrDefault(l.CohortId, $"#{l.CohortId}"))
+                    .OrderBy(n => n).ToList();
+            }
+        }
+
         StateHasChanged();
     }
 

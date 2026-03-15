@@ -48,3 +48,24 @@ Feature: Permaculture Training Attendance Tracking
     When I mark "Sipho Dlamini" as present
     Then her record should show "Tree Selection" as attended
     And her attendance count should increase by 1
+
+  # ─── CLASS-COHORT ASSOCIATION ─────────────────────────────────────────────────
+
+  Scenario: Admin links a cohort to a training class from the training edit screen
+    Given training class "PE Training Session 1" exists
+    And cohort "Roebuck 1 2026" is "Active"
+    When I edit "PE Training Session 1"
+    And I select "Roebuck 1 2026" from the cohort add dropdown
+    Then "Roebuck 1 2026" should appear as a tag on "PE Training Session 1"
+    And the link should also be visible from the cohort edit screen
+
+  Scenario: Training index shows cohort badges on each class row
+    Given training class "PE Training Session 1" is linked to cohorts "Roebuck 1 2026" and "Orpen Gate Village 2024"
+    When I navigate to the training sessions list
+    Then the row for "PE Training Session 1" should display both cohort names as badges
+
+  Scenario: Admin removes a cohort from a training class
+    Given cohort "Roebuck 1 2026" is linked to training class "PE Training Session 1"
+    When I edit "PE Training Session 1"
+    And I click the remove button on the "Roebuck 1 2026" tag and confirm
+    Then "Roebuck 1 2026" should no longer be linked to "PE Training Session 1"

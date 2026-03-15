@@ -35,36 +35,18 @@ Feature: Village-Scoped Data Access
     And no data from "Orpen Gate Village" should be visible
 
   # ─── COHORT MANAGEMENT ──────────────────────────────────────────────────────
+  # Cohorts are village-scoped groupings of growers managed via the Cohort Management
+  # module. Full cohort lifecycle, assignment, and tag UI scenarios are in
+  # Specs/Features/CohortManagement.feature.
 
-  Scenario: System auto-generates a cohort name from village and year
-    Given I am a 10 Trees Admin
-    When I create a new cohort for village "Roebuck" in year "2026"
-    Then the system should suggest the name "Roebuck 2026"
-    And I should be able to accept or overwrite the suggested name
+  Scenario: Cohort filter appears in grower list when the admin selects a village
+    Given cohorts "Orpen Gate Village 2023" and "Orpen Gate Village 2024" exist for "Orpen Gate Village"
+    When I select village "Orpen Gate Village" from the grower list village filter
+    Then a cohort filter dropdown should appear
+    And it should list "Orpen Gate Village 2023" and "Orpen Gate Village 2024"
 
-  Scenario: Admin creates a numbered cohort for a village with multiple cohorts
-    Given "Roebuck" already has a cohort named "Roebuck 2026"
-    When I create a second cohort for "Roebuck" in year "2026"
-    Then the system should suggest the name "Roebuck 2 2026"
-    And I should be able to rename it to "Roebuck 1 2026" and "Roebuck 2 2026" respectively
-
-  Scenario: Admin views all cohorts
-    Given the following cohorts exist:
-      | Cohort Name             | Village            | Households |
-      | Orpen Gate Village 2023 | Orpen Gate Village | 153        |
-      | Open Gate Village 2024  | Orpen Gate Village | 57         |
-      | Roebuck 1 2026          | Roebuck            | 55         |
-    When I navigate to cohort management
-    Then I should see all three cohorts listed with their household counts
-
-  Scenario: Filter grower list by cohort
+  Scenario: Selecting a cohort in the grower list filters to that cohort's members
     Given multiple cohorts exist for "Orpen Gate Village"
-    When I select cohort "Open Gate Village 2024" from the filter
-    Then I should see only the 57 growers in that cohort
+    When I select cohort "Orpen Gate Village 2024" from the cohort filter
+    Then I should see only the growers who are members of "Orpen Gate Village 2024"
     And growers from other cohorts should not appear
-
-  Scenario: Reports can be scoped to a specific cohort
-    Given cohort "Roebuck 1 2026" exists with 55 households
-    When I generate a tree survival report
-    And I select cohort "Roebuck 1 2026"
-    Then results should reflect only those 55 households

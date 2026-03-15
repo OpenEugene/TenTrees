@@ -166,7 +166,7 @@
                 OwnsHome = StateService.CurrentDraft.OwnsHome,
                 EnrollmentDate = DateTime.UtcNow,
                 MentorId = StateService.CurrentDraft.MentorUsername ?? PageState.User.Username,
-                TreeMentorName = StateService.CurrentDraft.TreeMentorName,
+                MentorName = StateService.CurrentDraft.MentorName,
                 EnrolledInPE = StateService.CurrentDraft.EnrolledInPE,
                 PEGraduate = StateService.CurrentDraft.PEGraduate,
                 GardenPlantedAndTended = StateService.CurrentDraft.GardenPlantedAndTended,
@@ -182,6 +182,7 @@
                 SignatureData = signatureData,
                 SignatureCollected = true,
                 SignatureDate = DateTime.UtcNow,
+                CohortId = StateService.CurrentDraft.CohortId,
                 Status = Models.EnrollmentStatus.Pending
             };
 
