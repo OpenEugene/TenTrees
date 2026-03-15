@@ -87,9 +87,20 @@ namespace OpenEug.TenTrees.Module.Cohort.Services
                 return Task.FromResult(existing);
             }
 
-            // Set ActivatedOn when first transitioning to Active
-            if (existing != null && existing.Status != Models.CohortStatus.Active && cohort.Status == Models.CohortStatus.Active && cohort.ActivatedOn == null)
-                cohort.ActivatedOn = DateTime.UtcNow;
+            // Set or preserve ActivatedOn for Active cohorts
+            if (existing != null)
+            {
+                // When first transitioning to Active, set ActivatedOn if not provided
+                if (existing.Status != Models.CohortStatus.Active && cohort.Status == Models.CohortStatus.Active && cohort.ActivatedOn == null)
+                {
+                    cohort.ActivatedOn = DateTime.UtcNow;
+                }
+                // When already Active, preserve existing ActivatedOn if the client omits it
+                else if (existing.Status == Models.CohortStatus.Active && cohort.ActivatedOn == null)
+                {
+                    cohort.ActivatedOn = existing.ActivatedOn;
+                }
+            }
 
             cohort = _cohortRepository.UpdateCohort(cohort);
             _logger.Log(LogLevel.Information, this, LogFunction.Update, "Cohort Updated {Cohort}", cohort);
