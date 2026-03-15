@@ -1,5 +1,6 @@
 @using OpenEug.TenTrees.Module.Grower.Services
 @using OpenEug.TenTrees.Module.Village.Services
+@using OpenEug.TenTrees.Module.Cohort.Services
 @using OpenEug.TenTrees.Models
 @page "/grower"
 
@@ -7,6 +8,7 @@
 @inherits ModuleBase
 @inject IGrowerService GrowerService
 @inject IVillageService VillageService
+@inject ICohortService CohortService
 @inject NavigationManager NavigationManager
 @inject IStringLocalizer<Index> Localizer
 
@@ -22,9 +24,9 @@
                 <option value="@GrowerStatus.Exited">@Localizer["Status.Exited"]</option>
             </select>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <label for="villageFilter">@Localizer["Filter.Village"]</label>
-            <select id="villageFilter" class="form-select" @bind="_villageFilter" @bind:after="LoadGrowersAsync">
+            <select id="villageFilter" class="form-select" @bind="_villageFilter" @bind:after="OnVillageFilterChanged">
                 <option value="">@Localizer["Filter.AllVillages"]</option>
                 @if (_villages != null)
                 {
@@ -35,7 +37,17 @@
                 }
             </select>
         </div>
-        <div class="col-md-4 d-flex align-items-end">
+        <div class="col-md-3">
+            <label for="cohortFilter">Cohort</label>
+            <select id="cohortFilter" class="form-select" @bind="_cohortFilter" @bind:after="LoadGrowersAsync">
+                <option value="">All Cohorts</option>
+                @foreach (var cohort in _cohorts)
+                {
+                    <option value="@cohort.CohortId">@cohort.Name</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
             <button class="btn btn-secondary w-100" @onclick="ClearFilters">@Localizer["Action.ClearFilters"]</button>
         </div>
     </div>
@@ -132,9 +144,12 @@
 @code {
     private List<Models.Grower> _growers;
     private List<Models.Village> _villages;
+    private List<Models.Cohort> _cohorts = new();
+    private HashSet<int> _cohortGrowerIds;     // null = no cohort filter
     private GrowerStatusSummary _summary;
     private string _statusFilter = "";
     private string _villageFilter = "";
+    private string _cohortFilter = "";
 
     public override SecurityAccessLevel SecurityAccessLevel => SecurityAccessLevel.View;
 
@@ -143,6 +158,7 @@
         try
         {
             await LoadVillagesAsync();
+            await LoadCohortsForMentorAsync();
             await LoadSummaryAsync();
             await LoadGrowersAsync();
         }
@@ -158,6 +174,40 @@
         _villages = UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin)
             ? await VillageService.GetVillagesAsync()
             : await VillageService.GetActiveVillagesAsync();
+    }
+
+    // For mentors, pre-load only their assigned cohorts and restrict grower list accordingly.
+    // Admins see all cohorts (optionally filtered by village).
+    private async Task LoadCohortsForMentorAsync()
+    {
+        if (!UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin))
+        {
+            _cohorts = await CohortService.GetCohortsByMentorAsync(PageState.User.Username);
+            // Pre-restrict grower IDs to those in the mentor's cohorts
+            if (_cohorts.Count > 0)
+            {
+                var ids = new HashSet<int>();
+                foreach (var c in _cohorts)
+                {
+                    var members = await CohortService.GetGrowerCohortsAsync(c.CohortId);
+                    foreach (var m in members) ids.Add(m.GrowerId);
+                }
+                _cohortGrowerIds = ids;
+            }
+        }
+    }
+
+    private async Task OnVillageFilterChanged()
+    {
+        _cohortFilter = "";
+        if (UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin))
+        {
+            _cohorts = string.IsNullOrEmpty(_villageFilter)
+                ? new()
+                : await CohortService.GetCohortsByVillageAsync(int.Parse(_villageFilter));
+        }
+        _cohortGrowerIds = null;
+        await LoadGrowersAsync();
     }
 
     private async Task LoadSummaryAsync()
@@ -180,6 +230,19 @@
             _growers = await GrowerService.GetGrowersByStatusAsync(status, ModuleState.ModuleId, villageId);
         }
 
+        // Apply cohort filter: if a specific cohort is selected by admin, load that cohort's grower IDs
+        if (!string.IsNullOrEmpty(_cohortFilter) && int.TryParse(_cohortFilter, out var cohortId))
+        {
+            var members = await CohortService.GetGrowerCohortsAsync(cohortId);
+            var ids = members.Select(m => m.GrowerId).ToHashSet();
+            _growers = _growers.Where(g => ids.Contains(g.GrowerId)).ToList();
+        }
+        else if (_cohortGrowerIds != null)
+        {
+            // Mentor role: restrict to growers in their assigned cohorts
+            _growers = _growers.Where(g => _cohortGrowerIds.Contains(g.GrowerId)).ToList();
+        }
+
         await LoadSummaryAsync();
         StateHasChanged();
     }
@@ -188,6 +251,9 @@
     {
         _statusFilter = "";
         _villageFilter = "";
+        _cohortFilter = "";
+        if (UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin))
+            _cohorts = new();
         await LoadGrowersAsync();
     }
 
