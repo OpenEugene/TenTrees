@@ -1,0 +1,45 @@
+name: Auto PR with Copilot Review
+
+on:
+  push:
+    branches-ignore:
+      - main
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  create-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create PR and request Copilot review
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BRANCH="${{ github.ref_name }}"
+
+          # Check if a PR already exists for this branch
+          EXISTING_PR=$(gh pr list --head "$BRANCH" --json number --jq '.[0].number // empty')
+
+          if [ -z "$EXISTING_PR" ]; then
+            # Format branch name as PR title: replace - and _ with spaces, title-case
+            TITLE=$(echo "$BRANCH" | sed 's/[-_]/ /g' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) tolower(substr($i,2)); print}')
+
+            gh pr create \
+              --title "$TITLE" \
+              --body "Auto-created PR for branch \`$BRANCH\`." \
+              --base main \
+              --reviewer copilot
+
+            echo "PR created for branch: $BRANCH"
+          else
+            echo "PR #$EXISTING_PR already exists for branch: $BRANCH"
+
+            # Ensure Copilot is still requested as a reviewer
+            gh pr edit "$EXISTING_PR" --add-reviewer copilot || true
+          fi
