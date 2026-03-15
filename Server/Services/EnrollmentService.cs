@@ -188,7 +188,7 @@ namespace OpenEug.TenTrees.Module.Enrollment.Services
             var mentorInfo = new MentorInfo
             {
                 MentorId = UserId.ToString(),
-                TreeMentorName = "Mentor Name",
+                MentorName = "Mentor Name",
                 VillageId = 1
             };
             return Task.FromResult(mentorInfo);

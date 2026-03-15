@@ -54,7 +54,7 @@ namespace OpenEug.TenTrees.Module.Enrollment.Repository
                                EnrollmentId = e.EnrollmentId,
                                GrowerId = e.GrowerId,
                                GrowerName = e.GrowerName,
-                               TreeMentorName = e.TreeMentorName,
+                               MentorName = e.MentorName,
                                VillageId = e.VillageId,
                                VillageName = v != null ? v.VillageName : null,
                                EnrollmentStatus = e.Status,
@@ -166,6 +166,21 @@ namespace OpenEug.TenTrees.Module.Enrollment.Repository
                     db.Grower.Add(grower);
                     db.SaveChanges(); // Save to get GrowerId
                     enrollment.GrowerId = grower.GrowerId;
+                }
+            }
+
+            // If approved and a cohort was selected, create GrowerCohort join if not already present
+            if (enrollment.Status == EnrollmentStatus.Approved && enrollment.GrowerId.HasValue && enrollment.CohortId.HasValue)
+            {
+                bool alreadyMember = db.GrowerCohort.Any(gc => gc.GrowerId == enrollment.GrowerId.Value && gc.CohortId == enrollment.CohortId.Value);
+                if (!alreadyMember)
+                {
+                    db.GrowerCohort.Add(new Models.GrowerCohort
+                    {
+                        GrowerId = enrollment.GrowerId.Value,
+                        CohortId = enrollment.CohortId.Value,
+                        JoinedOn = DateTime.UtcNow
+                    });
                 }
             }
 

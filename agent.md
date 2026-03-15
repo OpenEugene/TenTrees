@@ -156,7 +156,7 @@ CREATE TABLE [dbo].[ModelName] (
 ## 10 Trees Specific Patterns
 
 ### User Roles & Permissions
-- **Tree Mentor** — Submit enrollment/assessment forms; sees only their 10 assigned households
+- **Mentor** — Submit enrollment/assessment forms; sees only their 10 assigned households
 - **Educator** — View all villages, add home visit notes; cannot edit enrollment or assessment data. Role may be renamed — Rebecca to confirm with Tri (Director of Permaculture Education and Community Development)
 - **Project Manager** — View all villages, add notes, export data; no form submission
 - **10 Trees Admin** — Full access: data entry, user management, village/cohort assignment, export. Previously called "center admin" — use "10 Trees Admin" exclusively
@@ -213,7 +213,7 @@ CREATE TABLE [dbo].[ModelName] (
 
 ### Village Multi-Tenancy
 - All data scoped by `VillageId`
-- Tree Mentors see only their assigned households (up to 10)
+- Mentors see only their assigned households (up to 10)
 - Educators and above can view/filter all villages
 - Use village filter in all queries
 
