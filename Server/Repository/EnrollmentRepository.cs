@@ -58,7 +58,8 @@ namespace OpenEug.TenTrees.Module.Enrollment.Repository
                                VillageId = e.VillageId,
                                VillageName = v != null ? v.VillageName : null,
                                EnrollmentStatus = e.Status,
-                               GrowerStatus = g != null ? g.Status : GrowerStatus.Active
+                               GrowerStatus = g != null ? g.Status : GrowerStatus.Active,
+                               PhotoConsentLevel = e.PhotoConsentLevel
                            };
             return viewModels.ToList();
         }
