@@ -74,6 +74,9 @@ namespace OpenEug.TenTrees.Models
         
         public string SignatureData { get; set; }
         
+        // Cohort
+        public int? CohortId { get; set; }
+
         // Status
         public EnrollmentStatus Status { get; set; }
 

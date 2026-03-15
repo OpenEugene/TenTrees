@@ -11,6 +11,7 @@ using Oqtane.Shared;
 using OpenEug.TenTrees.Module.Assessment.Repository;
 using OpenEug.TenTrees.Models;
 using OpenEug.TenTrees.Module.Grower.Repository;
+using OpenEug.TenTrees.Module.Cohort.Repository;
 
 namespace OpenEug.TenTrees.Module.Assessment.Services
 {
@@ -18,6 +19,7 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
     {
         private readonly IAssessmentRepository _assessmentRepository;
         private readonly IGrowerRepository _growerRepository;
+        private readonly ICohortRepository _cohortRepository;
         private readonly IUserPermissions _userPermissions;
         private readonly ILogManager _logger;
         private readonly IHttpContextAccessor _accessor;
@@ -26,6 +28,7 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
         public ServerAssessmentService(
             IAssessmentRepository assessmentRepository,
             IGrowerRepository growerRepository,
+            ICohortRepository cohortRepository,
             IUserPermissions userPermissions,
             ITenantManager tenantManager,
             ILogManager logger,
@@ -33,6 +36,7 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
         {
             _assessmentRepository = assessmentRepository;
             _growerRepository = growerRepository;
+            _cohortRepository = cohortRepository;
             _userPermissions = userPermissions;
             _logger = logger;
             _accessor = accessor;
@@ -217,17 +221,23 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
             var lastAssessment = assessments.First();
             var daysSinceLast = (DateTime.UtcNow - lastAssessment.AssessmentDate).TotalDays;
 
-            // Determine program year based on grower creation date
-            var programYear = (DateTime.UtcNow - grower.CreatedOn).TotalDays <= 365 ? 1 : 2;
+            // Determine frequency from cohort: use the most recently activated cohort for this grower.
+            // Year 1 (activated this year) → twice monthly (14 days).
+            // Year 2+ → monthly (30 days).
+            var cohorts = _cohortRepository.GetCohortsByGrower(growerId).ToList();
+            var mostRecentActivation = cohorts
+                .Where(c => c.ActivatedOn.HasValue)
+                .OrderByDescending(c => c.ActivatedOn)
+                .Select(c => c.ActivatedOn.Value)
+                .FirstOrDefault();
 
-            if (programYear == 1)
-            {
-                return Task.FromResult(daysSinceLast >= 14);
-            }
+            int minDays;
+            if (mostRecentActivation != default && (DateTime.UtcNow - mostRecentActivation).TotalDays <= 365)
+                minDays = 14; // Year 1 cohort — twice monthly
             else
-            {
-                return Task.FromResult(daysSinceLast >= 30);
-            }
+                minDays = 30; // Year 2+ or no cohort assigned — monthly
+
+            return Task.FromResult(daysSinceLast >= minDays);
         }
     }
 }
