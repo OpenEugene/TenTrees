@@ -37,7 +37,4 @@ jobs:
             echo "PR #$PR_NUMBER already exists for branch: $BRANCH"
           fi
           # Request Copilot review via API
-          
-          gh api repos/${{ github.repository }}/pulls/$PR_NUMBER/requested_reviewers \
-            --method POST \
-            -f 'reviewers[]=copilot' || echo "Copilot review request failed (may not be enabled on this repo)"
+          gh pr edit --add-reviewer copilot
