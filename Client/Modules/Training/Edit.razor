@@ -94,7 +94,11 @@
     {
         try
         {
-            _villages = await VillageService.GetVillagesAsync();
+            // Edit mode loads all villages so the current village shows even if inactive;
+            // Add mode loads active only
+            _villages = PageState.QueryString.ContainsKey("id")
+                ? await VillageService.GetVillagesAsync()
+                : await VillageService.GetActiveVillagesAsync();
 
             if (PageState.QueryString.ContainsKey("id"))
             {
