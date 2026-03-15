@@ -1,0 +1,308 @@
+@using OpenEug.TenTrees.Module.Enrollment.Services
+@using OpenEug.TenTrees.Module.Village.Services
+@using OpenEug.TenTrees.Models
+
+@namespace OpenEug.TenTrees.Module.Enrollment
+@inherits ModuleBase
+@inject IEnrollmentService EnrollmentService
+@inject IVillageService VillageService
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+@inject IStringLocalizer<PhotoConsent> Localizer
+
+@if (_isLoading)
+{
+    <p><em>@Localizer["Message.Loading"]</em></p>
+}
+else if (_enrollment == null)
+{
+    <div class="alert alert-danger">
+        <i class="bi bi-exclamation-triangle"></i> @Localizer["Message.EnrollmentNotFound"]
+    </div>
+    <button class="btn btn-secondary" @onclick="NavigateToIndex">
+        <i class="bi bi-arrow-left"></i> @Localizer["Action.BackToList"]
+    </button>
+}
+else
+{
+    <div class="container">
+        <h3>@Localizer["Page.Title"]</h3>
+
+        <!-- Context header -->
+        <div class="card mb-3">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <strong>@Localizer["Label.Grower"]:</strong>
+                        <span class="ms-2 fs-5">@_enrollment.GrowerName</span>
+                    </div>
+                    <div class="col-md-6">
+                        <strong>@Localizer["Label.Village"]:</strong>
+                        <span class="ms-2">@_villageName</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (_enrollment.PhotoConsentSignatureCollected)
+        {
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle"></i>
+                @Localizer["Message.AlreadyCaptured"]
+                <strong>@GetConsentLevelText(_enrollment.PhotoConsentLevel)</strong>.
+                @Localizer["Message.CanUpdate"]
+            </div>
+        }
+
+        <!-- Consent options -->
+        <div class="card mb-3">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">@Localizer["Section.ConsentOptions"]</h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info mb-3">
+                    <i class="bi bi-info-circle"></i> @Localizer["Consent.Info"]
+                </div>
+
+                <div class="form-check p-3 mb-2 border rounded @(_selectedConsent == PhotoConsentLevel.Full ? "border-success bg-success-subtle" : "")">
+                    <input class="form-check-input" type="radio" name="consentLevel" id="consentFull"
+                           checked="@(_selectedConsent == PhotoConsentLevel.Full)"
+                           @onchange="@(() => _selectedConsent = PhotoConsentLevel.Full)"
+                           style="width: 20px; height: 20px;" />
+                    <label class="form-check-label ms-2" for="consentFull">
+                        <strong>@Localizer["Consent.Full.Label"]</strong><br />
+                        <small class="text-muted">@Localizer["Consent.Full.Description"]</small>
+                    </label>
+                </div>
+
+                <div class="form-check p-3 mb-2 border rounded @(_selectedConsent == PhotoConsentLevel.Limited ? "border-warning bg-warning-subtle" : "")">
+                    <input class="form-check-input" type="radio" name="consentLevel" id="consentLimited"
+                           checked="@(_selectedConsent == PhotoConsentLevel.Limited)"
+                           @onchange="@(() => _selectedConsent = PhotoConsentLevel.Limited)"
+                           style="width: 20px; height: 20px;" />
+                    <label class="form-check-label ms-2" for="consentLimited">
+                        <strong>@Localizer["Consent.Limited.Label"]</strong><br />
+                        <small class="text-muted">@Localizer["Consent.Limited.Description"]</small>
+                    </label>
+                </div>
+
+                <div class="form-check p-3 mb-2 border rounded @(_selectedConsent == PhotoConsentLevel.None ? "border-danger bg-danger-subtle" : "")">
+                    <input class="form-check-input" type="radio" name="consentLevel" id="consentNone"
+                           checked="@(_selectedConsent == PhotoConsentLevel.None)"
+                           @onchange="@(() => _selectedConsent = PhotoConsentLevel.None)"
+                           style="width: 20px; height: 20px;" />
+                    <label class="form-check-label ms-2" for="consentNone">
+                        <strong>@Localizer["Consent.None.Label"]</strong><br />
+                        <small class="text-muted">@Localizer["Consent.None.Description"]</small>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Signature canvas -->
+        <div class="card mb-3">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">@Localizer["Section.Signature"]</h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"></i> @Localizer["Signature.Info"]
+                </div>
+
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <label class="form-label fw-bold mb-0">@Localizer["Label.Signature"]</label>
+                        <button type="button" class="btn btn-sm btn-outline-secondary" @onclick="ClearSignature">
+                            <i class="bi bi-x-circle"></i> @Localizer["Signature.Clear"]
+                        </button>
+                    </div>
+                    <div class="border rounded bg-white" style="touch-action: none;">
+                        <canvas id="photoConsentSignatureCanvas"
+                                style="width: 100%; height: 180px; display: block; cursor: crosshair;"></canvas>
+                    </div>
+                    <small class="form-text text-muted">@Localizer["Signature.Help"]</small>
+                </div>
+
+                <div class="form-check p-3 border rounded">
+                    <input class="form-check-input" type="checkbox" id="confirmConsent"
+                           @bind="@_confirmed" style="width: 24px; height: 24px;" />
+                    <label class="form-check-label ms-2 fw-bold" for="confirmConsent">
+                        @Localizer["Signature.Confirm"]
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        @if (_isSaving)
+        {
+            <div class="alert alert-info text-center">
+                <div class="spinner-border spinner-border-sm" role="status">
+                    <span class="visually-hidden">@Localizer["Message.Saving"]</span>
+                </div>
+                <span class="ms-2">@Localizer["Message.Saving"]</span>
+            </div>
+        }
+
+        <div class="d-flex gap-2 mb-3">
+            <button type="button" class="btn btn-success"
+                    @onclick="Save"
+                    disabled="@(!_confirmed || _selectedConsent == PhotoConsentLevel.NotCaptured || _isSaving)">
+                <i class="bi bi-check-circle"></i> @Localizer["Action.Save"]
+            </button>
+            <button type="button" class="btn btn-secondary" @onclick="NavigateToIndex" disabled="@_isSaving">
+                <i class="bi bi-arrow-left"></i> @Localizer["Action.BackToList"]
+            </button>
+        </div>
+    </div>
+}
+
+@code {
+    private Models.Enrollment _enrollment;
+    private string _villageName;
+    private bool _isLoading = true;
+    private bool _confirmed;
+    private bool _isSaving;
+    private PhotoConsentLevel _selectedConsent = PhotoConsentLevel.NotCaptured;
+    private const string CanvasId = "photoConsentSignatureCanvas";
+
+    [Parameter]
+    public string Id { get; set; }
+
+    public override SecurityAccessLevel SecurityAccessLevel => SecurityAccessLevel.View;
+    public override string Actions => "PhotoConsent";
+    public override string Title => "Photo Release Consent";
+
+    protected override async Task OnParametersSetAsync()
+    {
+        try
+        {
+            _isLoading = true;
+            if (!string.IsNullOrEmpty(Id) && int.TryParse(Id, out int enrollmentId))
+            {
+                _enrollment = await EnrollmentService.GetEnrollmentAsync(enrollmentId, ModuleState.ModuleId);
+
+                if (_enrollment == null)
+                {
+                    await logger.LogWarning("Enrollment {Id} not found or unauthorized", Id);
+                    return;
+                }
+
+                if (_enrollment.Status != EnrollmentStatus.Approved)
+                {
+                    await logger.LogWarning("PhotoConsent accessed for non-Approved enrollment {Id}", Id);
+                    NavigationManager.NavigateTo(NavigateUrl());
+                    return;
+                }
+
+                if (_enrollment.PhotoConsentSignatureCollected)
+                {
+                    _selectedConsent = _enrollment.PhotoConsentLevel;
+                }
+
+                var village = await VillageService.GetVillageAsync(_enrollment.VillageId);
+                _villageName = village?.VillageName ?? _enrollment.VillageId.ToString();
+            }
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Loading Enrollment for PhotoConsent {Id} {Error}", Id, ex.Message);
+            AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && _enrollment != null)
+        {
+            await JSRuntime.InvokeVoidAsync(
+                "eval",
+                "if (typeof OpenEug === 'undefined') { " +
+                "var script = document.createElement('script'); " +
+                "script.src = '/Modules/OpenEug.TenTrees.Module.Enrollment/Module.js'; " +
+                "document.head.appendChild(script); }");
+            await Task.Delay(100);
+            await JSRuntime.InvokeVoidAsync("OpenEug.TenTrees.Enrollment.SignaturePad.init", CanvasId);
+        }
+    }
+
+    private async Task ClearSignature()
+    {
+        await JSRuntime.InvokeVoidAsync("OpenEug.TenTrees.Enrollment.SignaturePad.clear", CanvasId);
+    }
+
+    private async Task Save()
+    {
+        try
+        {
+            if (!_confirmed)
+            {
+                AddModuleMessage(Localizer["Message.ValidationError"], MessageType.Warning);
+                return;
+            }
+
+            if (_selectedConsent == PhotoConsentLevel.NotCaptured)
+            {
+                AddModuleMessage(Localizer["Message.ConsentRequired"], MessageType.Warning);
+                return;
+            }
+
+            var blank = await JSRuntime.InvokeAsync<bool>("OpenEug.TenTrees.Enrollment.SignaturePad.isBlank", CanvasId);
+            if (blank)
+            {
+                AddModuleMessage(Localizer["Message.SignatureRequired"], MessageType.Warning);
+                return;
+            }
+
+            var signatureData = await JSRuntime.InvokeAsync<string>("OpenEug.TenTrees.Enrollment.SignaturePad.getData", CanvasId);
+
+            _isSaving = true;
+            StateHasChanged();
+
+            var success = await EnrollmentService.CapturePhotoConsentAsync(
+                _enrollment.EnrollmentId,
+                ModuleState.ModuleId,
+                _selectedConsent,
+                signatureData);
+
+            if (success)
+            {
+                await logger.LogInformation(
+                    "Photo Consent Captured for Enrollment {EnrollmentId} Level: {Level}",
+                    _enrollment.EnrollmentId, _selectedConsent);
+                AddModuleMessage(Localizer["Message.Success"], MessageType.Success);
+                NavigationManager.NavigateTo(NavigateUrl());
+            }
+            else
+            {
+                _isSaving = false;
+                AddModuleMessage(Localizer["Message.Error"], MessageType.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            _isSaving = false;
+            await logger.LogError(ex, "Error Saving Photo Consent {Error}", ex.Message);
+            AddModuleMessage(Localizer["Message.Error"], MessageType.Error);
+        }
+    }
+
+    private void NavigateToIndex()
+    {
+        NavigationManager.NavigateTo(NavigateUrl());
+    }
+
+    private string GetConsentLevelText(PhotoConsentLevel level)
+    {
+        return level switch
+        {
+            PhotoConsentLevel.Full    => Localizer["Consent.Full.Label"],
+            PhotoConsentLevel.Limited => Localizer["Consent.Limited.Label"],
+            PhotoConsentLevel.None    => Localizer["Consent.None.Label"],
+            _                         => Localizer["ConsentLevel.NotCaptured"]
+        };
+    }
+}

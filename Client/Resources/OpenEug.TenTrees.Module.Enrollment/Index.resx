@@ -192,4 +192,22 @@
   <data name="Message.Loading" xml:space="preserve">
     <value>Loading...</value>
   </data>
+  <data name="Column.PhotoConsent" xml:space="preserve">
+    <value>Photo Consent</value>
+  </data>
+  <data name="PhotoConsent" xml:space="preserve">
+    <value>Photo Consent</value>
+  </data>
+  <data name="ConsentLevel.NotCaptured" xml:space="preserve">
+    <value>Not Captured</value>
+  </data>
+  <data name="ConsentLevel.Full" xml:space="preserve">
+    <value>Full</value>
+  </data>
+  <data name="ConsentLevel.Limited" xml:space="preserve">
+    <value>Limited</value>
+  </data>
+  <data name="ConsentLevel.None" xml:space="preserve">
+    <value>None</value>
+  </data>
 </root>
