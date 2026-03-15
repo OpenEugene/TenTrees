@@ -26,53 +26,37 @@ else if (_grower == null)
 }
 else
 {
-    <div class="container">
-        <h3>@Localizer["Page.Title"]: @_grower.GrowerName</h3>
+    <div>
+        <h5 class="mb-2">@Localizer["Page.Title"]: @_grower.GrowerName</h5>
 
         <!-- Current Status Section -->
-        <div class="card mb-3">
+        <div class="card mb-2">
             <div class="card-header">
                 <h5>@Localizer["Section.CurrentStatus"]</h5>
             </div>
             <div class="card-body">
-                <div class="row mb-3">
-                    <div class="col-md-4">
-                        <strong>@Localizer["Label.CurrentStatus"]:</strong>
-                    </div>
-                    <div class="col-md-8">
-                        <span class="badge @GetStatusBadgeClass(_grower.Status) fs-6">
-                            @GetStatusText(_grower.Status)
-                        </span>
-                    </div>
+                <div class="d-flex align-items-center gap-2">
+                    <strong>@Localizer["Label.CurrentStatus"]:</strong>
+                    <span class="badge @GetStatusBadgeClass(_grower.Status)">
+                        @GetStatusText(_grower.Status)
+                    </span>
                 </div>
 
                 @if (_grower.Status == GrowerStatus.Exited && _grower.ExitDate.HasValue)
                 {
-                    <div class="row mb-2">
-                        <div class="col-md-4">
-                            <strong>@Localizer["Label.ExitDate"]:</strong>
-                        </div>
-                        <div class="col-md-8">
-                            @_grower.ExitDate.Value.ToString("yyyy-MM-dd")
-                        </div>
+                    <div class="d-flex align-items-center gap-2 mb-1">
+                        <strong>@Localizer["Label.ExitDate"]:</strong>
+                        <span>@_grower.ExitDate.Value.ToString("yyyy-MM-dd")</span>
                     </div>
-                    <div class="row mb-2">
-                        <div class="col-md-4">
-                            <strong>@Localizer["Label.ExitReason"]:</strong>
-                        </div>
-                        <div class="col-md-8">
-                            @(_grower.ExitReason ?? "-")
-                        </div>
+                    <div class="d-flex align-items-center gap-2 mb-1">
+                        <strong>@Localizer["Label.ExitReason"]:</strong>
+                        <span>@(_grower.ExitReason ?? "-")</span>
                     </div>
                     @if (!string.IsNullOrWhiteSpace(_grower.ExitNotes))
                     {
-                        <div class="row mb-2">
-                            <div class="col-md-4">
-                                <strong>@Localizer["Label.ExitNotes"]:</strong>
-                            </div>
-                            <div class="col-md-8">
-                                @_grower.ExitNotes
-                            </div>
+                        <div class="d-flex align-items-center gap-2 mb-1">
+                            <strong>@Localizer["Label.ExitNotes"]:</strong>
+                            <span>@_grower.ExitNotes</span>
                         </div>
                     }
                 }
@@ -82,7 +66,7 @@ else
         <!-- Admin Actions (Admin-Only) -->
         @if (UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin))
         {
-            <div class="card mb-3">
+            <div class="card mb-2">
                 <div class="card-header bg-primary text-white">
                     <h5>@Localizer["Section.AdminActions"]</h5>
                 </div>
@@ -116,7 +100,7 @@ else
         <!-- Exit Program Form (Visible when ShowExitForm is true) -->
         @if (_showExitForm && UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin))
         {
-            <div class="card mb-3 border-danger">
+            <div class="card mb-2 border-danger">
                 <div class="card-header bg-danger text-white">
                     <h5>@Localizer["Modal.ExitTitle"]</h5>
                 </div>
@@ -225,9 +209,11 @@ else
         </div>
 
         <!-- Back Button -->
-        <button class="btn btn-secondary" @onclick="NavigateToIndex">
-            <i class="bi bi-arrow-left"></i> @Localizer["Action.BackToList"]
-        </button>
+        <div class="mt-2">
+            <button class="btn btn-secondary btn-sm" @onclick="NavigateToIndex">
+                <i class="bi bi-arrow-left"></i> @Localizer["Action.BackToList"]
+            </button>
+        </div>
     </div>
 }
 
@@ -245,24 +231,21 @@ else
     private ElementReference exitForm;
     private bool exitValidated = false;
 
-    [Parameter]
-    public string Id { get; set; }
-
     public override SecurityAccessLevel SecurityAccessLevel => SecurityAccessLevel.View;
 
     protected override async Task OnParametersSetAsync()
     {
         try
         {
-            if (!string.IsNullOrEmpty(Id))
+            if (PageState.QueryString.ContainsKey("id"))
             {
                 _isLoading = true;
-                int growerId = int.Parse(Id);
+                int growerId = int.Parse(PageState.QueryString["id"]);
                 _grower = await GrowerService.GetGrowerAsync(growerId, ModuleState.ModuleId);
 
                 if (_grower == null)
                 {
-                    await logger.LogWarning("Grower {Id} not found or unauthorized", Id);
+                    await logger.LogWarning("Grower {id} not found or unauthorized", PageState.QueryString["id"]);
                 }
                 else
                 {
@@ -272,7 +255,7 @@ else
         }
         catch (Exception ex)
         {
-            await logger.LogError(ex, "Error Loading Grower {Id} {Error}", Id, ex.Message);
+            await logger.LogError(ex, "Error Loading Grower {id} {Error}", PageState.QueryString.GetValueOrDefault("id"), ex.Message);
             AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
         }
         finally
@@ -415,7 +398,10 @@ else
 
     private void NavigateToIndex()
     {
-        NavigationManager.NavigateTo(NavigateUrl());
+        if (PageState.QueryString.ContainsKey("returnurl"))
+            NavigationManager.NavigateTo(PageState.QueryString["returnurl"]);
+        else
+            NavigationManager.NavigateTo(NavigateUrl());
     }
 
     private string GetStatusBadgeClass(GrowerStatus status)
