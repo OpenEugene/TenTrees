@@ -20,9 +20,9 @@
             </div>
             <div class="card-body">
                 <div class="row mb-2">
-                    <Label Class="col-sm-4" For="treementorname" ResourceKey="TreeMentorName">Tree Mentor Name:</Label>
+                    <Label Class="col-sm-4" For="mentorname" ResourceKey="MentorName">Mentor Name:</Label>
                     <div class="col-sm-8">
-                        <select id="treementorname" class="form-select" @bind="@_mentorUsername" required>
+                        <select id="mentorname" class="form-select" @bind="@_mentorUsername" required>
                             <option value="">-- Select --</option>
                             @if (_users != null)
                             {
@@ -450,7 +450,7 @@
                     Enrollment.OwnsHome = _ownsHome;
                     Enrollment.EnrollmentDate = DateTime.UtcNow;
                     Enrollment.MentorId = _mentorUsername;
-                    Enrollment.TreeMentorName = _users?.FirstOrDefault(u => u.Username == _mentorUsername)?.DisplayName ?? _mentorUsername;
+                    Enrollment.MentorName = _users?.FirstOrDefault(u => u.Username == _mentorUsername)?.DisplayName ?? _mentorUsername;
                     
                     // Preferred Criteria
                     Enrollment.EnrolledInPE = _enrolledInPE;
@@ -495,7 +495,7 @@
                     Enrollment.HouseholdSize = _householdSize;
                     Enrollment.OwnsHome = _ownsHome;
                     Enrollment.MentorId = _mentorUsername;
-                    Enrollment.TreeMentorName = _users?.FirstOrDefault(u => u.Username == _mentorUsername)?.DisplayName ?? _mentorUsername;
+                    Enrollment.MentorName = _users?.FirstOrDefault(u => u.Username == _mentorUsername)?.DisplayName ?? _mentorUsername;
                     
                     // Preferred Criteria
                     Enrollment.EnrolledInPE = _enrolledInPE;
