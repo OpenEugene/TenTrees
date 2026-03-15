@@ -31,7 +31,7 @@ This document provides a comprehensive Behavior-Driven Development (BDD) project
 
 ### 1.1 Key Stakeholders
 
-- **Tree Mentors (17 total):** Field staff collecting data on smartphones
+- **Mentors (17 total):** Field staff collecting data on smartphones
 - **Centre Staff:** 10 Trees Admin, Project Manager, Educator (permaculture educator; final role title TBD — Rebecca to confirm with Tri)
   *(Note: there is no Executive Director. The organisation uses a distributed leadership model. Tri — Director of Permaculture Education and Community Development — leads permaculture work; a new administrator is being hired.)*
 - **Growers:** Women in the community receiving trees and training
@@ -865,7 +865,7 @@ Each workflow file should contain:
 [Business value and purpose]
 
 ## Actors
-- Primary: Tree Mentor
+- Primary: Mentor
 - Secondary: Centre Staff
 
 ## Preconditions
@@ -1292,7 +1292,7 @@ Phased approach aligned with the 10 Trees Work Plan timeline.
 | Term | Definition |
 |------|------------|
 | **Grower** | Woman enrolled in the 10 Trees program receiving trees |
-| **Tree Mentor** | Field staff who visits households and collects data |
+| **Mentor** | Field staff who visits households and collects data |
 | **Centre** | Zingela Ulwazi headquarters with Wi-Fi |
 | **PE** | Permaculture Education program |
 | **Village** | Geographic grouping of growers |
