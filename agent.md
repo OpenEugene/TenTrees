@@ -3,6 +3,10 @@
 ## Project Overview
 This is the 10 Trees Digital Platform - a Blazor WebAssembly application built on the Oqtane framework (.NET 10) for tracking grower enrollments, garden mapping, tree monitoring, and program reporting in rural South Africa.
 
+## Task & Issue Tracking
+
+All tasks and issues are tracked on the **local Kanban board** at `/home/user/10Trees/kanban/`. When the user refers to "tasks", "issues", or "what to work on next", always look there — never assume GitHub Issues or any external tracker.
+
 ## Communication Guidelines
 - **DO NOT create summary documents** - Just do the work and report completion
 - Provide concise status updates during work
