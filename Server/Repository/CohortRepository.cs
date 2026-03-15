@@ -94,8 +94,11 @@ namespace OpenEug.TenTrees.Module.Cohort.Repository
         public int CountCohortsForVillageYear(int villageId, int year)
         {
             using var db = _factory.CreateDbContext();
-            // Match cohorts created in the given year for this village
-            return db.Cohort.Count(c => c.VillageId == villageId && c.CreatedOn.Year == year);
+            // Match cohorts whose program year (based on activation date) is the given year for this village
+            return db.Cohort.Count(c =>
+                c.VillageId == villageId &&
+                c.ActivatedOn.HasValue &&
+                c.ActivatedOn.Value.Year == year);
         }
 
         // ── Grower membership ──────────────────────────────────────────────────
