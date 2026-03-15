@@ -4,6 +4,17 @@ Feature: Tree Mentor Management
   I want to manage tree mentor accounts, village assignments, and grower assignments
   So that mentors can access exactly the data they need and no more
 
+  # Data model note:
+  # A Tree Mentor is an Oqtane user assigned the "Tree Mentor" role — there is no
+  # separate TreeMentor database table. The MentorProfile table extends the Oqtane
+  # user record with 10 Trees-specific fields (VillageId, etc.) using UserId as the
+  # foreign key. Deactivating a mentor means disabling the Oqtane user account;
+  # grower assignments (Grower.MentorId = UserId) are preserved.
+
+  Background:
+    Given the "Tree Mentor" role exists in Oqtane
+    And a MentorProfile record exists for each user in that role
+
   # ─── MENTOR LIST ─────────────────────────────────────────────────────────────
 
   Scenario: Admin views the tree mentor list
