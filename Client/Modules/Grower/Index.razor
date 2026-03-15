@@ -15,7 +15,7 @@
     <div class="row mb-3">
         <div class="col-md-4">
             <label for="statusFilter">@Localizer["Filter.Status"]</label>
-            <select id="statusFilter" class="form-select" @bind="_statusFilter" @bind:after="LoadGrowersAsync">
+            <select id="statusFilter" class="form-select" @bind="_statusFilter" @bind:after="NavigateWithFilters">
                 <option value="">@Localizer["Filter.AllStatuses"]</option>
                 <option value="@GrowerStatus.Active">@Localizer["Status.Active"]</option>
                 <option value="@GrowerStatus.Inactive">@Localizer["Status.Inactive"]</option>
@@ -24,7 +24,7 @@
         </div>
         <div class="col-md-4">
             <label for="villageFilter">@Localizer["Filter.Village"]</label>
-            <select id="villageFilter" class="form-select" @bind="_villageFilter" @bind:after="LoadGrowersAsync">
+            <select id="villageFilter" class="form-select" @bind="_villageFilter" @bind:after="NavigateWithFilters">
                 <option value="">@Localizer["Filter.AllVillages"]</option>
                 @if (_villages != null)
                 {
@@ -117,7 +117,7 @@
                         <td>@(grower.ExitDate?.ToString("yyyy-MM-dd") ?? "-")</td>
                         <td>
                             <ActionLink Action="Status" 
-                                       Parameters="@($"id={grower.GrowerId}")" 
+                                       Parameters="@($"id={grower.GrowerId}&returnurl={Uri.EscapeDataString(GetReturnUrl())}")" 
                                        Text="@Localizer["Action.ManageStatus"]" 
                                        ResourceKey="ManageStatus" 
                                        Class="btn btn-sm btn-primary" />
@@ -142,6 +142,8 @@
     {
         try
         {
+            _statusFilter = PageState.QueryString.GetValueOrDefault("status", "");
+            _villageFilter = PageState.QueryString.GetValueOrDefault("villageId", "");
             await LoadVillagesAsync();
             await LoadSummaryAsync();
             await LoadGrowersAsync();
@@ -172,23 +174,37 @@
 
         if (string.IsNullOrEmpty(_statusFilter))
         {
-            _growers = await GrowerService.GetAllGrowersAsync(ModuleState.ModuleId, villageId);
+            _growers = await GrowerService.GetAllGrowersAsync(ModuleState.ModuleId, villageId) ?? new List<Models.Grower>();
         }
         else
         {
             var status = (GrowerStatus)Enum.Parse(typeof(GrowerStatus), _statusFilter);
-            _growers = await GrowerService.GetGrowersByStatusAsync(status, ModuleState.ModuleId, villageId);
+            _growers = await GrowerService.GetGrowersByStatusAsync(status, ModuleState.ModuleId, villageId) ?? new List<Models.Grower>();
         }
 
         await LoadSummaryAsync();
         StateHasChanged();
     }
 
-    private async Task ClearFilters()
+    private void ClearFilters()
     {
-        _statusFilter = "";
-        _villageFilter = "";
-        await LoadGrowersAsync();
+        NavigationManager.NavigateTo(NavigateUrl());
+    }
+
+    private void NavigateWithFilters()
+    {
+        var parts = new List<string>();
+        if (!string.IsNullOrEmpty(_statusFilter))  parts.Add($"status={Uri.EscapeDataString(_statusFilter)}");
+        if (!string.IsNullOrEmpty(_villageFilter)) parts.Add($"villageId={Uri.EscapeDataString(_villageFilter)}");
+        NavigationManager.NavigateTo(NavigateUrl(PageState.Page.Path, string.Join("&", parts)));
+    }
+
+    private string GetReturnUrl()
+    {
+        var parts = new List<string>();
+        if (!string.IsNullOrEmpty(_statusFilter))  parts.Add($"status={Uri.EscapeDataString(_statusFilter)}");
+        if (!string.IsNullOrEmpty(_villageFilter)) parts.Add($"villageId={Uri.EscapeDataString(_villageFilter)}");
+        return NavigateUrl(PageState.Page.Path, string.Join("&", parts));
     }
 
     private string GetVillageName(int villageId)
