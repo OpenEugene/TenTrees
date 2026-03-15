@@ -130,7 +130,7 @@ namespace OpenEug.TenTrees.Module.Enrollment.Services
     public class MentorInfo
     {
         public string MentorId { get; set; }
-        public string TreeMentorName { get; set; }
+        public string MentorName { get; set; }
         public int VillageId { get; set; }
     }
 

@@ -17,7 +17,7 @@ Next steps
 
 Summary
 
-Tree Mentor System User Roles
+Mentor System User Roles
 
 Mark and Rebecca discussed the roles and responsibilities related to their app system. They clarified that growers do not use the system, while tree mentors are the first level of users who conduct interviews, complete onboarding forms, and handle release forms for potential participants. They also confirmed that tree mentors do not have an assignment portion in the system.
 
