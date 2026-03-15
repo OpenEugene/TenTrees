@@ -76,12 +76,29 @@ namespace OpenEug.TenTrees.Models
         
         // Status
         public EnrollmentStatus Status { get; set; }
+
+        // Photo Release Consent (captured separately after enrollment is Approved)
+        public PhotoConsentLevel PhotoConsentLevel { get; set; }
+
+        public bool PhotoConsentSignatureCollected { get; set; }
+
+        public DateTime? PhotoConsentSignatureDate { get; set; }
+
+        public string PhotoConsentSignatureData { get; set; }
     }
-    
+
     public enum EnrollmentStatus
     {
         Pending = 0,
         Approved = 1,
         Rejected = 2
+    }
+
+    public enum PhotoConsentLevel
+    {
+        NotCaptured = 0,
+        Full = 1,
+        Limited = 2,
+        None = 3
     }
 }

@@ -160,6 +160,28 @@ namespace OpenEug.TenTrees.Module.Enrollment.Services
                 return Task.FromResult(false);
             }
         }
+
+        public Task<bool> CapturePhotoConsentAsync(int enrollmentId, int moduleId, Models.PhotoConsentLevel consentLevel, string signatureData)
+        {
+            try
+            {
+                var enrollment = _enrollmentRepository.GetEnrollment(enrollmentId);
+                if (enrollment != null)
+                {
+                    enrollment.PhotoConsentLevel = consentLevel;
+                    enrollment.PhotoConsentSignatureData = signatureData;
+                    enrollment.PhotoConsentSignatureCollected = true;
+                    enrollment.PhotoConsentSignatureDate = System.DateTime.UtcNow;
+                    _enrollmentRepository.UpdateEnrollment(enrollment);
+                    return Task.FromResult(true);
+                }
+                return Task.FromResult(false);
+            }
+            catch
+            {
+                return Task.FromResult(false);
+            }
+        }
         
         public Task<MentorInfo> AutoFillMentorAsync(int UserId)
         {
