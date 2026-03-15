@@ -93,6 +93,20 @@ Feature: Tree Mentor Management
     Then she should be able to log in again
     And her previous village and grower assignments should be restored
 
+  # ─── COHORT ASSIGNMENT ───────────────────────────────────────────────────────
+
+  Scenario: Admin assigns a mentor to a cohort
+    Given I am logged in as a 10 Trees Admin
+    And cohort "Roebuck 1 2026" exists
+    When I edit cohort "Roebuck 1 2026"
+    And I assign mentor "Bondi" to the cohort
+    Then "Bondi" should appear in the assigned mentors list for "Roebuck 1 2026"
+
+  Scenario: Admin removes a mentor from a cohort
+    Given mentor "Bondi" is assigned to cohort "Roebuck 1 2026"
+    When I remove "Bondi" from cohort "Roebuck 1 2026" via the cohort edit screen
+    Then "Bondi" should no longer appear in the assigned mentors list
+
   # ─── GROWER ASSIGNMENT ───────────────────────────────────────────────────────
 
   Scenario: Admin assigns growers to a mentor
@@ -118,12 +132,22 @@ Feature: Tree Mentor Management
     And the grower should appear in "Bondi"'s assigned grower list
 
   # ─── MENTOR DATA ISOLATION ───────────────────────────────────────────────────
+  # Mentors are scoped to growers via cohort membership. A mentor sees all growers
+  # who belong to any cohort the mentor is assigned to. If a mentor has no cohort
+  # assignments, they fall back to seeing all growers in their assigned village.
 
-  Scenario: Mentor sees only her assigned growers
-    Given I am logged in as tree mentor "Bondi" with 10 assigned growers
+  Scenario: Mentor sees only growers from their assigned cohorts
+    Given I am logged in as tree mentor "Bondi"
+    And "Bondi" is assigned to cohort "Roebuck 1 2026" with 15 grower members
     When I navigate to the grower list
-    Then I should see exactly 10 growers
-    And I should not see growers assigned to other mentors
+    Then I should see exactly 15 growers
+    And I should not see growers who are not members of "Roebuck 1 2026"
+
+  Scenario: Mentor assigned to multiple cohorts sees growers from all of them
+    Given "Bondi" is assigned to cohorts "Roebuck 1 2026" and "Orpen Gate Village 2024"
+    And "Roebuck 1 2026" has 15 growers and "Orpen Gate Village 2024" has 10 growers (no overlap)
+    When I navigate to the grower list as "Bondi"
+    Then I should see 25 growers total
 
   Scenario: Mentor cannot access another mentor's grower record
     Given I am logged in as tree mentor "Bondi"
