@@ -220,8 +220,8 @@
             _cohorts = string.IsNullOrEmpty(_villageFilter)
                 ? new()
                 : await CohortService.GetCohortsByVillageAsync(int.Parse(_villageFilter));
+            _cohortGrowerIds = null;
         }
-        _cohortGrowerIds = null;
         await LoadGrowersAsync();
     }
 
