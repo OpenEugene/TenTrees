@@ -9,7 +9,7 @@ description: |
   Use this any time you create, edit, or review any Oqtane module component,
   service, controller, or repository in the PWApps workspace.
 author: Skiller
-version: 1.1.0
+version: 1.2.0
 date: 2025-07-14
 ---
 
@@ -104,6 +104,106 @@ Server/Repository/
 - Do not inject `ILogger` directly into components.
 - When registering a child component as a module control, pass the
   `RenderModeBoundary` parameter to correctly scope the render mode.
+
+### Reading Action Parameters (QueryString)
+
+Oqtane's module host (`RenderModeBoundary`) renders module components
+dynamically. It does **not** map URL querystring values to Blazor `[Parameter]`
+attributes. A `[Parameter] public string Id { get; set; }` on a module
+component will **always be null** at runtime.
+
+**Read action parameters from `PageState.QueryString` instead:**
+
+```csharp
+// WRONG — Id is never populated by the Oqtane module host
+[Parameter]
+public string Id { get; set; }
+
+protected override async Task OnParametersSetAsync()
+{
+    if (!string.IsNullOrEmpty(Id)) { ... }   // always skipped
+}
+
+// CORRECT
+protected override async Task OnParametersSetAsync()
+{
+    if (PageState.QueryString.ContainsKey("id"))
+    {
+        int id = int.Parse(PageState.QueryString["id"]);
+        ...
+    }
+}
+```
+
+`PageState` is a `CascadingParameter` from `ModuleBase` and is always
+populated before `OnParametersSetAsync` runs.
+
+For safe access in catch/log blocks use `GetValueOrDefault`:
+
+```csharp
+PageState.QueryString.GetValueOrDefault("id")
+```
+
+**How `ActionLink` passes parameters:**
+`ActionLink` with `Parameters="@($"id={someId}")"` calls
+`Utilities.ParseParameters`, which treats `id=123` as a querystring value
+(it prepends `?` if no leading `/`, `?`, or `#`). The generated URL is
+`/page/!/moduleId/ActionName?id=123`.
+
+**Confirmed in:** `Client/Modules/Enrollment/Edit.razor`
+
+```csharp
+_id = Int32.Parse(PageState.QueryString["id"]);
+```
+
+**Do not use `NavigateUrl(ModuleState.ModuleId, ...)` for page-level querystring navigation.**
+Oqtane's `EditUrl` (called by all `NavigateUrl(moduleId, ...)` overloads) appends
+`/!/moduleId` to the path. The `!` is Oqtane's **module admin delimiter** — any URL
+with that pattern opens the module inside the admin container modal. Use it only when
+intentionally navigating to a named module action (e.g. `Status`, `Edit`).
+
+**`NavigateUrl(string path, string querystring)`** calls `Utilities.NavigateUrl` directly —
+no `EditUrl`, no module ID. This is the correct helper for querystring-only navigation:
+
+```csharp
+// CORRECT — page URL + querystring, no module admin mode
+NavigationManager.NavigateTo(NavigateUrl(PageState.Page.Path, "status=Active&villageId=2"));
+
+// CORRECT — back to index, no querystring
+NavigationManager.NavigateTo(NavigateUrl());
+
+// WRONG — never build page URLs manually
+NavigationManager.NavigateTo($"/{PageState.Page.Path}?status=Active");  // misses alias handling
+```
+
+| Pattern | Produces | Use for |
+|---|---|---|
+| `NavigateUrl()` | `/grower` | Back to index |
+| `NavigateUrl(PageState.Page.Path, qs)` | `/grower?status=Active` | Filter navigation |
+| `EditUrl("Status", qs)` | `/grower/!/31/Status?id=5` | Module action links |
+attribute (.NET 7+, `[Parameter]` no longer required alongside it in .NET 8+)
+that binds a property from the URL querystring. It works when a *routing
+component* (one with `@page`) supplies the value through the Blazor router.
+Oqtane module components are **not** routed by Blazor — they are rendered
+dynamically by `RenderModeBoundary`, which does not participate in the Blazor
+routing cascade. `[SupplyParameterFromQuery]` will silently produce `null`
+in Oqtane module components for the same reason `[Parameter]` does.
+
+### OnParametersSetAsync vs OnInitializedAsync
+
+Use `OnParametersSetAsync` for data loading in module components. In Oqtane,
+`ModuleState` (a cascading parameter) is only guaranteed to be available by
+the time `OnParametersSetAsync` runs — not during `OnInitializedAsync`.
+
+When the service returns `null` (e.g. permissions not yet resolved on first
+render), default list fields to an empty collection rather than leaving them
+null so the template shows the empty-state message instead of a loading
+spinner:
+
+```csharp
+_growers = await GrowerService.GetAllGrowersAsync(ModuleState.ModuleId) 
+           ?? new List<Models.Grower>();
+```
 
 ---
 
