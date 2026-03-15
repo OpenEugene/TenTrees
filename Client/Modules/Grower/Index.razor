@@ -189,11 +189,24 @@
             if (_cohorts.Count > 0)
             {
                 var ids = new HashSet<int>();
+
+                // Fire all member lookups concurrently to avoid sequential N+1 latency.
+                var memberTasks = new List<Task<IEnumerable<YourCohortMemberType>>>();
                 foreach (var c in _cohorts)
                 {
-                    var members = await CohortService.GetGrowerCohortsAsync(c.CohortId);
-                    foreach (var m in members) ids.Add(m.GrowerId);
+                    memberTasks.Add(CohortService.GetGrowerCohortsAsync(c.CohortId));
                 }
+
+                var memberResults = await Task.WhenAll(memberTasks);
+
+                foreach (var members in memberResults)
+                {
+                    foreach (var m in members)
+                    {
+                        ids.Add(m.GrowerId);
+                    }
+                }
+
                 _cohortGrowerIds = ids;
             }
         }
