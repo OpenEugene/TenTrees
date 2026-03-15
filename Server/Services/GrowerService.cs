@@ -10,6 +10,7 @@ using Oqtane.Security;
 using Oqtane.Shared;
 using OpenEug.TenTrees.Module.Grower.Repository;
 using OpenEug.TenTrees.Models;
+using AppRoleNames = OpenEug.TenTrees.Shared.RoleNames;
 
 namespace OpenEug.TenTrees.Module.Grower.Services
 {
@@ -35,30 +36,38 @@ namespace OpenEug.TenTrees.Module.Grower.Services
             _alias = tenantManager.GetAlias();
         }
 
+        private bool IsMentor() => _accessor.HttpContext.User.IsInRole(AppRoleNames.Mentor);
+        private string CurrentUsername() => _accessor.HttpContext.User.Identity?.Name;
+
         public Task<Models.Grower> GetGrowerAsync(int growerId, int moduleId)
         {
-            if (_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.View))
-            {
-                return Task.FromResult(_growerRepository.GetGrower(growerId));
-            }
-            else
+            if (!_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.View))
             {
                 _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Grower Get Attempt {GrowerId} {ModuleId}", growerId, moduleId);
                 return null;
             }
+
+            var grower = _growerRepository.GetGrower(growerId);
+            if (grower != null && IsMentor() && grower.MentorId != CurrentUsername())
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Mentor Access Denied Grower {GrowerId}", growerId);
+                return Task.FromResult<Models.Grower>(null);
+            }
+            return Task.FromResult(grower);
         }
 
         public Task<List<Models.Grower>> GetAllGrowersAsync(int moduleId, int? villageId = null)
         {
-            if (_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.View))
-            {
-                return Task.FromResult(_growerRepository.GetAllGrowers(villageId).ToList());
-            }
-            else
+            if (!_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.View))
             {
                 _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized All Growers Get Attempt {ModuleId}", moduleId);
                 return null;
             }
+
+            var growers = _growerRepository.GetAllGrowers(villageId).ToList();
+            if (IsMentor())
+                growers = growers.Where(g => g.MentorId == CurrentUsername()).ToList();
+            return Task.FromResult(growers);
         }
 
         public Task<Models.Grower> ToggleActiveStatusAsync(int growerId, int moduleId)
@@ -137,41 +146,54 @@ namespace OpenEug.TenTrees.Module.Grower.Services
 
         public Task<List<Models.Grower>> GetActiveGrowersAsync(int moduleId, int? villageId = null)
         {
-            if (_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.View))
-            {
-                return Task.FromResult(_growerRepository.GetActiveGrowers(villageId).ToList());
-            }
-            else
+            if (!_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.View))
             {
                 _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Active Growers Get Attempt {ModuleId}", moduleId);
                 return null;
             }
+
+            var growers = _growerRepository.GetActiveGrowers(villageId).ToList();
+            if (IsMentor())
+                growers = growers.Where(g => g.MentorId == CurrentUsername()).ToList();
+            return Task.FromResult(growers);
         }
 
         public Task<List<Models.Grower>> GetGrowersByStatusAsync(GrowerStatus status, int moduleId, int? villageId = null)
         {
-            if (_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.View))
-            {
-                return Task.FromResult(_growerRepository.GetGrowersByStatus(status, villageId).ToList());
-            }
-            else
+            if (!_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.View))
             {
                 _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Growers By Status Get Attempt {ModuleId}", moduleId);
                 return null;
             }
+
+            var growers = _growerRepository.GetGrowersByStatus(status, villageId).ToList();
+            if (IsMentor())
+                growers = growers.Where(g => g.MentorId == CurrentUsername()).ToList();
+            return Task.FromResult(growers);
         }
 
         public Task<GrowerStatusSummary> GetStatusSummaryAsync(int moduleId, int? villageId = null)
         {
-            if (_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.View))
-            {
-                return Task.FromResult(_growerRepository.GetStatusSummary(villageId));
-            }
-            else
+            if (!_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.View))
             {
                 _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Status Summary Get Attempt {ModuleId}", moduleId);
                 return null;
             }
+
+            var summary = _growerRepository.GetStatusSummary(villageId);
+            if (IsMentor())
+            {
+                // Recompute summary scoped to this mentor's growers
+                var growers = _growerRepository.GetGrowersByMentor(CurrentUsername()).ToList();
+                summary = new GrowerStatusSummary
+                {
+                    Active = growers.Count(g => g.Status == GrowerStatus.Active),
+                    Inactive = growers.Count(g => g.Status == GrowerStatus.Inactive),
+                    Exited = growers.Count(g => g.Status == GrowerStatus.Exited),
+                    Total = growers.Count
+                };
+            }
+            return Task.FromResult(summary);
         }
 
         public Task<Models.Grower> UpdateGrowerAsync(Models.Grower grower, int moduleId)
