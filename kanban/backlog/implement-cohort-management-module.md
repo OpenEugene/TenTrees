@@ -12,18 +12,23 @@ They track program phases, drive assessment frequency, and scope funder reports.
 
 ## Checklist
 
-- [ ] DB table: `Cohort` (Id, VillageId, Name, CreatedDate) — SQL project
-- [ ] DB column: `Grower.CohortId` FK — SQL project
+- [ ] DB table: `Cohort` (Id, VillageId, Name, Status [Planned|Active|Completed], CreatedDate) — SQL project
+- [ ] DB table: `GrowerCohort` (GrowerCohortId, GrowerId, CohortId) — join table, replaces `Grower.CohortId` FK
+- [ ] DB table: `MentorCohort` (MentorCohortId, MentorId, CohortId) — join table
 - [ ] Server repository: `ICohortRepository` / `CohortRepository`
 - [ ] Server controller: `CohortController` (CRUD + list-by-village)
 - [ ] Client service: `CohortService`
-- [ ] Admin UI: Cohort management index (list, create, rename)
+- [ ] Admin UI: Cohort management index (list, create, rename, set status)
   - Auto-suggest name from village + year; allow override
   - Auto-increment number when village already has a cohort that year
-- [ ] Enrollment form: cohort selector when enrolling a grower
-- [ ] Grower list: cohort filter dropdown (admin sees all; mentor sees assigned cohort)
-- [ ] Cohort summary view: household count, enrollment date range, assigned mentors
-- [ ] Assessment schedule: derive frequency from cohort enrollment year (Year 1 = twice-monthly, Year 2 = monthly)
+  - Status transitions: Planned → Active → Completed
+  - Default filter hides Completed; "Show completed" toggle reveals them
+- [ ] Enrollment form: multi-select cohort picker (growers can belong to more than one)
+- [ ] Grower record: add/remove individual cohort memberships post-enrollment
+- [ ] Mentor assignment: assign mentor to one or more cohorts
+- [ ] Grower list: cohort filter (admin sees all; mentor sees union of their assigned cohorts)
+- [ ] Cohort summary view: member count, status, enrollment date range, assigned mentors
+- [ ] Assessment schedule: frequency is per-cohort based on cohort activation year, not grower's oldest cohort
 - [ ] Reporting: cohort scope filter on program reports and visit summary
 
 ## Source
