@@ -26,6 +26,11 @@ namespace OpenEug.TenTrees.Module.Cohort.Services
         Task<List<Models.Cohort>> GetCohortsByMentorAsync(string mentorId);
         Task<Models.MentorCohort> AssignMentorToCohortAsync(int cohortId, string mentorId);
         Task RemoveMentorFromCohortAsync(int cohortId, string mentorId);
+
+        Task<List<Models.CohortClass>> GetClassesForCohortAsync(int cohortId);
+        Task<List<Models.CohortClass>> GetCohortsForClassAsync(int trainingClassId);
+        Task<Models.CohortClass> AddCohortClassAsync(int cohortId, int trainingClassId);
+        Task RemoveCohortClassAsync(int cohortId, int trainingClassId);
     }
 
     public class CohortService : ServiceBase, ICohortService
@@ -82,5 +87,19 @@ namespace OpenEug.TenTrees.Module.Cohort.Services
 
         public async Task RemoveMentorFromCohortAsync(int cohortId, string mentorId)
             => await DeleteAsync($"{Apiurl}/{cohortId}/mentors/{mentorId}");
+
+        // ── Class association ──────────────────────────────────────────────────
+
+        public async Task<List<Models.CohortClass>> GetClassesForCohortAsync(int cohortId)
+            => await GetJsonAsync<List<Models.CohortClass>>($"{Apiurl}/{cohortId}/classes") ?? new();
+
+        public async Task<List<Models.CohortClass>> GetCohortsForClassAsync(int trainingClassId)
+            => await GetJsonAsync<List<Models.CohortClass>>($"{Apiurl}/class/{trainingClassId}/cohorts") ?? new();
+
+        public async Task<Models.CohortClass> AddCohortClassAsync(int cohortId, int trainingClassId)
+            => await PostJsonAsync<Models.CohortClass>($"{Apiurl}/{cohortId}/classes/{trainingClassId}", null);
+
+        public async Task RemoveCohortClassAsync(int cohortId, int trainingClassId)
+            => await DeleteAsync($"{Apiurl}/{cohortId}/classes/{trainingClassId}");
     }
 }
