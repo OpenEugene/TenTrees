@@ -232,16 +232,19 @@
         _attendanceSummaries = await TrainingService.GetAttendanceSummariesAsync(ModuleState.ModuleId, villageId);
         _summary = await TrainingService.GetTrainingStatusSummaryAsync(ModuleState.ModuleId, villageId);
 
-        // Load cohort names for each class
-        var allCohorts = await CohortService.GetCohortsAsync();
-        var cohortById = allCohorts.ToDictionary(c => c.CohortId, c => c.Name);
+        // Load cohort names for each class (admin users only, to avoid calling edit-only endpoints for viewers)
         _classCohorts = new();
-        foreach (var tc in _classes)
+        if (UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin))
         {
-            var links = await CohortService.GetCohortsForClassAsync(tc.TrainingClassId);
-            _classCohorts[tc.TrainingClassId] = links
-                .Select(l => cohortById.GetValueOrDefault(l.CohortId, $"#{l.CohortId}"))
-                .OrderBy(n => n).ToList();
+            var allCohorts = await CohortService.GetCohortsAsync();
+            var cohortById = allCohorts.ToDictionary(c => c.CohortId, c => c.Name);
+            foreach (var tc in _classes)
+            {
+                var links = await CohortService.GetCohortsForClassAsync(tc.TrainingClassId);
+                _classCohorts[tc.TrainingClassId] = links
+                    .Select(l => cohortById.GetValueOrDefault(l.CohortId, $"#{l.CohortId}"))
+                    .OrderBy(n => n).ToList();
+            }
         }
 
         StateHasChanged();
