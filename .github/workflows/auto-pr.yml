@@ -22,24 +22,22 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           BRANCH="${{ github.ref_name }}"
-
-          # Check if a PR already exists for this branch
           EXISTING_PR=$(gh pr list --head "$BRANCH" --json number --jq '.[0].number // empty')
-
+        
           if [ -z "$EXISTING_PR" ]; then
-            # Format branch name as PR title: replace - and _ with spaces, title-case
             TITLE=$(echo "$BRANCH" | sed 's/[-_]/ /g' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) tolower(substr($i,2)); print}')
-
-            gh pr create \
+            PR_URL=$(gh pr create \
               --title "$TITLE" \
               --body "Auto-created PR for branch \`$BRANCH\`." \
-              --base main \
-              --reviewer copilot
-
-            echo "PR created for branch: $BRANCH"
+              --base main)
+            PR_NUMBER=$(echo "$PR_URL" | grep -o '[0-9]*$')
+            echo "PR #$PR_NUMBER created for branch: $BRANCH"
           else
-            echo "PR #$EXISTING_PR already exists for branch: $BRANCH"
-
-            # Ensure Copilot is still requested as a reviewer
-            gh pr edit "$EXISTING_PR" --add-reviewer copilot || true
+            PR_NUMBER="$EXISTING_PR"
+            echo "PR #$PR_NUMBER already exists for branch: $BRANCH"
           fi
+          # Request Copilot review via API
+          
+          gh api repos/${{ github.repository }}/pulls/$PR_NUMBER/requested_reviewers \
+            --method POST \
+            -f 'reviewers[]=copilot' || echo "Copilot review request failed (may not be enabled on this repo)"

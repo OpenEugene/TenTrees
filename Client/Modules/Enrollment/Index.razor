@@ -1,6 +1,7 @@
 @using OpenEug.TenTrees.Module.Enrollment.Services
 @using OpenEug.TenTrees.Module.Village.Services
 @using OpenEug.TenTrees.Models
+@using System.Linq
 @page "/enrollment"
 
 @namespace OpenEug.TenTrees.Module.Enrollment
@@ -183,7 +184,11 @@
 
     private async Task LoadVillagesAsync()
     {
-        _villages = await VillageService.GetVillagesAsync();
+        _villages = UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin)
+            ? await VillageService.GetVillagesAsync()
+            : (await VillageService.GetActiveVillagesAsync())
+                .OrderBy(v => v.VillageName)
+                .ToList();
     }
 
     private async Task LoadEnrollmentsAsync()
