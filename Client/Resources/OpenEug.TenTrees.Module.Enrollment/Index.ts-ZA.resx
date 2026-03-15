@@ -45,4 +45,22 @@
   <data name="UnknownVillage" xml:space="preserve">
     <value>Rixaka ri nga Tiviwi</value>
   </data>
+  <data name="Column.PhotoConsent" xml:space="preserve">
+    <value>[XS] Photo Consent</value>
+  </data>
+  <data name="PhotoConsent" xml:space="preserve">
+    <value>[XS] Photo Consent</value>
+  </data>
+  <data name="ConsentLevel.NotCaptured" xml:space="preserve">
+    <value>[XS] Not Captured</value>
+  </data>
+  <data name="ConsentLevel.Full" xml:space="preserve">
+    <value>[XS] Full</value>
+  </data>
+  <data name="ConsentLevel.Limited" xml:space="preserve">
+    <value>[XS] Limited</value>
+  </data>
+  <data name="ConsentLevel.None" xml:space="preserve">
+    <value>[XS] None</value>
+  </data>
 </root>
