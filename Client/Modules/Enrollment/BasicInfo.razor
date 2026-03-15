@@ -1,5 +1,6 @@
 @using OpenEug.TenTrees.Module.Enrollment.Services
 @using OpenEug.TenTrees.Module.Village.Services
+@using OpenEug.TenTrees.Module.Cohort.Services
 @using Oqtane.Modules.Controls
 @using System.Linq
 
@@ -7,6 +8,7 @@
 @inherits ModuleBase
 @inject IEnrollmentService EnrollmentService
 @inject IVillageService VillageService
+@inject ICohortService CohortService
 @inject IEnrollmentStateService StateService
 @inject NavigationManager NavigationManager
 @inject IStringLocalizer<BasicInfo> Localizer
@@ -53,7 +55,8 @@
 
                     <div class="mb-3">
                         <Label For="villageid" ResourceKey="Village" ResourceType="@resourceType" Class="form-label fw-bold">Village: *</Label>
-                        <select id="villageid" class="form-select form-select-lg" @bind="@_villageId" required>
+                        <select id="villageid" class="form-select form-select-lg" @bind="@_villageId"
+                                @bind:after="OnVillageChanged" required>
                             <option value="0">@Localizer["Select"]</option>
                             @if (_villages != null)
                             {
@@ -65,6 +68,20 @@
                         </select>
                         <div class="invalid-feedback">@Localizer["Validation.Required"]</div>
                     </div>
+
+                    @if (_cohorts != null && _cohorts.Count > 0)
+                    {
+                        <div class="mb-3">
+                            <label class="form-label fw-bold" for="cohortid">Cohort (optional):</label>
+                            <select id="cohortid" class="form-select form-select-lg" @bind="@_cohortId">
+                                <option value="0">— none —</option>
+                                @foreach (var cohort in _cohorts)
+                                {
+                                    <option value="@cohort.CohortId">@cohort.Name</option>
+                                }
+                            </select>
+                        </div>
+                    }
 
                     <div class="mb-3">
                         <Label For="housenumber" ResourceKey="HouseNumber" ResourceType="@resourceType" Class="form-label fw-bold">House Number:</Label>
@@ -134,11 +151,13 @@
     private ElementReference form;
     private bool validated = false;
     private List<Models.Village> _villages;
+    private List<Models.Cohort> _cohorts = new();
     private List<UserInfo> _users;
 
     private string _mentorUsername;
     private string _growerName;
     private int _villageId;
+    private int _cohortId;
     private string _houseNumber;
     private string _idNumber;
     private DateTime? _birthDate;
@@ -171,6 +190,10 @@
                 _mentorUsername = StateService.CurrentDraft.MentorUsername ?? PageState.User.Username;
                 _growerName = StateService.CurrentDraft.GrowerName;
                 _villageId = StateService.CurrentDraft.VillageId;
+                _cohortId = StateService.CurrentDraft.CohortId ?? 0;
+                if (_villageId > 0)
+                    _cohorts = (await CohortService.GetCohortsByVillageAsync(_villageId))
+                        .Where(c => c.Status == Models.CohortStatus.Active).ToList();
                 _houseNumber = StateService.CurrentDraft.HouseNumber;
                 _idNumber = StateService.CurrentDraft.IdNumber;
                 _birthDate = StateService.CurrentDraft.BirthDate;
@@ -185,6 +208,15 @@
         }
     }
 
+    private async Task OnVillageChanged()
+    {
+        _cohortId = 0;
+        _cohorts = _villageId > 0
+            ? (await CohortService.GetCohortsByVillageAsync(_villageId))
+                .Where(c => c.Status == Models.CohortStatus.Active).ToList()
+            : new();
+    }
+
     private async Task NextStep()
     {
         try
@@ -194,6 +226,7 @@
             if (await interop.FormValid(form))
             {
                 // Save to draft state
+                StateService.CurrentDraft.CohortId = _cohortId > 0 ? _cohortId : null;
                 StateService.CurrentDraft.MentorUsername = _mentorUsername;
                 StateService.CurrentDraft.TreeMentorName = _users?.FirstOrDefault(u => u.Username == _mentorUsername)?.DisplayName ?? _mentorUsername;
                 StateService.CurrentDraft.GrowerName = _growerName;

@@ -1,0 +1,151 @@
+@using OpenEug.TenTrees.Module.Cohort.Services
+@using OpenEug.TenTrees.Models
+
+@page "/cohort"
+
+@namespace OpenEug.TenTrees.Module.Cohort
+@inherits ModuleBase
+@inject ICohortService CohortService
+@inject OpenEug.TenTrees.Module.Village.Services.IVillageService VillageService
+
+@if (_cohorts == null)
+{
+    <p role="status"><em>Loading...</em></p>
+}
+else
+{
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="d-flex gap-2 align-items-center">
+            <label class="form-label mb-0" for="statusFilter">Status:</label>
+            <select id="statusFilter" class="form-select form-select-sm" style="width: auto;" @bind="_statusFilter" @bind:after="ApplyFilter">
+                <option value="">Active &amp; Planned</option>
+                <option value="Planned">Planned</option>
+                <option value="Active">Active</option>
+                <option value="Completed">Completed</option>
+                <option value="All">All</option>
+            </select>
+        </div>
+        <ActionLink Action="Add" Text="Add Cohort" Class="btn btn-primary" Security="SecurityAccessLevel.Edit" />
+    </div>
+
+    @if (_filtered.Count != 0)
+    {
+        <table class="table table-striped align-middle">
+            <thead>
+                <tr>
+                    <th><span class="visually-hidden">Actions</span></th>
+                    <th>Name</th>
+                    <th>Village</th>
+                    <th>Status</th>
+                    <th>Members</th>
+                    <th>Activated</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var cohort in _filtered)
+                {
+                    <tr>
+                        <td style="white-space: nowrap;">
+                            <ActionLink Action="Edit" Parameters="@($"id={cohort.CohortId}")"
+                                        aria-label="@($"Edit cohort {cohort.Name}")" />
+                            <ActionDialog Header="Delete Cohort"
+                                          Message="@($"Delete cohort \"{cohort.Name}\"? This cannot be undone.")"
+                                          Action="Delete"
+                                          Security="SecurityAccessLevel.Edit"
+                                          Class="btn btn-sm btn-danger ms-1"
+                                          OnClick="@(async () => await Delete(cohort))"
+                                          aria-label="@($"Delete cohort {cohort.Name}")" />
+                        </td>
+                        <td>@cohort.Name</td>
+                        <td>@(_villageNames.GetValueOrDefault(cohort.VillageId, "—"))</td>
+                        <td>
+                            <span class="badge @StatusBadge(cohort.Status)">@cohort.Status</span>
+                        </td>
+                        <td>@(_memberCounts.GetValueOrDefault(cohort.CohortId, 0))</td>
+                        <td>@(cohort.ActivatedOn.HasValue ? cohort.ActivatedOn.Value.ToString("d MMM yyyy") : "—")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No cohorts found.</p>
+    }
+}
+
+@code {
+    public override SecurityAccessLevel SecurityAccessLevel => SecurityAccessLevel.Admin;
+
+    private List<Cohort> _cohorts;
+    private List<Cohort> _filtered = new();
+    private Dictionary<int, string> _villageNames = new();
+    private Dictionary<int, int> _memberCounts = new();
+    private string _statusFilter = "";
+
+    protected override async Task OnParametersSetAsync()
+    {
+        try
+        {
+            _cohorts = await CohortService.GetCohortsAsync();
+
+            // Load village names for display
+            var villages = await GetVillageNamesAsync();
+            _villageNames = villages;
+
+            // Load member counts
+            foreach (var c in _cohorts)
+                _memberCounts[c.CohortId] = (await CohortService.GetGrowerCohortsAsync(c.CohortId)).Count;
+
+            ApplyFilter();
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Loading Cohorts {Error}", ex.Message);
+            AddModuleMessage("Unable to load cohorts.", MessageType.Error);
+        }
+    }
+
+    private void ApplyFilter()
+    {
+        _filtered = _statusFilter switch
+        {
+            "Planned"   => _cohorts.Where(c => c.Status == CohortStatus.Planned).ToList(),
+            "Active"    => _cohorts.Where(c => c.Status == CohortStatus.Active).ToList(),
+            "Completed" => _cohorts.Where(c => c.Status == CohortStatus.Completed).ToList(),
+            "All"       => _cohorts,
+            _           => _cohorts.Where(c => c.Status != CohortStatus.Completed).ToList()
+        };
+    }
+
+    private async Task Delete(Cohort cohort)
+    {
+        try
+        {
+            await CohortService.DeleteCohortAsync(cohort.CohortId);
+            await logger.LogInformation("Cohort Deleted {Cohort}", cohort.Name);
+            _cohorts = await CohortService.GetCohortsAsync();
+            ApplyFilter();
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Deleting Cohort {Cohort} {Error}", cohort.Name, ex.Message);
+            AddModuleMessage("Unable to delete cohort.", MessageType.Error);
+        }
+    }
+
+    private static string StatusBadge(CohortStatus status) => status switch
+    {
+        CohortStatus.Planned   => "bg-secondary",
+        CohortStatus.Active    => "bg-success",
+        CohortStatus.Completed => "bg-dark opacity-50",
+        _                      => "bg-secondary"
+    };
+
+    private async Task<Dictionary<int, string>> GetVillageNamesAsync()
+    {
+        var villages = await VillageService.GetVillagesAsync();
+        return villages.ToDictionary(v => v.VillageId, v => v.VillageName);
+    }
+}

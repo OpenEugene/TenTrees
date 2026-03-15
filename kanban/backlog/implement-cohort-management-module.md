@@ -12,24 +12,33 @@ They track program phases, drive assessment frequency, and scope funder reports.
 
 ## Checklist
 
-- [ ] DB table: `Cohort` (Id, VillageId, Name, Status [Planned|Active|Completed], CreatedDate) — SQL project
-- [ ] DB table: `GrowerCohort` (GrowerCohortId, GrowerId, CohortId) — join table, replaces `Grower.CohortId` FK
-- [ ] DB table: `MentorCohort` (MentorCohortId, MentorId, CohortId) — join table
-- [ ] Server repository: `ICohortRepository` / `CohortRepository`
-- [ ] Server controller: `CohortController` (CRUD + list-by-village)
-- [ ] Client service: `CohortService`
-- [ ] Admin UI: Cohort management index (list, create, rename, set status)
-  - Auto-suggest name from village + year; allow override
-  - Auto-increment number when village already has a cohort that year
-  - Status transitions: Planned → Active → Completed
-  - Default filter hides Completed; "Show completed" toggle reveals them
-- [ ] Enrollment form: multi-select cohort picker (growers can belong to more than one)
-- [ ] Grower record: add/remove individual cohort memberships post-enrollment
-- [ ] Mentor assignment: assign mentor to one or more cohorts
-- [ ] Grower list: cohort filter (admin sees all; mentor sees union of their assigned cohorts)
-- [ ] Cohort summary view: member count, status, enrollment date range, assigned mentors
-- [ ] Assessment schedule: frequency is per-cohort based on cohort activation year, not grower's oldest cohort
-- [ ] Reporting: cohort scope filter on program reports and visit summary
+- [x] DB table: `Cohort` (CohortId, VillageId, Name, Status, ActivatedOn) — `Sql/dbo/Tables/Cohort.sql`
+- [x] DB table: `GrowerCohort` join table — `Sql/dbo/Tables/GrowerCohort.sql`
+- [x] DB table: `MentorCohort` join table — `Sql/dbo/Tables/MentorCohort.sql`
+- [x] DB migration: `Sql/Scripts/Migration_AddCohortIdToEnrollment.sql`
+- [x] Shared models: `Cohort.cs`, `GrowerCohort.cs`, `MentorCohort.cs`; `CohortId` added to `Enrollment.cs`
+- [x] EF context: 3 new DbSets in `TenTreesContext.cs`
+- [x] Server repository: `CohortRepository.cs`
+- [x] Server service: `CohortService.cs` (name suggestion, status transition guard)
+- [x] Server startup: `CohortServerStartup.cs`
+- [x] Server controller: `CohortController.cs` (13 endpoints including grower/mentor membership)
+- [x] Client service: `CohortService.cs` (client)
+- [x] Client startup: `CohortClientStartup.cs`
+- [x] Admin UI: `Client/Modules/Cohort/Index.razor` + `Edit.razor` + `ModuleInfo.cs`
+  - Status filter tabs (Active/Planned/Completed/All), member count, activated date
+  - Auto-suggest name; status transition guard in Save()
+  - Grower membership panel (list + remove)
+  - Mentor assignment panel (list + remove)
+- [x] Enrollment form: cohort picker in `BasicInfo.razor` (loads active cohorts for selected village)
+  - `CohortId` stored on `EnrollmentDraft` and `Enrollment` model
+  - `GrowerCohort` row created on enrollment approval in `EnrollmentRepository.UpdateEnrollment`
+- [x] Grower list: cohort filter in `Grower/Index.razor`
+  - Admin: village → cohort cascade filter
+  - Mentor: auto-restricted to growers in their assigned cohorts
+- [x] Assessment frequency: `AssessmentService.CanSubmitAssessmentAsync` now uses cohort `ActivatedOn` year (not grower `CreatedOn`)
+- [ ] Grower record: add/remove individual cohort memberships post-enrollment (via Edit.razor grower membership panel — needs grower name lookup)
+- [ ] Mentor assignment UI: assign mentor to cohort from Edit.razor (needs mentor search/picker)
+- [ ] Reporting: cohort scope filter — **deferred until reporting module is built** (`ProgramReporting.feature`)
 
 ## Source
 

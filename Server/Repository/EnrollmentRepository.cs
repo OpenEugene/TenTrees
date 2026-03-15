@@ -169,6 +169,21 @@ namespace OpenEug.TenTrees.Module.Enrollment.Repository
                 }
             }
 
+            // If approved and a cohort was selected, create GrowerCohort join if not already present
+            if (enrollment.Status == EnrollmentStatus.Approved && enrollment.GrowerId.HasValue && enrollment.CohortId.HasValue)
+            {
+                bool alreadyMember = db.GrowerCohort.Any(gc => gc.GrowerId == enrollment.GrowerId.Value && gc.CohortId == enrollment.CohortId.Value);
+                if (!alreadyMember)
+                {
+                    db.GrowerCohort.Add(new Models.GrowerCohort
+                    {
+                        GrowerId = enrollment.GrowerId.Value,
+                        CohortId = enrollment.CohortId.Value,
+                        JoinedOn = DateTime.UtcNow
+                    });
+                }
+            }
+
             // If enrollment is linked to a grower, update grower details too
             if (enrollment.GrowerId.HasValue)
             {

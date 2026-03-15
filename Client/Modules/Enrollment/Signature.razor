@@ -182,6 +182,7 @@
                 SignatureData = signatureData,
                 SignatureCollected = true,
                 SignatureDate = DateTime.UtcNow,
+                CohortId = StateService.CurrentDraft.CohortId,
                 Status = Models.EnrollmentStatus.Pending
             };
 
