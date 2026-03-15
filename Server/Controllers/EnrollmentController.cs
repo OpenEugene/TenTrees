@@ -182,6 +182,24 @@ namespace OpenEug.TenTrees.Module.Enrollment.Controllers
                 return false;
             }
         }
+
+        // POST api/<controller>/5/photoconsent
+        [HttpPost("{id}/photoconsent")]
+        [Authorize(Policy = PolicyNames.EditModule)]
+        public async Task<bool> CapturePhotoConsent(int id, [FromBody] PhotoConsentRequest request)
+        {
+            var enrollment = await _EnrollmentService.GetEnrollmentAsync(id, request.ModuleId);
+            if (enrollment != null && IsAuthorizedEntityId(EntityNames.Module, enrollment.ModuleId))
+            {
+                return await _EnrollmentService.CapturePhotoConsentAsync(id, request.ModuleId, request.ConsentLevel, request.SignatureData);
+            }
+            else
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Photo Consent Capture Attempt {EnrollmentId}", id);
+                HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                return false;
+            }
+        }
         
         // GET api/<controller>/mentor/5
         [HttpGet("mentor/{userid}")]
@@ -238,6 +256,13 @@ namespace OpenEug.TenTrees.Module.Enrollment.Controllers
     public class SignatureRequest
     {
         public int ModuleId { get; set; }
+        public string SignatureData { get; set; }
+    }
+
+    public class PhotoConsentRequest
+    {
+        public int ModuleId { get; set; }
+        public Models.PhotoConsentLevel ConsentLevel { get; set; }
         public string SignatureData { get; set; }
     }
 }

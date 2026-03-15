@@ -14,5 +14,6 @@ namespace OpenEug.TenTrees.Models
         public string VillageName { get; set; }
         public EnrollmentStatus EnrollmentStatus { get; set; }
         public GrowerStatus GrowerStatus { get; set; }
+        public PhotoConsentLevel PhotoConsentLevel { get; set; }
     }
 }
