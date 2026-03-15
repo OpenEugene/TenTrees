@@ -1,11 +1,13 @@
 @using OpenEug.TenTrees.Module.Cohort.Services
 @using OpenEug.TenTrees.Module.Village.Services
+@using OpenEug.TenTrees.Module.Training.Services
 @using OpenEug.TenTrees.Models
 
 @namespace OpenEug.TenTrees.Module.Cohort
 @inherits ModuleBase
 @inject ICohortService CohortService
 @inject IVillageService VillageService
+@inject ITrainingService TrainingService
 @inject NavigationManager NavigationManager
 
 <div class="container">
@@ -171,6 +173,62 @@
                             </tbody>
                         </table>
                     }
+
+                    @* ── Class association ──────────────────────────────────── *@
+                    <hr />
+                    <h5 class="mt-4"><span class="oi oi-book me-2" aria-hidden="true"></span>Linked Classes (@_cohortClasses.Count)</h5>
+
+                    @if (_availableClasses.Count > 0)
+                    {
+                        <div class="d-flex gap-2 align-items-center mb-2">
+                            <label class="form-label mb-0" for="classToAdd">Add class:</label>
+                            <select id="classToAdd" class="form-select form-select-sm" style="width: auto;" @bind="_classToAdd">
+                                <option value="0">— select —</option>
+                                @foreach (var c in _availableClasses)
+                                {
+                                    <option value="@c.TrainingClassId">@c.ClassName (@c.ClassDate.ToString("d MMM yyyy"))</option>
+                                }
+                            </select>
+                            <button class="btn btn-sm btn-outline-primary" @onclick="AddClass"
+                                    disabled="@(_classToAdd == 0)">
+                                <span class="oi oi-plus" aria-hidden="true"></span> Add
+                            </button>
+                        </div>
+                    }
+
+                    @if (_cohortClasses.Count == 0)
+                    {
+                        <p class="text-muted">No classes linked to this cohort.</p>
+                    }
+                    else
+                    {
+                        <table class="table table-sm align-middle mb-3">
+                            <thead>
+                                <tr>
+                                    <th>Class Name</th>
+                                    <th>Date</th>
+                                    <th><span class="visually-hidden">Actions</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var cc in _cohortClasses)
+                                {
+                                    var cls = _allClasses.FirstOrDefault(c => c.TrainingClassId == cc.TrainingClassId);
+                                    <tr>
+                                        <td>@(cls?.ClassName ?? $"Class {cc.TrainingClassId}")</td>
+                                        <td>@(cls?.ClassDate.ToString("d MMM yyyy") ?? "—")</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-danger"
+                                                    aria-label="@($"Remove class {cls?.ClassName ?? cc.TrainingClassId.ToString()} from cohort")"
+                                                    @onclick="@(async () => await RemoveClass(cc.TrainingClassId))">
+                                                <span class="oi oi-minus" aria-hidden="true"></span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
                 }
             }
         </div>
@@ -195,6 +253,10 @@
 
     private List<GrowerCohort> _growerCohorts = new();
     private List<MentorCohort> _mentorCohorts = new();
+    private List<CohortClass> _cohortClasses = new();
+    private List<TrainingClass> _allClasses = new();
+    private List<TrainingClass> _availableClasses = new();
+    private int _classToAdd;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -210,6 +272,8 @@
                 _originalStatus = _cohort.Status;
                 _growerCohorts = await CohortService.GetGrowerCohortsAsync(cohortId);
                 _mentorCohorts = await CohortService.GetMentorCohortsAsync(cohortId);
+                _cohortClasses = await CohortService.GetClassesForCohortAsync(cohortId);
+                await LoadAvailableClassesAsync();
             }
         }
         catch (Exception ex)
@@ -311,6 +375,49 @@
         {
             await logger.LogError(ex, "Error Removing Mentor {MentorId} from Cohort {Error}", mentorId, ex.Message);
             AddModuleMessage("Unable to remove mentor.", MessageType.Error);
+        }
+    }
+
+    private async Task LoadAvailableClassesAsync()
+    {
+        _allClasses = await TrainingService.GetTrainingClassesAsync(ModuleState.ModuleId,
+            _cohort.VillageId > 0 ? _cohort.VillageId : null);
+        var linked = _cohortClasses.Select(cc => cc.TrainingClassId).ToHashSet();
+        _availableClasses = _allClasses.Where(c => !linked.Contains(c.TrainingClassId))
+            .OrderByDescending(c => c.ClassDate).ToList();
+    }
+
+    private async Task AddClass()
+    {
+        if (_classToAdd == 0) return;
+        try
+        {
+            await CohortService.AddCohortClassAsync(_cohort.CohortId, _classToAdd);
+            _cohortClasses = await CohortService.GetClassesForCohortAsync(_cohort.CohortId);
+            _classToAdd = 0;
+            await LoadAvailableClassesAsync();
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Adding Class {ClassId} to Cohort {Error}", _classToAdd, ex.Message);
+            AddModuleMessage("Unable to add class.", MessageType.Error);
+        }
+    }
+
+    private async Task RemoveClass(int trainingClassId)
+    {
+        try
+        {
+            await CohortService.RemoveCohortClassAsync(_cohort.CohortId, trainingClassId);
+            _cohortClasses = await CohortService.GetClassesForCohortAsync(_cohort.CohortId);
+            await LoadAvailableClassesAsync();
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Removing Class {ClassId} from Cohort {Error}", trainingClassId, ex.Message);
+            AddModuleMessage("Unable to remove class.", MessageType.Error);
         }
     }
 

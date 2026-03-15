@@ -31,6 +31,12 @@ namespace OpenEug.TenTrees.Module.Cohort.Repository
         IEnumerable<Models.Cohort> GetCohortsByMentor(string mentorId);
         Models.MentorCohort AddMentorCohort(string mentorId, int cohortId);
         void DeleteMentorCohort(string mentorId, int cohortId);
+
+        // Class association
+        IEnumerable<Models.CohortClass> GetClassesForCohort(int cohortId);
+        IEnumerable<Models.CohortClass> GetCohortsForClass(int trainingClassId);
+        Models.CohortClass AddCohortClass(int cohortId, int trainingClassId);
+        void DeleteCohortClass(int cohortId, int trainingClassId);
     }
 
     public class CohortRepository : ICohortRepository, ITransientService
@@ -159,6 +165,40 @@ namespace OpenEug.TenTrees.Module.Cohort.Repository
             var mc = db.MentorCohort.FirstOrDefault(x => x.MentorId == mentorId && x.CohortId == cohortId);
             if (mc == null) return;
             db.MentorCohort.Remove(mc);
+            db.SaveChanges();
+        }
+
+        // ── Class association ──────────────────────────────────────────────────
+
+        public IEnumerable<Models.CohortClass> GetClassesForCohort(int cohortId)
+        {
+            using var db = _factory.CreateDbContext();
+            return db.CohortClass.Where(cc => cc.CohortId == cohortId).ToList();
+        }
+
+        public IEnumerable<Models.CohortClass> GetCohortsForClass(int trainingClassId)
+        {
+            using var db = _factory.CreateDbContext();
+            return db.CohortClass.Where(cc => cc.TrainingClassId == trainingClassId).ToList();
+        }
+
+        public Models.CohortClass AddCohortClass(int cohortId, int trainingClassId)
+        {
+            using var db = _factory.CreateDbContext();
+            var existing = db.CohortClass.FirstOrDefault(cc => cc.CohortId == cohortId && cc.TrainingClassId == trainingClassId);
+            if (existing != null) return existing;
+            var cc = new Models.CohortClass { CohortId = cohortId, TrainingClassId = trainingClassId };
+            db.CohortClass.Add(cc);
+            db.SaveChanges();
+            return cc;
+        }
+
+        public void DeleteCohortClass(int cohortId, int trainingClassId)
+        {
+            using var db = _factory.CreateDbContext();
+            var cc = db.CohortClass.FirstOrDefault(x => x.CohortId == cohortId && x.TrainingClassId == trainingClassId);
+            if (cc == null) return;
+            db.CohortClass.Remove(cc);
             db.SaveChanges();
         }
     }

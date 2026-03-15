@@ -140,5 +140,31 @@ namespace OpenEug.TenTrees.Module.Cohort.Controllers
         [Authorize(Policy = PolicyNames.EditModule)]
         public async Task DeleteMentorCohort(int id, string mentorId)
             => await _cohortService.DeleteMentorCohortAsync(mentorId, id);
+
+        // ── Class association ──────────────────────────────────────────────────
+
+        // GET api/<controller>/5/classes
+        [HttpGet("{id}/classes")]
+        [Authorize(Policy = PolicyNames.ViewModule)]
+        public async Task<IEnumerable<Models.CohortClass>> GetClassesForCohort(int id)
+            => await _cohortService.GetClassesForCohortAsync(id);
+
+        // GET api/<controller>/class/7/cohorts
+        [HttpGet("class/{classId}/cohorts")]
+        [Authorize(Policy = PolicyNames.ViewModule)]
+        public async Task<IEnumerable<Models.CohortClass>> GetCohortsForClass(int classId)
+            => await _cohortService.GetCohortsForClassAsync(classId);
+
+        // POST api/<controller>/5/classes/7
+        [HttpPost("{id}/classes/{classId}")]
+        [Authorize(Policy = PolicyNames.EditModule)]
+        public async Task<Models.CohortClass> AddCohortClass(int id, int classId)
+            => await _cohortService.AddCohortClassAsync(id, classId);
+
+        // DELETE api/<controller>/5/classes/7
+        [HttpDelete("{id}/classes/{classId}")]
+        [Authorize(Policy = PolicyNames.EditModule)]
+        public async Task DeleteCohortClass(int id, int classId)
+            => await _cohortService.DeleteCohortClassAsync(id, classId);
     }
 }
