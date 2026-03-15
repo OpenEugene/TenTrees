@@ -62,14 +62,14 @@ enforces data isolation so mentors only see their own assigned growers and villa
 - [ ] Grower count updates immediately after assignment change
 
 ### Data Isolation (server-enforced)
-- [ ] All grower list and detail endpoints filter by `MentorId = currentUserId` for Tree Mentor role
+- [ ] All grower list and detail endpoints filter by `Grower.MentorId == User.Identity.Name` (mentor username) for Tree Mentor role
 - [ ] Admin and Educator roles bypass the filter (see all)
-- [ ] Direct URL access to a grower not assigned to the logged-in mentor returns 403
+- [ ] Direct URL access to a grower not assigned to the logged-in mentor (by username in `Grower.MentorId`) returns 403
 - [ ] Village-scoped dropdowns return active-only villages filtered to mentor's assigned village
 
 ### Mentor Auto-Assignment at Enrollment
-- [ ] When a Tree Mentor submits a new enrollment, `Grower.MentorId` is set to their user ID automatically
-- [ ] Staff submitting on behalf of a mentor can override the MentorId field
+- [ ] When a Tree Mentor submits a new enrollment, `Grower.MentorId` is set to their username (e.g., `User.Identity.Name`) automatically
+- [ ] Staff submitting on behalf of a mentor can override the MentorId field (mentor username)
 
 ### Permissions
 - [ ] Module only visible/accessible to users with Admin role
