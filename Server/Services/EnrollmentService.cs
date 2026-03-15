@@ -10,6 +10,7 @@ using Oqtane.Shared;
 using OpenEug.TenTrees.Module.Enrollment.Repository;
 using OpenEug.TenTrees.Models;
 using Oqtane.Repository;
+using AppRoleNames = OpenEug.TenTrees.Shared.RoleNames;
 
 namespace OpenEug.TenTrees.Module.Enrollment.Services
 {
@@ -32,43 +33,59 @@ namespace OpenEug.TenTrees.Module.Enrollment.Services
             _alias = tenantManager.GetAlias();
         }
 
+        private bool IsMentor() => _accessor.HttpContext.User.IsInRole(AppRoleNames.Mentor);
+        private string CurrentUsername() => _accessor.HttpContext.User.Identity?.Name;
+
         public Task<List<Models.Enrollment>> GetEnrollmentsAsync(int moduleId)
         {
-            if (_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.View))
-            {
-                return Task.FromResult(_enrollmentRepository.GetEnrollments(moduleId).ToList());
-            }
-            else
+            if (!_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.View))
             {
                 _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Enrollment Get Attempt {ModuleId}", moduleId);
                 return null;
             }
+
+            var enrollments = _enrollmentRepository.GetEnrollments(moduleId).ToList();
+            if (IsMentor())
+                enrollments = enrollments.Where(e => e.MentorId == CurrentUsername()).ToList();
+            return Task.FromResult(enrollments);
         }
 
         public Task<List<EnrollmentListViewModel>> GetEnrollmentListViewModelsAsync(int moduleId)
         {
-            if (_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.View))
-            {
-                return Task.FromResult(_enrollmentRepository.GetEnrollmentListViewModels(moduleId).ToList());
-            }
-            else
+            if (!_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.View))
             {
                 _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Enrollment List ViewModel Get Attempt {ModuleId}", moduleId);
                 return null;
             }
+
+            var viewModels = _enrollmentRepository.GetEnrollmentListViewModels(moduleId).ToList();
+            if (IsMentor())
+            {
+                // Filter to enrollments that belong to this mentor via the raw Enrollment table
+                var mentorEnrollmentIds = _enrollmentRepository.GetEnrollments(moduleId)
+                    .Where(e => e.MentorId == CurrentUsername())
+                    .Select(e => e.EnrollmentId)
+                    .ToHashSet();
+                viewModels = viewModels.Where(e => mentorEnrollmentIds.Contains(e.EnrollmentId)).ToList();
+            }
+            return Task.FromResult(viewModels);
         }
 
         public Task<Models.Enrollment> GetEnrollmentAsync(int enrollmentId, int moduleId)
         {
-            if (_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.View))
-            {
-                return Task.FromResult(_enrollmentRepository.GetEnrollment(enrollmentId));
-            }
-            else
+            if (!_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.View))
             {
                 _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Enrollment Get Attempt {EnrollmentId} {ModuleId}", enrollmentId, moduleId);
                 return null;
             }
+
+            var enrollment = _enrollmentRepository.GetEnrollment(enrollmentId);
+            if (enrollment != null && IsMentor() && enrollment.MentorId != CurrentUsername())
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Mentor Access Denied Enrollment {EnrollmentId}", enrollmentId);
+                return Task.FromResult<Models.Enrollment>(null);
+            }
+            return Task.FromResult(enrollment);
         }
 
         public Task<Models.Enrollment> AddEnrollmentAsync(Models.Enrollment enrollment)
