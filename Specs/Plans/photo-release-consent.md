@@ -764,7 +764,7 @@ Execute in this order to avoid compile errors:
 8. **New razor component** — create `PhotoConsent.razor`
 9. **Index.razor** — add column header, badge cell, conditional action link, helper methods
 10. **Resource files** — create `PhotoConsent.resx` + `PhotoConsent.ts-ZA.resx`; add keys to `Index.resx` + `Index.ts-ZA.resx`
-11. **Database schema** — apply the 4 new columns via the project's schema tool
+11. **Database schema** — apply the 4 new columns via the project's schema tool (no separate `Sql/Scripts/Migration_AddPhotoConsent.sql` migration script; rely on the schema tool to generate and apply the changes)
 12. **Build and test**
 
 ---
