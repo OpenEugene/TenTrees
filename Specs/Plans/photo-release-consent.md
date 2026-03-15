@@ -799,5 +799,5 @@ Execute in this order to avoid compile errors:
 | `Client/Resources/.../PhotoConsent.ts-ZA.resx` | **New file** |
 | `Client/Resources/.../Index.resx` | Add 6 keys |
 | `Client/Resources/.../Index.ts-ZA.resx` | Add 6 keys |
-| `Sql/dbo/Tables/Enrollment.sql` | Add 4 columns to DDL |
-| `Sql/dbo/Tables/Enrollment.sql` updated DDL | Apply via project schema tool |
+| `Sql/dbo/Tables/Enrollment.sql` | Add 4 columns to DDL (applied via project schema tool) |
+
