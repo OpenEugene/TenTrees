@@ -1,10 +1,12 @@
 @using OpenEug.TenTrees.Module.Grower.Services
+@using OpenEug.TenTrees.Module.Cohort.Services
 @using OpenEug.TenTrees.Models
 @using Oqtane.UI
 
 @namespace OpenEug.TenTrees.Module.Grower
 @inherits ModuleBase
 @inject IGrowerService GrowerService
+@inject ICohortService CohortService
 @inject NavigationManager NavigationManager
 @inject IStringLocalizer<Status> Localizer
 @inject IJSRuntime JSRuntime
@@ -165,6 +167,63 @@ else
             </div>
         }
 
+        <!-- Cohort Membership -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5><span class="oi oi-layers me-2" aria-hidden="true"></span>Cohorts</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-flex flex-wrap align-items-center gap-2">
+                    @foreach (var cohort in _growerCohorts)
+                    {
+                        @if (_pendingRemoveCohortId == cohort.CohortId)
+                        {
+                            <span class="badge bg-warning text-dark d-inline-flex align-items-center gap-1 py-2 px-2">
+                                Remove <strong>@cohort.Name</strong>?
+                                <button class="btn btn-sm btn-warning border-0 py-0 px-1 fw-bold"
+                                        aria-label="Confirm remove @cohort.Name"
+                                        @onclick="@(async () => await RemoveGrowerCohort(cohort.CohortId))">Yes</button>
+                                <button class="btn btn-sm btn-outline-secondary border-0 py-0 px-1"
+                                        aria-label="Cancel remove @cohort.Name"
+                                        @onclick="@(() => _pendingRemoveCohortId = 0)">No</button>
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-primary d-inline-flex align-items-center gap-1 py-2 px-2">
+                                @cohort.Name
+                                @if (UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin))
+                                {
+                                    <button class="btn-close btn-close-white ms-1"
+                                            style="font-size:0.55em;"
+                                            aria-label="@($"Remove cohort {cohort.Name}")"
+                                            @onclick="@(() => _pendingRemoveCohortId = cohort.CohortId)"></button>
+                                }
+                            </span>
+                        }
+                    }
+
+                    @if (UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin) && _availableCohorts.Count > 0)
+                    {
+                        <select class="form-select form-select-sm d-inline-block w-auto"
+                                aria-label="Add cohort"
+                                @bind="_cohortToAdd" @bind:after="AddGrowerCohort">
+                            <option value="0">+ Add cohort…</option>
+                            @foreach (var c in _availableCohorts)
+                            {
+                                <option value="@c.CohortId">@c.Name</option>
+                            }
+                        </select>
+                    }
+
+                    @if (_growerCohorts.Count == 0 && _availableCohorts.Count == 0)
+                    {
+                        <span class="text-muted small">No cohorts assigned.</span>
+                    }
+                </div>
+            </div>
+        </div>
+
         <!-- Back Button -->
         <button class="btn btn-secondary" @onclick="NavigateToIndex">
             <i class="bi bi-arrow-left"></i> @Localizer["Action.BackToList"]
@@ -176,6 +235,10 @@ else
     private Models.Grower _grower;
     private bool _isLoading = true;
     private bool _showExitForm = false;
+    private List<Models.Cohort> _growerCohorts = new();
+    private List<Models.Cohort> _availableCohorts = new();
+    private int _cohortToAdd;
+    private int _pendingRemoveCohortId;
     private DateTime _exitDate = DateTime.Today;
     private string _exitReason = "";
     private string _exitNotes = "";
@@ -196,10 +259,14 @@ else
                 _isLoading = true;
                 int growerId = int.Parse(Id);
                 _grower = await GrowerService.GetGrowerAsync(growerId, ModuleState.ModuleId);
-                
+
                 if (_grower == null)
                 {
                     await logger.LogWarning("Grower {Id} not found or unauthorized", Id);
+                }
+                else
+                {
+                    await LoadCohortDataAsync();
                 }
             }
         }
@@ -299,6 +366,50 @@ else
         {
             await logger.LogError(ex, "Error Recording Exit {GrowerId} {Error}", _grower.GrowerId, ex.Message);
             AddModuleMessage(Localizer["Message.ExitRecordError"], MessageType.Error);
+        }
+    }
+
+    private async Task LoadCohortDataAsync()
+    {
+        _growerCohorts = await CohortService.GetCohortsByGrowerAsync(_grower.GrowerId);
+        var villageCohorts = await CohortService.GetCohortsByVillageAsync(_grower.VillageId);
+        var linked = _growerCohorts.Select(c => c.CohortId).ToHashSet();
+        _availableCohorts = villageCohorts
+            .Where(c => !linked.Contains(c.CohortId) && c.Status != Models.CohortStatus.Completed)
+            .OrderBy(c => c.Name).ToList();
+    }
+
+    private async Task AddGrowerCohort()
+    {
+        if (_cohortToAdd == 0) return;
+        try
+        {
+            await CohortService.AddGrowerToCohortAsync(_cohortToAdd, _grower.GrowerId);
+            _cohortToAdd = 0;
+            _pendingRemoveCohortId = 0;
+            await LoadCohortDataAsync();
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error adding Grower {Id} to Cohort {Error}", _grower.GrowerId, ex.Message);
+            AddModuleMessage("Unable to add cohort.", MessageType.Error);
+        }
+    }
+
+    private async Task RemoveGrowerCohort(int cohortId)
+    {
+        try
+        {
+            await CohortService.RemoveGrowerFromCohortAsync(cohortId, _grower.GrowerId);
+            _pendingRemoveCohortId = 0;
+            await LoadCohortDataAsync();
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error removing Grower {Id} from Cohort {Error}", _grower.GrowerId, ex.Message);
+            AddModuleMessage("Unable to remove cohort.", MessageType.Error);
         }
     }
 
