@@ -5,14 +5,14 @@ Feature: Tree Mentor Management
   So that mentors can access exactly the data they need and no more
 
   # Data model note:
-  # A Tree Mentor is an Oqtane user assigned the "Tree Mentor" role — there is no
+  # A Tree Mentor is an Oqtane user assigned the "Mentor" role — there is no
   # separate TreeMentor database table. The MentorProfile table extends the Oqtane
   # user record with 10 Trees-specific fields (VillageId, etc.) using UserId as the
   # foreign key. Deactivating a mentor means disabling the Oqtane user account;
   # grower assignments (Grower.MentorId = UserId) are preserved.
 
   Background:
-    Given the "Tree Mentor" role exists in Oqtane
+    Given the "Mentor" role exists in Oqtane
     And a MentorProfile record exists for each user in that role
 
   # ─── MENTOR LIST ─────────────────────────────────────────────────────────────
@@ -20,7 +20,7 @@ Feature: Tree Mentor Management
   Scenario: Admin views the tree mentor list
     Given I am logged in as a 10 Trees Admin
     When I navigate to the Tree Mentor management page
-    Then I should see a list of all users with the "Tree Mentor" role
+    Then I should see a list of all users with the "Mentor" role
     And each row should show:
       | Column          |
       | Name            |
@@ -53,7 +53,7 @@ Feature: Tree Mentor Management
       | Village  | Orpen Gate Village     |
     And I click "Save"
     Then a new Oqtane user account should be created for "Thandi Nkosi"
-    And the "Tree Mentor" role should be assigned to the account
+    And the "Mentor" role should be assigned to the account
     And the village "Orpen Gate Village" should be recorded on the mentor profile
     And the mentor should appear in the mentor list
 
