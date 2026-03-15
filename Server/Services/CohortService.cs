@@ -29,6 +29,11 @@ namespace OpenEug.TenTrees.Module.Cohort.Services
         Task<List<Models.Cohort>> GetCohortsByMentorAsync(string mentorId);
         Task<Models.MentorCohort> AddMentorCohortAsync(string mentorId, int cohortId);
         Task DeleteMentorCohortAsync(string mentorId, int cohortId);
+
+        Task<List<Models.CohortClass>> GetClassesForCohortAsync(int cohortId);
+        Task<List<Models.CohortClass>> GetCohortsForClassAsync(int trainingClassId);
+        Task<Models.CohortClass> AddCohortClassAsync(int cohortId, int trainingClassId);
+        Task DeleteCohortClassAsync(int cohortId, int trainingClassId);
     }
 
     public class ServerCohortService : ICohortService
@@ -139,6 +144,28 @@ namespace OpenEug.TenTrees.Module.Cohort.Services
         {
             _cohortRepository.DeleteMentorCohort(mentorId, cohortId);
             _logger.Log(LogLevel.Information, this, LogFunction.Delete, "Mentor {MentorId} removed from Cohort {CohortId}", mentorId, cohortId);
+            return Task.CompletedTask;
+        }
+
+        // ── Class association ──────────────────────────────────────────────────
+
+        public Task<List<Models.CohortClass>> GetClassesForCohortAsync(int cohortId)
+            => Task.FromResult(_cohortRepository.GetClassesForCohort(cohortId).ToList());
+
+        public Task<List<Models.CohortClass>> GetCohortsForClassAsync(int trainingClassId)
+            => Task.FromResult(_cohortRepository.GetCohortsForClass(trainingClassId).ToList());
+
+        public Task<Models.CohortClass> AddCohortClassAsync(int cohortId, int trainingClassId)
+        {
+            var cc = _cohortRepository.AddCohortClass(cohortId, trainingClassId);
+            _logger.Log(LogLevel.Information, this, LogFunction.Create, "Class {TrainingClassId} linked to Cohort {CohortId}", trainingClassId, cohortId);
+            return Task.FromResult(cc);
+        }
+
+        public Task DeleteCohortClassAsync(int cohortId, int trainingClassId)
+        {
+            _cohortRepository.DeleteCohortClass(cohortId, trainingClassId);
+            _logger.Log(LogLevel.Information, this, LogFunction.Delete, "Class {TrainingClassId} unlinked from Cohort {CohortId}", trainingClassId, cohortId);
             return Task.CompletedTask;
         }
     }
