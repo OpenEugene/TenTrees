@@ -206,7 +206,9 @@
 
     private async Task LoadVillagesAsync()
     {
-        _villages = await VillageService.GetVillagesAsync();
+        _villages = UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin)
+            ? await VillageService.GetVillagesAsync()
+            : await VillageService.GetActiveVillagesAsync();
     }
 
     private async Task LoadDataAsync()
