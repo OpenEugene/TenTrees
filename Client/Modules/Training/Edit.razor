@@ -264,7 +264,7 @@
         }
         catch (Exception ex)
         {
-            await logger.LogError(ex, "Error Linking Cohort {CohortId} to Class {Error}", _cohortToAdd, ex.Message);
+            await logger.LogError(ex, "Error Linking Cohort {CohortId} to Class {ClassId}. Error: {Error}", _cohortToAdd, _id, ex.Message);
             AddModuleMessage(Localizer["Message.SaveError"], MessageType.Error);
         }
     }
@@ -281,7 +281,7 @@
         }
         catch (Exception ex)
         {
-            await logger.LogError(ex, "Error Unlinking Cohort {CohortId} from Class {Error}", cohortId, ex.Message);
+            await logger.LogError(ex, "Error Unlinking Cohort {CohortId} from Class {ClassId}. Error: {Error}", cohortId, _id, ex.Message);
             AddModuleMessage(Localizer["Message.SaveError"], MessageType.Error);
         }
     }
