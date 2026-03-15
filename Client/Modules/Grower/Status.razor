@@ -288,9 +288,16 @@ else
     private void NavigateToIndex()
     {
         if (PageState.QueryString.ContainsKey("returnurl"))
-            NavigationManager.NavigateTo(PageState.QueryString["returnurl"]);
-        else
-            NavigationManager.NavigateTo(NavigateUrl());
+        {
+            var returnUrl = PageState.QueryString["returnurl"];
+            if (!string.IsNullOrWhiteSpace(returnUrl))
+            {
+                NavigationManager.NavigateTo(Uri.UnescapeDataString(returnUrl));
+                return;
+            }
+        }
+
+        NavigationManager.NavigateTo(NavigateUrl());
     }
 
     private string GetStatusBadgeClass(GrowerStatus status)
