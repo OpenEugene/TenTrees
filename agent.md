@@ -5,7 +5,7 @@ This is the 10 Trees Digital Platform - a Blazor WebAssembly application built o
 
 ## Task & Issue Tracking
 
-All tasks and issues are tracked on the **local Kanban board** at `/home/user/10Trees/kanban/`. When the user refers to "tasks", "issues", or "what to work on next", always look there — never assume GitHub Issues or any external tracker.
+All tasks and issues are tracked on the **local Kanban board** at `./kanban/`. When the user refers to "tasks", "issues", or "what to work on next", always look there — never assume GitHub Issues or any external tracker.
 
 ## Communication Guidelines
 - **DO NOT create summary documents** - Just do the work and report completion
