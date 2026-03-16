@@ -1,3 +1,4 @@
+@using Microsoft.AspNetCore.Components.Forms
 @using OpenEug.TenTrees.Module.Cohort.Services
 @using OpenEug.TenTrees.Module.Village.Services
 @using OpenEug.TenTrees.Module.Training.Services
@@ -26,19 +27,20 @@
                 <div class="row mb-3 align-items-center">
                     <label class="col-sm-3 col-form-label" for="village">Village</label>
                     <div class="col-sm-9">
-                        <select id="village"
-                                class="form-select @(_invalidFields.Contains("VillageId") ? "is-invalid" : "")"
-                                @bind="_cohort.VillageId"
-                                @bind:after="OnVillageChanged"
-                                aria-required="true"
-                                aria-invalid="@(_invalidFields.Contains("VillageId") ? "true" : null)"
-                                disabled="@(_isEdit)">
+                        <InputSelect id="village"
+                                     class="@($"form-select {(_invalidFields.Contains("VillageId") ? "is-invalid" : string.Empty)}")"
+                                     TValue="int"
+                                     @bind-Value="_cohort.VillageId"
+                                     @bind-Value:after="OnVillageChanged"
+                                     aria-required="true"
+                                     aria-invalid="@(_invalidFields.Contains("VillageId") ? "true" : null)"
+                                     disabled="@_isEdit">
                             <option value="0">— select village —</option>
                             @foreach (var v in _villages)
                             {
                                 <option value="@v.VillageId">@v.VillageName</option>
                             }
-                        </select>
+                        </InputSelect>
                     </div>
                 </div>
 
@@ -289,11 +291,24 @@
 
     private async Task OnVillageChanged()
     {
-        if (_cohort.VillageId > 0 && !_isEdit)
+        if (_cohort.VillageId <= 0)
         {
-            _suggestedName = await CohortService.GetSuggestedNameAsync(_cohort.VillageId, DateTime.Now.Year);
-            if (string.IsNullOrWhiteSpace(_cohort.Name))
+            _suggestedName = null;
+            return;
+        }
+
+        if (!_isEdit)
+        {
+            try
+            {
+                _suggestedName = await CohortService.GetSuggestedNameAsync(_cohort.VillageId, DateTime.UtcNow.Year);
                 _cohort.Name = _suggestedName;
+                StateHasChanged();
+            }
+            catch (Exception ex)
+            {
+                await logger.LogError(ex, "Error generating suggested cohort name {Error}", ex.Message);
+            }
         }
     }
 
@@ -304,6 +319,8 @@
         ClearModuleMessage();
         _invalidFields.Clear();
 
+        _cohort.Name = _cohort.Name?.Trim();
+
         var missing = new List<string>();
         if (_cohort.VillageId == 0) { _invalidFields.Add("VillageId"); missing.Add("Village"); }
         if (string.IsNullOrWhiteSpace(_cohort.Name)) { _invalidFields.Add("Name"); missing.Add("Name"); }
@@ -311,6 +328,19 @@
         if (missing.Count > 0)
         {
             AddModuleMessage($"Required: {string.Join(", ", missing)}", MessageType.Warning);
+            await ScrollToPageTop();
+            return;
+        }
+
+        var allCohorts = await CohortService.GetCohortsAsync();
+        var duplicateExists = allCohorts.Any(c =>
+            c.CohortId != _cohort.CohortId &&
+            string.Equals(c.Name?.Trim(), _cohort.Name, StringComparison.OrdinalIgnoreCase));
+
+        if (duplicateExists)
+        {
+            _invalidFields.Add("Name");
+            AddModuleMessage("Cohort name must be unique.", MessageType.Warning);
             await ScrollToPageTop();
             return;
         }

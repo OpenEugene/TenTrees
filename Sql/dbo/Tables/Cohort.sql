@@ -9,5 +9,6 @@ CREATE TABLE [dbo].[Cohort] (
     [ModifiedBy]  NVARCHAR (256) NOT NULL,
     [ModifiedOn]  DATETIME2 (7)  NOT NULL,
     CONSTRAINT [PK_Cohort] PRIMARY KEY CLUSTERED ([CohortId] ASC),
-    CONSTRAINT [FK_Cohort_Village] FOREIGN KEY ([VillageId]) REFERENCES [dbo].[Village] ([VillageId])
+    CONSTRAINT [FK_Cohort_Village] FOREIGN KEY ([VillageId]) REFERENCES [dbo].[Village] ([VillageId]),
+    CONSTRAINT [UQ_Cohort_Name] UNIQUE ([Name])
 );
