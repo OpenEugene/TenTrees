@@ -7,6 +7,7 @@ using Oqtane.Enums;
 using Models = OpenEug.TenTrees.Models;
 using OpenEug.TenTrees.Module.Cohort.Repository;
 using OpenEug.TenTrees.Module.Village.Repository;
+using Oqtane.Shared;
 
 namespace OpenEug.TenTrees.Module.Cohort.Services
 {
@@ -63,16 +64,38 @@ namespace OpenEug.TenTrees.Module.Cohort.Services
             var village = _villageRepository.GetVillage(villageId);
             if (village == null) return Task.FromResult(string.Empty);
 
-            var count = _cohortRepository.CountCohortsForVillageYear(villageId, year);
-            var name = count == 0
-                ? $"{village.VillageName} {year}"
-                : $"{village.VillageName} {count + 1} {year}";
+            var baseName = $"{village.VillageName} {year}";
+            if (!_cohortRepository.CohortNameExists(baseName))
+            {
+                return Task.FromResult(baseName);
+            }
 
-            return Task.FromResult(name);
+            var sequence = 2;
+            string candidate;
+            do
+            {
+                candidate = $"{village.VillageName} {sequence} {year}";
+                sequence++;
+            }
+            while (_cohortRepository.CohortNameExists(candidate));
+
+            return Task.FromResult(candidate);
         }
 
         public Task<Models.Cohort> AddCohortAsync(Models.Cohort cohort)
         {
+            cohort.Name = cohort.Name?.Trim();
+
+            if (string.IsNullOrWhiteSpace(cohort.Name))
+            {
+                throw new InvalidOperationException("Cohort name is required.");
+            }
+
+            if (_cohortRepository.CohortNameExists(cohort.Name))
+            {
+                throw new InvalidOperationException("Cohort name must be unique.");
+            }
+
             cohort = _cohortRepository.AddCohort(cohort);
             _logger.Log(LogLevel.Information, this, LogFunction.Create, "Cohort Added {Cohort}", cohort);
             return Task.FromResult(cohort);
@@ -85,6 +108,18 @@ namespace OpenEug.TenTrees.Module.Cohort.Services
             {
                 _logger.Log(LogLevel.Warning, this, LogFunction.Update, "Attempt to revert completed cohort {CohortId} rejected", cohort.CohortId);
                 return Task.FromResult(existing);
+            }
+
+            cohort.Name = cohort.Name?.Trim();
+
+            if (string.IsNullOrWhiteSpace(cohort.Name))
+            {
+                throw new InvalidOperationException("Cohort name is required.");
+            }
+
+            if (_cohortRepository.CohortNameExists(cohort.Name, cohort.CohortId))
+            {
+                throw new InvalidOperationException("Cohort name must be unique.");
             }
 
             // Set or preserve ActivatedOn for Active cohorts

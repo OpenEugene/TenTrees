@@ -49,7 +49,7 @@ namespace OpenEug.TenTrees.Module.Cohort.Services
             => await GetJsonAsync<Models.Cohort>($"{Apiurl}/{cohortId}");
 
         public async Task<string> GetSuggestedNameAsync(int villageId, int year)
-            => await GetJsonAsync<string>($"{Apiurl}/suggest?villageId={villageId}&year={year}") ?? string.Empty;
+            => (await GetJsonAsync<CohortNameSuggestionDto>($"{Apiurl}/suggest?villageId={villageId}&year={year}"))?.Name ?? string.Empty;
 
         public async Task<Models.Cohort> AddCohortAsync(Models.Cohort cohort)
             => await PostJsonAsync<Models.Cohort>(Apiurl, cohort);
@@ -101,5 +101,10 @@ namespace OpenEug.TenTrees.Module.Cohort.Services
 
         public async Task RemoveCohortClassAsync(int cohortId, int trainingClassId)
             => await DeleteAsync($"{Apiurl}/{cohortId}/classes/{trainingClassId}");
+
+        private class CohortNameSuggestionDto
+        {
+            public string Name { get; set; }
+        }
     }
 }
