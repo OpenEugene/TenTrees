@@ -103,12 +103,12 @@ namespace OpenEug.TenTrees.Module.Mentor.Controllers
             await _mentorService.SetMentorActiveAsync(username, isActive: false, moduleId);
         }
 
-        // PUT api/mentor/grower/{growerId}?newMentorId=xxx&moduleId=x
+        // PUT api/mentor/grower/{growerId}?newMentorUsername=xxx&moduleId=x
         [HttpPut("grower/{growerId}")]
         [Authorize(Policy = PolicyNames.EditModule)]
-        public async Task ReassignGrower(int growerId, string newMentorId, int moduleId)
+        public async Task ReassignGrower(int growerId, string newMentorUsername, int moduleId)
         {
-            await _mentorService.ReassignGrowerAsync(growerId, newMentorId, moduleId);
+            await _mentorService.ReassignGrowerAsync(growerId, newMentorUsername, moduleId);
         }
     }
 }

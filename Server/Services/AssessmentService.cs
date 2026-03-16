@@ -88,7 +88,7 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
                 if (!isAdmin)
                 {
                     var grower = _growerRepository.GetGrower(growerId);
-                    if (grower == null || grower.MentorId != _accessor.HttpContext.User.Identity.Name)
+                    if (grower == null || grower.MentorUsername != _accessor.HttpContext.User.Identity.Name)
                     {
                         _logger.Log(LogLevel.Error, this, LogFunction.Security, "User {User} is not assigned to grower {GrowerId}", _accessor.HttpContext.User.Identity.Name, growerId);
                         return Task.FromResult<List<Models.Assessment>>(null);
@@ -115,7 +115,7 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
                 }
 
                 bool isAdmin = _accessor.HttpContext.User.IsInRole(RoleNames.Admin);
-                if (!isAdmin && grower.MentorId != _accessor.HttpContext.User.Identity.Name)
+                if (!isAdmin && grower.MentorUsername != _accessor.HttpContext.User.Identity.Name)
                 {
                     _logger.Log(LogLevel.Error, this, LogFunction.Security, "User {User} is not assigned to grower {GrowerId}", _accessor.HttpContext.User.Identity.Name, assessment.GrowerId);
                     return Task.FromResult<Models.Assessment>(null);
@@ -207,7 +207,7 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
             }
 
             bool isAdmin = _accessor.HttpContext.User.IsInRole(RoleNames.Admin);
-            if (!isAdmin && grower.MentorId != _accessor.HttpContext.User.Identity.Name)
+            if (!isAdmin && grower.MentorUsername != _accessor.HttpContext.User.Identity.Name)
             {
                 return Task.FromResult(false);
             }
