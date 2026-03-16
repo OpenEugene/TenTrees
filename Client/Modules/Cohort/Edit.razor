@@ -301,8 +301,19 @@
         {
             try
             {
+                var previousSuggestedName = _suggestedName;
                 _suggestedName = await CohortService.GetSuggestedNameAsync(_cohort.VillageId, DateTime.UtcNow.Year);
-                _cohort.Name = _suggestedName;
+
+                var currentName = _cohort.Name;
+                var shouldApplySuggestion =
+                    string.IsNullOrWhiteSpace(currentName) ||
+                    string.Equals(currentName, previousSuggestedName, StringComparison.Ordinal);
+
+                if (shouldApplySuggestion)
+                {
+                    _cohort.Name = _suggestedName;
+                }
+
                 StateHasChanged();
             }
             catch (Exception ex)
