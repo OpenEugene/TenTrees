@@ -35,7 +35,7 @@ namespace OpenEug.TenTrees.Models
         
         // Enrollment metadata
         [Required]
-        public string MentorId { get; set; }
+        public string MentorUsername { get; set; }
         
         public string MentorName { get; set; }
         

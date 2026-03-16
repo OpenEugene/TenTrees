@@ -48,10 +48,10 @@ namespace OpenEug.TenTrees.Module.Mentor.Services
                 CreateAuthorizationPolicyUrl($"{ApiUrl}/{username}/{action}?moduleId={moduleId}", EntityNames.Module, moduleId));
         }
 
-        public async Task ReassignGrowerAsync(int growerId, string newMentorId, int moduleId)
+        public async Task ReassignGrowerAsync(int growerId, string newMentorUsername, int moduleId)
         {
             await PutAsync(
-                CreateAuthorizationPolicyUrl($"{ApiUrl}/grower/{growerId}?newMentorId={newMentorId ?? ""}&moduleId={moduleId}", EntityNames.Module, moduleId));
+                CreateAuthorizationPolicyUrl($"{ApiUrl}/grower/{growerId}?newMentorUsername={newMentorUsername ?? ""}&moduleId={moduleId}", EntityNames.Module, moduleId));
         }
     }
 }
