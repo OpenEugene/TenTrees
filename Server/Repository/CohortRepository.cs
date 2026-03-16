@@ -16,6 +16,7 @@ namespace OpenEug.TenTrees.Module.Cohort.Repository
         Models.Cohort AddCohort(Models.Cohort cohort);
         Models.Cohort UpdateCohort(Models.Cohort cohort);
         void DeleteCohort(int cohortId);
+        bool CohortNameExists(string name, int? excludeCohortId = null);
 
         // Cohort name suggestion support
         int CountCohortsForVillageYear(int villageId, int year);
@@ -89,6 +90,17 @@ namespace OpenEug.TenTrees.Module.Cohort.Repository
             if (cohort == null) return;
             db.Cohort.Remove(cohort);
             db.SaveChanges();
+        }
+
+        public bool CohortNameExists(string name, int? excludeCohortId = null)
+        {
+            using var db = _factory.CreateDbContext();
+            var query = db.Cohort.Where(c => c.Name == name);
+            if (excludeCohortId.HasValue)
+            {
+                query = query.Where(c => c.CohortId != excludeCohortId.Value);
+            }
+            return query.Any();
         }
 
         public int CountCohortsForVillageYear(int villageId, int year)
