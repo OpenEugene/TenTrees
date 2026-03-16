@@ -10,6 +10,7 @@ using Oqtane.Controllers;
 using System.Net;
 using System.Threading.Tasks;
 using OpenEug.TenTrees.Module.Cohort.Services;
+using System;
 
 namespace OpenEug.TenTrees.Module.Cohort.Controllers
 {
@@ -61,24 +62,34 @@ namespace OpenEug.TenTrees.Module.Cohort.Controllers
         // POST api/<controller>
         [HttpPost]
         [Authorize(Policy = PolicyNames.EditModule)]
-        public async Task<Models.Cohort> Post([FromBody] Models.Cohort cohort)
+        public async Task<ActionResult<Models.Cohort>> Post([FromBody] Models.Cohort cohort)
         {
             if (!ModelState.IsValid)
             {
                 _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Cohort Post Attempt {Cohort}", cohort);
-                HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                return null;
+                // Preserve existing behavior of returning 403 for invalid model state.
+                return StatusCode(StatusCodes.Status403Forbidden);
             }
 
             try
             {
-                return await _cohortService.AddCohortAsync(cohort);
+                var createdCohort = await _cohortService.AddCohortAsync(cohort);
+                return createdCohort;
             }
             catch (System.InvalidOperationException ex)
             {
                 _logger.Log(LogLevel.Warning, this, LogFunction.Create, "Invalid Cohort Post Attempt {Error}", ex.Message);
-                HttpContext.Response.StatusCode = (int)HttpStatusCode.Conflict;
-                return null;
+
+                var message = ex.Message ?? string.Empty;
+                // Treat "name required" as a validation error (400 Bad Request).
+                if (message.IndexOf("name", StringComparison.OrdinalIgnoreCase) >= 0 &&
+                    message.IndexOf("required", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    return BadRequest(new { error = ex.Message });
+                }
+
+                // Other invalid operations (e.g., "name not unique") are conflicts (409 Conflict).
+                return Conflict(new { error = ex.Message });
             }
         }
 
