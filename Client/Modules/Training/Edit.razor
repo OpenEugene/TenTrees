@@ -151,7 +151,7 @@
     private List<Models.Cohort> _allCohorts = new();
     private List<Models.Cohort> _availableCohorts = new();
     private int _cohortToAdd;
-    private int _pendingRemoveCohortId;
+    private int? _pendingRemoveCohortId;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -258,7 +258,7 @@
             await CohortService.AddCohortClassAsync(_cohortToAdd, _id);
             _linkedCohorts = await CohortService.GetCohortsForClassAsync(_id);
             _cohortToAdd = 0;
-            _pendingRemoveCohortId = 0;
+            _pendingRemoveCohortId = null;
             await RefreshAvailableCohortsAsync();
             StateHasChanged();
         }
@@ -269,13 +269,19 @@
         }
     }
 
-    private async Task RemoveCohort(int cohortId)
+    private async Task RemoveCohort(int? cohortId)
     {
+        if (!cohortId.HasValue)
+        {
+            _pendingRemoveCohortId = null;
+            return;
+        }
+
         try
         {
-            await CohortService.RemoveCohortClassAsync(cohortId, _id);
+            await CohortService.RemoveCohortClassAsync(cohortId.Value, _id);
             _linkedCohorts = await CohortService.GetCohortsForClassAsync(_id);
-            _pendingRemoveCohortId = 0;
+            _pendingRemoveCohortId = null;
             await RefreshAvailableCohortsAsync();
             StateHasChanged();
         }
