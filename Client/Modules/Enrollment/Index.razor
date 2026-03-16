@@ -120,7 +120,7 @@
                         <td><ActionLink Action="Edit" Parameters="@($"id={enrollment.EnrollmentId}")" ResourceKey="Edit" /></td>
                         <td><ActionDialog Header="Delete Enrollment" Message="Are You Sure You Wish To Delete This Enrollment?" Action="Delete" Security="SecurityAccessLevel.Edit" Class="btn btn-danger" OnClick="@(async () => await Delete(enrollment))" ResourceKey="Delete" Id="@enrollment.EnrollmentId.ToString()" /></td>
                         <td>@enrollment.GrowerName</td>
-                        <td>@enrollment.MentorName</td>
+                        <td>@enrollment.MentorUserName</td>
                         <td>@(string.IsNullOrEmpty(enrollment.VillageName) ? Localizer["UnknownVillage"] : enrollment.VillageName)</td>
                         <td>
                             <span class="badge @GetEnrollmentStatusBadgeClass(enrollment.EnrollmentStatus)">
