@@ -150,7 +150,7 @@ namespace OpenEug.TenTrees.Module.Enrollment.Repository
                     {
                         GrowerName = enrollment.GrowerName,
                         VillageId = enrollment.VillageId,
-                        MentorId = enrollment.MentorId,
+                        MentorUsername = enrollment.MentorUsername,
                         HouseNumber = enrollment.HouseNumber,
                         IdNumber = enrollment.IdNumber,
                         BirthDate = enrollment.BirthDate,
@@ -193,7 +193,7 @@ namespace OpenEug.TenTrees.Module.Enrollment.Repository
                     // Update grower details from enrollment
                     grower.GrowerName = enrollment.GrowerName;
                     grower.VillageId = enrollment.VillageId;
-                    grower.MentorId = enrollment.MentorId;
+                    grower.MentorUsername = enrollment.MentorUsername;
                     grower.HouseNumber = enrollment.HouseNumber;
                     grower.IdNumber = enrollment.IdNumber;
                     grower.BirthDate = enrollment.BirthDate;
@@ -269,7 +269,7 @@ namespace OpenEug.TenTrees.Module.Enrollment.Repository
                         {
                             GrowerName = enrollment.GrowerName,
                             VillageId = enrollment.VillageId,
-                            MentorId = enrollment.MentorId,
+                            MentorUsername = enrollment.MentorUsername,
                             HouseNumber = enrollment.HouseNumber,
                             IdNumber = enrollment.IdNumber,
                             BirthDate = enrollment.BirthDate,
