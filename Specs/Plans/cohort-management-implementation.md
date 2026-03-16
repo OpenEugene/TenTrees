@@ -33,8 +33,7 @@ CREATE TABLE [dbo].[Cohort] (
     [CreatedOn]  DATETIME2 (7)  NOT NULL,
     [ModifiedBy] NVARCHAR (256) NOT NULL,
     [ModifiedOn] DATETIME2 (7)  NOT NULL,
-    CONSTRAINT [PK_Cohort] PRIMARY KEY CLUSTERED ([CohortId] ASC),
-    CONSTRAINT [FK_Cohort_Village] FOREIGN KEY ([VillageId]) REFERENCES [dbo].[Village] ([VillageId])
+    CONSTRAINT [PK_Cohort] PRIMARY KEY CLUSTERED ([CohortId] ASC)
 );
 ```
 
@@ -46,8 +45,6 @@ CREATE TABLE [dbo].[GrowerCohort] (
     [CohortId]       INT           NOT NULL,
     [JoinedOn]       DATETIME2 (7) NOT NULL,
     CONSTRAINT [PK_GrowerCohort] PRIMARY KEY CLUSTERED ([GrowerCohortId] ASC),
-    CONSTRAINT [FK_GrowerCohort_Grower] FOREIGN KEY ([GrowerId]) REFERENCES [dbo].[Grower] ([GrowerId]),
-    CONSTRAINT [FK_GrowerCohort_Cohort] FOREIGN KEY ([CohortId]) REFERENCES [dbo].[Cohort] ([CohortId]),
     CONSTRAINT [UQ_GrowerCohort] UNIQUE ([GrowerId], [CohortId])
 );
 ```
@@ -56,11 +53,10 @@ CREATE TABLE [dbo].[GrowerCohort] (
 ```sql
 CREATE TABLE [dbo].[MentorCohort] (
     [MentorCohortId] INT            IDENTITY (1, 1) NOT NULL,
-    [MentorId]       NVARCHAR (256) NOT NULL,   -- Oqtane UserId (string)
+    [MentorId]       NVARCHAR (256) NOT NULL,   -- mentor username
     [CohortId]       INT            NOT NULL,
     [AssignedOn]     DATETIME2 (7)  NOT NULL,
     CONSTRAINT [PK_MentorCohort] PRIMARY KEY CLUSTERED ([MentorCohortId] ASC),
-    CONSTRAINT [FK_MentorCohort_Cohort] FOREIGN KEY ([CohortId]) REFERENCES [dbo].[Cohort] ([CohortId]),
     CONSTRAINT [UQ_MentorCohort] UNIQUE ([MentorId], [CohortId])
 );
 ```
