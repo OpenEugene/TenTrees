@@ -1,0 +1,183 @@
+@using OpenEug.TenTrees.Module.Mentor.Services
+@using OpenEug.TenTrees.Module.Village.Services
+@using OpenEug.TenTrees.Models
+
+@namespace OpenEug.TenTrees.Module.Mentor
+@inherits ModuleBase
+@inject IMentorService MentorService
+@inject IVillageService VillageService
+
+@if (!_isLoaded)
+{
+    <p role="status"><em>Loading...</em></p>
+}
+else
+{
+    <div class="container-fluid">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4><span class="oi oi-people me-2" aria-hidden="true"></span>Mentors</h4>
+            <ActionLink Action="Edit" Text="Add Mentor" IconName="plus" Class="btn btn-primary" />
+        </div>
+
+        <!-- Filters -->
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label class="form-label" for="filterVillage">Village</label>
+                <select id="filterVillage" class="form-select" @bind="_villageFilter">
+                    <option value="0">All Villages</option>
+                    @foreach (var v in _villages)
+                    {
+                        <option value="@v.VillageId">@v.VillageName</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label" for="filterName">Name / Username</label>
+                <input id="filterName" type="text" class="form-control" @bind="_nameFilter" @bind:event="oninput" placeholder="Search…" />
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <div class="form-check mb-2">
+                    <input id="showInactive" type="checkbox" class="form-check-input" @bind="_showInactive" />
+                    <label class="form-check-label" for="showInactive">Show inactive</label>
+                </div>
+            </div>
+        </div>
+
+        @{
+            var filtered = FilteredMentors();
+        }
+
+        @if (!filtered.Any())
+        {
+            <p class="text-muted">No mentors found.</p>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Village</th>
+                            <th class="text-center">Growers</th>
+                            <th class="text-center">Status</th>
+                            <th><span class="visually-hidden">Actions</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var mentor in filtered)
+                        {
+                            <tr class="@(mentor.IsDeleted ? "table-secondary text-muted" : "")">
+                                <td>@mentor.DisplayName</td>
+                                <td><code>@mentor.Username</code></td>
+                                <td>@mentor.Email</td>
+                                <td>@(mentor.VillageName ?? "—")</td>
+                                <td class="text-center">@mentor.GrowerCount</td>
+                                <td class="text-center">
+                                    @if (mentor.IsDeleted)
+                                    {
+                                        <span class="badge bg-secondary">Inactive</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success">Active</span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="d-flex gap-1">
+                                        <ActionLink Action="Edit"
+                                                    Parameters="@($"username={Uri.EscapeDataString(mentor.Username)}")"
+                                                    Class="btn btn-sm btn-outline-primary"
+                                                    AltText="@($"Edit {mentor.DisplayName}")"
+                                                    IconName="pencil" />
+                                        @if (mentor.IsDeleted)
+                                        {
+                                            <button type="button"
+                                                    class="btn btn-sm btn-outline-success"
+                                                    aria-label="@($"Activate {mentor.DisplayName}")"
+                                                    disabled="@_isBusy"
+                                                    @onclick="@(() => ToggleActive(mentor, true))">
+                                                <span class="oi oi-circle-check" aria-hidden="true"></span>
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <button type="button"
+                                                    class="btn btn-sm btn-outline-warning"
+                                                    aria-label="@($"Deactivate {mentor.DisplayName}")"
+                                                    disabled="@_isBusy"
+                                                    @onclick="@(() => ToggleActive(mentor, false))">
+                                                <span class="oi oi-ban" aria-hidden="true"></span>
+                                            </button>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private List<MentorViewModel> _mentors = new();
+    private List<Village> _villages = new();
+    private bool _isLoaded;
+    private bool _isBusy;
+    private int _villageFilter;
+    private string _nameFilter = "";
+    private bool _showInactive;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _mentors = await MentorService.GetMentorsAsync(ModuleState.ModuleId) ?? new List<MentorViewModel>();
+        _villages = await VillageService.GetVillagesAsync() ?? new List<Village>();
+        _isLoaded = true;
+    }
+
+    private IEnumerable<MentorViewModel> FilteredMentors()
+    {
+        var q = _mentors.AsEnumerable();
+
+        if (!_showInactive)
+            q = q.Where(m => !m.IsDeleted);
+
+        if (_villageFilter > 0)
+            q = q.Where(m => m.VillageId == _villageFilter);
+
+        if (!string.IsNullOrWhiteSpace(_nameFilter))
+        {
+            var f = _nameFilter.Trim().ToLowerInvariant();
+            q = q.Where(m =>
+                (m.DisplayName?.ToLowerInvariant().Contains(f) ?? false) ||
+                (m.Username?.ToLowerInvariant().Contains(f) ?? false));
+        }
+
+        return q.OrderBy(m => m.DisplayName);
+    }
+
+    private async Task ToggleActive(MentorViewModel mentor, bool activate)
+    {
+        _isBusy = true;
+        ClearModuleMessage();
+        try
+        {
+            await MentorService.SetMentorActiveAsync(mentor.Username, activate, ModuleState.ModuleId);
+            mentor.IsDeleted = !activate;
+            AddModuleMessage($"Mentor {mentor.DisplayName} {(activate ? "activated" : "deactivated")}.", MessageType.Success);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error toggling mentor active state for {Username}", mentor.Username);
+            AddModuleMessage("An error occurred. Please try again.", MessageType.Error);
+        }
+        finally
+        {
+            _isBusy = false;
+        }
+    }
+}
