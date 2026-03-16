@@ -98,13 +98,29 @@ namespace OpenEug.TenTrees.Module.Mentor.Services
                 return null;
             }
 
+            // Normalize and validate required fields before creating the Oqtane user
+            var username = model.Username?.Trim();
+            if (string.IsNullOrWhiteSpace(username))
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Create, "Failed to create Oqtane user for mentor: Username is required");
+                return null;
+            }
+
+            var displayName = !string.IsNullOrWhiteSpace(model.DisplayName)
+                ? model.DisplayName.Trim()
+                : username;
+
+            var email = string.IsNullOrWhiteSpace(model.Email)
+                ? null
+                : model.Email.Trim();
+
             // Create the Oqtane user
             var user = new User
             {
                 SiteId = _alias.SiteId,
-                Username = model.Username.Trim(),
-                DisplayName = model.DisplayName?.Trim() ?? model.Username.Trim(),
-                Email = model.Email?.Trim(),
+                Username = username,
+                DisplayName = displayName,
+                Email = email,
                 Password = model.Password,
                 EmailConfirmed = model.EmailConfirmed,
                 IsAuthenticated = true  // admin path — skips password requirement
