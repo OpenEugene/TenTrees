@@ -159,12 +159,12 @@
                                 @foreach (var mc in _mentorCohorts)
                                 {
                                     <tr>
-                                        <td>@mc.MentorId</td>
+                                        <td>@mc.MentorUsername</td>
                                         <td>@mc.AssignedOn.ToString("d MMM yyyy")</td>
                                         <td>
                                             <button class="btn btn-sm btn-outline-danger"
-                                                    aria-label="@($"Remove mentor {mc.MentorId} from cohort")"
-                                                    @onclick="@(async () => await RemoveMentor(mc.MentorId))">
+                                                    aria-label="@($"Remove mentor {mc.MentorUsername} from cohort")"
+                                                    @onclick="@(async () => await RemoveMentor(mc.MentorUsername))">
                                                 <span class="oi oi-minus" aria-hidden="true"></span>
                                             </button>
                                         </td>

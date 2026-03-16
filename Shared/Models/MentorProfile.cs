@@ -8,7 +8,7 @@ namespace OpenEug.TenTrees.Models
     public class MentorProfile : ModelBase
     {
         [Key]
-        public string MentorId { get; set; }
+        public string Username { get; set; }
 
         [Required]
         public int VillageId { get; set; }

@@ -151,7 +151,7 @@ namespace OpenEug.TenTrees.Module.Mentor.Services
                 var username = _accessor.HttpContext.User.Identity.Name ?? "system";
                 _mentorRepository.UpsertMentorProfile(new MentorProfile
                 {
-                    MentorId = user.Username,
+                    Username = user.Username,
                     VillageId = model.VillageId,
                     CreatedBy = username,
                     CreatedOn = now,
@@ -176,7 +176,7 @@ namespace OpenEug.TenTrees.Module.Mentor.Services
             var username = _accessor.HttpContext.User.Identity.Name ?? "system";
             _mentorRepository.UpsertMentorProfile(new MentorProfile
             {
-                MentorId = model.Username,
+                Username = model.Username,
                 VillageId = model.VillageId,
                 CreatedBy = username,
                 CreatedOn = now,
@@ -209,7 +209,7 @@ namespace OpenEug.TenTrees.Module.Mentor.Services
             _logger.Log(LogLevel.Information, this, LogFunction.Update, "Mentor {Action} {Username}", isActive ? "Activated" : "Deactivated", username);
         }
 
-        public Task ReassignGrowerAsync(int growerId, string newMentorId, int moduleId)
+        public Task ReassignGrowerAsync(int growerId, string newMentorUsername, int moduleId)
         {
             if (!_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.Edit))
             {
@@ -217,8 +217,8 @@ namespace OpenEug.TenTrees.Module.Mentor.Services
                 return Task.CompletedTask;
             }
 
-            _mentorRepository.ReassignGrower(growerId, newMentorId);
-            _logger.Log(LogLevel.Information, this, LogFunction.Update, "Grower {GrowerId} reassigned to mentor {MentorId}", growerId, newMentorId);
+            _mentorRepository.ReassignGrower(growerId, newMentorUsername);
+            _logger.Log(LogLevel.Information, this, LogFunction.Update, "Grower {GrowerId} reassigned to mentor {MentorUsername}", growerId, newMentorUsername);
             return Task.CompletedTask;
         }
 

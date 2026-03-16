@@ -165,7 +165,7 @@
                 HouseholdSize = StateService.CurrentDraft.HouseholdSize,
                 OwnsHome = StateService.CurrentDraft.OwnsHome,
                 EnrollmentDate = DateTime.UtcNow,
-                MentorId = StateService.CurrentDraft.MentorUsername ?? PageState.User.Username,
+                MentorUsername = StateService.CurrentDraft.MentorUsername ?? PageState.User.Username,
                 MentorName = StateService.CurrentDraft.MentorName,
                 EnrolledInPE = StateService.CurrentDraft.EnrolledInPE,
                 PEGraduate = StateService.CurrentDraft.PEGraduate,
