@@ -149,7 +149,7 @@ namespace OpenEug.TenTrees.Module.Grower.Services
             if (!_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.View))
             {
                 _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Active Growers Get Attempt {ModuleId}", moduleId);
-                return null;
+                return Task.FromResult(new List<Models.Grower>());
             }
 
             var growers = _growerRepository.GetActiveGrowers(villageId).ToList();
@@ -163,7 +163,7 @@ namespace OpenEug.TenTrees.Module.Grower.Services
             if (!_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.View))
             {
                 _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Growers By Status Get Attempt {ModuleId}", moduleId);
-                return null;
+                return Task.FromResult(new List<Models.Grower>());
             }
 
             var growers = _growerRepository.GetGrowersByStatus(status, villageId).ToList();
@@ -177,7 +177,7 @@ namespace OpenEug.TenTrees.Module.Grower.Services
             if (!_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.View))
             {
                 _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Status Summary Get Attempt {ModuleId}", moduleId);
-                return null;
+                return Task.FromResult<GrowerStatusSummary>(null);
             }
 
             var summary = _growerRepository.GetStatusSummary(villageId);
