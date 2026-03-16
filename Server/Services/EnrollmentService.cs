@@ -58,17 +58,14 @@ namespace OpenEug.TenTrees.Module.Enrollment.Services
                 return null;
             }
 
-            var viewModels = _enrollmentRepository.GetEnrollmentListViewModels(moduleId).ToList();
+            var viewModels = _enrollmentRepository.GetEnrollmentListViewModels(moduleId);
             if (IsMentor())
             {
-                // Filter to enrollments that belong to this mentor via the raw Enrollment table
-                var mentorEnrollmentIds = _enrollmentRepository.GetEnrollments(moduleId)
-                    .Where(e => e.MentorId == CurrentUsername())
-                    .Select(e => e.EnrollmentId)
-                    .ToHashSet();
-                viewModels = viewModels.Where(e => mentorEnrollmentIds.Contains(e.EnrollmentId)).ToList();
+                var currentUsername = CurrentUsername();
+                viewModels = viewModels.Where(e => e.MentorId == currentUsername);
             }
-            return Task.FromResult(viewModels);
+
+            return Task.FromResult(viewModels.ToList());
         }
 
         public Task<Models.Enrollment> GetEnrollmentAsync(int enrollmentId, int moduleId)
