@@ -62,7 +62,7 @@ namespace OpenEug.TenTrees.Module.Enrollment.Services
             if (IsMentor())
             {
                 var currentUsername = CurrentUsername();
-                viewModels = viewModels.Where(e => e.MentorUsername == currentUsername);
+                viewModels = viewModels.Where(e => e.MentorUserName == currentUsername);
             }
 
             return Task.FromResult(viewModels.ToList());
