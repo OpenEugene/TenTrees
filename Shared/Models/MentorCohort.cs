@@ -10,7 +10,7 @@ namespace OpenEug.TenTrees.Models
         [Key]
         public int MentorCohortId { get; set; }
 
-        public string MentorId { get; set; }
+        public string MentorUsername { get; set; }
 
         public int CohortId { get; set; }
 

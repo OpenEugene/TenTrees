@@ -9,7 +9,7 @@
     [BirthDate]                   DATETIME2 (7)  NULL,
     [HouseholdSize]               INT            NOT NULL,
     [OwnsHome]                    BIT            NOT NULL,
-    [MentorId]                    NVARCHAR (256) NOT NULL,
+    [MentorUsername]              NVARCHAR (256) NOT NULL,
     [MentorName]              NVARCHAR (200) NULL,
     [EnrollmentDate]              DATETIME2 (7)  NOT NULL,
     [EnrolledInPE]                BIT            NOT NULL,

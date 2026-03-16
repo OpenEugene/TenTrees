@@ -159,16 +159,16 @@ namespace OpenEug.TenTrees.Module.Cohort.Repository
         public IEnumerable<Models.Cohort> GetCohortsByMentor(string mentorId)
         {
             using var db = _factory.CreateDbContext();
-            var cohortIds = db.MentorCohort.Where(mc => mc.MentorId == mentorId).Select(mc => mc.CohortId);
+            var cohortIds = db.MentorCohort.Where(mc => mc.MentorUsername == mentorId).Select(mc => mc.CohortId);
             return db.Cohort.Where(c => cohortIds.Contains(c.CohortId)).OrderBy(c => c.Name).ToList();
         }
 
         public Models.MentorCohort AddMentorCohort(string mentorId, int cohortId)
         {
             using var db = _factory.CreateDbContext();
-            var existing = db.MentorCohort.FirstOrDefault(mc => mc.MentorId == mentorId && mc.CohortId == cohortId);
+            var existing = db.MentorCohort.FirstOrDefault(mc => mc.MentorUsername == mentorId && mc.CohortId == cohortId);
             if (existing != null) return existing;
-            var mc = new Models.MentorCohort { MentorId = mentorId, CohortId = cohortId, AssignedOn = DateTime.UtcNow };
+            var mc = new Models.MentorCohort { MentorUsername = mentorId, CohortId = cohortId, AssignedOn = DateTime.UtcNow };
             db.MentorCohort.Add(mc);
             db.SaveChanges();
             return mc;
@@ -177,7 +177,7 @@ namespace OpenEug.TenTrees.Module.Cohort.Repository
         public void DeleteMentorCohort(string mentorId, int cohortId)
         {
             using var db = _factory.CreateDbContext();
-            var mc = db.MentorCohort.FirstOrDefault(x => x.MentorId == mentorId && x.CohortId == cohortId);
+            var mc = db.MentorCohort.FirstOrDefault(x => x.MentorUsername == mentorId && x.CohortId == cohortId);
             if (mc == null) return;
             db.MentorCohort.Remove(mc);
             db.SaveChanges();

@@ -60,13 +60,13 @@ namespace OpenEug.TenTrees.Module.Mentor.Services
             }
 
             var userRoles = _userRoles.GetUserRoles(AppRoleNames.Mentor, _alias.SiteId).ToList();
-            var profiles = _mentorRepository.GetAllMentorProfiles();
+            var villageIds = _mentorRepository.GetAllVillageIds();
             var growerCounts = _mentorRepository.GetGrowerCountsByMentor();
             var villages = _villageRepository.GetVillages().ToDictionary(v => v.VillageId, v => v.VillageName);
 
             var result = userRoles
                 .Where(ur => ur.User != null)
-                .Select(ur => BuildViewModel(ur.User, profiles, growerCounts, villages))
+                .Select(ur => BuildViewModel(ur.User, villageIds, growerCounts, villages))
                 .ToList();
 
             return Task.FromResult(result);
@@ -83,11 +83,11 @@ namespace OpenEug.TenTrees.Module.Mentor.Services
             var user = _userManager.GetUser(username, _alias.SiteId);
             if (user == null) return Task.FromResult<MentorViewModel>(null);
 
-            var profiles = _mentorRepository.GetAllMentorProfiles();
+            var villageIds = _mentorRepository.GetAllVillageIds();
             var growerCounts = _mentorRepository.GetGrowerCountsByMentor();
             var villages = _villageRepository.GetVillages().ToDictionary(v => v.VillageId, v => v.VillageName);
 
-            return Task.FromResult(BuildViewModel(user, profiles, growerCounts, villages));
+            return Task.FromResult(BuildViewModel(user, villageIds, growerCounts, villages));
         }
 
         public async Task<MentorViewModel> CreateMentorAsync(MentorViewModel model, int moduleId)
@@ -144,20 +144,10 @@ namespace OpenEug.TenTrees.Module.Mentor.Services
                 _logger.Log(LogLevel.Warning, this, LogFunction.Create, "Mentor role not found in site {SiteId} — user created without role assignment", _alias.SiteId);
             }
 
-            // Save profile
+            // Save village assignment
             if (model.VillageId > 0)
             {
-                var now = DateTime.UtcNow;
-                var auditUsername = _accessor.HttpContext.User.Identity.Name ?? "system";
-                _mentorRepository.UpsertMentorProfile(new MentorProfile
-                {
-                    MentorId = user.Username,
-                    VillageId = model.VillageId,
-                    CreatedBy = auditUsername,
-                    CreatedOn = now,
-                    ModifiedBy = auditUsername,
-                    ModifiedOn = now
-                });
+                _mentorRepository.SetVillageId(user.UserId, model.VillageId);
             }
 
             _logger.Log(LogLevel.Information, this, LogFunction.Create, "Mentor Created {Username}", user.Username);
@@ -172,17 +162,7 @@ namespace OpenEug.TenTrees.Module.Mentor.Services
                 return Task.FromResult<MentorViewModel>(null);
             }
 
-            var now = DateTime.UtcNow;
-            var username = _accessor.HttpContext.User.Identity.Name ?? "system";
-            _mentorRepository.UpsertMentorProfile(new MentorProfile
-            {
-                MentorId = model.Username,
-                VillageId = model.VillageId,
-                CreatedBy = username,
-                CreatedOn = now,
-                ModifiedBy = username,
-                ModifiedOn = now
-            });
+            _mentorRepository.SetVillageId(model.UserId, model.VillageId);
 
             _logger.Log(LogLevel.Information, this, LogFunction.Update, "Mentor Profile Updated {Username}", model.Username);
             return GetMentorAsync(model.Username, moduleId);
@@ -209,7 +189,7 @@ namespace OpenEug.TenTrees.Module.Mentor.Services
             _logger.Log(LogLevel.Information, this, LogFunction.Update, "Mentor {Action} {Username}", isActive ? "Activated" : "Deactivated", username);
         }
 
-        public Task ReassignGrowerAsync(int growerId, string newMentorId, int moduleId)
+        public Task ReassignGrowerAsync(int growerId, string newMentorUsername, int moduleId)
         {
             if (!_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.Edit))
             {
@@ -217,8 +197,8 @@ namespace OpenEug.TenTrees.Module.Mentor.Services
                 return Task.CompletedTask;
             }
 
-            _mentorRepository.ReassignGrower(growerId, newMentorId);
-            _logger.Log(LogLevel.Information, this, LogFunction.Update, "Grower {GrowerId} reassigned to mentor {MentorId}", growerId, newMentorId);
+            _mentorRepository.ReassignGrower(growerId, newMentorUsername);
+            _logger.Log(LogLevel.Information, this, LogFunction.Update, "Grower {GrowerId} reassigned to mentor {MentorUsername}", growerId, newMentorUsername);
             return Task.CompletedTask;
         }
 
@@ -226,15 +206,12 @@ namespace OpenEug.TenTrees.Module.Mentor.Services
 
         private MentorViewModel BuildViewModel(
             User user,
-            Dictionary<string, MentorProfile> profiles,
+            Dictionary<int, int> villageIds,
             Dictionary<string, int> growerCounts,
             Dictionary<int, string> villages)
         {
-            profiles.TryGetValue(user.Username, out var profile);
-            string villageName = null;
-            if (profile != null && villages.TryGetValue(profile.VillageId, out var vn))
-                villageName = vn;
-
+            villageIds.TryGetValue(user.UserId, out var villageId);
+            villages.TryGetValue(villageId, out var villageName);
             growerCounts.TryGetValue(user.Username, out var count);
 
             return new MentorViewModel
@@ -244,7 +221,7 @@ namespace OpenEug.TenTrees.Module.Mentor.Services
                 DisplayName = user.DisplayName,
                 Email = user.Email,
                 IsDeleted = user.IsDeleted,
-                VillageId = profile?.VillageId ?? 0,
+                VillageId = villageId,
                 VillageName = villageName,
                 GrowerCount = count
             };

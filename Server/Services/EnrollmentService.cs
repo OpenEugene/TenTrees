@@ -46,7 +46,7 @@ namespace OpenEug.TenTrees.Module.Enrollment.Services
 
             var enrollments = _enrollmentRepository.GetEnrollments(moduleId).ToList();
             if (IsMentor())
-                enrollments = enrollments.Where(e => e.MentorId == CurrentUsername()).ToList();
+                enrollments = enrollments.Where(e => e.MentorUsername == CurrentUsername()).ToList();
             return Task.FromResult(enrollments);
         }
 
@@ -62,7 +62,7 @@ namespace OpenEug.TenTrees.Module.Enrollment.Services
             if (IsMentor())
             {
                 var currentUsername = CurrentUsername();
-                viewModels = viewModels.Where(e => e.MentorName == currentUsername);
+                viewModels = viewModels.Where(e => e.MentorUsername == currentUsername);
             }
 
             return Task.FromResult(viewModels.ToList());
@@ -77,7 +77,7 @@ namespace OpenEug.TenTrees.Module.Enrollment.Services
             }
 
             var enrollment = _enrollmentRepository.GetEnrollment(enrollmentId);
-            if (enrollment != null && IsMentor() && enrollment.MentorId != CurrentUsername())
+            if (enrollment != null && IsMentor() && enrollment.MentorUsername != CurrentUsername())
             {
                 _logger.Log(LogLevel.Error, this, LogFunction.Security, "Mentor Access Denied Enrollment {EnrollmentId}", enrollmentId);
                 return Task.FromResult<Models.Enrollment>(null);
@@ -201,7 +201,7 @@ namespace OpenEug.TenTrees.Module.Enrollment.Services
         {
             var mentorInfo = new MentorInfo
             {
-                MentorId = UserId.ToString(),
+                MentorUsername = UserId.ToString(),
                 MentorName = "Mentor Name",
                 VillageId = 1
             };
