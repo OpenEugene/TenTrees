@@ -48,7 +48,7 @@ namespace OpenEug.TenTrees.Module.Grower.Services
             }
 
             var grower = _growerRepository.GetGrower(growerId);
-            if (grower != null && IsMentor() && grower.MentorId != CurrentUsername())
+            if (grower != null && IsMentor() && grower.MentorUsername != CurrentUsername())
             {
                 _logger.Log(LogLevel.Error, this, LogFunction.Security, "Mentor Access Denied Grower {GrowerId}", growerId);
                 return Task.FromResult<Models.Grower>(null);
@@ -66,7 +66,7 @@ namespace OpenEug.TenTrees.Module.Grower.Services
 
             var growers = _growerRepository.GetAllGrowers(villageId).ToList();
             if (IsMentor())
-                growers = growers.Where(g => g.MentorId == CurrentUsername()).ToList();
+                growers = growers.Where(g => g.MentorUsername == CurrentUsername()).ToList();
             return Task.FromResult(growers);
         }
 
@@ -154,7 +154,7 @@ namespace OpenEug.TenTrees.Module.Grower.Services
 
             var growers = _growerRepository.GetActiveGrowers(villageId).ToList();
             if (IsMentor())
-                growers = growers.Where(g => g.MentorId == CurrentUsername()).ToList();
+                growers = growers.Where(g => g.MentorUsername == CurrentUsername()).ToList();
             return Task.FromResult(growers);
         }
 
@@ -168,7 +168,7 @@ namespace OpenEug.TenTrees.Module.Grower.Services
 
             var growers = _growerRepository.GetGrowersByStatus(status, villageId).ToList();
             if (IsMentor())
-                growers = growers.Where(g => g.MentorId == CurrentUsername()).ToList();
+                growers = growers.Where(g => g.MentorUsername == CurrentUsername()).ToList();
             return Task.FromResult(growers);
         }
 

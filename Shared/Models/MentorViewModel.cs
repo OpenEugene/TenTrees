@@ -1,19 +1,33 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace OpenEug.TenTrees.Models
 {
     /// <summary>
-    /// Combined view of an Oqtane User in the Mentor role plus their MentorProfile data.
+    /// Combined view of an Oqtane User in the Mentor role plus their profile settings.
     /// Used for list, create, and edit operations in the Mentor management module.
     /// </summary>
     public class MentorViewModel
     {
         // Oqtane user fields
         public int UserId { get; set; }
+
+        [Required]
+        [StringLength(256)]
         public string Username { get; set; }
+
+        [Required]
+        [StringLength(256)]
         public string DisplayName { get; set; }
+
+        [Required]
+        [EmailAddress]
+        [StringLength(256)]
         public string Email { get; set; }
+
         public bool IsDeleted { get; set; }
 
-        // From MentorProfile
+        // Village assignment stored via Oqtane ISettingRepository
+        [Range(1, int.MaxValue, ErrorMessage = "A valid Village must be selected.")]
         public int VillageId { get; set; }
 
         // Resolved from Village (read-only, populated server-side for lists)

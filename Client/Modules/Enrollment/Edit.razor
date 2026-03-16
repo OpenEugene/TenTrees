@@ -388,7 +388,7 @@
                     _householdSize = Enrollment.HouseholdSize;
                     _ownsHome = Enrollment.OwnsHome;
                     _enrollmentDate = Enrollment.EnrollmentDate.Date;
-                    _mentorUsername = Enrollment.MentorId ?? PageState.User.Username;
+                    _mentorUsername = Enrollment.MentorUsername ?? PageState.User.Username;
 
                     // Preferred Criteria
                     _enrolledInPE = Enrollment.EnrolledInPE;
@@ -449,7 +449,7 @@
                     Enrollment.HouseholdSize = _householdSize;
                     Enrollment.OwnsHome = _ownsHome;
                     Enrollment.EnrollmentDate = DateTime.UtcNow;
-                    Enrollment.MentorId = _mentorUsername;
+                    Enrollment.MentorUsername = _mentorUsername;
                     Enrollment.MentorName = _users?.FirstOrDefault(u => u.Username == _mentorUsername)?.DisplayName ?? _mentorUsername;
                     
                     // Preferred Criteria
@@ -494,7 +494,7 @@
                     Enrollment.BirthDate = _birthDate;
                     Enrollment.HouseholdSize = _householdSize;
                     Enrollment.OwnsHome = _ownsHome;
-                    Enrollment.MentorId = _mentorUsername;
+                    Enrollment.MentorUsername = _mentorUsername;
                     Enrollment.MentorName = _users?.FirstOrDefault(u => u.Username == _mentorUsername)?.DisplayName ?? _mentorUsername;
                     
                     // Preferred Criteria

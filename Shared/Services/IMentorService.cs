@@ -11,6 +11,6 @@ namespace OpenEug.TenTrees.Module.Mentor.Services
         Task<MentorViewModel> CreateMentorAsync(MentorViewModel model, int moduleId);
         Task<MentorViewModel> UpdateMentorProfileAsync(MentorViewModel model, int moduleId);
         Task SetMentorActiveAsync(string username, bool isActive, int moduleId);
-        Task ReassignGrowerAsync(int growerId, string newMentorId, int moduleId);
+        Task ReassignGrowerAsync(int growerId, string newMentorUsername, int moduleId);
     }
 }

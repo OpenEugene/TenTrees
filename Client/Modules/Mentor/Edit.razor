@@ -132,7 +132,7 @@ else
                                     @foreach (var g in _availableGrowers)
                                     {
                                         <option value="@g.GrowerId">
-                                            @g.GrowerName@(g.MentorId != null ? $" (currently: {g.MentorId})" : "")
+                                            @g.GrowerName@(g.MentorUsername != null ? $" (currently: {g.MentorUsername})" : "")
                                         </option>
                                     }
                                 </select>
@@ -228,8 +228,8 @@ else
     private async Task LoadGrowers()
     {
         _allGrowers = await GrowerService.GetAllGrowersAsync(ModuleState.ModuleId) ?? new List<Models.Grower>();
-        _assignedGrowers = _allGrowers.Where(g => g.MentorId == _model.Username).ToList();
-        _availableGrowers = _allGrowers.Where(g => g.MentorId != _model.Username).OrderBy(g => g.GrowerName).ToList();
+        _assignedGrowers = _allGrowers.Where(g => g.MentorUsername == _model.Username).ToList();
+        _availableGrowers = _allGrowers.Where(g => g.MentorUsername != _model.Username).OrderBy(g => g.GrowerName).ToList();
     }
 
     private async Task Save()
