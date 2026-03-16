@@ -20,6 +20,7 @@ namespace OpenEug.TenTrees.Repository
         public virtual DbSet<Models.GrowerCohort> GrowerCohort { get; set; }
         public virtual DbSet<Models.MentorCohort> MentorCohort { get; set; }
         public virtual DbSet<Models.CohortClass> CohortClass { get; set; }
+        public virtual DbSet<Models.MentorProfile> MentorProfile { get; set; }
 
         public TenTreesContext(IDBContextDependencies dependencies) : base(dependencies)
         {
@@ -40,6 +41,7 @@ namespace OpenEug.TenTrees.Repository
             modelBuilder.Entity<Models.GrowerCohort>().ToTable(ActiveDatabase.RewriteName("GrowerCohort"));
             modelBuilder.Entity<Models.MentorCohort>().ToTable(ActiveDatabase.RewriteName("MentorCohort"));
             modelBuilder.Entity<Models.CohortClass>().ToTable(ActiveDatabase.RewriteName("CohortClass"));
+            modelBuilder.Entity<Models.MentorProfile>().ToTable(ActiveDatabase.RewriteName("MentorProfile"));
         }
     }
 }

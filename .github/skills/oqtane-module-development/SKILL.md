@@ -9,8 +9,8 @@ description: |
   Use this any time you create, edit, or review any Oqtane module component,
   service, controller, or repository in the PWApps workspace.
 author: Skiller
-version: 1.2.0
-date: 2025-07-14
+version: 1.3.0
+date: 2026-03-15
 ---
 
 # Oqtane Module Development
@@ -82,8 +82,11 @@ Client/Modules/<ModuleName>/
   Index.razor          <- default action
   Edit.razor           <- edit action
   Settings.razor       <- module settings (loaded by Oqtane admin panel)
-  Services/
-    <ModuleName>Service.cs   <- one service class per module, if needed
+  ModuleInfo.cs        <- module registration (actions, resources, etc.)
+
+Client/Services/
+  <ModuleName>Service.cs   <- typed HTTP client for this module
+  I<ModuleName>Service.cs  <- interface (if used)
 
 Server/Controllers/
   <ModuleName>Controller.cs  <- one controller per module
@@ -91,7 +94,15 @@ Server/Controllers/
 Server/Repository/
   I<ModuleName>Repository.cs
   <ModuleName>Repository.cs
+
+Server/Services/
+  <ModuleName>Service.cs   <- server-side orchestration (if needed)
 ```
+
+**All client HTTP services live in `Client/Services/` — never inside
+`Client/Modules/<ModuleName>/Services/`.** The flat `Client/Services/`
+directory is the project convention used by every existing module
+(Assessment, Cohort, Enrollment, Grower, Training, Village).
 
 ---
 
@@ -276,3 +287,6 @@ Apply this skill whenever:
 - Framework source (local): `.oqtane-ref\`
 - Framework source (live): https://github.com/oqtane/oqtane.framework
 - Oqtane docs: https://docs.oqtane.org
+
+## Activation History
+- 2026-03-15: Corrected client service file layout — `Client/Services/` flat directory, not per-module `Services/` subfolder, during Mentor module planning

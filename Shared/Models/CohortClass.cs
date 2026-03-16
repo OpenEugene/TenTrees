@@ -9,8 +9,8 @@ namespace OpenEug.TenTrees.Models
         [Key]
         public int CohortClassId { get; set; }
 
-        public int CohortId { get; set; }
+        public int? CohortId { get; set; }
 
-        public int TrainingClassId { get; set; }
+        public int? TrainingClassId { get; set; }
     }
 }
