@@ -103,7 +103,6 @@
     <Build Include="dbo\Tables\SiteTask.sql" />
     <Build Include="dbo\Tables\SiteGroupMember.sql" />
     <Build Include="dbo\Tables\SiteGroup.sql" />
-    <Build Include="dbo\Tables\MentorProfile.sql" />
     <Build Include="Seed_SampleGrowers.sql" />
   </ItemGroup>
   <ItemGroup>
