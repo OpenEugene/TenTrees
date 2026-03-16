@@ -433,11 +433,17 @@
         }
     }
 
-    private async Task RemoveClass(int trainingClassId)
+    private async Task RemoveClass(int? trainingClassId)
     {
+        if (!trainingClassId.HasValue)
+        {
+            AddModuleMessage("Unable to remove class.", MessageType.Error);
+            return;
+        }
+
         try
         {
-            await CohortService.RemoveCohortClassAsync(_cohort.CohortId, trainingClassId);
+            await CohortService.RemoveCohortClassAsync(_cohort.CohortId, trainingClassId.Value);
             _cohortClasses = await CohortService.GetClassesForCohortAsync(_cohort.CohortId);
             await LoadAvailableClassesAsync();
             StateHasChanged();

@@ -148,14 +148,14 @@ namespace OpenEug.TenTrees.Module.Mentor.Services
             if (model.VillageId > 0)
             {
                 var now = DateTime.UtcNow;
-                var username = _accessor.HttpContext.User.Identity.Name ?? "system";
+                var auditUsername = _accessor.HttpContext.User.Identity.Name ?? "system";
                 _mentorRepository.UpsertMentorProfile(new MentorProfile
                 {
                     MentorId = user.Username,
                     VillageId = model.VillageId,
-                    CreatedBy = username,
+                    CreatedBy = auditUsername,
                     CreatedOn = now,
-                    ModifiedBy = username,
+                    ModifiedBy = auditUsername,
                     ModifiedOn = now
                 });
             }

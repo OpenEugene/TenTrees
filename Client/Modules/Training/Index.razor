@@ -242,7 +242,9 @@
             {
                 var links = await CohortService.GetCohortsForClassAsync(tc.TrainingClassId);
                 _classCohorts[tc.TrainingClassId] = links
-                    .Select(l => cohortById.GetValueOrDefault(l.CohortId, $"#{l.CohortId}"))
+                    .Select(l => l.CohortId.HasValue
+                        ? cohortById.GetValueOrDefault(l.CohortId.Value, $"#{l.CohortId.Value}")
+                        : "#(unassigned)")
                     .OrderBy(n => n).ToList();
             }
         }
