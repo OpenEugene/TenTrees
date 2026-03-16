@@ -343,19 +343,6 @@
             return;
         }
 
-        var allCohorts = await CohortService.GetCohortsAsync();
-        var duplicateExists = allCohorts.Any(c =>
-            c.CohortId != _cohort.CohortId &&
-            string.Equals(c.Name?.Trim(), _cohort.Name, StringComparison.OrdinalIgnoreCase));
-
-        if (duplicateExists)
-        {
-            _invalidFields.Add("Name");
-            AddModuleMessage("Cohort name must be unique.", MessageType.Warning);
-            await ScrollToPageTop();
-            return;
-        }
-
         // Guard: completed cohorts cannot be reverted
         if (_isEdit && _originalStatus == CohortStatus.Completed && _cohort.Status != CohortStatus.Completed)
         {
