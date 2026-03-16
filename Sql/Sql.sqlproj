@@ -107,7 +107,6 @@
     <Build Include="dbo\Tables\GrowerCohort.sql" />
     <Build Include="dbo\Tables\MentorCohort.sql" />
     <Build Include="dbo\Tables\CohortClass.sql" />
-    <Build Include="dbo\Tables\MentorProfile.sql" />
     <Build Include="Seed_SampleGrowers.sql" />
   </ItemGroup>
   <ItemGroup>
