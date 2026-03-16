@@ -52,8 +52,11 @@ namespace OpenEug.TenTrees.Module.Cohort.Controllers
         // GET api/<controller>/suggest?villageId=1&year=2026
         [HttpGet("suggest")]
         [Authorize(Policy = PolicyNames.EditModule)]
-        public async Task<string> Suggest([FromQuery] int villageId, [FromQuery] int year)
-            => await _cohortService.SuggestCohortNameAsync(villageId, year);
+        public async Task<ActionResult<CohortNameSuggestion>> Suggest([FromQuery] int villageId, [FromQuery] int year)
+        {
+            var suggestion = await _cohortService.SuggestCohortNameAsync(villageId, year);
+            return Ok(new CohortNameSuggestion { Name = suggestion });
+        }
 
         // POST api/<controller>
         [HttpPost]
@@ -66,7 +69,17 @@ namespace OpenEug.TenTrees.Module.Cohort.Controllers
                 HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
                 return null;
             }
-            return await _cohortService.AddCohortAsync(cohort);
+
+            try
+            {
+                return await _cohortService.AddCohortAsync(cohort);
+            }
+            catch (System.InvalidOperationException ex)
+            {
+                _logger.Log(LogLevel.Warning, this, LogFunction.Create, "Invalid Cohort Post Attempt {Error}", ex.Message);
+                HttpContext.Response.StatusCode = (int)HttpStatusCode.Conflict;
+                return null;
+            }
         }
 
         // PUT api/<controller>/5
@@ -80,7 +93,17 @@ namespace OpenEug.TenTrees.Module.Cohort.Controllers
                 HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
                 return null;
             }
-            return await _cohortService.UpdateCohortAsync(cohort);
+
+            try
+            {
+                return await _cohortService.UpdateCohortAsync(cohort);
+            }
+            catch (System.InvalidOperationException ex)
+            {
+                _logger.Log(LogLevel.Warning, this, LogFunction.Update, "Invalid Cohort Put Attempt {Error}", ex.Message);
+                HttpContext.Response.StatusCode = (int)HttpStatusCode.Conflict;
+                return null;
+            }
         }
 
         // DELETE api/<controller>/5
@@ -166,5 +189,10 @@ namespace OpenEug.TenTrees.Module.Cohort.Controllers
         [Authorize(Policy = PolicyNames.EditModule)]
         public async Task DeleteCohortClass(int id, int classId)
             => await _cohortService.DeleteCohortClassAsync(id, classId);
+    }
+
+    public class CohortNameSuggestion
+    {
+        public string Name { get; set; }
     }
 }
