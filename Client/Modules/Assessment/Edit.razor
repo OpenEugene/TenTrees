@@ -352,7 +352,7 @@
             }
             else
             {
-                _growers = allGrowers.Where(g => g.MentorId == PageState.User.Username).ToList();
+                _growers = allGrowers.Where(g => g.MentorUsername == PageState.User.Username).ToList();
             }
 
             if (PageState.Action == "Edit")

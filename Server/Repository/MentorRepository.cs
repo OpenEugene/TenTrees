@@ -8,12 +8,12 @@ namespace OpenEug.TenTrees.Module.Mentor.Repository
 {
     public interface IMentorRepository
     {
-        Models.MentorProfile GetMentorProfile(string mentorId);
+        Models.MentorProfile GetMentorProfile(string username);
         Dictionary<string, Models.MentorProfile> GetAllMentorProfiles();
         Models.MentorProfile UpsertMentorProfile(Models.MentorProfile profile);
-        void DeleteMentorProfile(string mentorId);
+        void DeleteMentorProfile(string username);
         Dictionary<string, int> GetGrowerCountsByMentor();
-        void ReassignGrower(int growerId, string newMentorId);
+        void ReassignGrower(int growerId, string newMentorUsername);
     }
 
     public class MentorRepository : IMentorRepository, ITransientService
@@ -25,24 +25,24 @@ namespace OpenEug.TenTrees.Module.Mentor.Repository
             _factory = factory;
         }
 
-        public Models.MentorProfile GetMentorProfile(string mentorId)
+        public Models.MentorProfile GetMentorProfile(string username)
         {
             using var db = _factory.CreateDbContext();
             return db.MentorProfile.AsNoTracking()
-                .FirstOrDefault(p => p.MentorId == mentorId);
+                .FirstOrDefault(p => p.Username == username);
         }
 
         public Dictionary<string, Models.MentorProfile> GetAllMentorProfiles()
         {
             using var db = _factory.CreateDbContext();
             return db.MentorProfile.AsNoTracking()
-                .ToDictionary(p => p.MentorId, p => p);
+                .ToDictionary(p => p.Username, p => p);
         }
 
         public Models.MentorProfile UpsertMentorProfile(Models.MentorProfile profile)
         {
             using var db = _factory.CreateDbContext();
-            var existing = db.MentorProfile.Find(profile.MentorId);
+            var existing = db.MentorProfile.Find(profile.Username);
             if (existing == null)
             {
                 db.MentorProfile.Add(profile);
@@ -57,10 +57,10 @@ namespace OpenEug.TenTrees.Module.Mentor.Repository
             return profile;
         }
 
-        public void DeleteMentorProfile(string mentorId)
+        public void DeleteMentorProfile(string username)
         {
             using var db = _factory.CreateDbContext();
-            var profile = db.MentorProfile.Find(mentorId);
+            var profile = db.MentorProfile.Find(username);
             if (profile != null)
             {
                 db.MentorProfile.Remove(profile);
@@ -72,18 +72,18 @@ namespace OpenEug.TenTrees.Module.Mentor.Repository
         {
             using var db = _factory.CreateDbContext();
             return db.Grower
-                .Where(g => g.MentorId != null)
-                .GroupBy(g => g.MentorId)
+                .Where(g => g.MentorUsername != null)
+                .GroupBy(g => g.MentorUsername)
                 .ToDictionary(g => g.Key, g => g.Count());
         }
 
-        public void ReassignGrower(int growerId, string newMentorId)
+        public void ReassignGrower(int growerId, string newMentorUsername)
         {
             using var db = _factory.CreateDbContext();
             var grower = db.Grower.Find(growerId);
             if (grower != null)
             {
-                grower.MentorId = string.IsNullOrEmpty(newMentorId) ? null : newMentorId;
+                grower.MentorUsername = string.IsNullOrEmpty(newMentorUsername) ? null : newMentorUsername;
                 db.SaveChanges();
             }
         }
