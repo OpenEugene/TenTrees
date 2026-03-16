@@ -10,6 +10,7 @@ using Oqtane.Controllers;
 using System.Net;
 using System.Threading.Tasks;
 using OpenEug.TenTrees.Module.Cohort.Services;
+using System;
 
 namespace OpenEug.TenTrees.Module.Cohort.Controllers
 {
@@ -52,21 +53,50 @@ namespace OpenEug.TenTrees.Module.Cohort.Controllers
         // GET api/<controller>/suggest?villageId=1&year=2026
         [HttpGet("suggest")]
         [Authorize(Policy = PolicyNames.EditModule)]
-        public async Task<string> Suggest([FromQuery] int villageId, [FromQuery] int year)
-            => await _cohortService.SuggestCohortNameAsync(villageId, year);
+        public async Task<ActionResult<CohortNameSuggestion>> Suggest([FromQuery] int villageId, [FromQuery] int year)
+        {
+            var suggestion = await _cohortService.SuggestCohortNameAsync(villageId, year);
+            return Ok(new CohortNameSuggestion { Name = suggestion });
+        }
 
         // POST api/<controller>
         [HttpPost]
         [Authorize(Policy = PolicyNames.EditModule)]
-        public async Task<Models.Cohort> Post([FromBody] Models.Cohort cohort)
+        public async Task<ActionResult<Models.Cohort>> Post([FromBody] Models.Cohort cohort)
         {
             if (!ModelState.IsValid)
             {
                 _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Cohort Post Attempt {Cohort}", cohort);
-                HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                // Preserve existing behavior of returning 403 for invalid model state.
+                return StatusCode(StatusCodes.Status403Forbidden);
+            }
+
+            try
+            {
+                var createdCohort = await _cohortService.AddCohortAsync(cohort);
+                return createdCohort;
+            }
+            catch (System.InvalidOperationException ex)
+            {
+                _logger.Log(LogLevel.Warning, this, LogFunction.Create, "Invalid Cohort Post Attempt {Error}", ex.Message);
+
+                var message = ex.Message ?? string.Empty;
+                // Treat "name required" as a validation error (400 Bad Request).
+                if (message.IndexOf("name", StringComparison.OrdinalIgnoreCase) >= 0 &&
+                    message.IndexOf("required", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    return BadRequest(new { error = ex.Message });
+                }
+
+                // Other invalid operations (e.g., "name not unique") are conflicts (409 Conflict).
+                return Conflict(new { error = ex.Message });
+            }
+            catch (Microsoft.EntityFrameworkCore.DbUpdateException ex)
+            {
+                _logger.Log(LogLevel.Warning, this, LogFunction.Create, "Cohort Post DbUpdateException {Error}", ex.Message);
+                HttpContext.Response.StatusCode = (int)HttpStatusCode.Conflict;
                 return null;
             }
-            return await _cohortService.AddCohortAsync(cohort);
         }
 
         // PUT api/<controller>/5
@@ -80,7 +110,17 @@ namespace OpenEug.TenTrees.Module.Cohort.Controllers
                 HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
                 return null;
             }
-            return await _cohortService.UpdateCohortAsync(cohort);
+
+            try
+            {
+                return await _cohortService.UpdateCohortAsync(cohort);
+            }
+            catch (System.InvalidOperationException ex)
+            {
+                _logger.Log(LogLevel.Warning, this, LogFunction.Update, "Invalid Cohort Put Attempt {Error}", ex.Message);
+                HttpContext.Response.StatusCode = (int)HttpStatusCode.Conflict;
+                return null;
+            }
         }
 
         // DELETE api/<controller>/5
@@ -166,5 +206,10 @@ namespace OpenEug.TenTrees.Module.Cohort.Controllers
         [Authorize(Policy = PolicyNames.EditModule)]
         public async Task DeleteCohortClass(int id, int classId)
             => await _cohortService.DeleteCohortClassAsync(id, classId);
+    }
+
+    public class CohortNameSuggestion
+    {
+        public string Name { get; set; }
     }
 }
