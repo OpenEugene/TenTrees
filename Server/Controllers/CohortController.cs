@@ -91,6 +91,12 @@ namespace OpenEug.TenTrees.Module.Cohort.Controllers
                 // Other invalid operations (e.g., "name not unique") are conflicts (409 Conflict).
                 return Conflict(new { error = ex.Message });
             }
+            catch (Microsoft.EntityFrameworkCore.DbUpdateException ex)
+            {
+                _logger.Log(LogLevel.Warning, this, LogFunction.Create, "Cohort Post DbUpdateException {Error}", ex.Message);
+                HttpContext.Response.StatusCode = (int)HttpStatusCode.Conflict;
+                return null;
+            }
         }
 
         // PUT api/<controller>/5
