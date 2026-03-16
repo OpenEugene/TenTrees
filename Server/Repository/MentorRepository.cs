@@ -1,70 +1,76 @@
-using Microsoft.EntityFrameworkCore;
-using Oqtane.Modules;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using Oqtane.Models;
+using Oqtane.Modules;
+using Oqtane.Repository;
+using Oqtane.Shared;
 using Models = OpenEug.TenTrees.Models;
 
 namespace OpenEug.TenTrees.Module.Mentor.Repository
 {
     public interface IMentorRepository
     {
-        Models.MentorProfile GetMentorProfile(string username);
-        Dictionary<string, Models.MentorProfile> GetAllMentorProfiles();
-        Models.MentorProfile UpsertMentorProfile(Models.MentorProfile profile);
-        void DeleteMentorProfile(string username);
+        int GetVillageId(int userId);
+        Dictionary<int, int> GetAllVillageIds();
+        void SetVillageId(int userId, int villageId);
+        void DeleteVillageId(int userId);
         Dictionary<string, int> GetGrowerCountsByMentor();
         void ReassignGrower(int growerId, string newMentorUsername);
     }
 
     public class MentorRepository : IMentorRepository, ITransientService
     {
+        private const string VillageIdKey = "VillageId";
+        private readonly ISettingRepository _settings;
         private readonly IDbContextFactory<OpenEug.TenTrees.Repository.TenTreesContext> _factory;
 
-        public MentorRepository(IDbContextFactory<OpenEug.TenTrees.Repository.TenTreesContext> factory)
+        public MentorRepository(ISettingRepository settings, IDbContextFactory<OpenEug.TenTrees.Repository.TenTreesContext> factory)
         {
+            _settings = settings;
             _factory = factory;
         }
 
-        public Models.MentorProfile GetMentorProfile(string username)
+        public int GetVillageId(int userId)
         {
-            using var db = _factory.CreateDbContext();
-            return db.MentorProfile.AsNoTracking()
-                .FirstOrDefault(p => p.Username == username);
+            var value = _settings.GetSettingValue(EntityNames.User, userId, VillageIdKey, "0");
+            return int.TryParse(value, out var v) ? v : 0;
         }
 
-        public Dictionary<string, Models.MentorProfile> GetAllMentorProfiles()
+        public Dictionary<int, int> GetAllVillageIds()
         {
-            using var db = _factory.CreateDbContext();
-            return db.MentorProfile.AsNoTracking()
-                .ToDictionary(p => p.Username, p => p);
+            return _settings.GetSettings(EntityNames.User)
+                .Where(s => s.SettingName == VillageIdKey)
+                .ToDictionary(s => s.EntityId, s => int.TryParse(s.SettingValue, out var v) ? v : 0);
         }
 
-        public Models.MentorProfile UpsertMentorProfile(Models.MentorProfile profile)
+        public void SetVillageId(int userId, int villageId)
         {
-            using var db = _factory.CreateDbContext();
-            var existing = db.MentorProfile.Find(profile.Username);
+            var existing = _settings.GetSetting(EntityNames.User, userId, VillageIdKey);
             if (existing == null)
             {
-                db.MentorProfile.Add(profile);
+                _settings.AddSetting(new Setting
+                {
+                    EntityName = EntityNames.User,
+                    EntityId = userId,
+                    SettingName = VillageIdKey,
+                    SettingValue = villageId.ToString(),
+                    IsPrivate = false
+                });
             }
             else
             {
-                existing.VillageId = profile.VillageId;
-                existing.ModifiedBy = profile.ModifiedBy;
-                existing.ModifiedOn = profile.ModifiedOn;
+                existing.SettingValue = villageId.ToString();
+                _settings.UpdateSetting(existing);
             }
-            db.SaveChanges();
-            return profile;
         }
 
-        public void DeleteMentorProfile(string username)
+        public void DeleteVillageId(int userId)
         {
-            using var db = _factory.CreateDbContext();
-            var profile = db.MentorProfile.Find(username);
-            if (profile != null)
+            var existing = _settings.GetSetting(EntityNames.User, userId, VillageIdKey);
+            if (existing != null)
             {
-                db.MentorProfile.Remove(profile);
-                db.SaveChanges();
+                _settings.DeleteSetting(EntityNames.User, existing.SettingId);
             }
         }
 
