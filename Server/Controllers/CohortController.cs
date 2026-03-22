@@ -26,7 +26,7 @@ namespace OpenEug.TenTrees.Module.Cohort.Controllers
 
         // GET: api/<controller>
         [HttpGet]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Models.Cohort>>> Get()
         {
             try
@@ -43,7 +43,7 @@ namespace OpenEug.TenTrees.Module.Cohort.Controllers
 
         // GET api/<controller>/5
         [HttpGet("{id}")]
-        [Authorize(Policy = PolicyNames.ViewModule)]
+        [Authorize]
         public async Task<ActionResult<Models.Cohort>> Get(int id)
         {
             try
@@ -66,7 +66,7 @@ namespace OpenEug.TenTrees.Module.Cohort.Controllers
 
         // GET api/<controller>/village/5
         [HttpGet("village/{villageId}")]
-        [Authorize(Policy = PolicyNames.ViewModule)]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Models.Cohort>>> GetByVillage(int villageId)
         {
             try
@@ -83,7 +83,7 @@ namespace OpenEug.TenTrees.Module.Cohort.Controllers
 
         // GET api/<controller>/suggest?villageId=1&year=2026
         [HttpGet("suggest")]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult<CohortNameSuggestion>> Suggest([FromQuery] int villageId, [FromQuery] int year)
         {
             try
@@ -185,7 +185,7 @@ namespace OpenEug.TenTrees.Module.Cohort.Controllers
 
         // GET api/<controller>/5/growers
         [HttpGet("{id}/growers")]
-        [Authorize(Policy = PolicyNames.ViewModule)]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Models.GrowerCohort>>> GetGrowerCohorts(int id)
         {
             try
@@ -202,7 +202,7 @@ namespace OpenEug.TenTrees.Module.Cohort.Controllers
 
         // GET api/<controller>/grower/5
         [HttpGet("grower/{growerId}")]
-        [Authorize(Policy = PolicyNames.ViewModule)]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Models.Cohort>>> GetByGrower(int growerId)
         {
             try
@@ -255,7 +255,7 @@ namespace OpenEug.TenTrees.Module.Cohort.Controllers
 
         // GET api/<controller>/5/mentors
         [HttpGet("{id}/mentors")]
-        [Authorize(Policy = PolicyNames.ViewModule)]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Models.MentorCohort>>> GetMentorCohorts(int id)
         {
             try
@@ -272,7 +272,7 @@ namespace OpenEug.TenTrees.Module.Cohort.Controllers
 
         // GET api/<controller>/mentor/abc123
         [HttpGet("mentor/{mentorId}")]
-        [Authorize(Policy = PolicyNames.ViewModule)]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Models.Cohort>>> GetByMentor(string mentorId)
         {
             try
@@ -325,7 +325,7 @@ namespace OpenEug.TenTrees.Module.Cohort.Controllers
 
         // GET api/<controller>/5/classes
         [HttpGet("{id}/classes")]
-        [Authorize(Policy = PolicyNames.ViewModule)]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Models.CohortClass>>> GetClassesForCohort(int id)
         {
             try
@@ -342,7 +342,7 @@ namespace OpenEug.TenTrees.Module.Cohort.Controllers
 
         // GET api/<controller>/class/7/cohorts
         [HttpGet("class/{classId}/cohorts")]
-        [Authorize(Policy = PolicyNames.ViewModule)]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Models.CohortClass>>> GetCohortsForClass(int classId)
         {
             try

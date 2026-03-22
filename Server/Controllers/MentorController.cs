@@ -26,7 +26,7 @@ namespace OpenEug.TenTrees.Module.Mentor.Controllers
 
         // GET api/mentor?moduleId=x
         [HttpGet]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult<List<MentorViewModel>>> Get(int moduleId)
         {
             try
@@ -48,7 +48,7 @@ namespace OpenEug.TenTrees.Module.Mentor.Controllers
 
         // GET api/mentor/{username}?moduleId=x
         [HttpGet("{username}")]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult<MentorViewModel>> Get(string username, int moduleId)
         {
             try

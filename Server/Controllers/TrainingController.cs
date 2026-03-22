@@ -25,7 +25,7 @@ namespace OpenEug.TenTrees.Module.Training.Controllers
 
         // GET: api/<controller>?moduleid=x&villageid=y
         [HttpGet]
-        [Authorize(Policy = PolicyNames.ViewModule)]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<TrainingClass>>> Get(string moduleid, int? villageid = null)
         {
             if (!int.TryParse(moduleid, out var moduleId) || !IsAuthorizedEntityId(EntityNames.Module, moduleId))
@@ -48,7 +48,7 @@ namespace OpenEug.TenTrees.Module.Training.Controllers
 
         // GET api/<controller>/5?moduleid=x
         [HttpGet("{id}")]
-        [Authorize(Policy = PolicyNames.ViewModule)]
+        [Authorize]
         public async Task<ActionResult<TrainingClass>> Get(int id, int moduleid)
         {
             try
@@ -160,7 +160,7 @@ namespace OpenEug.TenTrees.Module.Training.Controllers
 
         // GET api/<controller>/attendance/5?moduleid=x
         [HttpGet("attendance/{classId}")]
-        [Authorize(Policy = PolicyNames.ViewModule)]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<ClassAttendance>>> GetAttendance(int classId, int moduleid)
         {
             if (!IsAuthorizedEntityId(EntityNames.Module, moduleid))
@@ -211,7 +211,7 @@ namespace OpenEug.TenTrees.Module.Training.Controllers
 
         // GET api/<controller>/summaries?moduleid=x&villageid=y
         [HttpGet("summaries")]
-        [Authorize(Policy = PolicyNames.ViewModule)]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<AttendanceSummaryViewModel>>> GetSummaries(int moduleid, int? villageid = null)
         {
             if (!IsAuthorizedEntityId(EntityNames.Module, moduleid))
@@ -234,7 +234,7 @@ namespace OpenEug.TenTrees.Module.Training.Controllers
 
         // GET api/<controller>/grower-summary/5?moduleid=x
         [HttpGet("grower-summary/{growerId}")]
-        [Authorize(Policy = PolicyNames.ViewModule)]
+        [Authorize]
         public async Task<ActionResult<AttendanceSummaryViewModel>> GetGrowerSummary(int growerId, int moduleid)
         {
             if (!IsAuthorizedEntityId(EntityNames.Module, moduleid))
@@ -262,7 +262,7 @@ namespace OpenEug.TenTrees.Module.Training.Controllers
 
         // GET api/<controller>/status-summary?moduleid=x&villageid=y
         [HttpGet("status-summary")]
-        [Authorize(Policy = PolicyNames.ViewModule)]
+        [Authorize]
         public async Task<ActionResult<TrainingStatusSummary>> GetStatusSummary(int moduleid, int? villageid = null)
         {
             if (!IsAuthorizedEntityId(EntityNames.Module, moduleid))
