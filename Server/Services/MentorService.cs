@@ -8,7 +8,6 @@ using Oqtane.Infrastructure;
 using Oqtane.Managers;
 using Oqtane.Models;
 using Oqtane.Repository;
-using Oqtane.Security;
 using Oqtane.Shared;
 using OpenEug.TenTrees.Models;
 using OpenEug.TenTrees.Module.Mentor.Repository;
@@ -24,7 +23,6 @@ namespace OpenEug.TenTrees.Module.Mentor.Services
         private readonly IUserManager _userManager;
         private readonly IRoleRepository _roles;
         private readonly IUserRoleRepository _userRoles;
-        private readonly IUserPermissions _userPermissions;
         private readonly ILogManager _logger;
         private readonly IHttpContextAccessor _accessor;
         private readonly Alias _alias;
@@ -35,7 +33,6 @@ namespace OpenEug.TenTrees.Module.Mentor.Services
             IUserManager userManager,
             IRoleRepository roles,
             IUserRoleRepository userRoles,
-            IUserPermissions userPermissions,
             ITenantManager tenantManager,
             ILogManager logger,
             IHttpContextAccessor accessor)
@@ -45,7 +42,6 @@ namespace OpenEug.TenTrees.Module.Mentor.Services
             _userManager = userManager;
             _roles = roles;
             _userRoles = userRoles;
-            _userPermissions = userPermissions;
             _logger = logger;
             _accessor = accessor;
             _alias = tenantManager.GetAlias();
@@ -53,20 +49,30 @@ namespace OpenEug.TenTrees.Module.Mentor.Services
 
         public Task<List<MentorViewModel>> GetMentorsAsync(int moduleId)
         {
-            if (!_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.Edit))
-            {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Mentor List Attempt {ModuleId}", moduleId);
-                return Task.FromResult<List<MentorViewModel>>(null);
-            }
+            var mentorRoleUsers = _userRoles.GetUserRoles(AppRoleNames.Mentor, _alias.SiteId)
+                .Where(ur => ur.User != null)
+                .ToList();
 
-            var userRoles = _userRoles.GetUserRoles(AppRoleNames.Mentor, _alias.SiteId).ToList();
             var villageIds = _mentorRepository.GetAllVillageIds();
             var growerCounts = _mentorRepository.GetGrowerCountsByMentor();
             var villages = _villageRepository.GetVillages().ToDictionary(v => v.VillageId, v => v.VillageName);
 
-            var result = userRoles
-                .Where(ur => ur.User != null)
-                .Select(ur => BuildViewModel(ur.User, villageIds, growerCounts, villages))
+            // Primary source: users in Mentor role.
+            // Fallback: users with a VillageId assignment (covers legacy/misconfigured role assignment cases).
+            var mentorUserIds = new HashSet<int>(mentorRoleUsers.Select(ur => ur.UserId));
+            foreach (var userId in villageIds.Keys)
+            {
+                mentorUserIds.Add(userId);
+            }
+
+            var users = _userRoles.GetUserRoles(_alias.SiteId)
+                .Where(ur => ur.User != null && mentorUserIds.Contains(ur.UserId))
+                .GroupBy(ur => ur.UserId)
+                .Select(g => g.First().User)
+                .ToList();
+
+            var result = users
+                .Select(u => BuildViewModel(u, villageIds, growerCounts, villages))
                 .ToList();
 
             return Task.FromResult(result);
@@ -74,12 +80,6 @@ namespace OpenEug.TenTrees.Module.Mentor.Services
 
         public Task<MentorViewModel> GetMentorAsync(string username, int moduleId)
         {
-            if (!_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.Edit))
-            {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Mentor Get Attempt {Username} {ModuleId}", username, moduleId);
-                return Task.FromResult<MentorViewModel>(null);
-            }
-
             var user = _userManager.GetUser(username, _alias.SiteId);
             if (user == null) return Task.FromResult<MentorViewModel>(null);
 
@@ -92,12 +92,6 @@ namespace OpenEug.TenTrees.Module.Mentor.Services
 
         public async Task<MentorViewModel> CreateMentorAsync(MentorViewModel model, int moduleId)
         {
-            if (!_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.Edit))
-            {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Mentor Create Attempt {ModuleId}", moduleId);
-                return null;
-            }
-
             // Normalize and validate required fields before creating the Oqtane user
             var username = model.Username?.Trim();
             if (string.IsNullOrWhiteSpace(username))
@@ -156,12 +150,6 @@ namespace OpenEug.TenTrees.Module.Mentor.Services
 
         public Task<MentorViewModel> UpdateMentorProfileAsync(MentorViewModel model, int moduleId)
         {
-            if (!_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.Edit))
-            {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Mentor Update Attempt {ModuleId}", moduleId);
-                return Task.FromResult<MentorViewModel>(null);
-            }
-
             _mentorRepository.SetVillageId(model.UserId, model.VillageId);
 
             _logger.Log(LogLevel.Information, this, LogFunction.Update, "Mentor Profile Updated {Username}", model.Username);
@@ -170,12 +158,6 @@ namespace OpenEug.TenTrees.Module.Mentor.Services
 
         public async Task SetMentorActiveAsync(string username, bool isActive, int moduleId)
         {
-            if (!_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.Edit))
-            {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Mentor Activate/Deactivate Attempt {Username} {ModuleId}", username, moduleId);
-                return;
-            }
-
             var user = _userManager.GetUser(username, _alias.SiteId);
             if (user == null)
             {
@@ -191,12 +173,6 @@ namespace OpenEug.TenTrees.Module.Mentor.Services
 
         public Task ReassignGrowerAsync(int growerId, string newMentorUsername, int moduleId)
         {
-            if (!_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.Edit))
-            {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Grower Reassign Attempt {GrowerId} {ModuleId}", growerId, moduleId);
-                return Task.CompletedTask;
-            }
-
             _mentorRepository.ReassignGrower(growerId, newMentorUsername);
             _logger.Log(LogLevel.Information, this, LogFunction.Update, "Grower {GrowerId} reassigned to mentor {MentorUsername}", growerId, newMentorUsername);
             return Task.CompletedTask;
