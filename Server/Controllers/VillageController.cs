@@ -25,7 +25,7 @@ namespace OpenEug.TenTrees.Module.Village.Controllers
 
         // GET: api/<controller>
         [HttpGet]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Models.Village>>> Get()
         {
             try
@@ -42,7 +42,7 @@ namespace OpenEug.TenTrees.Module.Village.Controllers
 
         // GET api/<controller>/5
         [HttpGet("{id}")]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult<Models.Village>> Get(int id)
         {
             try
@@ -65,7 +65,7 @@ namespace OpenEug.TenTrees.Module.Village.Controllers
 
         // GET api/<controller>/active
         [HttpGet("active")]
-        [Authorize(Policy = PolicyNames.ViewModule)]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Models.Village>>> GetActive()
         {
             try
