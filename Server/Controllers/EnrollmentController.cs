@@ -8,7 +8,7 @@ using Oqtane.Infrastructure;
 using OpenEug.TenTrees.Module.Enrollment.Services;
 using OpenEug.TenTrees.Models;
 using Oqtane.Controllers;
-using System.Net;
+using System;
 using System.Threading.Tasks;
 
 namespace OpenEug.TenTrees.Module.Enrollment.Controllers
@@ -26,229 +26,358 @@ namespace OpenEug.TenTrees.Module.Enrollment.Controllers
         // GET: api/<controller>?moduleid=x
         [HttpGet]
         [Authorize(Policy = PolicyNames.ViewModule)]
-        public async Task<IEnumerable<Models.Enrollment>> Get(string moduleid)
+        public async Task<ActionResult<IEnumerable<Models.Enrollment>>> Get(string moduleid)
         {
-            int ModuleId;
-            if (int.TryParse(moduleid, out ModuleId) && IsAuthorizedEntityId(EntityNames.Module, ModuleId))
-            {
-                return await _EnrollmentService.GetEnrollmentsAsync(ModuleId);
-            }
-            else
+            if (!int.TryParse(moduleid, out var moduleId) || !IsAuthorizedEntityId(EntityNames.Module, moduleId))
             {
                 _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Enrollment Get Attempt {ModuleId}", moduleid);
-                HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                return null;
+                return StatusCode(StatusCodes.Status403Forbidden);
+            }
+
+            try
+            {
+                var enrollments = await _EnrollmentService.GetEnrollmentsAsync(moduleId);
+                return Ok(enrollments);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Read, "Enrollment Get Failed {ModuleId} {Error}", moduleId, ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
 
         // GET: api/<controller>/listviewmodels?moduleid=x
         [HttpGet("listviewmodels")]
         [Authorize(Policy = PolicyNames.ViewModule)]
-        public async Task<IEnumerable<EnrollmentListViewModel>> GetListViewModels(string moduleid)
+        public async Task<ActionResult<IEnumerable<EnrollmentListViewModel>>> GetListViewModels(string moduleid)
         {
-            int ModuleId;
-            if (int.TryParse(moduleid, out ModuleId) && IsAuthorizedEntityId(EntityNames.Module, ModuleId))
-            {
-                return await _EnrollmentService.GetEnrollmentListViewModelsAsync(ModuleId);
-            }
-            else
+            if (!int.TryParse(moduleid, out var moduleId) || !IsAuthorizedEntityId(EntityNames.Module, moduleId))
             {
                 _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Enrollment List ViewModel Get Attempt {ModuleId}", moduleid);
-                HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                return null;
+                return StatusCode(StatusCodes.Status403Forbidden);
+            }
+
+            try
+            {
+                var list = await _EnrollmentService.GetEnrollmentListViewModelsAsync(moduleId);
+                return Ok(list);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Read, "Enrollment List ViewModel Get Failed {ModuleId} {Error}", moduleId, ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
 
         // GET api/<controller>/users?moduleid=x
         [HttpGet("users")]
         [Authorize(Policy = PolicyNames.ViewModule)]
-        public async Task<IEnumerable<UserInfo>> GetUsers(string moduleid)
+        public async Task<ActionResult<IEnumerable<UserInfo>>> GetUsers(string moduleid)
         {
-            int ModuleId;
-            if (int.TryParse(moduleid, out ModuleId) && IsAuthorizedEntityId(EntityNames.Module, ModuleId))
-            {
-                return await _EnrollmentService.GetSiteUsersAsync(ModuleId);
-            }
-            else
+            if (!int.TryParse(moduleid, out var moduleId) || !IsAuthorizedEntityId(EntityNames.Module, moduleId))
             {
                 _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized GetUsers Attempt {ModuleId}", moduleid);
-                HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                return null;
+                return StatusCode(StatusCodes.Status403Forbidden);
+            }
+
+            try
+            {
+                var users = await _EnrollmentService.GetSiteUsersAsync(moduleId);
+                return Ok(users);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Read, "Enrollment GetUsers Failed {ModuleId} {Error}", moduleId, ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
 
         // GET api/<controller>/5
         [HttpGet("{id}/{moduleid}")]
         [Authorize(Policy = PolicyNames.ViewModule)]
-        public async Task<Models.Enrollment> Get(int id, int moduleid)
+        public async Task<ActionResult<Models.Enrollment>> Get(int id, int moduleid)
         {
-            Models.Enrollment Enrollment = await _EnrollmentService.GetEnrollmentAsync(id, moduleid);
-            if (Enrollment != null && IsAuthorizedEntityId(EntityNames.Module, Enrollment.ModuleId))
+            try
             {
-                return Enrollment;
+                var enrollment = await _EnrollmentService.GetEnrollmentAsync(id, moduleid);
+                if (enrollment == null)
+                {
+                    return NotFound();
+                }
+
+                if (!IsAuthorizedEntityId(EntityNames.Module, enrollment.ModuleId))
+                {
+                    _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Enrollment Get Attempt {EnrollmentId} {ModuleId}", id, moduleid);
+                    return StatusCode(StatusCodes.Status403Forbidden);
+                }
+
+                return Ok(enrollment);
             }
-            else
-            { 
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Enrollment Get Attempt {EnrollmentId} {ModuleId}", id, moduleid);
-                HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                return null;
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Read, "Enrollment Get Failed {EnrollmentId} {ModuleId} {Error}", id, moduleid, ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
 
         // POST api/<controller>
         [HttpPost]
         [Authorize(Policy = PolicyNames.EditModule)]
-        public async Task<Models.Enrollment> Post([FromBody] Models.Enrollment Enrollment)
+        public async Task<ActionResult<Models.Enrollment>> Post([FromBody] Models.Enrollment Enrollment)
         {
-            if (ModelState.IsValid && IsAuthorizedEntityId(EntityNames.Module, Enrollment.ModuleId))
+            if (!ModelState.IsValid)
             {
-                Enrollment = await _EnrollmentService.AddEnrollmentAsync(Enrollment);
+                return BadRequest(ModelState);
             }
-            else
+
+            if (!IsAuthorizedEntityId(EntityNames.Module, Enrollment.ModuleId))
             {
                 _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Enrollment Post Attempt {Enrollment}", Enrollment);
-                HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                Enrollment = null;
+                return StatusCode(StatusCodes.Status403Forbidden);
             }
-            return Enrollment;
+
+            try
+            {
+                var created = await _EnrollmentService.AddEnrollmentAsync(Enrollment);
+                return Ok(created);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Create, "Enrollment Post Failed {EnrollmentId} {ModuleId} {Error}", Enrollment?.EnrollmentId, Enrollment?.ModuleId, ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
 
         // PUT api/<controller>/5
         [HttpPut("{id}")]
         [Authorize(Policy = PolicyNames.EditModule)]
-        public async Task<Models.Enrollment> Put(int id, [FromBody] Models.Enrollment Enrollment)
+        public async Task<ActionResult<Models.Enrollment>> Put(int id, [FromBody] Models.Enrollment Enrollment)
         {
-            if (ModelState.IsValid && Enrollment.EnrollmentId == id && IsAuthorizedEntityId(EntityNames.Module, Enrollment.ModuleId))
+            if (!ModelState.IsValid)
             {
-                Enrollment = await _EnrollmentService.UpdateEnrollmentAsync(Enrollment);
+                return BadRequest(ModelState);
             }
-            else
+
+            if (Enrollment == null || Enrollment.EnrollmentId != id)
+            {
+                return BadRequest();
+            }
+
+            if (!IsAuthorizedEntityId(EntityNames.Module, Enrollment.ModuleId))
             {
                 _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Enrollment Put Attempt {Enrollment}", Enrollment);
-                HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                Enrollment = null;
+                return StatusCode(StatusCodes.Status403Forbidden);
             }
-            return Enrollment;
+
+            try
+            {
+                var updated = await _EnrollmentService.UpdateEnrollmentAsync(Enrollment);
+                if (updated == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(updated);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Update, "Enrollment Put Failed {EnrollmentId} {ModuleId} {Error}", id, Enrollment.ModuleId, ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
 
         // DELETE api/<controller>/5
         [HttpDelete("{id}/{moduleid}")]
         [Authorize(Policy = PolicyNames.EditModule)]
-        public async Task Delete(int id, int moduleid)
+        public async Task<ActionResult> Delete(int id, int moduleid)
         {
-            Models.Enrollment Enrollment = await _EnrollmentService.GetEnrollmentAsync(id, moduleid);
-            if (Enrollment != null && IsAuthorizedEntityId(EntityNames.Module, Enrollment.ModuleId))
+            try
             {
-                await _EnrollmentService.DeleteEnrollmentAsync(id, Enrollment.ModuleId);
+                var enrollment = await _EnrollmentService.GetEnrollmentAsync(id, moduleid);
+                if (enrollment == null)
+                {
+                    return NotFound();
+                }
+
+                if (!IsAuthorizedEntityId(EntityNames.Module, enrollment.ModuleId))
+                {
+                    _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Enrollment Delete Attempt {EnrollmentId} {ModuleId}", id, moduleid);
+                    return StatusCode(StatusCodes.Status403Forbidden);
+                }
+
+                await _EnrollmentService.DeleteEnrollmentAsync(id, enrollment.ModuleId);
+                return NoContent();
             }
-            else
+            catch (Exception ex)
             {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Enrollment Delete Attempt {EnrollmentId} {ModuleId}", id, moduleid);
-                HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                _logger.Log(LogLevel.Error, this, LogFunction.Delete, "Enrollment Delete Failed {EnrollmentId} {ModuleId} {Error}", id, moduleid, ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
         
         // POST api/<controller>/validate
         [HttpPost("validate")]
         [Authorize(Policy = PolicyNames.EditModule)]
-        public async Task<ValidationResult> Validate([FromBody] Models.Enrollment Enrollment)
+        public async Task<ActionResult<ValidationResult>> Validate([FromBody] Models.Enrollment Enrollment)
         {
-            if (IsAuthorizedEntityId(EntityNames.Module, Enrollment.ModuleId))
-            {
-                return await _EnrollmentService.ValidateRequiredAsync(Enrollment);
-            }
-            else
+            if (!IsAuthorizedEntityId(EntityNames.Module, Enrollment.ModuleId))
             {
                 _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Enrollment Validate Attempt");
-                HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                return null;
+                return StatusCode(StatusCodes.Status403Forbidden);
+            }
+
+            try
+            {
+                var validation = await _EnrollmentService.ValidateRequiredAsync(Enrollment);
+                return Ok(validation);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Read, "Enrollment Validate Failed {EnrollmentId} {ModuleId} {Error}", Enrollment?.EnrollmentId, Enrollment?.ModuleId, ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
         
         // POST api/<controller>/5/signature
         [HttpPost("{id}/signature")]
         [Authorize(Policy = PolicyNames.EditModule)]
-        public async Task<bool> CaptureSignature(int id, [FromBody] SignatureRequest request)
+        public async Task<ActionResult<bool>> CaptureSignature(int id, [FromBody] SignatureRequest request)
         {
-            var enrollment = await _EnrollmentService.GetEnrollmentAsync(id, request.ModuleId);
-            if (enrollment != null && IsAuthorizedEntityId(EntityNames.Module, enrollment.ModuleId))
+            try
             {
-                return await _EnrollmentService.CaptureSignatureAsync(id, request.SignatureData);
+                var enrollment = await _EnrollmentService.GetEnrollmentAsync(id, request.ModuleId);
+                if (enrollment == null)
+                {
+                    return NotFound();
+                }
+
+                if (!IsAuthorizedEntityId(EntityNames.Module, enrollment.ModuleId))
+                {
+                    _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Signature Capture Attempt {EnrollmentId}", id);
+                    return StatusCode(StatusCodes.Status403Forbidden);
+                }
+
+                var captured = await _EnrollmentService.CaptureSignatureAsync(id, request.SignatureData);
+                return Ok(captured);
             }
-            else
+            catch (Exception ex)
             {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Signature Capture Attempt {EnrollmentId}", id);
-                HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                return false;
+                _logger.Log(LogLevel.Error, this, LogFunction.Update, "Signature Capture Failed {EnrollmentId} {ModuleId} {Error}", id, request?.ModuleId, ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
 
         // POST api/<controller>/5/photoconsent
         [HttpPost("{id}/photoconsent")]
         [Authorize(Policy = PolicyNames.EditModule)]
-        public async Task<bool> CapturePhotoConsent(int id, [FromBody] PhotoConsentRequest request)
+        public async Task<ActionResult<bool>> CapturePhotoConsent(int id, [FromBody] PhotoConsentRequest request)
         {
-            var enrollment = await _EnrollmentService.GetEnrollmentAsync(id, request.ModuleId);
-            if (enrollment != null && IsAuthorizedEntityId(EntityNames.Module, enrollment.ModuleId))
+            try
             {
-                return await _EnrollmentService.CapturePhotoConsentAsync(id, request.ModuleId, request.ConsentLevel, request.SignatureData);
+                var enrollment = await _EnrollmentService.GetEnrollmentAsync(id, request.ModuleId);
+                if (enrollment == null)
+                {
+                    return NotFound();
+                }
+
+                if (!IsAuthorizedEntityId(EntityNames.Module, enrollment.ModuleId))
+                {
+                    _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Photo Consent Capture Attempt {EnrollmentId}", id);
+                    return StatusCode(StatusCodes.Status403Forbidden);
+                }
+
+                var captured = await _EnrollmentService.CapturePhotoConsentAsync(id, request.ModuleId, request.ConsentLevel, request.SignatureData);
+                return Ok(captured);
             }
-            else
+            catch (Exception ex)
             {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Photo Consent Capture Attempt {EnrollmentId}", id);
-                HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                return false;
+                _logger.Log(LogLevel.Error, this, LogFunction.Update, "Photo Consent Capture Failed {EnrollmentId} {ModuleId} {Error}", id, request?.ModuleId, ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
         
         // GET api/<controller>/mentor/5
         [HttpGet("mentor/{userid}")]
         [Authorize(Policy = PolicyNames.ViewModule)]
-        public async Task<MentorInfo> GetMentorInfo(int userid)
+        public async Task<ActionResult<MentorInfo>> GetMentorInfo(int userid)
         {
-            return await _EnrollmentService.AutoFillMentorAsync(userid);
+            try
+            {
+                var mentor = await _EnrollmentService.AutoFillMentorAsync(userid);
+                if (mentor == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(mentor);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Read, "Enrollment MentorInfo Get Failed {UserId} {Error}", userid, ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
         
         // GET api/<controller>/status/{status}?moduleid=x
         [HttpGet("status/{status}")]
         [Authorize(Policy = PolicyNames.ViewModule)]
-        public async Task<IEnumerable<Models.Enrollment>> GetByStatus(Models.EnrollmentStatus status, string moduleid)
+        public async Task<ActionResult<IEnumerable<Models.Enrollment>>> GetByStatus(Models.EnrollmentStatus status, string moduleid)
         {
-            int ModuleId;
-            if (int.TryParse(moduleid, out ModuleId) && IsAuthorizedEntityId(EntityNames.Module, ModuleId))
-            {
-                return await _EnrollmentService.GetByStatusAsync(ModuleId, status);
-            }
-            else
+            if (!int.TryParse(moduleid, out var moduleId) || !IsAuthorizedEntityId(EntityNames.Module, moduleId))
             {
                 _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Enrollment Get By Status Attempt {ModuleId}", moduleid);
-                HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                return null;
+                return StatusCode(StatusCodes.Status403Forbidden);
+            }
+
+            try
+            {
+                var enrollments = await _EnrollmentService.GetByStatusAsync(moduleId, status);
+                return Ok(enrollments);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Read, "Enrollment GetByStatus Failed {ModuleId} {Status} {Error}", moduleId, status, ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
         
         // GET api/<controller>/village/5
         [HttpGet("village/{villageid}")]
         [Authorize(Policy = PolicyNames.ViewModule)]
-        public async Task<IEnumerable<Models.Enrollment>> GetByVillage(int villageid)
+        public async Task<ActionResult<IEnumerable<Models.Enrollment>>> GetByVillage(int villageid)
         {
-            return await _EnrollmentService.GetByVillageAsync(villageid);
+            try
+            {
+                var enrollments = await _EnrollmentService.GetByVillageAsync(villageid);
+                return Ok(enrollments);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Read, "Enrollment GetByVillage Failed {VillageId} {Error}", villageid, ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
 
         // POST api/<controller>/backfill-growers
         [HttpPost("backfill-growers")]
         [Authorize(Policy = PolicyNames.EditModule)]
-        public async Task<int> BackfillGrowers(int moduleId)
+        public async Task<ActionResult<int>> BackfillGrowers(int moduleId)
         {
-            if (IsAuthorizedEntityId(EntityNames.Module, moduleId))
-            {
-                return await _EnrollmentService.BackfillGrowersFromEnrollmentsAsync(moduleId);
-            }
-            else
+            if (!IsAuthorizedEntityId(EntityNames.Module, moduleId))
             {
                 _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Backfill Growers Attempt {ModuleId}", moduleId);
-                HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                return 0;
+                return StatusCode(StatusCodes.Status403Forbidden);
+            }
+
+            try
+            {
+                var count = await _EnrollmentService.BackfillGrowersFromEnrollmentsAsync(moduleId);
+                return Ok(count);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Update, "Backfill Growers Failed {ModuleId} {Error}", moduleId, ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
     }
