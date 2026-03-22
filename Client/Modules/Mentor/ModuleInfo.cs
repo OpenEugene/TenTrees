@@ -9,9 +9,9 @@ namespace OpenEug.TenTrees.Module.Mentor
         {
             Name = "Mentor",
             Description = "Mentor user management — create, edit, activate/deactivate mentors and assign growers",
-            Version = "1.0.2",
+            Version = "1.0.3",
             ServerManagerType = "",
-            ReleaseVersions = "1.0.0,1.0.1,1.0.2",
+            ReleaseVersions = "1.0.0,1.0.1,1.0.2,1.0.3",
             Dependencies = "OpenEug.TenTrees.Module.Village.1.0.0",
             PackageName = "OpenEug.TenTrees.Module.Mentor"
         };
