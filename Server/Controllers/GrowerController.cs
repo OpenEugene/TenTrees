@@ -25,7 +25,7 @@ namespace OpenEug.TenTrees.Module.Grower.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(Policy = PolicyNames.ViewModule)]
+        [Authorize]
         public async Task<ActionResult<Models.Grower>> Get(int id, int moduleId)
         {
             try
@@ -46,7 +46,7 @@ namespace OpenEug.TenTrees.Module.Grower.Controllers
         }
 
         [HttpGet("all")]
-        [Authorize(Policy = PolicyNames.ViewModule)]
+        [Authorize]
         public async Task<ActionResult<List<Models.Grower>>> GetAll(int moduleId, int? villageId = null)
         {
             try
@@ -114,7 +114,7 @@ namespace OpenEug.TenTrees.Module.Grower.Controllers
         }
 
         [HttpGet("active")]
-        [Authorize(Policy = PolicyNames.ViewModule)]
+        [Authorize]
         public async Task<ActionResult<List<Models.Grower>>> GetActiveGrowers(int moduleId, int? villageId = null)
         {
             try
@@ -130,7 +130,7 @@ namespace OpenEug.TenTrees.Module.Grower.Controllers
         }
 
         [HttpGet("by-status")]
-        [Authorize(Policy = PolicyNames.ViewModule)]
+        [Authorize]
         public async Task<ActionResult<List<Models.Grower>>> GetByStatus(int moduleId, GrowerStatus status, int? villageId = null)
         {
             try
@@ -146,7 +146,7 @@ namespace OpenEug.TenTrees.Module.Grower.Controllers
         }
 
         [HttpGet("status-summary")]
-        [Authorize(Policy = PolicyNames.ViewModule)]
+        [Authorize]
         public async Task<ActionResult<GrowerStatusSummary>> GetStatusSummary(int moduleId, int? villageId = null)
         {
             try

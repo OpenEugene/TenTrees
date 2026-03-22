@@ -24,7 +24,7 @@ namespace OpenEug.TenTrees.Module.Assessment.Controllers
         }
 
         [HttpGet]
-        [Authorize(Policy = PolicyNames.ViewModule)]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Models.Assessment>>> Get(int moduleId)
         {
             try
@@ -40,7 +40,7 @@ namespace OpenEug.TenTrees.Module.Assessment.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(Policy = PolicyNames.ViewModule)]
+        [Authorize]
         public async Task<ActionResult<Models.Assessment>> Get(int id, int moduleId)
         {
             try
@@ -61,7 +61,7 @@ namespace OpenEug.TenTrees.Module.Assessment.Controllers
         }
 
         [HttpGet("grower/{growerId}")]
-        [Authorize(Policy = PolicyNames.ViewModule)]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Models.Assessment>>> GetByGrower(int growerId, int moduleId)
         {
             try
@@ -151,7 +151,7 @@ namespace OpenEug.TenTrees.Module.Assessment.Controllers
         }
 
         [HttpGet("can-submit/{growerId}")]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult<bool>> CanSubmit(int growerId, int moduleId)
         {
             try

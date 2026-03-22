@@ -25,7 +25,7 @@ namespace OpenEug.TenTrees.Module.Enrollment.Controllers
 
         // GET: api/<controller>?moduleid=x
         [HttpGet]
-        [Authorize(Policy = PolicyNames.ViewModule)]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Models.Enrollment>>> Get(string moduleid)
         {
             if (!int.TryParse(moduleid, out var moduleId) || !IsAuthorizedEntityId(EntityNames.Module, moduleId))
@@ -48,7 +48,7 @@ namespace OpenEug.TenTrees.Module.Enrollment.Controllers
 
         // GET: api/<controller>/listviewmodels?moduleid=x
         [HttpGet("listviewmodels")]
-        [Authorize(Policy = PolicyNames.ViewModule)]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<EnrollmentListViewModel>>> GetListViewModels(string moduleid)
         {
             if (!int.TryParse(moduleid, out var moduleId) || !IsAuthorizedEntityId(EntityNames.Module, moduleId))
@@ -71,7 +71,7 @@ namespace OpenEug.TenTrees.Module.Enrollment.Controllers
 
         // GET api/<controller>/users?moduleid=x
         [HttpGet("users")]
-        [Authorize(Policy = PolicyNames.ViewModule)]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<UserInfo>>> GetUsers(string moduleid)
         {
             if (!int.TryParse(moduleid, out var moduleId) || !IsAuthorizedEntityId(EntityNames.Module, moduleId))
@@ -94,7 +94,7 @@ namespace OpenEug.TenTrees.Module.Enrollment.Controllers
 
         // GET api/<controller>/5
         [HttpGet("{id}/{moduleid}")]
-        [Authorize(Policy = PolicyNames.ViewModule)]
+        [Authorize]
         public async Task<ActionResult<Models.Enrollment>> Get(int id, int moduleid)
         {
             try
@@ -298,7 +298,7 @@ namespace OpenEug.TenTrees.Module.Enrollment.Controllers
         
         // GET api/<controller>/mentor/5
         [HttpGet("mentor/{userid}")]
-        [Authorize(Policy = PolicyNames.ViewModule)]
+        [Authorize]
         public async Task<ActionResult<MentorInfo>> GetMentorInfo(int userid)
         {
             try
@@ -320,7 +320,7 @@ namespace OpenEug.TenTrees.Module.Enrollment.Controllers
         
         // GET api/<controller>/status/{status}?moduleid=x
         [HttpGet("status/{status}")]
-        [Authorize(Policy = PolicyNames.ViewModule)]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Models.Enrollment>>> GetByStatus(Models.EnrollmentStatus status, string moduleid)
         {
             if (!int.TryParse(moduleid, out var moduleId) || !IsAuthorizedEntityId(EntityNames.Module, moduleId))
@@ -343,7 +343,7 @@ namespace OpenEug.TenTrees.Module.Enrollment.Controllers
         
         // GET api/<controller>/village/5
         [HttpGet("village/{villageid}")]
-        [Authorize(Policy = PolicyNames.ViewModule)]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Models.Enrollment>>> GetByVillage(int villageid)
         {
             try
