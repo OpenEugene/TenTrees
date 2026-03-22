@@ -23,6 +23,11 @@
         <div class="progress-bar" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
     </div>
 
+@if (!string.IsNullOrEmpty(_stepError))
+{
+    <div class="alert alert-danger" role="alert">@_stepError</div>
+}
+
 <form @ref="form" class="@(validated ? " was-validated" : "needs-validation" )" novalidate>
     <div class="row">
         <!-- Card 1: Participant Information -->
@@ -165,11 +170,13 @@
     private int _householdSize = 1;
     private DateTime _enrollmentDate = DateTime.Today;
     private string resourceType;
+    private string _stepError;
 
     protected override async Task OnParametersSetAsync()
     {
         try
         {
+            _stepError = null;
             resourceType = GetType().AssemblyQualifiedName;
 
             // Load villages and users — new enrollment only shows active villages
@@ -204,7 +211,7 @@
         catch (Exception ex)
         {
             await logger.LogError(ex, "Error initializing BasicInfo {Error}", ex.Message);
-            AddModuleMessage(Localizer["Message.Error"], MessageType.Error);
+            _stepError = Localizer["Message.Error"];
         }
     }
 
@@ -221,6 +228,7 @@
     {
         try
         {
+            _stepError = null;
             validated = true;
             var interop = new Oqtane.UI.Interop(JSRuntime);
             if (await interop.FormValid(form))
@@ -242,13 +250,13 @@
             }
             else
             {
-                AddModuleMessage(Localizer["Message.ValidationError"], MessageType.Error);
+                _stepError = Localizer["Message.ValidationError"];
             }
         }
         catch (Exception ex)
         {
             await logger.LogError(ex, "Error in BasicInfo step {Error}", ex.Message);
-            AddModuleMessage(Localizer["Message.Error"], MessageType.Error);
+            _stepError = Localizer["Message.Error"];
         }
     }
 }

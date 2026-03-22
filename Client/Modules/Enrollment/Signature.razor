@@ -18,6 +18,11 @@
     <div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
 </div>
 
+@if (!string.IsNullOrEmpty(_stepError))
+{
+    <div class="alert alert-danger" role="alert">@_stepError</div>
+}
+
 <div class="card mb-3">
     <div class="card-header bg-primary text-white">
         <h5 class="mb-0">@Localizer["Section.Signature"]</h5>
@@ -97,9 +102,11 @@
     private bool _confirmed;
     private bool _isSaving;
     private const string CanvasId = "signatureCanvas";
+    private string _stepError;
 
     protected override void OnParametersSet()
     {
+        _stepError = null;
         if (StateService.CurrentDraft == null)
         {
             NavigationManager.NavigateTo(EditUrl("BasicInfo"));
@@ -127,6 +134,7 @@
 
     private async Task PreviousStep()
     {
+        _stepError = null;
         var data = await JSRuntime.InvokeAsync<string>("OpenEug.TenTrees.Enrollment.SignaturePad.getData", CanvasId);
         StateService.CurrentDraft.SignatureData = data;
         NavigationManager.NavigateTo(EditUrl("Commitments"));
@@ -136,16 +144,18 @@
     {
         try
         {
+            _stepError = null;
+
             if (!_confirmed)
             {
-                AddModuleMessage(Localizer["Message.ValidationError"], MessageType.Error);
+                _stepError = Localizer["Message.ValidationError"];
                 return;
             }
 
             var blank = await JSRuntime.InvokeAsync<bool>("OpenEug.TenTrees.Enrollment.SignaturePad.isBlank", CanvasId);
             if (blank)
             {
-                AddModuleMessage(Localizer["Message.SignatureRequired"], MessageType.Error);
+                _stepError = Localizer["Message.SignatureRequired"];
                 return;
             }
 
@@ -197,7 +207,7 @@
         {
             _isSaving = false;
             await logger.LogError(ex, "Error Saving Enrollment {Error}", ex.Message);
-            AddModuleMessage(Localizer["Message.Error"], MessageType.Error);
+            _stepError = Localizer["Message.Error"];
         }
     }
 }

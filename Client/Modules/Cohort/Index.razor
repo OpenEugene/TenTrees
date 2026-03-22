@@ -46,15 +46,13 @@ else
                 {
                     <tr>
                         <td style="white-space: nowrap;">
-                            <ActionLink Action="Edit" Parameters="@($"id={cohort.CohortId}")"
-                                        aria-label="@($"Edit cohort {cohort.Name}")" />
+                            <ActionLink Action="Edit" Parameters="@($"id={cohort.CohortId}")" />
                             <ActionDialog Header="Delete Cohort"
                                           Message="@($"Delete cohort \"{cohort.Name}\"? This cannot be undone.")"
                                           Action="Delete"
                                           Security="SecurityAccessLevel.Edit"
                                           Class="btn btn-sm btn-danger ms-1"
-                                          OnClick="@(async () => await Delete(cohort))"
-                                          aria-label="@($"Delete cohort {cohort.Name}")" />
+                                          OnClick="@(async () => await Delete(cohort))" />
                         </td>
                         <td>@cohort.Name</td>
                         <td>@(_villageNames.GetValueOrDefault(cohort.VillageId, "—"))</td>
