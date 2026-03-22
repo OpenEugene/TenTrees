@@ -8,7 +8,7 @@ using Oqtane.Infrastructure;
 using OpenEug.TenTrees.Module.Village.Services;
 using Models = OpenEug.TenTrees.Models;
 using Oqtane.Controllers;
-using System.Net;
+using System;
 using System.Threading.Tasks;
 
 namespace OpenEug.TenTrees.Module.Village.Controllers
@@ -26,79 +26,132 @@ namespace OpenEug.TenTrees.Module.Village.Controllers
         // GET: api/<controller>
         [HttpGet]
         [Authorize(Policy = PolicyNames.EditModule)]
-        public async Task<IEnumerable<Models.Village>> Get()
+        public async Task<ActionResult<IEnumerable<Models.Village>>> Get()
         {
-            return await _villageService.GetVillagesAsync();
+            try
+            {
+                var villages = await _villageService.GetVillagesAsync();
+                return Ok(villages);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Read, "Village Get Failed {Error}", ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
 
         // GET api/<controller>/5
         [HttpGet("{id}")]
         [Authorize(Policy = PolicyNames.EditModule)]
-        public async Task<Models.Village> Get(int id)
+        public async Task<ActionResult<Models.Village>> Get(int id)
         {
-            Models.Village village = await _villageService.GetVillageAsync(id);
-            if (village != null)
+            try
             {
-                return village;
+                var village = await _villageService.GetVillageAsync(id);
+                if (village == null)
+                {
+                    _logger.Log(LogLevel.Warning, this, LogFunction.Read, "Village Not Found {VillageId}", id);
+                    return NotFound();
+                }
+
+                return Ok(village);
             }
-            else
-            { 
-                _logger.Log(LogLevel.Warning, this, LogFunction.Security, "Village Not Found {VillageId}", id);
-                HttpContext.Response.StatusCode = (int)HttpStatusCode.NotFound;
-                return null;
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Read, "Village Get Failed {VillageId} {Error}", id, ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
 
         // GET api/<controller>/active
         [HttpGet("active")]
         [Authorize(Policy = PolicyNames.ViewModule)]
-        public async Task<IEnumerable<Models.Village>> GetActive()
+        public async Task<ActionResult<IEnumerable<Models.Village>>> GetActive()
         {
-            return await _villageService.GetActiveVillagesAsync();
+            try
+            {
+                var villages = await _villageService.GetActiveVillagesAsync();
+                return Ok(villages);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Read, "Village GetActive Failed {Error}", ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
 
         // POST api/<controller>
         [HttpPost]
         [Authorize(Policy = PolicyNames.EditModule)]
-        public async Task<Models.Village> Post([FromBody] Models.Village village)
+        public async Task<ActionResult<Models.Village>> Post([FromBody] Models.Village village)
         {
-            if (ModelState.IsValid)
+            try
             {
-                village = await _villageService.AddVillageAsync(village);
+                if (!ModelState.IsValid)
+                {
+                    _logger.Log(LogLevel.Error, this, LogFunction.Create, "Village Add Failed Validation {Village}", village);
+                    return BadRequest(ModelState);
+                }
+
+                var created = await _villageService.AddVillageAsync(village);
+                return Ok(created);
             }
-            else
+            catch (Exception ex)
             {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Village Post Attempt {Village}", village);
-                HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                village = null;
+                _logger.Log(LogLevel.Error, this, LogFunction.Create, "Village Add Failed {Village} {Error}", village, ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
-            return village;
         }
 
         // PUT api/<controller>/5
         [HttpPut("{id}")]
         [Authorize(Policy = PolicyNames.EditModule)]
-        public async Task<Models.Village> Put(int id, [FromBody] Models.Village village)
+        public async Task<ActionResult<Models.Village>> Put(int id, [FromBody] Models.Village village)
         {
-            if (ModelState.IsValid && village.VillageId == id)
+            try
             {
-                village = await _villageService.UpdateVillageAsync(village);
+                if (!ModelState.IsValid)
+                {
+                    _logger.Log(LogLevel.Error, this, LogFunction.Update, "Village Update Failed Validation {Village}", village);
+                    return BadRequest(ModelState);
+                }
+
+                if (village == null || village.VillageId != id)
+                {
+                    _logger.Log(LogLevel.Error, this, LogFunction.Update, "Village Update Failed Id Mismatch {RouteId} {VillageId}", id, village?.VillageId);
+                    return BadRequest();
+                }
+
+                var updated = await _villageService.UpdateVillageAsync(village);
+                if (updated == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(updated);
             }
-            else
+            catch (Exception ex)
             {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Village Put Attempt {Village}", village);
-                HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                village = null;
+                _logger.Log(LogLevel.Error, this, LogFunction.Update, "Village Update Failed {VillageId} {Error}", id, ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
-            return village;
         }
 
         // DELETE api/<controller>/5
         [HttpDelete("{id}")]
         [Authorize(Policy = PolicyNames.EditModule)]
-        public async Task Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            await _villageService.DeleteVillageAsync(id);
+            try
+            {
+                await _villageService.DeleteVillageAsync(id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Delete, "Village Delete Failed {VillageId} {Error}", id, ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
     }
 }
