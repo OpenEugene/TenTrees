@@ -5,6 +5,7 @@ using Oqtane.Shared;
 using Oqtane.Enums;
 using Oqtane.Infrastructure;
 using OpenEug.TenTrees.Module.Assessment.Services;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -24,70 +25,145 @@ namespace OpenEug.TenTrees.Module.Assessment.Controllers
 
         [HttpGet]
         [Authorize(Policy = PolicyNames.ViewModule)]
-        public async Task<IEnumerable<Models.Assessment>> Get(int moduleId)
+        public async Task<ActionResult<IEnumerable<Models.Assessment>>> Get(int moduleId)
         {
-            return await _assessmentService.GetAssessmentsAsync(moduleId);
+            try
+            {
+                var assessments = await _assessmentService.GetAssessmentsAsync(moduleId);
+                return Ok(assessments);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Read, "Assessment Get Failed {ModuleId} {Error}", moduleId, ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
 
         [HttpGet("{id}")]
         [Authorize(Policy = PolicyNames.ViewModule)]
-        public async Task<Models.Assessment> Get(int id, int moduleId)
+        public async Task<ActionResult<Models.Assessment>> Get(int id, int moduleId)
         {
-            return await _assessmentService.GetAssessmentAsync(id, moduleId);
+            try
+            {
+                var assessment = await _assessmentService.GetAssessmentAsync(id, moduleId);
+                if (assessment == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(assessment);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Read, "Assessment Get Failed {AssessmentId} {ModuleId} {Error}", id, moduleId, ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
 
         [HttpGet("grower/{growerId}")]
         [Authorize(Policy = PolicyNames.ViewModule)]
-        public async Task<IEnumerable<Models.Assessment>> GetByGrower(int growerId, int moduleId)
+        public async Task<ActionResult<IEnumerable<Models.Assessment>>> GetByGrower(int growerId, int moduleId)
         {
-            return await _assessmentService.GetAssessmentsByGrowerAsync(growerId, moduleId);
+            try
+            {
+                var assessments = await _assessmentService.GetAssessmentsByGrowerAsync(growerId, moduleId);
+                return Ok(assessments);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Read, "Assessment Get By Grower Failed {GrowerId} {ModuleId} {Error}", growerId, moduleId, ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
 
         [HttpPost]
         [Authorize(Policy = PolicyNames.EditModule)]
-        public async Task<Models.Assessment> Post([FromBody] Models.Assessment assessment)
+        public async Task<ActionResult<Models.Assessment>> Post([FromBody] Models.Assessment assessment)
         {
-            if (ModelState.IsValid)
+            try
             {
-                assessment = await _assessmentService.AddAssessmentAsync(assessment);
-                _logger.Log(LogLevel.Information, this, LogFunction.Create, "Assessment Added {Assessment}", assessment);
+                if (!ModelState.IsValid)
+                {
+                    _logger.Log(LogLevel.Error, this, LogFunction.Create, "Assessment Add Failed Validation {Assessment}", assessment);
+                    return BadRequest(ModelState);
+                }
+
+                var created = await _assessmentService.AddAssessmentAsync(assessment);
+                _logger.Log(LogLevel.Information, this, LogFunction.Create, "Assessment Added {Assessment}", created);
+                return Ok(created);
             }
-            else
+            catch (Exception ex)
             {
-                _logger.Log(LogLevel.Error, this, LogFunction.Create, "Assessment Add Failed {Assessment}", assessment);
+                _logger.Log(LogLevel.Error, this, LogFunction.Create, "Assessment Add Failed {Assessment} {Error}", assessment, ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
-            return assessment;
         }
 
         [HttpPut("{id}")]
         [Authorize(Policy = PolicyNames.EditModule)]
-        public async Task<Models.Assessment> Put(int id, [FromBody] Models.Assessment assessment)
+        public async Task<ActionResult<Models.Assessment>> Put(int id, [FromBody] Models.Assessment assessment)
         {
-            if (ModelState.IsValid && assessment.AssessmentId == id)
+            try
             {
-                assessment = await _assessmentService.UpdateAssessmentAsync(assessment);
-                _logger.Log(LogLevel.Information, this, LogFunction.Update, "Assessment Updated {Assessment}", assessment);
+                if (!ModelState.IsValid)
+                {
+                    _logger.Log(LogLevel.Error, this, LogFunction.Update, "Assessment Update Failed Validation {Assessment}", assessment);
+                    return BadRequest(ModelState);
+                }
+
+                if (assessment == null || assessment.AssessmentId != id)
+                {
+                    _logger.Log(LogLevel.Error, this, LogFunction.Update, "Assessment Update Failed Id Mismatch {RouteId} {AssessmentId}", id, assessment?.AssessmentId);
+                    return BadRequest();
+                }
+
+                var updated = await _assessmentService.UpdateAssessmentAsync(assessment);
+                if (updated == null)
+                {
+                    return NotFound();
+                }
+
+                _logger.Log(LogLevel.Information, this, LogFunction.Update, "Assessment Updated {Assessment}", updated);
+                return Ok(updated);
             }
-            else
+            catch (Exception ex)
             {
-                _logger.Log(LogLevel.Error, this, LogFunction.Update, "Assessment Update Failed {Assessment}", assessment);
+                _logger.Log(LogLevel.Error, this, LogFunction.Update, "Assessment Update Failed {AssessmentId} {Error}", id, ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
-            return assessment;
         }
 
         [HttpDelete("{id}")]
         [Authorize(Policy = PolicyNames.EditModule)]
-        public async Task Delete(int id, int moduleId)
+        public async Task<ActionResult> Delete(int id, int moduleId)
         {
-            await _assessmentService.DeleteAssessmentAsync(id, moduleId);
-            _logger.Log(LogLevel.Information, this, LogFunction.Delete, "Assessment Deleted {AssessmentId}", id);
+            try
+            {
+                await _assessmentService.DeleteAssessmentAsync(id, moduleId);
+                _logger.Log(LogLevel.Information, this, LogFunction.Delete, "Assessment Deleted {AssessmentId}", id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Delete, "Assessment Delete Failed {AssessmentId} {ModuleId} {Error}", id, moduleId, ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
 
         [HttpGet("can-submit/{growerId}")]
         [Authorize(Policy = PolicyNames.EditModule)]
-        public async Task<bool> CanSubmit(int growerId, int moduleId)
+        public async Task<ActionResult<bool>> CanSubmit(int growerId, int moduleId)
         {
-            return await _assessmentService.CanSubmitAssessmentAsync(growerId, moduleId);
+            try
+            {
+                var canSubmit = await _assessmentService.CanSubmitAssessmentAsync(growerId, moduleId);
+                return Ok(canSubmit);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Read, "Assessment CanSubmit Failed {GrowerId} {ModuleId} {Error}", growerId, moduleId, ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
     }
 }
