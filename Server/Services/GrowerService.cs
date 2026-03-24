@@ -39,14 +39,8 @@ namespace OpenEug.TenTrees.Module.Grower.Services
         private bool IsMentor() => _accessor.HttpContext.User.IsInRole(AppRoleNames.Mentor);
         private string CurrentUsername() => _accessor.HttpContext.User.Identity?.Name;
 
-        public Task<Models.Grower> GetGrowerAsync(int growerId, int moduleId)
+        public Task<Models.Grower> GetGrowerAsync(int growerId)
         {
-            if (!_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.View))
-            {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Grower Get Attempt {GrowerId} {ModuleId}", growerId, moduleId);
-                return null;
-            }
-
             var grower = _growerRepository.GetGrower(growerId);
             if (grower != null && IsMentor() && grower.MentorUsername != CurrentUsername())
             {
@@ -56,14 +50,8 @@ namespace OpenEug.TenTrees.Module.Grower.Services
             return Task.FromResult(grower);
         }
 
-        public Task<List<Models.Grower>> GetAllGrowersAsync(int moduleId, int? villageId = null)
+        public Task<List<Models.Grower>> GetAllGrowersAsync(int? villageId = null)
         {
-            if (!_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.View))
-            {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized All Growers Get Attempt {ModuleId}", moduleId);
-                return null;
-            }
-
             var growers = _growerRepository.GetAllGrowers(villageId).ToList();
             if (IsMentor())
                 growers = growers.Where(g => g.MentorUsername == CurrentUsername()).ToList();
@@ -144,46 +132,27 @@ namespace OpenEug.TenTrees.Module.Grower.Services
             return Task.FromResult(grower);
         }
 
-        public Task<List<Models.Grower>> GetActiveGrowersAsync(int moduleId, int? villageId = null)
+        public Task<List<Models.Grower>> GetActiveGrowersAsync(int? villageId = null)
         {
-            if (!_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.View))
-            {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Active Growers Get Attempt {ModuleId}", moduleId);
-                return Task.FromResult(new List<Models.Grower>());
-            }
-
             var growers = _growerRepository.GetActiveGrowers(villageId).ToList();
             if (IsMentor())
                 growers = growers.Where(g => g.MentorUsername == CurrentUsername()).ToList();
             return Task.FromResult(growers);
         }
 
-        public Task<List<Models.Grower>> GetGrowersByStatusAsync(GrowerStatus status, int moduleId, int? villageId = null)
+        public Task<List<Models.Grower>> GetGrowersByStatusAsync(GrowerStatus status, int? villageId = null)
         {
-            if (!_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.View))
-            {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Growers By Status Get Attempt {ModuleId}", moduleId);
-                return Task.FromResult(new List<Models.Grower>());
-            }
-
             var growers = _growerRepository.GetGrowersByStatus(status, villageId).ToList();
             if (IsMentor())
                 growers = growers.Where(g => g.MentorUsername == CurrentUsername()).ToList();
             return Task.FromResult(growers);
         }
 
-        public Task<GrowerStatusSummary> GetStatusSummaryAsync(int moduleId, int? villageId = null)
+        public Task<GrowerStatusSummary> GetStatusSummaryAsync(int? villageId = null)
         {
-            if (!_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.View))
-            {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Status Summary Get Attempt {ModuleId}", moduleId);
-                return Task.FromResult<GrowerStatusSummary>(null);
-            }
-
             var summary = _growerRepository.GetStatusSummary(villageId);
             if (IsMentor())
             {
-                // Recompute summary scoped to this mentor's growers
                 var growers = _growerRepository.GetGrowersByMentor(CurrentUsername()).ToList();
                 summary = new GrowerStatusSummary
                 {

@@ -11,8 +11,6 @@ namespace OpenEug.TenTrees.Models
         [Key]
         public int TrainingClassId { get; set; }
 
-        public int ModuleId { get; set; }
-
         [Required]
         public int VillageId { get; set; }
 

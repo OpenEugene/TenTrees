@@ -10,8 +10,6 @@ namespace OpenEug.TenTrees.Models
     {
         [Key]
         public int EnrollmentId { get; set; }
-        
-        public int ModuleId { get; set; }
 
         // Grower Information (creates Grower record)
         public int? GrowerId { get; set; }

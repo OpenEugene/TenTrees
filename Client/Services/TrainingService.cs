@@ -30,14 +30,14 @@ namespace OpenEug.TenTrees.Module.Training.Services
             return await GetJsonAsync<TrainingClass>(CreateAuthorizationPolicyUrl($"{ApiUrl}/{classId}?moduleid={moduleId}", EntityNames.Module, moduleId));
         }
 
-        public async Task<TrainingClass> AddTrainingClassAsync(TrainingClass trainingClass)
+        public async Task<TrainingClass> AddTrainingClassAsync(TrainingClass trainingClass, int moduleId)
         {
-            return await PostJsonAsync<TrainingClass>(CreateAuthorizationPolicyUrl($"{ApiUrl}", EntityNames.Module, trainingClass.ModuleId), trainingClass);
+            return await PostJsonAsync<TrainingClass>(CreateAuthorizationPolicyUrl($"{ApiUrl}", EntityNames.Module, moduleId), trainingClass);
         }
 
-        public async Task<TrainingClass> UpdateTrainingClassAsync(TrainingClass trainingClass)
+        public async Task<TrainingClass> UpdateTrainingClassAsync(TrainingClass trainingClass, int moduleId)
         {
-            return await PutJsonAsync<TrainingClass>(CreateAuthorizationPolicyUrl($"{ApiUrl}/{trainingClass.TrainingClassId}", EntityNames.Module, trainingClass.ModuleId), trainingClass);
+            return await PutJsonAsync<TrainingClass>(CreateAuthorizationPolicyUrl($"{ApiUrl}/{trainingClass.TrainingClassId}", EntityNames.Module, moduleId), trainingClass);
         }
 
         public async Task DeleteTrainingClassAsync(int classId, int moduleId)
