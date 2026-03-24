@@ -166,7 +166,6 @@
 
             var enrollment = new Models.Enrollment
             {
-                ModuleId = ModuleState.ModuleId,
                 GrowerName = StateService.CurrentDraft.GrowerName,
                 VillageId = StateService.CurrentDraft.VillageId,
                 HouseNumber = StateService.CurrentDraft.HouseNumber,
@@ -174,30 +173,16 @@
                 BirthDate = StateService.CurrentDraft.BirthDate,
                 HouseholdSize = StateService.CurrentDraft.HouseholdSize,
                 OwnsHome = StateService.CurrentDraft.OwnsHome,
-                EnrollmentDate = DateTime.UtcNow,
                 MentorUsername = StateService.CurrentDraft.MentorUsername ?? PageState.User.Username,
                 MentorName = StateService.CurrentDraft.MentorName,
-                EnrolledInPE = StateService.CurrentDraft.EnrolledInPE,
-                PEGraduate = StateService.CurrentDraft.PEGraduate,
-                GardenPlantedAndTended = StateService.CurrentDraft.GardenPlantedAndTended,
-                ChildHeadedHousehold = StateService.CurrentDraft.ChildHeadedHousehold,
-                WomanHeadedHousehold = StateService.CurrentDraft.WomanHeadedHousehold,
-                EmptyYard = StateService.CurrentDraft.EmptyYard,
-                CommitNoChemicals = StateService.CurrentDraft.CommitNoChemicals,
-                CommitAttendClasses = StateService.CurrentDraft.CommitAttendClasses,
-                CommitNoCuttingTrees = StateService.CurrentDraft.CommitNoCuttingTrees,
-                CommitStandForWomenChildren = StateService.CurrentDraft.CommitStandForWomenChildren,
-                CommitCareWhileAway = StateService.CurrentDraft.CommitCareWhileAway,
-                CommitAllowYardAccess = StateService.CurrentDraft.CommitAllowYardAccess,
+                EnrollmentDate = DateTime.UtcNow,
                 SignatureData = signatureData,
                 SignatureCollected = true,
                 SignatureDate = DateTime.UtcNow,
-                CohortId = StateService.CurrentDraft.CohortId,
                 Status = Models.EnrollmentStatus.Pending
             };
 
             var result = await EnrollmentService.AddEnrollmentAsync(enrollment);
-            await logger.LogInformation("Enrollment Added {Enrollment}", result);
 
             StateService.ClearDraft();
             AddModuleMessage(Localizer["Message.Success"], MessageType.Success);
@@ -210,4 +195,4 @@
             _stepError = Localizer["Message.Error"];
         }
     }
-}
+}}

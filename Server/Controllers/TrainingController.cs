@@ -59,12 +59,6 @@ namespace OpenEug.TenTrees.Module.Training.Controllers
                     return NotFound();
                 }
 
-                if (!IsAuthorizedEntityId(EntityNames.Module, trainingClass.ModuleId))
-                {
-                    _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Training Class Get Attempt {ClassId} {ModuleId}", id, moduleid);
-                    return StatusCode(StatusCodes.Status403Forbidden);
-                }
-
                 return Ok(trainingClass);
             }
             catch (Exception ex)
@@ -77,14 +71,14 @@ namespace OpenEug.TenTrees.Module.Training.Controllers
         // POST api/<controller>
         [HttpPost]
         [Authorize(Policy = PolicyNames.EditModule)]
-        public async Task<ActionResult<TrainingClass>> Post([FromBody] TrainingClass trainingClass)
+        public async Task<ActionResult<TrainingClass>> Post([FromBody] TrainingClass trainingClass, int moduleid)
         {
             if (trainingClass == null)
             {
                 return BadRequest();
             }
 
-            if (!IsAuthorizedEntityId(EntityNames.Module, trainingClass.ModuleId))
+            if (!IsAuthorizedEntityId(EntityNames.Module, moduleid))
             {
                 _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Training Class Add Attempt {TrainingClass}", trainingClass);
                 return StatusCode(StatusCodes.Status403Forbidden);
@@ -92,12 +86,12 @@ namespace OpenEug.TenTrees.Module.Training.Controllers
 
             try
             {
-                var created = await _trainingService.AddTrainingClassAsync(trainingClass);
+                var created = await _trainingService.AddTrainingClassAsync(trainingClass, moduleid);
                 return Ok(created);
             }
             catch (Exception ex)
             {
-                _logger.Log(LogLevel.Error, this, LogFunction.Create, "Training Class Add Failed {ClassId} {ModuleId} {Error}", trainingClass?.TrainingClassId, trainingClass?.ModuleId, ex.ToString());
+                _logger.Log(LogLevel.Error, this, LogFunction.Create, "Training Class Add Failed {ClassId} {ModuleId} {Error}", trainingClass?.TrainingClassId, moduleid, ex.ToString());
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
@@ -105,14 +99,14 @@ namespace OpenEug.TenTrees.Module.Training.Controllers
         // PUT api/<controller>/5
         [HttpPut("{id}")]
         [Authorize(Policy = PolicyNames.EditModule)]
-        public async Task<ActionResult<TrainingClass>> Put(int id, [FromBody] TrainingClass trainingClass)
+        public async Task<ActionResult<TrainingClass>> Put(int id, [FromBody] TrainingClass trainingClass, int moduleid)
         {
             if (trainingClass == null)
             {
                 return BadRequest();
             }
 
-            if (!IsAuthorizedEntityId(EntityNames.Module, trainingClass.ModuleId))
+            if (!IsAuthorizedEntityId(EntityNames.Module, moduleid))
             {
                 _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Training Class Update Attempt {TrainingClass}", trainingClass);
                 return StatusCode(StatusCodes.Status403Forbidden);
@@ -125,12 +119,12 @@ namespace OpenEug.TenTrees.Module.Training.Controllers
 
             try
             {
-                var updated = await _trainingService.UpdateTrainingClassAsync(trainingClass);
+                var updated = await _trainingService.UpdateTrainingClassAsync(trainingClass, moduleid);
                 return Ok(updated);
             }
             catch (Exception ex)
             {
-                _logger.Log(LogLevel.Error, this, LogFunction.Update, "Training Class Update Failed {ClassId} {ModuleId} {Error}", id, trainingClass.ModuleId, ex.ToString());
+                _logger.Log(LogLevel.Error, this, LogFunction.Update, "Training Class Update Failed {ClassId} {ModuleId} {Error}", id, moduleid, ex.ToString());
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }

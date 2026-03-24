@@ -1,6 +1,5 @@
 CREATE TABLE [dbo].[TrainingClass] (
     [TrainingClassId] INT            IDENTITY (1, 1) NOT NULL,
-    [ModuleId]        INT            NOT NULL,
     [VillageId]       INT            NOT NULL,
     [ClassName]       NVARCHAR (MAX) NOT NULL,
     [ClassDate]       DATETIME2 (7)  NOT NULL,

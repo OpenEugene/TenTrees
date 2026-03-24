@@ -25,27 +25,27 @@ namespace OpenEug.TenTrees.Module.Assessment.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<ActionResult<IEnumerable<Models.Assessment>>> Get(int moduleId)
+        public async Task<ActionResult<IEnumerable<Models.Assessment>>> Get()
         {
             try
             {
-                var assessments = await _assessmentService.GetAssessmentsAsync(moduleId);
+                var assessments = await _assessmentService.GetAssessmentsAsync();
                 return Ok(assessments);
             }
             catch (Exception ex)
             {
-                _logger.Log(LogLevel.Error, this, LogFunction.Read, "Assessment Get Failed {ModuleId} {Error}", moduleId, ex.ToString());
+                _logger.Log(LogLevel.Error, this, LogFunction.Read, "Assessment Get Failed {Error}", ex.ToString());
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
 
         [HttpGet("{id}")]
         [Authorize]
-        public async Task<ActionResult<Models.Assessment>> Get(int id, int moduleId)
+        public async Task<ActionResult<Models.Assessment>> Get(int id)
         {
             try
             {
-                var assessment = await _assessmentService.GetAssessmentAsync(id, moduleId);
+                var assessment = await _assessmentService.GetAssessmentAsync(id);
                 if (assessment == null)
                 {
                     return NotFound();
@@ -55,23 +55,23 @@ namespace OpenEug.TenTrees.Module.Assessment.Controllers
             }
             catch (Exception ex)
             {
-                _logger.Log(LogLevel.Error, this, LogFunction.Read, "Assessment Get Failed {AssessmentId} {ModuleId} {Error}", id, moduleId, ex.ToString());
+                _logger.Log(LogLevel.Error, this, LogFunction.Read, "Assessment Get Failed {AssessmentId} {Error}", id, ex.ToString());
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
 
         [HttpGet("grower/{growerId}")]
         [Authorize]
-        public async Task<ActionResult<IEnumerable<Models.Assessment>>> GetByGrower(int growerId, int moduleId)
+        public async Task<ActionResult<IEnumerable<Models.Assessment>>> GetByGrower(int growerId)
         {
             try
             {
-                var assessments = await _assessmentService.GetAssessmentsByGrowerAsync(growerId, moduleId);
+                var assessments = await _assessmentService.GetAssessmentsByGrowerAsync(growerId);
                 return Ok(assessments);
             }
             catch (Exception ex)
             {
-                _logger.Log(LogLevel.Error, this, LogFunction.Read, "Assessment Get By Grower Failed {GrowerId} {ModuleId} {Error}", growerId, moduleId, ex.ToString());
+                _logger.Log(LogLevel.Error, this, LogFunction.Read, "Assessment Get By Grower Failed {GrowerId} {Error}", growerId, ex.ToString());
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
@@ -135,33 +135,33 @@ namespace OpenEug.TenTrees.Module.Assessment.Controllers
 
         [HttpDelete("{id}")]
         [Authorize(Policy = PolicyNames.EditModule)]
-        public async Task<ActionResult> Delete(int id, int moduleId)
+        public async Task<ActionResult> Delete(int id)
         {
             try
             {
-                await _assessmentService.DeleteAssessmentAsync(id, moduleId);
+                await _assessmentService.DeleteAssessmentAsync(id);
                 _logger.Log(LogLevel.Information, this, LogFunction.Delete, "Assessment Deleted {AssessmentId}", id);
                 return NoContent();
             }
             catch (Exception ex)
             {
-                _logger.Log(LogLevel.Error, this, LogFunction.Delete, "Assessment Delete Failed {AssessmentId} {ModuleId} {Error}", id, moduleId, ex.ToString());
+                _logger.Log(LogLevel.Error, this, LogFunction.Delete, "Assessment Delete Failed {AssessmentId} {Error}", id, ex.ToString());
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
 
         [HttpGet("can-submit/{growerId}")]
         [Authorize]
-        public async Task<ActionResult<bool>> CanSubmit(int growerId, int moduleId)
+        public async Task<ActionResult<bool>> CanSubmit(int growerId)
         {
             try
             {
-                var canSubmit = await _assessmentService.CanSubmitAssessmentAsync(growerId, moduleId);
+                var canSubmit = await _assessmentService.CanSubmitAssessmentAsync(growerId);
                 return Ok(canSubmit);
             }
             catch (Exception ex)
             {
-                _logger.Log(LogLevel.Error, this, LogFunction.Read, "Assessment CanSubmit Failed {GrowerId} {ModuleId} {Error}", growerId, moduleId, ex.ToString());
+                _logger.Log(LogLevel.Error, this, LogFunction.Read, "Assessment CanSubmit Failed {GrowerId} {Error}", growerId, ex.ToString());
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }

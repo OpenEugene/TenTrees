@@ -9,9 +9,8 @@ namespace OpenEug.TenTrees.Module.Enrollment.Repository
 {
     public interface IEnrollmentRepository
     {
-        IEnumerable<Models.Enrollment> GetEnrollments(int moduleId);
         IEnumerable<Models.Enrollment> GetEnrollments();
-        IEnumerable<EnrollmentListViewModel> GetEnrollmentListViewModels(int moduleId);
+        IEnumerable<EnrollmentListViewModel> GetEnrollmentListViewModels();
         Models.Enrollment GetEnrollment(int enrollmentId);
         Models.Enrollment GetEnrollment(int enrollmentId, bool tracking);
         Models.Enrollment AddEnrollment(Models.Enrollment enrollment);
@@ -29,19 +28,13 @@ namespace OpenEug.TenTrees.Module.Enrollment.Repository
             _factory = factory;
         }
 
-        public IEnumerable<Models.Enrollment> GetEnrollments(int moduleId)
-        {
-            using var db = _factory.CreateDbContext();
-            return db.Enrollment.Where(item => item.ModuleId == moduleId).ToList();
-        }
-
         public IEnumerable<Models.Enrollment> GetEnrollments()
         {
             using var db = _factory.CreateDbContext();
             return db.Enrollment.ToList();
         }
 
-        public IEnumerable<EnrollmentListViewModel> GetEnrollmentListViewModels(int moduleId)
+        public IEnumerable<EnrollmentListViewModel> GetEnrollmentListViewModels()
         {
             using var db = _factory.CreateDbContext();
             var viewModels = from e in db.Enrollment
@@ -49,7 +42,6 @@ namespace OpenEug.TenTrees.Module.Enrollment.Repository
                            from v in villageJoin.DefaultIfEmpty()
                            join g in db.Grower on e.GrowerId equals g.GrowerId into growerJoin
                            from g in growerJoin.DefaultIfEmpty()
-                           where e.ModuleId == moduleId
                            select new EnrollmentListViewModel
                            {
                                EnrollmentId = e.EnrollmentId,

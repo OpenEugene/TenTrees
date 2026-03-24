@@ -1,16 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Oqtane.Enums;
 using Oqtane.Infrastructure;
 using Oqtane.Models;
-using Oqtane.Security;
+using Oqtane.Repository;
 using Oqtane.Shared;
 using OpenEug.TenTrees.Module.Enrollment.Repository;
 using OpenEug.TenTrees.Models;
-using Oqtane.Repository;
-using AppRoleNames = OpenEug.TenTrees.Shared.RoleNames;
 
 namespace OpenEug.TenTrees.Module.Enrollment.Services
 {
@@ -18,114 +15,53 @@ namespace OpenEug.TenTrees.Module.Enrollment.Services
     {
         private readonly IEnrollmentRepository _enrollmentRepository;
         private readonly IUserRoleRepository _userRoleRepository;
-        private readonly IUserPermissions _userPermissions;
         private readonly ILogManager _logger;
-        private readonly IHttpContextAccessor _accessor;
         private readonly Alias _alias;
 
-        public ServerEnrollmentService(IEnrollmentRepository enrollmentRepository, IUserRoleRepository userRoleRepository, IUserPermissions userPermissions, ITenantManager tenantManager, ILogManager logger, IHttpContextAccessor accessor)
+        public ServerEnrollmentService(IEnrollmentRepository enrollmentRepository, IUserRoleRepository userRoleRepository, ITenantManager tenantManager, ILogManager logger)
         {
             _enrollmentRepository = enrollmentRepository;
             _userRoleRepository = userRoleRepository;
-            _userPermissions = userPermissions;
             _logger = logger;
-            _accessor = accessor;
             _alias = tenantManager.GetAlias();
         }
 
-        private bool IsMentor() => _accessor.HttpContext.User.IsInRole(AppRoleNames.Mentor);
-        private string CurrentUsername() => _accessor.HttpContext.User.Identity?.Name;
-
-        public Task<List<Models.Enrollment>> GetEnrollmentsAsync(int moduleId)
+        public Task<List<Models.Enrollment>> GetEnrollmentsAsync()
         {
-            if (!_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.View))
-            {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Enrollment Get Attempt {ModuleId}", moduleId);
-                return null;
-            }
-
-            var enrollments = _enrollmentRepository.GetEnrollments(moduleId).ToList();
-            if (IsMentor())
-                enrollments = enrollments.Where(e => e.MentorUsername == CurrentUsername()).ToList();
+            var enrollments = _enrollmentRepository.GetEnrollments().ToList();
             return Task.FromResult(enrollments);
         }
 
-        public Task<List<EnrollmentListViewModel>> GetEnrollmentListViewModelsAsync(int moduleId)
+        public Task<List<EnrollmentListViewModel>> GetEnrollmentListViewModelsAsync()
         {
-            if (!_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.View))
-            {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Enrollment List ViewModel Get Attempt {ModuleId}", moduleId);
-                return null;
-            }
-
-            var viewModels = _enrollmentRepository.GetEnrollmentListViewModels(moduleId);
-            if (IsMentor())
-            {
-                var currentUsername = CurrentUsername();
-                viewModels = viewModels.Where(e => e.MentorUserName == currentUsername);
-            }
-
+            var viewModels = _enrollmentRepository.GetEnrollmentListViewModels();
             return Task.FromResult(viewModels.ToList());
         }
 
-        public Task<Models.Enrollment> GetEnrollmentAsync(int enrollmentId, int moduleId)
+        public Task<Models.Enrollment> GetEnrollmentAsync(int enrollmentId)
         {
-            if (!_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.View))
-            {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Enrollment Get Attempt {EnrollmentId} {ModuleId}", enrollmentId, moduleId);
-                return null;
-            }
-
             var enrollment = _enrollmentRepository.GetEnrollment(enrollmentId);
-            if (enrollment != null && IsMentor() && enrollment.MentorUsername != CurrentUsername())
-            {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Mentor Access Denied Enrollment {EnrollmentId}", enrollmentId);
-                return Task.FromResult<Models.Enrollment>(null);
-            }
             return Task.FromResult(enrollment);
         }
 
         public Task<Models.Enrollment> AddEnrollmentAsync(Models.Enrollment enrollment)
         {
-            if (_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, enrollment.ModuleId, PermissionNames.Edit))
-            {
-                enrollment = _enrollmentRepository.AddEnrollment(enrollment);
-                _logger.Log(LogLevel.Information, this, LogFunction.Create, "Enrollment Added {Enrollment}", enrollment);
-            }
-            else
-            {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Enrollment Add Attempt {Enrollment}", enrollment);
-                enrollment = null;
-            }
+            enrollment = _enrollmentRepository.AddEnrollment(enrollment);
+            _logger.Log(LogLevel.Information, this, LogFunction.Create, "Enrollment Added {Enrollment}", enrollment);
             return Task.FromResult(enrollment);
         }
 
         public Task<Models.Enrollment> UpdateEnrollmentAsync(Models.Enrollment enrollment)
         {
-            if (_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, enrollment.ModuleId, PermissionNames.Edit))
-            {
-                enrollment = _enrollmentRepository.UpdateEnrollment(enrollment);
-                _logger.Log(LogLevel.Information, this, LogFunction.Update, "Enrollment Updated {Enrollment}", enrollment);
-            }
-            else
-            {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Enrollment Update Attempt {Enrollment}", enrollment);
-                enrollment = null;
-            }
+            enrollment = _enrollmentRepository.UpdateEnrollment(enrollment);
+            _logger.Log(LogLevel.Information, this, LogFunction.Update, "Enrollment Updated {Enrollment}", enrollment);
             return Task.FromResult(enrollment);
         }
 
         public Task DeleteEnrollmentAsync(int enrollmentId, int moduleId)
         {
-            if (_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.Edit))
-            {
-                _enrollmentRepository.DeleteEnrollment(enrollmentId);
-                _logger.Log(LogLevel.Information, this, LogFunction.Delete, "Enrollment Deleted {EnrollmentId}", enrollmentId);
-            }
-            else
-            {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Enrollment Delete Attempt {EnrollmentId} {ModuleId}", enrollmentId, moduleId);
-            }
+            _enrollmentRepository.DeleteEnrollment(enrollmentId);
+            _logger.Log(LogLevel.Information, this, LogFunction.Delete, "Enrollment Deleted {EnrollmentId}", enrollmentId);
             return Task.CompletedTask;
         }
         
@@ -208,20 +144,12 @@ namespace OpenEug.TenTrees.Module.Enrollment.Services
             return Task.FromResult(mentorInfo);
         }
         
-        public Task<List<Models.Enrollment>> GetByStatusAsync(int ModuleId, Models.EnrollmentStatus Status)
+        public Task<List<Models.Enrollment>> GetByStatusAsync(Models.EnrollmentStatus Status)
         {
-            if (_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, ModuleId, PermissionNames.View))
-            {
-                var enrollments = _enrollmentRepository.GetEnrollments(ModuleId)
-                    .Where(e => e.Status == Status)
-                    .ToList();
-                return Task.FromResult(enrollments);
-            }
-            else
-            {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Enrollment Get By Status Attempt {ModuleId}", ModuleId);
-                return null;
-            }
+            var enrollments = _enrollmentRepository.GetEnrollments()
+                .Where(e => e.Status == Status)
+                .ToList();
+            return Task.FromResult(enrollments);
         }
         
         public Task<List<Models.Enrollment>> GetByVillageAsync(int VillageId)
@@ -234,39 +162,21 @@ namespace OpenEug.TenTrees.Module.Enrollment.Services
 
         public Task<int> BackfillGrowersFromEnrollmentsAsync(int moduleId)
         {
-            // Admin-only operation
-            if (_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.Edit) &&
-                _accessor.HttpContext.User.IsInRole(RoleNames.Admin))
-            {
-                int created = _enrollmentRepository.BackfillGrowersFromEnrollments();
-                _logger.Log(LogLevel.Information, this, LogFunction.Create, "Backfilled {Count} Growers from Enrollments", created);
-                return Task.FromResult(created);
-            }
-            else
-            {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Backfill Attempt {ModuleId}", moduleId);
-                return Task.FromResult(0);
-            }
+            int created = _enrollmentRepository.BackfillGrowersFromEnrollments();
+            _logger.Log(LogLevel.Information, this, LogFunction.Create, "Backfilled {Count} Growers from Enrollments", created);
+            return Task.FromResult(created);
         }
 
-        public Task<List<UserInfo>> GetSiteUsersAsync(int moduleId)
+        public Task<List<UserInfo>> GetSiteUsersAsync()
         {
-            if (_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.View))
-            {
-                var userRoles = _userRoleRepository.GetUserRoles(_alias.SiteId)
-                    .Where(ur => ur.User != null && !ur.User.IsDeleted)
-                    .GroupBy(ur => ur.UserId)
-                    .Select(g => g.First().User)
-                    .Select(u => new UserInfo { Username = u.Username, DisplayName = u.DisplayName })
-                    .OrderBy(u => u.DisplayName)
-                    .ToList();
-                return Task.FromResult(userRoles);
-            }
-            else
-            {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized GetSiteUsers Attempt {ModuleId}", moduleId);
-                return Task.FromResult(new List<UserInfo>());
-            }
+            var userRoles = _userRoleRepository.GetUserRoles(_alias.SiteId)
+                .Where(ur => ur.User != null && !ur.User.IsDeleted)
+                .GroupBy(ur => ur.UserId)
+                .Select(g => g.First().User)
+                .Select(u => new UserInfo { Username = u.Username, DisplayName = u.DisplayName })
+                .OrderBy(u => u.DisplayName)
+                .ToList();
+            return Task.FromResult(userRoles);
         }
     }
 }

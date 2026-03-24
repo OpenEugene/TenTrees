@@ -208,21 +208,20 @@
                     trainingClass.VillageId = _villageId;
                     trainingClass.ClassNumber = _classNumber;
                     trainingClass.Notes = _notes;
-                    await TrainingService.UpdateTrainingClassAsync(trainingClass);
+                    await TrainingService.UpdateTrainingClassAsync(trainingClass, ModuleState.ModuleId);
                     await logger.LogInformation("Training Class Updated {ClassName}", _className);
                 }
                 else
                 {
                     var trainingClass = new TrainingClass
                     {
-                        ModuleId = ModuleState.ModuleId,
                         ClassName = _className,
                         ClassDate = _classDate,
                         VillageId = _villageId,
                         ClassNumber = _classNumber,
                         Notes = _notes
                     };
-                    await TrainingService.AddTrainingClassAsync(trainingClass);
+                    await TrainingService.AddTrainingClassAsync(trainingClass, ModuleState.ModuleId);
                     await logger.LogInformation("Training Class Added {ClassName}", _className);
                 }
 
