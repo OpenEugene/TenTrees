@@ -23,117 +23,83 @@ namespace OpenEug.TenTrees.Module.Enrollment.Controllers
             _EnrollmentService = EnrollmentService;
         }
 
-        // GET: api/<controller>?moduleid=x
         [HttpGet]
         [Authorize]
-        public async Task<ActionResult<IEnumerable<Models.Enrollment>>> Get(string moduleid)
+        public async Task<ActionResult<IEnumerable<Models.Enrollment>>> Get()
         {
-            if (!int.TryParse(moduleid, out var moduleId) || !IsAuthorizedEntityId(EntityNames.Module, moduleId))
-            {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Enrollment Get Attempt {ModuleId}", moduleid);
-                return StatusCode(StatusCodes.Status403Forbidden);
-            }
-
             try
             {
-                var enrollments = await _EnrollmentService.GetEnrollmentsAsync(moduleId);
+                var enrollments = await _EnrollmentService.GetEnrollmentsAsync();
                 return Ok(enrollments);
             }
             catch (Exception ex)
             {
-                _logger.Log(LogLevel.Error, this, LogFunction.Read, "Enrollment Get Failed {ModuleId} {Error}", moduleId, ex.ToString());
+                _logger.Log(LogLevel.Error, this, LogFunction.Read, "Enrollment Get Failed {Error}", ex.ToString());
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
 
-        // GET: api/<controller>/listviewmodels?moduleid=x
         [HttpGet("listviewmodels")]
         [Authorize]
-        public async Task<ActionResult<IEnumerable<EnrollmentListViewModel>>> GetListViewModels(string moduleid)
+        public async Task<ActionResult<IEnumerable<EnrollmentListViewModel>>> GetListViewModels()
         {
-            if (!int.TryParse(moduleid, out var moduleId) || !IsAuthorizedEntityId(EntityNames.Module, moduleId))
-            {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Enrollment List ViewModel Get Attempt {ModuleId}", moduleid);
-                return StatusCode(StatusCodes.Status403Forbidden);
-            }
-
             try
             {
-                var list = await _EnrollmentService.GetEnrollmentListViewModelsAsync(moduleId);
+                var list = await _EnrollmentService.GetEnrollmentListViewModelsAsync();
                 return Ok(list);
             }
             catch (Exception ex)
             {
-                _logger.Log(LogLevel.Error, this, LogFunction.Read, "Enrollment List ViewModel Get Failed {ModuleId} {Error}", moduleId, ex.ToString());
+                _logger.Log(LogLevel.Error, this, LogFunction.Read, "Enrollment List ViewModel Get Failed {Error}", ex.ToString());
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
 
-        // GET api/<controller>/users?moduleid=x
         [HttpGet("users")]
         [Authorize]
-        public async Task<ActionResult<IEnumerable<UserInfo>>> GetUsers(string moduleid)
+        public async Task<ActionResult<IEnumerable<UserInfo>>> GetUsers()
         {
-            if (!int.TryParse(moduleid, out var moduleId) || !IsAuthorizedEntityId(EntityNames.Module, moduleId))
-            {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized GetUsers Attempt {ModuleId}", moduleid);
-                return StatusCode(StatusCodes.Status403Forbidden);
-            }
-
             try
             {
-                var users = await _EnrollmentService.GetSiteUsersAsync(moduleId);
+                var users = await _EnrollmentService.GetSiteUsersAsync();
                 return Ok(users);
             }
             catch (Exception ex)
             {
-                _logger.Log(LogLevel.Error, this, LogFunction.Read, "Enrollment GetUsers Failed {ModuleId} {Error}", moduleId, ex.ToString());
+                _logger.Log(LogLevel.Error, this, LogFunction.Read, "Enrollment GetUsers Failed {Error}", ex.ToString());
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
 
-        // GET api/<controller>/5
-        [HttpGet("{id}/{moduleid}")]
+        [HttpGet("{id}")]
         [Authorize]
-        public async Task<ActionResult<Models.Enrollment>> Get(int id, int moduleid)
+        public async Task<ActionResult<Models.Enrollment>> Get(int id)
         {
             try
             {
-                var enrollment = await _EnrollmentService.GetEnrollmentAsync(id, moduleid);
+                var enrollment = await _EnrollmentService.GetEnrollmentAsync(id);
                 if (enrollment == null)
                 {
                     return NotFound();
-                }
-
-                if (!IsAuthorizedEntityId(EntityNames.Module, enrollment.ModuleId))
-                {
-                    _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Enrollment Get Attempt {EnrollmentId} {ModuleId}", id, moduleid);
-                    return StatusCode(StatusCodes.Status403Forbidden);
                 }
 
                 return Ok(enrollment);
             }
             catch (Exception ex)
             {
-                _logger.Log(LogLevel.Error, this, LogFunction.Read, "Enrollment Get Failed {EnrollmentId} {ModuleId} {Error}", id, moduleid, ex.ToString());
+                _logger.Log(LogLevel.Error, this, LogFunction.Read, "Enrollment Get Failed {EnrollmentId} {Error}", id, ex.ToString());
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
 
         // POST api/<controller>
         [HttpPost]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult<Models.Enrollment>> Post([FromBody] Models.Enrollment Enrollment)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
-            }
-
-            if (!IsAuthorizedEntityId(EntityNames.Module, Enrollment.ModuleId))
-            {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Enrollment Post Attempt {Enrollment}", Enrollment);
-                return StatusCode(StatusCodes.Status403Forbidden);
             }
 
             try
@@ -143,14 +109,14 @@ namespace OpenEug.TenTrees.Module.Enrollment.Controllers
             }
             catch (Exception ex)
             {
-                _logger.Log(LogLevel.Error, this, LogFunction.Create, "Enrollment Post Failed {EnrollmentId} {ModuleId} {Error}", Enrollment?.EnrollmentId, Enrollment?.ModuleId, ex.ToString());
+                _logger.Log(LogLevel.Error, this, LogFunction.Create, "Enrollment Post Failed {EnrollmentId} {Error}", Enrollment?.EnrollmentId, ex.ToString());
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
 
         // PUT api/<controller>/5
         [HttpPut("{id}")]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult<Models.Enrollment>> Put(int id, [FromBody] Models.Enrollment Enrollment)
         {
             if (!ModelState.IsValid)
@@ -161,12 +127,6 @@ namespace OpenEug.TenTrees.Module.Enrollment.Controllers
             if (Enrollment == null || Enrollment.EnrollmentId != id)
             {
                 return BadRequest();
-            }
-
-            if (!IsAuthorizedEntityId(EntityNames.Module, Enrollment.ModuleId))
-            {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Enrollment Put Attempt {Enrollment}", Enrollment);
-                return StatusCode(StatusCodes.Status403Forbidden);
             }
 
             try
@@ -181,31 +141,24 @@ namespace OpenEug.TenTrees.Module.Enrollment.Controllers
             }
             catch (Exception ex)
             {
-                _logger.Log(LogLevel.Error, this, LogFunction.Update, "Enrollment Put Failed {EnrollmentId} {ModuleId} {Error}", id, Enrollment.ModuleId, ex.ToString());
+                _logger.Log(LogLevel.Error, this, LogFunction.Update, "Enrollment Put Failed {EnrollmentId} {Error}", id, ex.ToString());
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
 
-        // DELETE api/<controller>/5
         [HttpDelete("{id}/{moduleid}")]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult> Delete(int id, int moduleid)
         {
             try
             {
-                var enrollment = await _EnrollmentService.GetEnrollmentAsync(id, moduleid);
+                var enrollment = await _EnrollmentService.GetEnrollmentAsync(id);
                 if (enrollment == null)
                 {
                     return NotFound();
                 }
 
-                if (!IsAuthorizedEntityId(EntityNames.Module, enrollment.ModuleId))
-                {
-                    _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Enrollment Delete Attempt {EnrollmentId} {ModuleId}", id, moduleid);
-                    return StatusCode(StatusCodes.Status403Forbidden);
-                }
-
-                await _EnrollmentService.DeleteEnrollmentAsync(id, enrollment.ModuleId);
+                await _EnrollmentService.DeleteEnrollmentAsync(id, moduleid);
                 return NoContent();
             }
             catch (Exception ex)
@@ -217,15 +170,9 @@ namespace OpenEug.TenTrees.Module.Enrollment.Controllers
         
         // POST api/<controller>/validate
         [HttpPost("validate")]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult<ValidationResult>> Validate([FromBody] Models.Enrollment Enrollment)
         {
-            if (!IsAuthorizedEntityId(EntityNames.Module, Enrollment.ModuleId))
-            {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Enrollment Validate Attempt");
-                return StatusCode(StatusCodes.Status403Forbidden);
-            }
-
             try
             {
                 var validation = await _EnrollmentService.ValidateRequiredAsync(Enrollment);
@@ -233,28 +180,22 @@ namespace OpenEug.TenTrees.Module.Enrollment.Controllers
             }
             catch (Exception ex)
             {
-                _logger.Log(LogLevel.Error, this, LogFunction.Read, "Enrollment Validate Failed {EnrollmentId} {ModuleId} {Error}", Enrollment?.EnrollmentId, Enrollment?.ModuleId, ex.ToString());
+                _logger.Log(LogLevel.Error, this, LogFunction.Read, "Enrollment Validate Failed {EnrollmentId} {Error}", Enrollment?.EnrollmentId, ex.ToString());
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
         
         // POST api/<controller>/5/signature
         [HttpPost("{id}/signature")]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult<bool>> CaptureSignature(int id, [FromBody] SignatureRequest request)
         {
             try
             {
-                var enrollment = await _EnrollmentService.GetEnrollmentAsync(id, request.ModuleId);
+                var enrollment = await _EnrollmentService.GetEnrollmentAsync(id);
                 if (enrollment == null)
                 {
                     return NotFound();
-                }
-
-                if (!IsAuthorizedEntityId(EntityNames.Module, enrollment.ModuleId))
-                {
-                    _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Signature Capture Attempt {EnrollmentId}", id);
-                    return StatusCode(StatusCodes.Status403Forbidden);
                 }
 
                 var captured = await _EnrollmentService.CaptureSignatureAsync(id, request.SignatureData);
@@ -262,28 +203,22 @@ namespace OpenEug.TenTrees.Module.Enrollment.Controllers
             }
             catch (Exception ex)
             {
-                _logger.Log(LogLevel.Error, this, LogFunction.Update, "Signature Capture Failed {EnrollmentId} {ModuleId} {Error}", id, request?.ModuleId, ex.ToString());
+                _logger.Log(LogLevel.Error, this, LogFunction.Update, "Signature Capture Failed {EnrollmentId} {Error}", id, ex.ToString());
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
 
         // POST api/<controller>/5/photoconsent
         [HttpPost("{id}/photoconsent")]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult<bool>> CapturePhotoConsent(int id, [FromBody] PhotoConsentRequest request)
         {
             try
             {
-                var enrollment = await _EnrollmentService.GetEnrollmentAsync(id, request.ModuleId);
+                var enrollment = await _EnrollmentService.GetEnrollmentAsync(id);
                 if (enrollment == null)
                 {
                     return NotFound();
-                }
-
-                if (!IsAuthorizedEntityId(EntityNames.Module, enrollment.ModuleId))
-                {
-                    _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Photo Consent Capture Attempt {EnrollmentId}", id);
-                    return StatusCode(StatusCodes.Status403Forbidden);
                 }
 
                 var captured = await _EnrollmentService.CapturePhotoConsentAsync(id, request.ModuleId, request.ConsentLevel, request.SignatureData);
@@ -318,25 +253,18 @@ namespace OpenEug.TenTrees.Module.Enrollment.Controllers
             }
         }
         
-        // GET api/<controller>/status/{status}?moduleid=x
         [HttpGet("status/{status}")]
         [Authorize]
-        public async Task<ActionResult<IEnumerable<Models.Enrollment>>> GetByStatus(Models.EnrollmentStatus status, string moduleid)
+        public async Task<ActionResult<IEnumerable<Models.Enrollment>>> GetByStatus(Models.EnrollmentStatus status)
         {
-            if (!int.TryParse(moduleid, out var moduleId) || !IsAuthorizedEntityId(EntityNames.Module, moduleId))
-            {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Enrollment Get By Status Attempt {ModuleId}", moduleid);
-                return StatusCode(StatusCodes.Status403Forbidden);
-            }
-
             try
             {
-                var enrollments = await _EnrollmentService.GetByStatusAsync(moduleId, status);
+                var enrollments = await _EnrollmentService.GetByStatusAsync(status);
                 return Ok(enrollments);
             }
             catch (Exception ex)
             {
-                _logger.Log(LogLevel.Error, this, LogFunction.Read, "Enrollment GetByStatus Failed {ModuleId} {Status} {Error}", moduleId, status, ex.ToString());
+                _logger.Log(LogLevel.Error, this, LogFunction.Read, "Enrollment GetByStatus Failed {Status} {Error}", status, ex.ToString());
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
@@ -360,15 +288,9 @@ namespace OpenEug.TenTrees.Module.Enrollment.Controllers
 
         // POST api/<controller>/backfill-growers
         [HttpPost("backfill-growers")]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult<int>> BackfillGrowers(int moduleId)
         {
-            if (!IsAuthorizedEntityId(EntityNames.Module, moduleId))
-            {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Backfill Growers Attempt {ModuleId}", moduleId);
-                return StatusCode(StatusCodes.Status403Forbidden);
-            }
-
             try
             {
                 var count = await _EnrollmentService.BackfillGrowersFromEnrollmentsAsync(moduleId);

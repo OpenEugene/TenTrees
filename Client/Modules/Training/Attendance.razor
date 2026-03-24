@@ -120,7 +120,7 @@ else
                 if (_trainingClass != null)
                 {
                     // Get active growers for this village
-                    var growers = await GrowerService.GetActiveGrowersAsync(ModuleState.ModuleId, _trainingClass.VillageId);
+                    var growers = await GrowerService.GetActiveGrowersAsync(_trainingClass.VillageId);
 
                     // Get existing attendance for this class
                     var existingAttendance = await TrainingService.GetAttendanceForClassAsync(classId, ModuleState.ModuleId);
@@ -159,7 +159,6 @@ else
             var request = new MarkAttendanceRequest
             {
                 TrainingClassId = _trainingClass.TrainingClassId,
-                ModuleId = ModuleState.ModuleId,
                 Entries = _growerEntries.Select(e => new AttendanceEntry
                 {
                     GrowerId = e.GrowerId,
@@ -167,7 +166,7 @@ else
                 }).ToList()
             };
 
-            await TrainingService.MarkAttendanceAsync(request);
+            await TrainingService.MarkAttendanceAsync(request, ModuleState.ModuleId);
             await logger.LogInformation("Attendance Saved for {ClassName}", _trainingClass.ClassName);
             AddModuleMessage(Localizer["Message.AttendanceSaved"], MessageType.Success);
             NavigationManager.NavigateTo(NavigateUrl());

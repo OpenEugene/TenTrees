@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using System.Linq;
 using Oqtane.Services;
 using OpenEug.TenTrees.Module.Assessment.Services;
 
@@ -8,7 +9,10 @@ namespace OpenEug.TenTrees.Module.Assessment.Startup
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<IAssessmentService, AssessmentService>();
+            if (!services.Any(s => s.ServiceType == typeof(IAssessmentService)))
+            {
+                services.AddScoped<IAssessmentService, AssessmentService>();
+            }
         }
     }
 }

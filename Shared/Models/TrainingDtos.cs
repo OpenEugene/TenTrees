@@ -25,7 +25,6 @@ namespace OpenEug.TenTrees.Models
     public class MarkAttendanceRequest
     {
         public int TrainingClassId { get; set; }
-        public int ModuleId { get; set; }
         public List<AttendanceEntry> Entries { get; set; } = new();
     }
 
