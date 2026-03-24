@@ -60,9 +60,9 @@ namespace OpenEug.TenTrees.Module.Training.Services
             }
         }
 
-        public Task<TrainingClass> AddTrainingClassAsync(TrainingClass trainingClass)
+        public Task<TrainingClass> AddTrainingClassAsync(TrainingClass trainingClass, int moduleId)
         {
-            if (_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, trainingClass.ModuleId, PermissionNames.Edit))
+            if (_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.Edit))
             {
                 trainingClass = _trainingRepository.AddTrainingClass(trainingClass);
                 _logger.Log(LogLevel.Information, this, LogFunction.Create, "Training Class Added {TrainingClass}", trainingClass);
@@ -75,9 +75,9 @@ namespace OpenEug.TenTrees.Module.Training.Services
             }
         }
 
-        public Task<TrainingClass> UpdateTrainingClassAsync(TrainingClass trainingClass)
+        public Task<TrainingClass> UpdateTrainingClassAsync(TrainingClass trainingClass, int moduleId)
         {
-            if (_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, trainingClass.ModuleId, PermissionNames.Edit))
+            if (_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.Edit))
             {
                 trainingClass = _trainingRepository.UpdateTrainingClass(trainingClass);
                 _logger.Log(LogLevel.Information, this, LogFunction.Update, "Training Class Updated {TrainingClass}", trainingClass);

@@ -9,11 +9,11 @@ namespace OpenEug.TenTrees.Module.Enrollment.Services
 {
     public interface IEnrollmentService 
     {
-        Task<List<Models.Enrollment>> GetEnrollmentsAsync(int moduleId);
+        Task<List<Models.Enrollment>> GetEnrollmentsAsync();
 
-        Task<List<Models.EnrollmentListViewModel>> GetEnrollmentListViewModelsAsync(int moduleId);
+        Task<List<Models.EnrollmentListViewModel>> GetEnrollmentListViewModelsAsync();
 
-        Task<Models.Enrollment> GetEnrollmentAsync(int enrollmentId, int moduleId);
+        Task<Models.Enrollment> GetEnrollmentAsync(int enrollmentId);
 
         Task<Models.Enrollment> AddEnrollmentAsync(Models.Enrollment enrollment);
 
@@ -28,13 +28,13 @@ namespace OpenEug.TenTrees.Module.Enrollment.Services
 
         Task<MentorInfo> AutoFillMentorAsync(int UserId);
 
-        Task<List<Models.Enrollment>> GetByStatusAsync(int ModuleId, Models.EnrollmentStatus Status);
+        Task<List<Models.Enrollment>> GetByStatusAsync(Models.EnrollmentStatus Status);
 
         Task<List<Models.Enrollment>> GetByVillageAsync(int villageId);
 
         Task<int> BackfillGrowersFromEnrollmentsAsync(int moduleId);
 
-        Task<List<UserInfo>> GetSiteUsersAsync(int moduleId);
+        Task<List<UserInfo>> GetSiteUsersAsync();
 
         Task<bool> CapturePhotoConsentAsync(int enrollmentId, int moduleId, Models.PhotoConsentLevel consentLevel, string signatureData);
     }
@@ -45,31 +45,31 @@ namespace OpenEug.TenTrees.Module.Enrollment.Services
 
         private string Apiurl => CreateApiUrl("Enrollment");
 
-        public async Task<List<Models.Enrollment>> GetEnrollmentsAsync(int moduleId)
+        public async Task<List<Models.Enrollment>> GetEnrollmentsAsync()
         {
-            List<Models.Enrollment> enrollments = await GetJsonAsync<List<Models.Enrollment>>(CreateAuthorizationPolicyUrl($"{Apiurl}?moduleid={moduleId}", EntityNames.Module, moduleId), Enumerable.Empty<Models.Enrollment>().ToList());
+            List<Models.Enrollment> enrollments = await GetJsonAsync<List<Models.Enrollment>>($"{Apiurl}", Enumerable.Empty<Models.Enrollment>().ToList());
             return enrollments.OrderBy(item => item.GrowerName).ToList();
         }
 
-        public async Task<List<Models.EnrollmentListViewModel>> GetEnrollmentListViewModelsAsync(int moduleId)
+        public async Task<List<Models.EnrollmentListViewModel>> GetEnrollmentListViewModelsAsync()
         {
-            List<Models.EnrollmentListViewModel> viewModels = await GetJsonAsync<List<Models.EnrollmentListViewModel>>(CreateAuthorizationPolicyUrl($"{Apiurl}/listviewmodels?moduleid={moduleId}", EntityNames.Module, moduleId), Enumerable.Empty<Models.EnrollmentListViewModel>().ToList());
+            List<Models.EnrollmentListViewModel> viewModels = await GetJsonAsync<List<Models.EnrollmentListViewModel>>($"{Apiurl}/listviewmodels", Enumerable.Empty<Models.EnrollmentListViewModel>().ToList());
             return viewModels.OrderBy(item => item.GrowerName).ToList();
         }
 
-        public async Task<Models.Enrollment> GetEnrollmentAsync(int enrollmentId, int moduleId)
+        public async Task<Models.Enrollment> GetEnrollmentAsync(int enrollmentId)
         {
-            return await GetJsonAsync<Models.Enrollment>(CreateAuthorizationPolicyUrl($"{Apiurl}/{enrollmentId}/{moduleId}", EntityNames.Module, moduleId));
+            return await GetJsonAsync<Models.Enrollment>($"{Apiurl}/{enrollmentId}");
         }
 
         public async Task<Models.Enrollment> AddEnrollmentAsync(Models.Enrollment enrollment)
         {
-            return await PostJsonAsync<Models.Enrollment>(CreateAuthorizationPolicyUrl($"{Apiurl}", EntityNames.Module, enrollment.ModuleId), enrollment);
+            return await PostJsonAsync<Models.Enrollment>($"{Apiurl}", enrollment);
         }
 
         public async Task<Models.Enrollment> UpdateEnrollmentAsync(Models.Enrollment enrollment)
         {
-            return await PutJsonAsync<Models.Enrollment>(CreateAuthorizationPolicyUrl($"{Apiurl}/{enrollment.EnrollmentId}", EntityNames.Module, enrollment.ModuleId), enrollment);
+            return await PutJsonAsync<Models.Enrollment>($"{Apiurl}/{enrollment.EnrollmentId}", enrollment);
         }
 
         public async Task DeleteEnrollmentAsync(int enrollmentId, int moduleId)
@@ -80,7 +80,7 @@ namespace OpenEug.TenTrees.Module.Enrollment.Services
         
         public async Task<ValidationResult> ValidateRequiredAsync(Models.Enrollment enrollment)
         {
-            return await PostJsonAsync<Models.Enrollment, ValidationResult>(CreateAuthorizationPolicyUrl($"{Apiurl}/validate", EntityNames.Module, enrollment.ModuleId), enrollment);
+            return await PostJsonAsync<Models.Enrollment, ValidationResult>($"{Apiurl}/validate", enrollment);
         }
         
         public async Task<bool> CaptureSignatureAsync(int enrollmentId, string signatureData)
@@ -93,9 +93,9 @@ namespace OpenEug.TenTrees.Module.Enrollment.Services
             return await GetJsonAsync<MentorInfo>($"{Apiurl}/mentor/{userId}");
         }
         
-        public async Task<List<Models.Enrollment>> GetByStatusAsync(int moduleId, Models.EnrollmentStatus status)
+        public async Task<List<Models.Enrollment>> GetByStatusAsync(Models.EnrollmentStatus status)
         {
-            return await GetJsonAsync<List<Models.Enrollment>>(CreateAuthorizationPolicyUrl($"{Apiurl}/status/{status}?moduleid={moduleId}", EntityNames.Module, moduleId));
+            return await GetJsonAsync<List<Models.Enrollment>>($"{Apiurl}/status/{status}");
         }
         
         public async Task<List<Models.Enrollment>> GetByVillageAsync(int villageId)
@@ -108,9 +108,9 @@ namespace OpenEug.TenTrees.Module.Enrollment.Services
             return await PostJsonAsync<object, int>(CreateAuthorizationPolicyUrl($"{Apiurl}/backfill-growers", EntityNames.Module, moduleId), null);
         }
 
-        public async Task<List<UserInfo>> GetSiteUsersAsync(int moduleId)
+        public async Task<List<UserInfo>> GetSiteUsersAsync()
         {
-            return await GetJsonAsync<List<UserInfo>>(CreateAuthorizationPolicyUrl($"{Apiurl}/users?moduleid={moduleId}", EntityNames.Module, moduleId));
+            return await GetJsonAsync<List<UserInfo>>($"{Apiurl}/users");
         }
 
         public async Task<bool> CapturePhotoConsentAsync(int enrollmentId, int moduleId, Models.PhotoConsentLevel consentLevel, string signatureData)

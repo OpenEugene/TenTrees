@@ -71,12 +71,12 @@
     private List<Models.Assessment> _assessments;
     private List<Models.Grower> _growers;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
         try
         {
-            _growers = await GrowerService.GetAllGrowersAsync(ModuleState.ModuleId);
-            _assessments = await AssessmentService.GetAssessmentsAsync(ModuleState.ModuleId);
+            _growers = await GrowerService.GetAllGrowersAsync();
+            _assessments = await AssessmentService.GetAssessmentsAsync();
         }
         catch (Exception ex)
         {
@@ -89,9 +89,9 @@
     {
         try
         {
-            await AssessmentService.DeleteAssessmentAsync(assessment.AssessmentId, ModuleState.ModuleId);
+            await AssessmentService.DeleteAssessmentAsync(assessment.AssessmentId);
             await logger.LogInformation("Assessment Deleted {Assessment}", assessment);
-            _assessments = await AssessmentService.GetAssessmentsAsync(ModuleState.ModuleId);
+            _assessments = await AssessmentService.GetAssessmentsAsync();
             StateHasChanged();
         }
         catch (Exception ex)

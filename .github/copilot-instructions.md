@@ -9,7 +9,7 @@
 - Use concise controller error responses with `StatusCode` and `StatusCodes` constants instead of `Problem()`.
 
 ## Authorization
-- Rely on Oqtane page/controller permissions and avoid additional authorization checks in service layer methods.
+- Rely on Oqtane page/controller permissions and avoid additional authorization checks in service layer methods. Authorization is handled automatically by Oqtane at the page/controller level.
 
 ## Training Edit Screens
 - In Training Edit screens, populate the village dropdown regardless of action (no action-based filtering).

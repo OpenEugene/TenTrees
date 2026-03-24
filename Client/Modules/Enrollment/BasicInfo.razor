@@ -183,7 +183,7 @@
             _villages = (await VillageService.GetActiveVillagesAsync())
                 .OrderBy(v => v.VillageName)
                 .ToList();
-            _users = await EnrollmentService.GetSiteUsersAsync(ModuleState.ModuleId);
+            _users = await EnrollmentService.GetSiteUsersAsync();
             _mentorUsername = PageState.User.Username;
 
             // Initialize or restore draft

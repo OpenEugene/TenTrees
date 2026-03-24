@@ -371,13 +371,13 @@
             }
 
             // Auto-fill tree mentor name from current user
-            _users = await EnrollmentService.GetSiteUsersAsync(ModuleState.ModuleId);
+            _users = await EnrollmentService.GetSiteUsersAsync();
             _mentorUsername = PageState.User.Username;
 
             if (PageState.Action == "Edit")
             {
                 _id = Int32.Parse(PageState.QueryString["id"]);
-                Models.Enrollment Enrollment = await EnrollmentService.GetEnrollmentAsync(_id, ModuleState.ModuleId);
+                Models.Enrollment Enrollment = await EnrollmentService.GetEnrollmentAsync(_id);
                 if (Enrollment != null)
                 {
                     _growerName = Enrollment.GrowerName;
@@ -438,8 +438,7 @@
                 if (PageState.Action == "Add")
                 {
                     Models.Enrollment Enrollment = new Models.Enrollment();
-                    Enrollment.ModuleId = ModuleState.ModuleId;
-                    
+
                     // Basic Information
                     Enrollment.GrowerName = _growerName;
                     Enrollment.VillageId = _villageId;
@@ -484,8 +483,8 @@
                 }
                 else
                 {
-                    Models.Enrollment Enrollment = await EnrollmentService.GetEnrollmentAsync(_id, ModuleState.ModuleId);
-                    
+                    Models.Enrollment Enrollment = await EnrollmentService.GetEnrollmentAsync(_id);
+
                     // Basic Information
                     Enrollment.GrowerName = _growerName;
                     Enrollment.VillageId = _villageId;
@@ -547,7 +546,7 @@
         try
         {
             _enrollmentStatus = Models.EnrollmentStatus.Approved;
-            var enrollment = await EnrollmentService.GetEnrollmentAsync(_id, ModuleState.ModuleId);
+            var enrollment = await EnrollmentService.GetEnrollmentAsync(_id);
             enrollment.Status = _enrollmentStatus;
             await EnrollmentService.UpdateEnrollmentAsync(enrollment);
             await logger.LogInformation("Enrollment {EnrollmentId} Approved", _id);
@@ -566,7 +565,7 @@
         try
         {
             _enrollmentStatus = Models.EnrollmentStatus.Rejected;
-            var enrollment = await EnrollmentService.GetEnrollmentAsync(_id, ModuleState.ModuleId);
+            var enrollment = await EnrollmentService.GetEnrollmentAsync(_id);
             enrollment.Status = _enrollmentStatus;
             await EnrollmentService.UpdateEnrollmentAsync(enrollment);
             await logger.LogInformation("Enrollment {EnrollmentId} Rejected", _id);
@@ -585,7 +584,7 @@
         try
         {
             _enrollmentStatus = Models.EnrollmentStatus.Pending;
-            var enrollment = await EnrollmentService.GetEnrollmentAsync(_id, ModuleState.ModuleId);
+            var enrollment = await EnrollmentService.GetEnrollmentAsync(_id);
             enrollment.Status = _enrollmentStatus;
             await EnrollmentService.UpdateEnrollmentAsync(enrollment);
             await logger.LogInformation("Enrollment {EnrollmentId} Set to Pending", _id);

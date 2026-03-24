@@ -241,7 +241,7 @@ else
             {
                 _isLoading = true;
                 int growerId = int.Parse(PageState.QueryString["id"]);
-                _grower = await GrowerService.GetGrowerAsync(growerId, ModuleState.ModuleId);
+                _grower = await GrowerService.GetGrowerAsync(growerId);
 
                 if (_grower == null)
                 {
@@ -325,7 +325,6 @@ else
             var request = new ProgramExitRequest
             {
                 GrowerId = _grower.GrowerId,
-                ModuleId = ModuleState.ModuleId,
                 ExitDate = _exitDate,
                 ExitReason = _exitReason,
                 Notes = _exitNotes

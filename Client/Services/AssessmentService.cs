@@ -13,39 +13,39 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
 
         private string ApiUrl => CreateApiUrl("Assessment");
 
-        public async Task<Models.Assessment> GetAssessmentAsync(int assessmentId, int moduleId)
+        public async Task<Models.Assessment> GetAssessmentAsync(int assessmentId)
         {
-            return await GetJsonAsync<Models.Assessment>(CreateAuthorizationPolicyUrl($"{ApiUrl}/{assessmentId}?moduleId={moduleId}", EntityNames.Module, moduleId));
+            return await GetJsonAsync<Models.Assessment>($"{ApiUrl}/{assessmentId}");
         }
 
-        public async Task<List<Models.Assessment>> GetAssessmentsAsync(int moduleId)
+        public async Task<List<Models.Assessment>> GetAssessmentsAsync()
         {
-            return await GetJsonAsync<List<Models.Assessment>>(CreateAuthorizationPolicyUrl($"{ApiUrl}?moduleId={moduleId}", EntityNames.Module, moduleId));
+            return await GetJsonAsync<List<Models.Assessment>>($"{ApiUrl}");
         }
 
-        public async Task<List<Models.Assessment>> GetAssessmentsByGrowerAsync(int growerId, int moduleId)
+        public async Task<List<Models.Assessment>> GetAssessmentsByGrowerAsync(int growerId)
         {
-            return await GetJsonAsync<List<Models.Assessment>>(CreateAuthorizationPolicyUrl($"{ApiUrl}/grower/{growerId}?moduleId={moduleId}", EntityNames.Module, moduleId));
+            return await GetJsonAsync<List<Models.Assessment>>($"{ApiUrl}/grower/{growerId}");
         }
 
         public async Task<Models.Assessment> AddAssessmentAsync(Models.Assessment assessment)
         {
-            return await PostJsonAsync<Models.Assessment>(CreateAuthorizationPolicyUrl($"{ApiUrl}", EntityNames.Module, assessment.ModuleId), assessment);
+            return await PostJsonAsync<Models.Assessment>($"{ApiUrl}", assessment);
         }
 
         public async Task<Models.Assessment> UpdateAssessmentAsync(Models.Assessment assessment)
         {
-            return await PutJsonAsync<Models.Assessment>(CreateAuthorizationPolicyUrl($"{ApiUrl}/{assessment.AssessmentId}", EntityNames.Module, assessment.ModuleId), assessment);
+            return await PutJsonAsync<Models.Assessment>($"{ApiUrl}/{assessment.AssessmentId}", assessment);
         }
 
-        public async Task DeleteAssessmentAsync(int assessmentId, int moduleId)
+        public async Task DeleteAssessmentAsync(int assessmentId)
         {
-            await DeleteAsync(CreateAuthorizationPolicyUrl($"{ApiUrl}/{assessmentId}?moduleId={moduleId}", EntityNames.Module, moduleId));
+            await DeleteAsync($"{ApiUrl}/{assessmentId}");
         }
 
-        public async Task<bool> CanSubmitAssessmentAsync(int growerId, int moduleId)
+        public async Task<bool> CanSubmitAssessmentAsync(int growerId)
         {
-            return await GetJsonAsync<bool>(CreateAuthorizationPolicyUrl($"{ApiUrl}/can-submit/{growerId}?moduleId={moduleId}", EntityNames.Module, moduleId));
+            return await GetJsonAsync<bool>($"{ApiUrl}/can-submit/{growerId}");
         }
     }
 }
