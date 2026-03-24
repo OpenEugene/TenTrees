@@ -227,7 +227,7 @@ else
 
     private async Task LoadGrowers()
     {
-        _allGrowers = await GrowerService.GetAllGrowersAsync(ModuleState.ModuleId) ?? new List<Models.Grower>();
+        _allGrowers = await GrowerService.GetAllGrowersAsync() ?? new List<Models.Grower>();
         _assignedGrowers = _allGrowers.Where(g => g.MentorUsername == _model.Username).ToList();
         _availableGrowers = _allGrowers.Where(g => g.MentorUsername != _model.Username).OrderBy(g => g.GrowerName).ToList();
     }

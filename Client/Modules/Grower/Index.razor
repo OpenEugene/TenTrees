@@ -228,7 +228,7 @@
     private async Task LoadSummaryAsync()
     {
         int? villageId = string.IsNullOrEmpty(_villageFilter) ? null : int.Parse(_villageFilter);
-        _summary = await GrowerService.GetStatusSummaryAsync(ModuleState.ModuleId, villageId);
+        _summary = await GrowerService.GetStatusSummaryAsync(villageId);
     }
 
     private async Task LoadGrowersAsync()
@@ -237,12 +237,12 @@
 
         if (string.IsNullOrEmpty(_statusFilter))
         {
-            _growers = await GrowerService.GetAllGrowersAsync(ModuleState.ModuleId, villageId) ?? new List<Models.Grower>();
+            _growers = await GrowerService.GetAllGrowersAsync(villageId) ?? new List<Models.Grower>();
         }
         else
         {
             var status = (GrowerStatus)Enum.Parse(typeof(GrowerStatus), _statusFilter);
-            _growers = await GrowerService.GetGrowersByStatusAsync(status, ModuleState.ModuleId, villageId) ?? new List<Models.Grower>();
+            _growers = await GrowerService.GetGrowersByStatusAsync(status, villageId) ?? new List<Models.Grower>();
         }
 
         // Apply cohort filter: if a specific cohort is selected by admin, load that cohort's grower IDs

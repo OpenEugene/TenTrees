@@ -82,7 +82,7 @@ namespace OpenEug.TenTrees.Module.Village.Controllers
 
         // POST api/<controller>
         [HttpPost]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult<Models.Village>> Post([FromBody] Models.Village village)
         {
             try
@@ -105,7 +105,7 @@ namespace OpenEug.TenTrees.Module.Village.Controllers
 
         // PUT api/<controller>/5
         [HttpPut("{id}")]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult<Models.Village>> Put(int id, [FromBody] Models.Village village)
         {
             try
@@ -139,7 +139,7 @@ namespace OpenEug.TenTrees.Module.Village.Controllers
 
         // DELETE api/<controller>/5
         [HttpDelete("{id}")]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult> Delete(int id)
         {
             try

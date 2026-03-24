@@ -8,8 +8,8 @@ namespace OpenEug.TenTrees.Module.Assessment.Repository
 {
     public interface IAssessmentRepository
     {
-        IEnumerable<Models.Assessment> GetAssessments(int moduleId);
-        IEnumerable<Models.Assessment> GetAssessmentsByGrower(int growerId, int moduleId);
+        IEnumerable<Models.Assessment> GetAssessments();
+        IEnumerable<Models.Assessment> GetAssessmentsByGrower(int growerId);
         Models.Assessment GetAssessment(int assessmentId);
         Models.Assessment GetAssessment(int assessmentId, bool tracking);
         Models.Assessment AddAssessment(Models.Assessment assessment);
@@ -26,16 +26,17 @@ namespace OpenEug.TenTrees.Module.Assessment.Repository
             _factory = factory;
         }
 
-        public IEnumerable<Models.Assessment> GetAssessments(int moduleId)
+        public IEnumerable<Models.Assessment> GetAssessments()
         {
             using var db = _factory.CreateDbContext();
-            return db.Assessment.Where(item => item.ModuleId == moduleId).ToList();
+            var list = db.Assessment.ToList();
+            return list;
         }
 
-        public IEnumerable<Models.Assessment> GetAssessmentsByGrower(int growerId, int moduleId)
+        public IEnumerable<Models.Assessment> GetAssessmentsByGrower(int growerId)
         {
             using var db = _factory.CreateDbContext();
-            return db.Assessment.Where(item => item.GrowerId == growerId && item.ModuleId == moduleId).ToList();
+            return db.Assessment.Where(item => item.GrowerId == growerId).ToList();
         }
 
         public Models.Assessment GetAssessment(int assessmentId)
