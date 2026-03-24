@@ -29,7 +29,8 @@ namespace OpenEug.TenTrees.Module.Assessment.Repository
         public IEnumerable<Models.Assessment> GetAssessments()
         {
             using var db = _factory.CreateDbContext();
-            return db.Assessment.ToList();
+            var list = db.Assessment.ToList();
+            return list;
         }
 
         public IEnumerable<Models.Assessment> GetAssessmentsByGrower(int growerId)
