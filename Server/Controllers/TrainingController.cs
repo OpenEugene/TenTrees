@@ -70,7 +70,7 @@ namespace OpenEug.TenTrees.Module.Training.Controllers
 
         // POST api/<controller>
         [HttpPost]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult<TrainingClass>> Post([FromBody] TrainingClass trainingClass, int moduleid)
         {
             if (trainingClass == null)
@@ -98,7 +98,7 @@ namespace OpenEug.TenTrees.Module.Training.Controllers
 
         // PUT api/<controller>/5
         [HttpPut("{id}")]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult<TrainingClass>> Put(int id, [FromBody] TrainingClass trainingClass, int moduleid)
         {
             if (trainingClass == null)
@@ -131,7 +131,7 @@ namespace OpenEug.TenTrees.Module.Training.Controllers
 
         // DELETE api/<controller>/5?moduleid=x
         [HttpDelete("{id}/{moduleid}")]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult> Delete(int id, int moduleid)
         {
             if (!IsAuthorizedEntityId(EntityNames.Module, moduleid))
@@ -177,28 +177,28 @@ namespace OpenEug.TenTrees.Module.Training.Controllers
 
         // POST api/<controller>/attendance
         [HttpPost("attendance")]
-        [Authorize(Policy = PolicyNames.EditModule)]
-        public async Task<ActionResult> MarkAttendance([FromBody] MarkAttendanceRequest request)
+        [Authorize]
+        public async Task<ActionResult> MarkAttendance([FromBody] MarkAttendanceRequest request, int moduleid)
         {
             if (request == null)
             {
                 return BadRequest();
             }
 
-            if (!IsAuthorizedEntityId(EntityNames.Module, request.ModuleId))
+            if (!IsAuthorizedEntityId(EntityNames.Module, moduleid))
             {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Attendance Mark Attempt {ClassId} {ModuleId}", request.TrainingClassId, request.ModuleId);
+                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Attendance Mark Attempt {ClassId} {ModuleId}", request.TrainingClassId, moduleid);
                 return StatusCode(StatusCodes.Status403Forbidden);
             }
 
             try
             {
-                await _trainingService.MarkAttendanceAsync(request);
+                await _trainingService.MarkAttendanceAsync(request, moduleid);
                 return NoContent();
             }
             catch (Exception ex)
             {
-                _logger.Log(LogLevel.Error, this, LogFunction.Update, "Attendance Mark Failed {ClassId} {ModuleId} {Error}", request.TrainingClassId, request.ModuleId, ex.ToString());
+                _logger.Log(LogLevel.Error, this, LogFunction.Update, "Attendance Mark Failed {ClassId} {ModuleId} {Error}", request.TrainingClassId, moduleid, ex.ToString());
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }

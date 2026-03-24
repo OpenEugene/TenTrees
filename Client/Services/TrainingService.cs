@@ -50,9 +50,9 @@ namespace OpenEug.TenTrees.Module.Training.Services
             return await GetJsonAsync<List<ClassAttendance>>(CreateAuthorizationPolicyUrl($"{ApiUrl}/attendance/{classId}?moduleid={moduleId}", EntityNames.Module, moduleId), Enumerable.Empty<ClassAttendance>().ToList());
         }
 
-        public async Task MarkAttendanceAsync(MarkAttendanceRequest request)
+        public async Task MarkAttendanceAsync(MarkAttendanceRequest request, int moduleId)
         {
-            await PostJsonAsync(CreateAuthorizationPolicyUrl($"{ApiUrl}/attendance", EntityNames.Module, request.ModuleId), request);
+            await PostJsonAsync(CreateAuthorizationPolicyUrl($"{ApiUrl}/attendance?moduleid={moduleId}", EntityNames.Module, moduleId), request);
         }
 
         public async Task<List<AttendanceSummaryViewModel>> GetAttendanceSummariesAsync(int moduleId, int? villageId = null)

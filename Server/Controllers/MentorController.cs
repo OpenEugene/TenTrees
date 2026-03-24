@@ -70,7 +70,7 @@ namespace OpenEug.TenTrees.Module.Mentor.Controllers
 
         // POST api/mentor?moduleId=x
         [HttpPost]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult<MentorViewModel>> Post([FromBody] MentorViewModel model, int moduleId)
         {
             try
@@ -98,7 +98,7 @@ namespace OpenEug.TenTrees.Module.Mentor.Controllers
 
         // PUT api/mentor/{username}/profile?moduleId=x
         [HttpPut("{username}/profile")]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult<MentorViewModel>> PutProfile(string username, [FromBody] MentorViewModel model, int moduleId)
         {
             try
@@ -125,7 +125,7 @@ namespace OpenEug.TenTrees.Module.Mentor.Controllers
 
         // PUT api/mentor/{username}/activate?moduleId=x
         [HttpPut("{username}/activate")]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult> Activate(string username, int moduleId)
         {
             try
@@ -142,7 +142,7 @@ namespace OpenEug.TenTrees.Module.Mentor.Controllers
 
         // PUT api/mentor/{username}/deactivate?moduleId=x
         [HttpPut("{username}/deactivate")]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult> Deactivate(string username, int moduleId)
         {
             try
@@ -159,7 +159,7 @@ namespace OpenEug.TenTrees.Module.Mentor.Controllers
 
         // PUT api/mentor/grower/{growerId}?newMentorUsername=xxx&moduleId=x
         [HttpPut("grower/{growerId}")]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult> ReassignGrower(int growerId, string newMentorUsername, int moduleId)
         {
             try

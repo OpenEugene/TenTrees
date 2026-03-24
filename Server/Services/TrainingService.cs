@@ -117,9 +117,9 @@ namespace OpenEug.TenTrees.Module.Training.Services
             }
         }
 
-        public Task MarkAttendanceAsync(MarkAttendanceRequest request)
+        public Task MarkAttendanceAsync(MarkAttendanceRequest request, int moduleId)
         {
-            if (_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, request.ModuleId, PermissionNames.Edit))
+            if (_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.Edit))
             {
                 var records = request.Entries.Select(e => new ClassAttendance
                 {
@@ -133,7 +133,7 @@ namespace OpenEug.TenTrees.Module.Training.Services
             }
             else
             {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Attendance Mark Attempt {ClassId} {ModuleId}", request.TrainingClassId, request.ModuleId);
+                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Attendance Mark Attempt {ClassId} {ModuleId}", request.TrainingClassId, moduleId);
             }
             return Task.CompletedTask;
         }

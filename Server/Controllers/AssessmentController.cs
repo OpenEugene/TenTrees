@@ -77,7 +77,7 @@ namespace OpenEug.TenTrees.Module.Assessment.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult<Models.Assessment>> Post([FromBody] Models.Assessment assessment)
         {
             try
@@ -100,7 +100,7 @@ namespace OpenEug.TenTrees.Module.Assessment.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult<Models.Assessment>> Put(int id, [FromBody] Models.Assessment assessment)
         {
             try
@@ -134,7 +134,7 @@ namespace OpenEug.TenTrees.Module.Assessment.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult> Delete(int id)
         {
             try
