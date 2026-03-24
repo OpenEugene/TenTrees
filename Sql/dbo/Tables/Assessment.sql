@@ -1,6 +1,5 @@
 CREATE TABLE [dbo].[Assessment] (
     [AssessmentId]                   INT            IDENTITY (1, 1) NOT NULL,
-    [ModuleId]                       INT            NOT NULL,
     [GrowerId]                       INT            NOT NULL,
     [AssessmentDate]                 DATETIME2 (7)  NOT NULL,
     [TreesPlanted]                   INT            NOT NULL,

@@ -9,13 +9,13 @@ namespace OpenEug.TenTrees.Module.Training.Services
         // Training Class CRUD
         Task<List<TrainingClass>> GetTrainingClassesAsync(int moduleId, int? villageId = null);
         Task<TrainingClass> GetTrainingClassAsync(int classId, int moduleId);
-        Task<TrainingClass> AddTrainingClassAsync(TrainingClass trainingClass);
-        Task<TrainingClass> UpdateTrainingClassAsync(TrainingClass trainingClass);
+        Task<TrainingClass> AddTrainingClassAsync(TrainingClass trainingClass, int moduleId);
+        Task<TrainingClass> UpdateTrainingClassAsync(TrainingClass trainingClass, int moduleId);
         Task DeleteTrainingClassAsync(int classId, int moduleId);
 
         // Attendance
         Task<List<ClassAttendance>> GetAttendanceForClassAsync(int classId, int moduleId);
-        Task MarkAttendanceAsync(MarkAttendanceRequest request);
+        Task MarkAttendanceAsync(MarkAttendanceRequest request, int moduleId);
 
         // Summaries
         Task<List<AttendanceSummaryViewModel>> GetAttendanceSummariesAsync(int moduleId, int? villageId = null);

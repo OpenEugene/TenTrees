@@ -59,12 +59,6 @@ namespace OpenEug.TenTrees.Module.Training.Controllers
                     return NotFound();
                 }
 
-                if (!IsAuthorizedEntityId(EntityNames.Module, trainingClass.ModuleId))
-                {
-                    _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Training Class Get Attempt {ClassId} {ModuleId}", id, moduleid);
-                    return StatusCode(StatusCodes.Status403Forbidden);
-                }
-
                 return Ok(trainingClass);
             }
             catch (Exception ex)
@@ -76,15 +70,15 @@ namespace OpenEug.TenTrees.Module.Training.Controllers
 
         // POST api/<controller>
         [HttpPost]
-        [Authorize(Policy = PolicyNames.EditModule)]
-        public async Task<ActionResult<TrainingClass>> Post([FromBody] TrainingClass trainingClass)
+        [Authorize]
+        public async Task<ActionResult<TrainingClass>> Post([FromBody] TrainingClass trainingClass, int moduleid)
         {
             if (trainingClass == null)
             {
                 return BadRequest();
             }
 
-            if (!IsAuthorizedEntityId(EntityNames.Module, trainingClass.ModuleId))
+            if (!IsAuthorizedEntityId(EntityNames.Module, moduleid))
             {
                 _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Training Class Add Attempt {TrainingClass}", trainingClass);
                 return StatusCode(StatusCodes.Status403Forbidden);
@@ -92,27 +86,27 @@ namespace OpenEug.TenTrees.Module.Training.Controllers
 
             try
             {
-                var created = await _trainingService.AddTrainingClassAsync(trainingClass);
+                var created = await _trainingService.AddTrainingClassAsync(trainingClass, moduleid);
                 return Ok(created);
             }
             catch (Exception ex)
             {
-                _logger.Log(LogLevel.Error, this, LogFunction.Create, "Training Class Add Failed {ClassId} {ModuleId} {Error}", trainingClass?.TrainingClassId, trainingClass?.ModuleId, ex.ToString());
+                _logger.Log(LogLevel.Error, this, LogFunction.Create, "Training Class Add Failed {ClassId} {ModuleId} {Error}", trainingClass?.TrainingClassId, moduleid, ex.ToString());
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
 
         // PUT api/<controller>/5
         [HttpPut("{id}")]
-        [Authorize(Policy = PolicyNames.EditModule)]
-        public async Task<ActionResult<TrainingClass>> Put(int id, [FromBody] TrainingClass trainingClass)
+        [Authorize]
+        public async Task<ActionResult<TrainingClass>> Put(int id, [FromBody] TrainingClass trainingClass, int moduleid)
         {
             if (trainingClass == null)
             {
                 return BadRequest();
             }
 
-            if (!IsAuthorizedEntityId(EntityNames.Module, trainingClass.ModuleId))
+            if (!IsAuthorizedEntityId(EntityNames.Module, moduleid))
             {
                 _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Training Class Update Attempt {TrainingClass}", trainingClass);
                 return StatusCode(StatusCodes.Status403Forbidden);
@@ -125,19 +119,19 @@ namespace OpenEug.TenTrees.Module.Training.Controllers
 
             try
             {
-                var updated = await _trainingService.UpdateTrainingClassAsync(trainingClass);
+                var updated = await _trainingService.UpdateTrainingClassAsync(trainingClass, moduleid);
                 return Ok(updated);
             }
             catch (Exception ex)
             {
-                _logger.Log(LogLevel.Error, this, LogFunction.Update, "Training Class Update Failed {ClassId} {ModuleId} {Error}", id, trainingClass.ModuleId, ex.ToString());
+                _logger.Log(LogLevel.Error, this, LogFunction.Update, "Training Class Update Failed {ClassId} {ModuleId} {Error}", id, moduleid, ex.ToString());
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
 
         // DELETE api/<controller>/5?moduleid=x
         [HttpDelete("{id}/{moduleid}")]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult> Delete(int id, int moduleid)
         {
             if (!IsAuthorizedEntityId(EntityNames.Module, moduleid))
@@ -183,28 +177,28 @@ namespace OpenEug.TenTrees.Module.Training.Controllers
 
         // POST api/<controller>/attendance
         [HttpPost("attendance")]
-        [Authorize(Policy = PolicyNames.EditModule)]
-        public async Task<ActionResult> MarkAttendance([FromBody] MarkAttendanceRequest request)
+        [Authorize]
+        public async Task<ActionResult> MarkAttendance([FromBody] MarkAttendanceRequest request, int moduleid)
         {
             if (request == null)
             {
                 return BadRequest();
             }
 
-            if (!IsAuthorizedEntityId(EntityNames.Module, request.ModuleId))
+            if (!IsAuthorizedEntityId(EntityNames.Module, moduleid))
             {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Attendance Mark Attempt {ClassId} {ModuleId}", request.TrainingClassId, request.ModuleId);
+                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Attendance Mark Attempt {ClassId} {ModuleId}", request.TrainingClassId, moduleid);
                 return StatusCode(StatusCodes.Status403Forbidden);
             }
 
             try
             {
-                await _trainingService.MarkAttendanceAsync(request);
+                await _trainingService.MarkAttendanceAsync(request, moduleid);
                 return NoContent();
             }
             catch (Exception ex)
             {
-                _logger.Log(LogLevel.Error, this, LogFunction.Update, "Attendance Mark Failed {ClassId} {ModuleId} {Error}", request.TrainingClassId, request.ModuleId, ex.ToString());
+                _logger.Log(LogLevel.Error, this, LogFunction.Update, "Attendance Mark Failed {ClassId} {ModuleId} {Error}", request.TrainingClassId, moduleid, ex.ToString());
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }

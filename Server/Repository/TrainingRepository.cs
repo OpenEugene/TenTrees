@@ -38,7 +38,7 @@ namespace OpenEug.TenTrees.Module.Training.Repository
         public IEnumerable<TrainingClass> GetTrainingClasses(int moduleId, int? villageId = null)
         {
             using var db = _factory.CreateDbContext();
-            var query = db.TrainingClass.Where(tc => tc.ModuleId == moduleId);
+            var query = db.TrainingClass.AsQueryable();
 
             if (villageId.HasValue)
             {
@@ -118,7 +118,6 @@ namespace OpenEug.TenTrees.Module.Training.Repository
             }
 
             var moduleClassIds = db.TrainingClass
-                .Where(tc => tc.ModuleId == moduleId)
                 .Select(tc => tc.TrainingClassId)
                 .ToList();
 
@@ -158,7 +157,6 @@ namespace OpenEug.TenTrees.Module.Training.Repository
             var village = db.Village.Find(grower.VillageId);
 
             var moduleClassIds = db.TrainingClass
-                .Where(tc => tc.ModuleId == moduleId)
                 .Select(tc => tc.TrainingClassId)
                 .ToList();
 

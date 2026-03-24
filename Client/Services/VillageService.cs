@@ -57,7 +57,7 @@ namespace OpenEug.TenTrees.Module.Village.Services
         
         public async Task<List<Models.Village>> GetActiveVillagesAsync()
         {
-            return await GetJsonAsync<List<Models.Village>>($"{Apiurl}/active");
+            return await GetJsonAsync<List<Models.Village>>($"{Apiurl}/active", Enumerable.Empty<Models.Village>().ToList());
         }
     }
 }

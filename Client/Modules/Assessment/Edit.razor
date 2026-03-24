@@ -344,7 +344,7 @@
     {
         try
         {
-            var allGrowers = await GrowerService.GetActiveGrowersAsync(ModuleState.ModuleId);
+            var allGrowers = await GrowerService.GetActiveGrowersAsync();
 
             if (UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin))
             {
@@ -360,7 +360,7 @@
                 if (PageState.QueryString.ContainsKey("id"))
                 {
                     _id = Int32.Parse(PageState.QueryString["id"]);
-                    Models.Assessment assessment = await AssessmentService.GetAssessmentAsync(_id, ModuleState.ModuleId);
+                    Models.Assessment assessment = await AssessmentService.GetAssessmentAsync(_id);
                     if (assessment != null)
                     {
                         _growerId = assessment.GrowerId;
@@ -547,7 +547,7 @@
                 if (PageState.Action == "Add")
                 {
                     // Check frequency rules
-                    bool canSubmit = await AssessmentService.CanSubmitAssessmentAsync(_growerId, ModuleState.ModuleId);
+                    bool canSubmit = await AssessmentService.CanSubmitAssessmentAsync(_growerId);
                     if (!canSubmit)
                     {
                         AddModuleMessage(Localizer["Message.FrequencyError"], MessageType.Warning);
@@ -555,8 +555,7 @@
                     }
 
                     Models.Assessment assessment = new Models.Assessment();
-                    assessment.ModuleId = ModuleState.ModuleId;
-                    
+
                     assessment.GrowerId = _growerId;
                     assessment.AssessmentDate = _assessmentDate;
 
@@ -594,7 +593,7 @@
                 }
                 else
                 {
-                    Models.Assessment assessment = await AssessmentService.GetAssessmentAsync(_id, ModuleState.ModuleId);
+                    Models.Assessment assessment = await AssessmentService.GetAssessmentAsync(_id);
 
                     assessment.AssessmentDate = _assessmentDate;
 

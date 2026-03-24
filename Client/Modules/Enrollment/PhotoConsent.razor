@@ -177,7 +177,7 @@ else
             _isLoading = true;
             if (PageState.QueryString.ContainsKey("id") && int.TryParse(PageState.QueryString["id"], out int enrollmentId))
             {
-                _enrollment = await EnrollmentService.GetEnrollmentAsync(enrollmentId, ModuleState.ModuleId);
+                _enrollment = await EnrollmentService.GetEnrollmentAsync(enrollmentId);
 
                 if (_enrollment == null)
                 {

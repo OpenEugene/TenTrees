@@ -30,14 +30,14 @@ namespace OpenEug.TenTrees.Module.Training.Services
             return await GetJsonAsync<TrainingClass>(CreateAuthorizationPolicyUrl($"{ApiUrl}/{classId}?moduleid={moduleId}", EntityNames.Module, moduleId));
         }
 
-        public async Task<TrainingClass> AddTrainingClassAsync(TrainingClass trainingClass)
+        public async Task<TrainingClass> AddTrainingClassAsync(TrainingClass trainingClass, int moduleId)
         {
-            return await PostJsonAsync<TrainingClass>(CreateAuthorizationPolicyUrl($"{ApiUrl}", EntityNames.Module, trainingClass.ModuleId), trainingClass);
+            return await PostJsonAsync<TrainingClass>(CreateAuthorizationPolicyUrl($"{ApiUrl}", EntityNames.Module, moduleId), trainingClass);
         }
 
-        public async Task<TrainingClass> UpdateTrainingClassAsync(TrainingClass trainingClass)
+        public async Task<TrainingClass> UpdateTrainingClassAsync(TrainingClass trainingClass, int moduleId)
         {
-            return await PutJsonAsync<TrainingClass>(CreateAuthorizationPolicyUrl($"{ApiUrl}/{trainingClass.TrainingClassId}", EntityNames.Module, trainingClass.ModuleId), trainingClass);
+            return await PutJsonAsync<TrainingClass>(CreateAuthorizationPolicyUrl($"{ApiUrl}/{trainingClass.TrainingClassId}", EntityNames.Module, moduleId), trainingClass);
         }
 
         public async Task DeleteTrainingClassAsync(int classId, int moduleId)
@@ -50,9 +50,9 @@ namespace OpenEug.TenTrees.Module.Training.Services
             return await GetJsonAsync<List<ClassAttendance>>(CreateAuthorizationPolicyUrl($"{ApiUrl}/attendance/{classId}?moduleid={moduleId}", EntityNames.Module, moduleId), Enumerable.Empty<ClassAttendance>().ToList());
         }
 
-        public async Task MarkAttendanceAsync(MarkAttendanceRequest request)
+        public async Task MarkAttendanceAsync(MarkAttendanceRequest request, int moduleId)
         {
-            await PostJsonAsync(CreateAuthorizationPolicyUrl($"{ApiUrl}/attendance", EntityNames.Module, request.ModuleId), request);
+            await PostJsonAsync(CreateAuthorizationPolicyUrl($"{ApiUrl}/attendance?moduleid={moduleId}", EntityNames.Module, moduleId), request);
         }
 
         public async Task<List<AttendanceSummaryViewModel>> GetAttendanceSummariesAsync(int moduleId, int? villageId = null)

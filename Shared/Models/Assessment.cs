@@ -11,8 +11,6 @@ namespace OpenEug.TenTrees.Models
         [Key]
         public int AssessmentId { get; set; }
 
-        public int ModuleId { get; set; }
-
         [Required]
         public int GrowerId { get; set; }
 
@@ -33,7 +31,7 @@ namespace OpenEug.TenTrees.Models
         public bool HasLeakyTaps { get; set; }
         public bool IsGardenDesignedToCaptureWater { get; set; }
         public bool IsUsingGreywater { get; set; }
-        
+
         public int PermaculturePrinciplesCount { get; set; }
 
         // Problems
@@ -50,7 +48,7 @@ namespace OpenEug.TenTrees.Models
         // Access Control / Submission
         public string SubmittedBy { get; set; }
         public bool EnteredByAdmin { get; set; }
-        
+
         // Frequency Tracking
         public string FrequencyType { get; set; } // e.g., "Twice-Monthly", "Monthly"
     }
