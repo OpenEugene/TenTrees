@@ -25,7 +25,7 @@ namespace OpenEug.TenTrees.Module.Grower.Services
             {
                 url += $"?villageId={villageId.Value}";
             }
-            return await GetJsonAsync<List<Models.Grower>>(url);
+            return await GetJsonAsync<List<Models.Grower>>(url, new List<Models.Grower>());
         }
 
         public async Task<Models.Grower> ToggleActiveStatusAsync(int growerId, int moduleId)
@@ -47,7 +47,7 @@ namespace OpenEug.TenTrees.Module.Grower.Services
             {
                 url += $"?villageId={villageId.Value}";
             }
-            return await GetJsonAsync<List<Models.Grower>>(url);
+            return await GetJsonAsync<List<Models.Grower>>(url, new List<Models.Grower>());
         }
 
         public async Task<List<Models.Grower>> GetGrowersByStatusAsync(GrowerStatus status, int? villageId = null)
@@ -57,7 +57,7 @@ namespace OpenEug.TenTrees.Module.Grower.Services
             {
                 url += $"&villageId={villageId.Value}";
             }
-            return await GetJsonAsync<List<Models.Grower>>(url);
+            return await GetJsonAsync<List<Models.Grower>>(url, new List<Models.Grower>());
         }
 
         public async Task<GrowerStatusSummary> GetStatusSummaryAsync(int? villageId = null)

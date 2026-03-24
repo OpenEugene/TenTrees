@@ -95,12 +95,12 @@ namespace OpenEug.TenTrees.Module.Enrollment.Services
         
         public async Task<List<Models.Enrollment>> GetByStatusAsync(Models.EnrollmentStatus status)
         {
-            return await GetJsonAsync<List<Models.Enrollment>>($"{Apiurl}/status/{status}");
+            return await GetJsonAsync<List<Models.Enrollment>>($"{Apiurl}/status/{status}", new List<Models.Enrollment>());
         }
         
         public async Task<List<Models.Enrollment>> GetByVillageAsync(int villageId)
         {
-            return await GetJsonAsync<List<Models.Enrollment>>($"{Apiurl}/village/{villageId}");
+            return await GetJsonAsync<List<Models.Enrollment>>($"{Apiurl}/village/{villageId}", new List<Models.Enrollment>());
         }
 
         public async Task<int> BackfillGrowersFromEnrollmentsAsync(int moduleId)
@@ -110,7 +110,7 @@ namespace OpenEug.TenTrees.Module.Enrollment.Services
 
         public async Task<List<UserInfo>> GetSiteUsersAsync()
         {
-            return await GetJsonAsync<List<UserInfo>>($"{Apiurl}/users");
+            return await GetJsonAsync<List<UserInfo>>($"{Apiurl}/users", new List<UserInfo>());
         }
 
         public async Task<bool> CapturePhotoConsentAsync(int enrollmentId, int moduleId, Models.PhotoConsentLevel consentLevel, string signatureData)
