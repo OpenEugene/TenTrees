@@ -94,7 +94,7 @@ namespace OpenEug.TenTrees.Module.Enrollment.Controllers
 
         // POST api/<controller>
         [HttpPost]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult<Models.Enrollment>> Post([FromBody] Models.Enrollment Enrollment)
         {
             if (!ModelState.IsValid)
@@ -116,7 +116,7 @@ namespace OpenEug.TenTrees.Module.Enrollment.Controllers
 
         // PUT api/<controller>/5
         [HttpPut("{id}")]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult<Models.Enrollment>> Put(int id, [FromBody] Models.Enrollment Enrollment)
         {
             if (!ModelState.IsValid)
@@ -147,7 +147,7 @@ namespace OpenEug.TenTrees.Module.Enrollment.Controllers
         }
 
         [HttpDelete("{id}/{moduleid}")]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult> Delete(int id, int moduleid)
         {
             try
@@ -170,7 +170,7 @@ namespace OpenEug.TenTrees.Module.Enrollment.Controllers
         
         // POST api/<controller>/validate
         [HttpPost("validate")]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult<ValidationResult>> Validate([FromBody] Models.Enrollment Enrollment)
         {
             try
@@ -187,7 +187,7 @@ namespace OpenEug.TenTrees.Module.Enrollment.Controllers
         
         // POST api/<controller>/5/signature
         [HttpPost("{id}/signature")]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult<bool>> CaptureSignature(int id, [FromBody] SignatureRequest request)
         {
             try
@@ -210,7 +210,7 @@ namespace OpenEug.TenTrees.Module.Enrollment.Controllers
 
         // POST api/<controller>/5/photoconsent
         [HttpPost("{id}/photoconsent")]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult<bool>> CapturePhotoConsent(int id, [FromBody] PhotoConsentRequest request)
         {
             try
@@ -288,7 +288,7 @@ namespace OpenEug.TenTrees.Module.Enrollment.Controllers
 
         // POST api/<controller>/backfill-growers
         [HttpPost("backfill-growers")]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult<int>> BackfillGrowers(int moduleId)
         {
             try

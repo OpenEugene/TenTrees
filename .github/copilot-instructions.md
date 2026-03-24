@@ -1,7 +1,6 @@
 # Copilot Instructions
 
 ## General Guidelines
-- See /agents.md for instructions on how to use agents with Copilot.
 - Avoid switching to the profiler or other agents unless clearly necessary. Explain the impact of such switches to prevent session loss and user frustration.
 
 ## Error Handling
@@ -13,3 +12,14 @@
 
 ## Training Edit Screens
 - In Training Edit screens, populate the village dropdown regardless of action (no action-based filtering).
+
+## Agent / Tool Usage
+- Never run tools or agents in parallel. Always run one tool or agent at a time, sequentially. Prefer fewer tokens over faster execution.
+
+## Project Skills
+@.github/skills/oqtane-module-development/SKILL.md
+@.github/skills/blazor-oqtane-js-interop/SKILL.md
+@.github/skills/accessibility-and-validation/SKILL.md
+@.github/skills/respect-working-tree/SKILL.md
+@.github/skills/kanban/skill.md
+@.github/skills/skiller/skill.md

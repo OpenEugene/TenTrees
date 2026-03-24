@@ -15,7 +15,7 @@ namespace OpenEug.TenTrees.Module.Training.Services
 
         // Attendance
         Task<List<ClassAttendance>> GetAttendanceForClassAsync(int classId, int moduleId);
-        Task MarkAttendanceAsync(MarkAttendanceRequest request);
+        Task MarkAttendanceAsync(MarkAttendanceRequest request, int moduleId);
 
         // Summaries
         Task<List<AttendanceSummaryViewModel>> GetAttendanceSummariesAsync(int moduleId, int? villageId = null);

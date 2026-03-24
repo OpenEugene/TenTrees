@@ -62,7 +62,7 @@ namespace OpenEug.TenTrees.Module.Grower.Controllers
         }
 
         [HttpPost("toggle-status")]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult<Models.Grower>> ToggleStatus([FromBody] StatusToggleRequest request, int moduleId)
         {
             try
@@ -88,7 +88,7 @@ namespace OpenEug.TenTrees.Module.Grower.Controllers
         }
 
         [HttpPost("exit")]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult<Models.Grower>> RecordExit([FromBody] ProgramExitRequest request, int moduleId)
         {
             try
@@ -162,7 +162,7 @@ namespace OpenEug.TenTrees.Module.Grower.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult<Models.Grower>> Put(int id, [FromBody] Models.Grower grower, int moduleId)
         {
             try

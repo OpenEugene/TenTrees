@@ -100,7 +100,7 @@ namespace OpenEug.TenTrees.Module.Cohort.Controllers
 
         // POST api/<controller>
         [HttpPost]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult<Models.Cohort>> Post([FromBody] Models.Cohort cohort)
         {
             if (!ModelState.IsValid)
@@ -128,7 +128,7 @@ namespace OpenEug.TenTrees.Module.Cohort.Controllers
 
         // PUT api/<controller>/5
         [HttpPut("{id}")]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult<Models.Cohort>> Put(int id, [FromBody] Models.Cohort cohort)
         {
             if (!ModelState.IsValid)
@@ -166,7 +166,7 @@ namespace OpenEug.TenTrees.Module.Cohort.Controllers
 
         // DELETE api/<controller>/5
         [HttpDelete("{id}")]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult> Delete(int id)
         {
             try
@@ -219,7 +219,7 @@ namespace OpenEug.TenTrees.Module.Cohort.Controllers
 
         // POST api/<controller>/5/growers/7
         [HttpPost("{id}/growers/{growerId}")]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult<Models.GrowerCohort>> AddGrowerCohort(int id, int growerId)
         {
             try
@@ -236,7 +236,7 @@ namespace OpenEug.TenTrees.Module.Cohort.Controllers
 
         // DELETE api/<controller>/5/growers/7
         [HttpDelete("{id}/growers/{growerId}")]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult> DeleteGrowerCohort(int id, int growerId)
         {
             try
@@ -289,7 +289,7 @@ namespace OpenEug.TenTrees.Module.Cohort.Controllers
 
         // POST api/<controller>/5/mentors/abc123
         [HttpPost("{id}/mentors/{mentorId}")]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult<Models.MentorCohort>> AddMentorCohort(int id, string mentorId)
         {
             try
@@ -306,7 +306,7 @@ namespace OpenEug.TenTrees.Module.Cohort.Controllers
 
         // DELETE api/<controller>/5/mentors/abc123
         [HttpDelete("{id}/mentors/{mentorId}")]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult> DeleteMentorCohort(int id, string mentorId)
         {
             try
@@ -359,7 +359,7 @@ namespace OpenEug.TenTrees.Module.Cohort.Controllers
 
         // POST api/<controller>/5/classes/7
         [HttpPost("{id}/classes/{classId}")]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult<Models.CohortClass>> AddCohortClass(int id, int classId)
         {
             try
@@ -376,7 +376,7 @@ namespace OpenEug.TenTrees.Module.Cohort.Controllers
 
         // DELETE api/<controller>/5/classes/7
         [HttpDelete("{id}/classes/{classId}")]
-        [Authorize(Policy = PolicyNames.EditModule)]
+        [Authorize]
         public async Task<ActionResult> DeleteCohortClass(int id, int classId)
         {
             try
