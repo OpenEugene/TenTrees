@@ -9,9 +9,9 @@ namespace OpenEug.TenTrees.Module.Village
         {
             Name = "Village",
             Description = "Village Management",
-            Version = "1.1.2",
+            Version = "1.1.3",
             ServerManagerType = "",
-            ReleaseVersions = "1.0.0,1.1.0,1.1.1,1.1.2",
+            ReleaseVersions = "1.0.0,1.1.0,1.1.1,1.1.2,1.1.3",
             Dependencies = ""
         };
     }
