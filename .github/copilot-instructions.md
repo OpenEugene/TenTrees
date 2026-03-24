@@ -13,13 +13,16 @@
 ## Training Edit Screens
 - In Training Edit screens, populate the village dropdown regardless of action (no action-based filtering).
 
+## Project Lifecycle
+- Follow existing project lifecycle pattern for index pages: use `OnParametersSetAsync` rather than `OnInitializedAsync`.
+
 ## Agent / Tool Usage
 - Never run tools or agents in parallel. Always run one tool or agent at a time, sequentially. Prefer fewer tokens over faster execution.
 
 ## Project Skills
-@.github/skills/oqtane-module-development/SKILL.md
-@.github/skills/blazor-oqtane-js-interop/SKILL.md
-@.github/skills/accessibility-and-validation/SKILL.md
-@.github/skills/respect-working-tree/SKILL.md
-@.github/skills/kanban/skill.md
-@.github/skills/skiller/skill.md
+@.github/skills/oqtane-module-development/SKILL.md  
+@.github/skills/blazor-oqtane-js-interop/SKILL.md  
+@.github/skills/accessibility-and-validation/SKILL.md  
+@.github/skills/respect-working-tree/SKILL.md  
+@.github/skills/kanban/skill.md  
+@.github/skills/skiller/skill.md  
