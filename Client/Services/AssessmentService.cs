@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using OpenEug.TenTrees.Models;
 using Oqtane.Services;
 using Oqtane.Shared;
@@ -9,7 +10,12 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
 {
     public class AssessmentService : ServiceBase, IAssessmentService
     {
-        public AssessmentService(HttpClient http, SiteState siteState) : base(http, siteState) { }
+        private readonly ILogger<AssessmentService> _logger;
+
+        public AssessmentService(HttpClient http, SiteState siteState, ILogger<AssessmentService> logger) : base(http, siteState)
+        {
+            _logger = logger;
+        }
 
         private string ApiUrl => CreateApiUrl("Assessment");
 
@@ -20,12 +26,20 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
 
         public async Task<List<Models.Assessment>> GetAssessmentsAsync()
         {
-            return await GetJsonAsync<List<Models.Assessment>>($"{ApiUrl}");
+            try
+            {
+                return await GetJsonAsync<List<Models.Assessment>>($"{ApiUrl}", new List<Models.Assessment>());
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError(ex, "AssessmentService.GetAssessmentsAsync failed for url {ApiUrl}", ApiUrl);
+                throw;
+            }
         }
 
         public async Task<List<Models.Assessment>> GetAssessmentsByGrowerAsync(int growerId)
         {
-            return await GetJsonAsync<List<Models.Assessment>>($"{ApiUrl}/grower/{growerId}");
+            return await GetJsonAsync<List<Models.Assessment>>($"{ApiUrl}/grower/{growerId}", new List<Models.Assessment>());
         }
 
         public async Task<Models.Assessment> AddAssessmentAsync(Models.Assessment assessment)
