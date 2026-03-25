@@ -142,5 +142,11 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
 
             return Task.FromResult(daysSinceLast >= minDays);
         }
+
+        public Task<List<AssessmentListDto>> GetAssessmentListAsync(int? villageId = null, int? cohortId = null, string mentorUsername = null, int? growerId = null)
+        {
+            var list = _assessmentRepository.GetAssessmentList(villageId, cohortId, mentorUsername, growerId).ToList();
+            return Task.FromResult(list);
+        }
     }
 }
