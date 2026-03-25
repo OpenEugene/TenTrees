@@ -59,17 +59,17 @@ Onboard Roy Buck Village into the new system before manual data entry begins
 Action Items and Next Steps
 ---------------------------
 
-[ ] $1  
+[ ] Confirm Roy Buck registrations and send instructions  
   - Becky  
   - Within 24 hours  
   - Confirmed registration status and clear instructions sent to Roy Buck team  
 
-[ ] $1  
+[ ] Rebalance grower assignments across all 17 mentors  
   - Becky and Kimberly  
   - Before next Tuesday's meeting  
   - All growers correctly distributed across all 17 mentors  
 
-[ ] $1  
+[ ] Schedule and confirm joint system testing meeting  
   - Becky  
   - Confirm meeting details by end of day  
   - Meeting invite sent with clear agenda for joint system testing  
