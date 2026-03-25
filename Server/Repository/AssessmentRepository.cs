@@ -10,6 +10,7 @@ namespace OpenEug.TenTrees.Module.Assessment.Repository
     {
         IEnumerable<Models.Assessment> GetAssessments();
         IEnumerable<Models.Assessment> GetAssessmentsByGrower(int growerId);
+        IEnumerable<AssessmentListDto> GetAssessmentList(int? villageId = null, int? cohortId = null, string mentorUsername = null, int? growerId = null);
         Models.Assessment GetAssessment(int assessmentId);
         Models.Assessment GetAssessment(int assessmentId, bool tracking);
         Models.Assessment AddAssessment(Models.Assessment assessment);
@@ -37,6 +38,49 @@ namespace OpenEug.TenTrees.Module.Assessment.Repository
         {
             using var db = _factory.CreateDbContext();
             return db.Assessment.Where(item => item.GrowerId == growerId).ToList();
+        }
+
+        public IEnumerable<AssessmentListDto> GetAssessmentList(int? villageId = null, int? cohortId = null, string mentorUsername = null, int? growerId = null)
+        {
+            using var db = _factory.CreateDbContext();
+            var query = from a in db.Assessment
+                        join g in db.Grower on a.GrowerId equals g.GrowerId
+                        join v in db.Village on g.VillageId equals v.VillageId
+                        select new { a, g, v };
+
+            if (villageId.HasValue)
+                query = query.Where(x => x.g.VillageId == villageId.Value);
+
+            if (cohortId.HasValue)
+            {
+                var cohortGrowerIds = db.GrowerCohort
+                    .Where(gc => gc.CohortId == cohortId.Value)
+                    .Select(gc => gc.GrowerId);
+                query = query.Where(x => cohortGrowerIds.Contains(x.a.GrowerId));
+            }
+
+            if (!string.IsNullOrEmpty(mentorUsername))
+                query = query.Where(x => x.g.MentorUsername == mentorUsername);
+
+            if (growerId.HasValue)
+                query = query.Where(x => x.a.GrowerId == growerId.Value);
+
+            return query.OrderByDescending(x => x.a.AssessmentDate)
+                .Select(x => new AssessmentListDto
+                {
+                    AssessmentId = x.a.AssessmentId,
+                    AssessmentDate = x.a.AssessmentDate,
+                    GrowerId = x.a.GrowerId,
+                    GrowerName = x.g.GrowerName,
+                    VillageId = x.v.VillageId,
+                    VillageName = x.v.VillageName,
+                    MentorUsername = x.g.MentorUsername,
+                    TreesPlanted = x.a.TreesPlanted,
+                    TreesAlive = x.a.TreesAlive,
+                    PermaculturePrinciplesCount = x.a.PermaculturePrinciplesCount,
+                    NeedsHelp = x.a.NeedsHelp
+                })
+                .ToList();
         }
 
         public Models.Assessment GetAssessment(int assessmentId)
