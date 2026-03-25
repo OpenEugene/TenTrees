@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DataComparison>
+  <Version>10</Version>
+  <ConnectionProperties1>
+    <ConnectionString>Data Source=db38494.public.databaseasp.net;Initial Catalog=db38494;Persist Security Info=False;User ID=db38494;Pooling=False;Multiple Active Result Sets=True;Encrypt=True;Trust Server Certificate=True;Command Timeout=0</ConnectionString>
+    <FullDisplayName>db38494.public.databaseasp.net.db38494 (db38494)</FullDisplayName>
+  </ConnectionProperties1>
+  <ConnectionProperties2>
+    <ConnectionString>Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=Oqtane-202603242345;Integrated Security=True;Persist Security Info=False;Pooling=False;Multiple Active Result Sets=False;Connect Timeout=60;Encrypt=True;Trust Server Certificate=False;Command Timeout=0</ConnectionString>
+    <FullDisplayName>(localdb)\MSSQLLocalDB.Oqtane-202603242345 (NOSURFPRO7\mark)</FullDisplayName>
+  </ConnectionProperties2>
+  <SessionSettings>Default</SessionSettings>
+</DataComparison>
