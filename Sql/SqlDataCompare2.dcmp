@@ -2,12 +2,12 @@
 <DataComparison>
   <Version>10</Version>
   <ConnectionProperties1>
-    <ConnectionString>Data Source=db38494.public.databaseasp.net;Initial Catalog=db38494;Persist Security Info=False;User ID=db38494;Pooling=False;Multiple Active Result Sets=True;Encrypt=True;Trust Server Certificate=True;Command Timeout=0</ConnectionString>
-    <FullDisplayName>db38494.public.databaseasp.net.db38494 (db38494)</FullDisplayName>
+    <ConnectionString>Data Source=SERVER_NAME;Initial Catalog=DATABASE_NAME;Persist Security Info=False;User ID=DB_USER_ID;Pooling=False;Multiple Active Result Sets=True;Encrypt=True;Trust Server Certificate=True;Command Timeout=0</ConnectionString>
+    <FullDisplayName>SERVER_NAME.DATABASE_NAME (DB_USER_ID)</FullDisplayName>
   </ConnectionProperties1>
   <ConnectionProperties2>
-    <ConnectionString>Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=Oqtane-202603242345;Integrated Security=True;Persist Security Info=False;Pooling=False;Multiple Active Result Sets=False;Connect Timeout=60;Encrypt=True;Trust Server Certificate=False;Command Timeout=0</ConnectionString>
-    <FullDisplayName>(localdb)\MSSQLLocalDB.Oqtane-202603242345 (NOSURFPRO7\mark)</FullDisplayName>
+    <ConnectionString>Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=LOCAL_DATABASE_NAME;Integrated Security=True;Persist Security Info=False;Pooling=False;Multiple Active Result Sets=False;Connect Timeout=60;Encrypt=True;Trust Server Certificate=False;Command Timeout=0</ConnectionString>
+    <FullDisplayName>(localdb)\MSSQLLocalDB.LOCAL_DATABASE_NAME (MACHINE_NAME\USER_NAME)</FullDisplayName>
   </ConnectionProperties2>
   <SessionSettings>Default</SessionSettings>
 </DataComparison>
