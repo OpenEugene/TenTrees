@@ -1,103 +1,338 @@
 @using OpenEug.TenTrees.Module.Assessment.Services
 @using OpenEug.TenTrees.Module.Grower.Services
+@using OpenEug.TenTrees.Module.Village.Services
+@using OpenEug.TenTrees.Module.Cohort.Services
 @using OpenEug.TenTrees.Models
+@using Oqtane.Modules.Controls
 @page "/assessment"
 
 @namespace OpenEug.TenTrees.Module.Assessment
 @inherits ModuleBase
 @inject IAssessmentService AssessmentService
 @inject IGrowerService GrowerService
+@inject IVillageService VillageService
+@inject ICohortService CohortService
 @inject NavigationManager NavigationManager
-@inject IStringLocalizer<Index> Localizer
 
 <div class="container">
     <div class="d-flex gap-2 mb-3">
         <ActionLink Action="Add" Security="SecurityAccessLevel.Edit" Text="New Assessment" ResourceKey="Add" Class="btn btn-primary" />
     </div>
 
+    <!-- Cascading Filters: Village → Cohort → Mentor → Grower -->
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <label for="villageFilter">Village</label>
+            <select id="villageFilter" class="form-select" @bind="_selectedVillageId" @bind:after="OnVillageChanged">
+                <option value="">All</option>
+                @if (_villages != null)
+                {
+                    @foreach (var v in _villages)
+                    {
+                        <option value="@v.VillageId">@v.VillageName</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="cohortFilter">Cohort</label>
+            <select id="cohortFilter" class="form-select" @bind="_selectedCohortId" @bind:after="OnCohortChanged">
+                <option value="">All</option>
+                @foreach (var c in _cohortOptions)
+                {
+                    <option value="@c.CohortId">@c.Name</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label for="mentorFilter">Mentor</label>
+            <select id="mentorFilter" class="form-select" @bind="_selectedMentor" @bind:after="OnMentorChanged">
+                <option value="">All</option>
+                @foreach (var m in _mentorOptions)
+                {
+                    <option value="@m">@m</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label for="growerFilter">Grower</label>
+            <select id="growerFilter" class="form-select" @bind="_selectedGrowerId" @bind:after="OnGrowerChanged">
+                <option value="">All</option>
+                @foreach (var g in _growerOptions)
+                {
+                    <option value="@g.GrowerId">@g.GrowerName</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+            <button class="btn btn-secondary w-100" @onclick="ClearFilters">Clear Filters</button>
+        </div>
+    </div>
+
     @if (_assessments == null)
     {
-        <p><em>@Localizer["Message.Loading"]</em></p>
+        <p><em>Loading...</em></p>
     }
-    else if (@_assessments.Count == 0)
+    else if (_assessments.Count == 0)
     {
-        <p>@Localizer["Message.DisplayNone"]</p>
+        <p>No assessments found.</p>
     }
     else
     {
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th style="width: 1px;">&nbsp;</th>
-                    <th style="width: 1px;">&nbsp;</th>
-                    <th>@Localizer["Column.Date"]</th>
-                    <th>@Localizer["Column.Grower"]</th>
-                    <th>@Localizer["Column.SurvivalRate"]</th>
-                    <th>@Localizer["Column.PermacultureScore"]</th>
-                    <th>@Localizer["Column.NeedsHelp"]</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var assessment in _assessments)
-                {
-                    var growerName = _growers?.FirstOrDefault(g => g.GrowerId == assessment.GrowerId)?.GrowerName ?? "Unknown";
-                    var survivalRate = assessment.TreesPlanted > 0 ? (assessment.TreesAlive * 100 / assessment.TreesPlanted) : 0;
-                    
-                    <tr>
-                        <td><ActionLink Action="Edit" Parameters="@($"id={assessment.AssessmentId}")" ResourceKey="Edit" /></td>
-                        <td><ActionDialog Header="Delete Assessment" Message="Are You Sure You Wish To Delete This Assessment?" Action="Delete" Security="SecurityAccessLevel.Edit" Class="btn btn-danger" OnClick="@(async () => await Delete(assessment))" ResourceKey="Delete" Id="@assessment.AssessmentId.ToString()" /></td>
-                        <td>@assessment.AssessmentDate.ToShortDateString()</td>
-                        <td>@growerName</td>
-                        <td>@survivalRate% (@assessment.TreesAlive / @assessment.TreesPlanted)</td>
-                        <td>@assessment.PermaculturePrinciplesCount / 9</td>
-                        <td>
-                            @if (assessment.NeedsHelp)
-                            {
-                                <span class="badge bg-danger">@Localizer["Yes"]</span>
-                            }
-                            else
-                            {
-                                <span class="badge bg-success">@Localizer["No"]</span>
-                            }
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+        <Pager Items="@_assessments" Format="Table" Class="table table-striped" PageSize="@_pageSize.ToString()">
+            <Header>
+                <th style="width: 1px;">&nbsp;</th>
+                <th style="width: 1px;">&nbsp;</th>
+                <th>Date</th>
+                <th>Grower</th>
+                <th>Village</th>
+                <th>Survival Rate</th>
+                <th>Permaculture</th>
+                <th>Needs Help</th>
+            </Header>
+            <Row>
+                <td><ActionLink Action="Edit" Parameters="@($"id={context.AssessmentId}")" ResourceKey="Edit" /></td>
+                <td><ActionDialog Header="Delete Assessment" Message="Are You Sure You Wish To Delete This Assessment?" Action="Delete" Security="SecurityAccessLevel.Edit" Class="btn btn-danger" OnClick="@(async () => await Delete(context))" ResourceKey="Delete" Id="@context.AssessmentId.ToString()" /></td>
+                <td>@context.AssessmentDate.ToShortDateString()</td>
+                <td>@context.GrowerName</td>
+                <td>@context.VillageName</td>
+                <td>@(context.TreesPlanted > 0 ? $"{context.TreesAlive * 100 / context.TreesPlanted}% ({context.TreesAlive}/{context.TreesPlanted})" : "N/A")</td>
+                <td>@context.PermaculturePrinciplesCount / 9</td>
+                <td>
+                    @if (context.NeedsHelp)
+                    {
+                        <span class="badge bg-danger">Yes</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-success">No</span>
+                    }
+                </td>
+            </Row>
+        </Pager>
     }
 </div>
 
 @code {
-    private List<Models.Assessment> _assessments;
-    private List<Models.Grower> _growers;
+    private List<AssessmentListDto> _assessments;
+    private List<Models.Village> _villages;
+    private List<Models.Cohort> _cohortOptions = new();
+    private List<Models.Grower> _growers = new();
+    private List<string> _mentorOptions = new();
+    private List<Models.Grower> _growerOptions = new();
+    private HashSet<int> _cohortGrowerIds;
+    private HashSet<string> _cohortMentorUsernames;
+    private string _selectedVillageId = "";
+    private string _selectedCohortId = "";
+    private string _selectedMentor = "";
+    private string _selectedGrowerId = "";
+    private const int _pageSize = 20;
 
     protected override async Task OnParametersSetAsync()
     {
         try
         {
-            _growers = await GrowerService.GetAllGrowersAsync();
-            _assessments = await AssessmentService.GetAssessmentsAsync();
+            _villages = await VillageService.GetActiveVillagesAsync()
+                        ?? new List<Models.Village>();
+
+            if (_villages.Count > 0)
+            {
+                _selectedVillageId = _villages[0].VillageId.ToString();
+            }
+
+            await LoadCohortOptions();
+            await LoadGrowersForFilters();
+            await LoadAssessments();
         }
         catch (Exception ex)
         {
             await logger.LogError(ex, "Error Loading Assessments {Error}", ex.Message);
-            AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
+            AddModuleMessage("Error loading assessments.", MessageType.Error);
         }
     }
 
-    private async Task Delete(Models.Assessment assessment)
+    private async Task LoadCohortOptions()
+    {
+        int? villageId = ParseNullableInt(_selectedVillageId);
+        if (villageId.HasValue)
+        {
+            _cohortOptions = await CohortService.GetCohortsByVillageAsync(villageId.Value);
+        }
+        else
+        {
+            _cohortOptions = await CohortService.GetCohortsAsync();
+        }
+
+        // Auto-select the current active cohort, or clear if not available
+        var activeCohort = _cohortOptions.FirstOrDefault(c => c.Status == CohortStatus.Active);
+        if (activeCohort != null)
+        {
+            _selectedCohortId = activeCohort.CohortId.ToString();
+        }
+        else
+        {
+            _selectedCohortId = "";
+        }
+
+        await LoadCohortMembers();
+    }
+
+    private async Task LoadCohortMembers()
+    {
+        int? cohortId = ParseNullableInt(_selectedCohortId);
+        if (cohortId.HasValue)
+        {
+            var growerCohorts = await CohortService.GetGrowerCohortsAsync(cohortId.Value);
+            _cohortGrowerIds = new HashSet<int>(growerCohorts.Select(gc => gc.GrowerId));
+
+            var mentorCohorts = await CohortService.GetMentorCohortsAsync(cohortId.Value);
+            _cohortMentorUsernames = new HashSet<string>(mentorCohorts.Select(mc => mc.MentorUsername));
+        }
+        else
+        {
+            _cohortGrowerIds = null;
+            _cohortMentorUsernames = null;
+        }
+    }
+
+    private async Task LoadGrowersForFilters()
+    {
+        int? villageId = ParseNullableInt(_selectedVillageId);
+        _growers = await GrowerService.GetAllGrowersAsync(villageId)
+                   ?? new List<Models.Grower>();
+
+        // When a cohort is selected, restrict growers to cohort members
+        if (_cohortGrowerIds != null)
+        {
+            _growers = _growers.Where(g => _cohortGrowerIds.Contains(g.GrowerId)).ToList();
+        }
+
+        RebuildMentorOptions();
+        RebuildGrowerOptions();
+    }
+
+    private void RebuildMentorOptions()
+    {
+        // When a cohort is selected, use the cohort's assigned mentors directly
+        // When no cohort is selected, derive from grower assignments
+        if (_cohortMentorUsernames != null)
+        {
+            _mentorOptions = _cohortMentorUsernames.OrderBy(m => m).ToList();
+        }
+        else
+        {
+            _mentorOptions = _growers
+                .Where(g => !string.IsNullOrEmpty(g.MentorUsername))
+                .Select(g => g.MentorUsername)
+                .Distinct()
+                .OrderBy(m => m)
+                .ToList();
+        }
+
+        if (!string.IsNullOrEmpty(_selectedMentor) && !_mentorOptions.Contains(_selectedMentor))
+        {
+            _selectedMentor = "";
+        }
+
+        if (string.IsNullOrEmpty(_selectedMentor) && _mentorOptions.Count > 0)
+        {
+            _selectedMentor = _mentorOptions[0];
+        }
+    }
+
+    private void RebuildGrowerOptions()
+    {
+        var filtered = _growers.AsEnumerable();
+        if (!string.IsNullOrEmpty(_selectedMentor))
+        {
+            filtered = filtered.Where(g => g.MentorUsername == _selectedMentor);
+        }
+
+        _growerOptions = filtered.OrderBy(g => g.GrowerName).ToList();
+
+        if (!string.IsNullOrEmpty(_selectedGrowerId))
+        {
+            int gid = int.Parse(_selectedGrowerId);
+            if (!_growerOptions.Any(g => g.GrowerId == gid))
+            {
+                _selectedGrowerId = "";
+            }
+        }
+    }
+
+    private async Task LoadAssessments()
+    {
+        int? villageId = ParseNullableInt(_selectedVillageId);
+        int? cohortId = ParseNullableInt(_selectedCohortId);
+        string mentor = string.IsNullOrEmpty(_selectedMentor) ? null : _selectedMentor;
+        int? growerId = ParseNullableInt(_selectedGrowerId);
+
+        _assessments = await AssessmentService.GetAssessmentListAsync(villageId, cohortId, mentor, growerId)
+                       ?? new List<AssessmentListDto>();
+    }
+
+    private async Task OnVillageChanged()
+    {
+        _selectedCohortId = "";
+        _selectedMentor = "";
+        _selectedGrowerId = "";
+        await LoadCohortOptions();
+        await LoadGrowersForFilters();
+        await LoadAssessments();
+    }
+
+    private async Task OnCohortChanged()
+    {
+        _selectedMentor = "";
+        _selectedGrowerId = "";
+        await LoadCohortMembers();
+        await LoadGrowersForFilters();
+        await LoadAssessments();
+    }
+
+    private async Task OnMentorChanged()
+    {
+        _selectedGrowerId = "";
+        RebuildGrowerOptions();
+        await LoadAssessments();
+    }
+
+    private async Task OnGrowerChanged()
+    {
+        await LoadAssessments();
+    }
+
+    private async Task ClearFilters()
+    {
+        _selectedVillageId = "";
+        _selectedCohortId = "";
+        _selectedMentor = "";
+        _selectedGrowerId = "";
+        _cohortGrowerIds = null;
+        _cohortMentorUsernames = null;
+        _cohortOptions = await CohortService.GetCohortsAsync();
+        await LoadGrowersForFilters();
+        await LoadAssessments();
+    }
+
+    private async Task Delete(AssessmentListDto assessment)
     {
         try
         {
             await AssessmentService.DeleteAssessmentAsync(assessment.AssessmentId);
-            await logger.LogInformation("Assessment Deleted {Assessment}", assessment);
-            _assessments = await AssessmentService.GetAssessmentsAsync();
+            await logger.LogInformation("Assessment Deleted {AssessmentId}", assessment.AssessmentId);
+            await LoadAssessments();
             StateHasChanged();
         }
         catch (Exception ex)
         {
-            await logger.LogError(ex, "Error Deleting Assessment {Assessment} {Error}", assessment, ex.Message);
-            AddModuleMessage(Localizer["Message.DeleteError"], MessageType.Error);
+            await logger.LogError(ex, "Error Deleting Assessment {AssessmentId} {Error}", assessment.AssessmentId, ex.Message);
+            AddModuleMessage("Error deleting assessment.", MessageType.Error);
         }
+    }
+
+    private static int? ParseNullableInt(string value)
+    {
+        return int.TryParse(value, out int result) ? result : null;
     }
 }

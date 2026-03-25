@@ -5,6 +5,7 @@ using Oqtane.Shared;
 using Oqtane.Enums;
 using Oqtane.Infrastructure;
 using OpenEug.TenTrees.Module.Assessment.Services;
+using OpenEug.TenTrees.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -35,6 +36,22 @@ namespace OpenEug.TenTrees.Module.Assessment.Controllers
             catch (Exception ex)
             {
                 _logger.Log(LogLevel.Error, this, LogFunction.Read, "Assessment Get Failed {Error}", ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpGet("list")]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<AssessmentListDto>>> GetList([FromQuery] int? villageId = null, [FromQuery] int? cohortId = null, [FromQuery] string mentor = null, [FromQuery] int? growerId = null)
+        {
+            try
+            {
+                var list = await _assessmentService.GetAssessmentListAsync(villageId, cohortId, mentor, growerId);
+                return Ok(list);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Read, "Assessment GetList Failed {Error}", ex.ToString());
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
