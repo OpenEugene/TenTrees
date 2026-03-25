@@ -61,5 +61,17 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
         {
             return await GetJsonAsync<bool>($"{ApiUrl}/can-submit/{growerId}");
         }
+
+        public async Task<List<AssessmentListDto>> GetAssessmentListAsync(int? villageId = null, int? cohortId = null, string mentorUsername = null, int? growerId = null)
+        {
+            var url = $"{ApiUrl}/list";
+            var queryParams = new List<string>();
+            if (villageId.HasValue) queryParams.Add($"villageId={villageId.Value}");
+            if (cohortId.HasValue) queryParams.Add($"cohortId={cohortId.Value}");
+            if (!string.IsNullOrEmpty(mentorUsername)) queryParams.Add($"mentor={System.Uri.EscapeDataString(mentorUsername)}");
+            if (growerId.HasValue) queryParams.Add($"growerId={growerId.Value}");
+            if (queryParams.Count > 0) url += "?" + string.Join("&", queryParams);
+            return await GetJsonAsync<List<AssessmentListDto>>(url, new List<AssessmentListDto>());
+        }
     }
 }
