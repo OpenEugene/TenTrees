@@ -100,15 +100,16 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th style="width: 1px;">&nbsp;</th>
-                    <th style="width: 1px;">&nbsp;</th>
+                    <th style="width: 1px;"><span class="visually-hidden">Edit</span></th>
+                    <th style="width: 1px;"><span class="visually-hidden">Delete</span></th>
                     <th>@Localizer["Grower"]</th>
                     <th>@Localizer["Mentor"]</th>
                     <th>@Localizer["Village"]</th>
                     <th>@Localizer["Status"]</th>
                     <th>@Localizer["Column.GrowerStatus"]</th>
                     <th>@Localizer["Column.PhotoConsent"]</th>
-                    <th style="width: 1px;">&nbsp;</th>
+                    <th style="width: 1px;"><span class="visually-hidden">Approval</span></th>
+                    <th style="width: 1px;"><span class="visually-hidden">@Localizer["Column.PhotoConsentAction"]</span></th>
                 </tr>
             </thead>
             <tbody>
@@ -137,6 +138,21 @@
                             <span class="badge @GetPhotoConsentBadgeClass(enrollment.PhotoConsentLevel)">
                                 @GetPhotoConsentText(enrollment.PhotoConsentLevel)
                             </span>
+                        </td>
+                        <td>
+                            @if (enrollment.EnrollmentStatus == EnrollmentStatus.Pending)
+                            {
+                                <button class="btn btn-sm btn-success me-1"
+                                        aria-label="Approve @enrollment.GrowerName"
+                                        @onclick="() => ApproveInline(enrollment.EnrollmentId)">
+                                    <span class="oi oi-check" aria-hidden="true"></span>
+                                </button>
+                                <button class="btn btn-sm btn-danger"
+                                        aria-label="Reject @enrollment.GrowerName"
+                                        @onclick="() => RejectInline(enrollment.EnrollmentId)">
+                                    <span class="oi oi-x" aria-hidden="true"></span>
+                                </button>
+                            }
                         </td>
                         <td>
                             @if (enrollment.EnrollmentStatus == EnrollmentStatus.Approved)
@@ -263,6 +279,51 @@
         }
     }
 
+    private async Task UpdateEnrollmentStatusInline(
+        int enrollmentId,
+        Models.EnrollmentStatus status,
+        string successLogMessageTemplate,
+        string errorLogMessageTemplate,
+        string toastLocalizationKey,
+        MessageType toastMessageType)
+    {
+        try
+        {
+            var enrollment = await EnrollmentService.GetEnrollmentAsync(enrollmentId);
+            enrollment.Status = status;
+            await EnrollmentService.UpdateEnrollmentAsync(enrollment);
+            await logger.LogInformation(successLogMessageTemplate, enrollmentId);
+            AddModuleMessage(Localizer[toastLocalizationKey], toastMessageType);
+            await LoadEnrollmentsAsync();
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, errorLogMessageTemplate, enrollmentId, ex.Message);
+            AddModuleMessage(Localizer["Message.StatusChangeError"], MessageType.Error);
+        }
+    }
+
+    private Task ApproveInline(int enrollmentId)
+    {
+        return UpdateEnrollmentStatusInline(
+            enrollmentId,
+            Models.EnrollmentStatus.Approved,
+            "Enrollment {EnrollmentId} Approved",
+            "Error Approving Enrollment {EnrollmentId} {Error}",
+            "Message.Approved",
+            MessageType.Success);
+    }
+
+    private Task RejectInline(int enrollmentId)
+    {
+        return UpdateEnrollmentStatusInline(
+            enrollmentId,
+            Models.EnrollmentStatus.Rejected,
+            "Enrollment {EnrollmentId} Rejected",
+            "Error Rejecting Enrollment {EnrollmentId} {Error}",
+            "Message.Rejected",
+            MessageType.Warning);
+    }
     private string GetEnrollmentStatusBadgeClass(Models.EnrollmentStatus status)
     {
         return status switch
