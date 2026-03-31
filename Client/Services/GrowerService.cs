@@ -74,5 +74,10 @@ namespace OpenEug.TenTrees.Module.Grower.Services
         {
             return await PutJsonAsync<Models.Grower>(CreateAuthorizationPolicyUrl($"{ApiUrl}/{grower.GrowerId}?moduleId={moduleId}", EntityNames.Module, moduleId), grower);
         }
+
+        public async Task DeleteGrowerAsync(int growerId, int moduleId)
+        {
+            await DeleteAsync(CreateAuthorizationPolicyUrl($"{ApiUrl}/{growerId}?moduleId={moduleId}", EntityNames.Module, moduleId));
+        }
     }
 }
