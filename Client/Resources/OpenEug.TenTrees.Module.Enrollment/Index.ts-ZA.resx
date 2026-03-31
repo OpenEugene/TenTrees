@@ -48,6 +48,18 @@
   <data name="Column.PhotoConsent" xml:space="preserve">
     <value>[XS] Photo Consent</value>
   </data>
+  <data name="Column.PhotoConsentAction" xml:space="preserve">
+    <value>[XS] Capture Consent</value>
+  </data>
+  <data name="Message.Approved" xml:space="preserve">
+    <value>[XS] Enrollment approved successfully</value>
+  </data>
+  <data name="Message.Rejected" xml:space="preserve">
+    <value>[XS] Enrollment rejected</value>
+  </data>
+  <data name="Message.StatusChangeError" xml:space="preserve">
+    <value>[XS] Error changing enrollment status</value>
+  </data>
   <data name="PhotoConsent" xml:space="preserve">
     <value>[XS] Photo Consent</value>
   </data>
