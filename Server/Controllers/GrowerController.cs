@@ -191,5 +191,28 @@ namespace OpenEug.TenTrees.Module.Grower.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+
+        [HttpDelete("{id}")]
+        [Authorize]
+        public async Task<ActionResult> Delete(int id, int moduleId)
+        {
+            try
+            {
+                var grower = await _growerService.GetGrowerAsync(id);
+                if (grower == null)
+                {
+                    return NotFound();
+                }
+
+                await _growerService.DeleteGrowerAsync(id, moduleId);
+                _logger.Log(LogLevel.Information, this, LogFunction.Delete, "Grower Deleted {GrowerId}", id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Delete, "Grower Delete Failed {GrowerId} {ModuleId} {Error}", id, moduleId, ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
     }
 }
