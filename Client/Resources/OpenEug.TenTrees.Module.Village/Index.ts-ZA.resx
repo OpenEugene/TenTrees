@@ -88,6 +88,12 @@
   <data name="Delete" xml:space="preserve">
     <value>Susa</value>
   </data>
+  <data name="Dialog.DeleteVillage.Header" xml:space="preserve">
+    <value>Susa Motse</value>
+  </data>
+  <data name="Dialog.DeleteVillage.Message" xml:space="preserve">
+    <value>U cinisekile leswaku u lava ku susa motse lowu? Switwaneli a swi nga hundzuleki.</value>
+  </data>
   <data name="Message.NoVillages" xml:space="preserve">
     <value>A ku na motse lowu kumekeke</value>
   </data>
