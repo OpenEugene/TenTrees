@@ -189,6 +189,10 @@ else
 }
 
 @code {
+    public override string Actions => "Add,Edit";
+    public override string Title => "Manage Mentor";
+    public override bool UseAdminContainer => false;
+
     private MentorViewModel _model = new();
     private List<Village> _villages = new();
     private List<Models.Grower> _allGrowers = new();

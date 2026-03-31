@@ -9,9 +9,9 @@ namespace OpenEug.TenTrees.Module.Training
         {
             Name = "Training",
             Description = "Permaculture training class management and attendance tracking for tree eligibility",
-            Version = "1.0.3",
+            Version = "1.0.4",
             ServerManagerType = "",
-            ReleaseVersions = "1.0.0,1.0.1,1.0.2,1.0.3",
+            ReleaseVersions = "1.0.0,1.0.1,1.0.2,1.0.3,1.0.4",
             Dependencies = "OpenEug.TenTrees.Module.Village.1.0.0,OpenEug.TenTrees.Module.Grower.1.0.0",
             PackageName = "OpenEug.TenTrees.Module.Training"
         };
