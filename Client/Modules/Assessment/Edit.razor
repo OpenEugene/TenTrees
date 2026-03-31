@@ -284,6 +284,10 @@
         <button type="button" class="btn btn-outline-info" @onclick="LoadDraft">@Localizer["LoadDraft"]</button>
     }
     <NavLink class="btn btn-secondary" href="@NavigateUrl()">@Localizer["Cancel"]</NavLink>
+    @if (PageState.Action == "Edit")
+    {
+        <ActionDialog Header="@Localizer["Dialog.Delete.Header"]" Message="@Localizer["Dialog.Delete.Message"]" Action="Delete" Security="SecurityAccessLevel.Edit" Class="btn btn-danger ms-2" OnClick="@Delete" ResourceKey="Delete" />
+    }
     <br /><br />
     @if (PageState.Action == "Edit")
     {
@@ -647,6 +651,21 @@
         {
             await logger.LogError(ex, "Error Saving Assessment {Error}", ex.Message);
             AddModuleMessage(Localizer["Message.SaveError"], MessageType.Error);
+        }
+    }
+
+    private async Task Delete()
+    {
+        try
+        {
+            await AssessmentService.DeleteAssessmentAsync(_id);
+            await logger.LogInformation("Assessment Deleted {AssessmentId}", _id);
+            NavigationManager.NavigateTo(NavigateUrl());
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Deleting Assessment {AssessmentId} {Error}", _id, ex.Message);
+            AddModuleMessage(Localizer["Message.DeleteError"], MessageType.Error);
         }
     }
 }
