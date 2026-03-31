@@ -39,6 +39,12 @@
                             </div>
                         </div>
                         <div class="row mb-2">
+                            <Label Class="col-sm-4" For="assessmentname" ResourceKey="Name">Assessment Name:</Label>
+                            <div class="col-sm-8">
+                                <input id="assessmentname" type="text" class="form-control" @bind="@_name" placeholder="e.g. GA-1" />
+                            </div>
+                        </div>
+                        <div class="row mb-2">
                             <Label Class="col-sm-4" For="assessmentdate" ResourceKey="Date">Assessment Date:</Label>
                             <div class="col-sm-8">
                                 <input id="assessmentdate" type="date" class="form-control" @bind="@_assessmentDate" required />
@@ -299,6 +305,7 @@
 
     // Basic Info
     private int _growerId;
+    private string _name;
     private DateTime _assessmentDate = DateTime.Today;
 
     // Tree Survival
@@ -364,6 +371,7 @@
                     if (assessment != null)
                     {
                         _growerId = assessment.GrowerId;
+                        _name = assessment.Name;
                         _assessmentDate = assessment.AssessmentDate;
 
                         _treesPlanted = assessment.TreesPlanted;
@@ -442,6 +450,7 @@
             var draft = new Models.Assessment
             {
                 GrowerId = _growerId,
+                Name = _name,
                 AssessmentDate = _assessmentDate,
                 TreesPlanted = _treesPlanted,
                 TreesAlive = _treesAlive,
@@ -487,6 +496,7 @@
                 if (draft != null)
                 {
                     _growerId = draft.GrowerId;
+                    _name = draft.Name;
                     _assessmentDate = draft.AssessmentDate;
                     _treesPlanted = draft.TreesPlanted;
                     _treesAlive = draft.TreesAlive;
@@ -557,6 +567,7 @@
                     Models.Assessment assessment = new Models.Assessment();
 
                     assessment.GrowerId = _growerId;
+                    assessment.Name = _name;
                     assessment.AssessmentDate = _assessmentDate;
 
                     assessment.TreesPlanted = _treesPlanted;
@@ -597,6 +608,7 @@
 
                     assessment.AssessmentDate = _assessmentDate;
 
+                    assessment.Name = _name;
                     assessment.TreesPlanted = _treesPlanted;
                     assessment.TreesAlive = _treesAlive;
                     assessment.DeceasedTreeTypes = !string.IsNullOrEmpty(_deceasedTreeTypesOther) ? _deceasedTreeTypesOther : _deceasedTreeTypes;
