@@ -241,8 +241,8 @@
             </div>
         </div>
 
-        <!-- Section 5: Enrollment Status (Admin Only) -->
-        @if (PageState.Action == "Edit" && UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin))
+        <!-- Section 5: Enrollment Status -->
+        @if (PageState.Action == "Edit")
         {
             <div class="card mb-3 border-primary">
                 <div class="card-header bg-primary text-white">

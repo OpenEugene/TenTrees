@@ -100,15 +100,16 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th style="width: 1px;">&nbsp;</th>
-                    <th style="width: 1px;">&nbsp;</th>
+                    <th style="width: 1px;"><span class="visually-hidden">Edit</span></th>
+                    <th style="width: 1px;"><span class="visually-hidden">Delete</span></th>
                     <th>@Localizer["Grower"]</th>
                     <th>@Localizer["Mentor"]</th>
                     <th>@Localizer["Village"]</th>
                     <th>@Localizer["Status"]</th>
                     <th>@Localizer["Column.GrowerStatus"]</th>
                     <th>@Localizer["Column.PhotoConsent"]</th>
-                    <th style="width: 1px;">&nbsp;</th>
+                    <th style="width: 1px;"><span class="visually-hidden">Approval</span></th>
+                    <th style="width: 1px;"><span class="visually-hidden">Photo Consent</span></th>
                 </tr>
             </thead>
             <tbody>
@@ -137,6 +138,21 @@
                             <span class="badge @GetPhotoConsentBadgeClass(enrollment.PhotoConsentLevel)">
                                 @GetPhotoConsentText(enrollment.PhotoConsentLevel)
                             </span>
+                        </td>
+                        <td>
+                            @if (enrollment.EnrollmentStatus == EnrollmentStatus.Pending)
+                            {
+                                <button class="btn btn-sm btn-success me-1"
+                                        aria-label="Approve @enrollment.GrowerName"
+                                        @onclick="() => ApproveInline(enrollment.EnrollmentId)">
+                                    <span class="oi oi-check" aria-hidden="true"></span>
+                                </button>
+                                <button class="btn btn-sm btn-danger"
+                                        aria-label="Reject @enrollment.GrowerName"
+                                        @onclick="() => RejectInline(enrollment.EnrollmentId)">
+                                    <span class="oi oi-x" aria-hidden="true"></span>
+                                </button>
+                            }
                         </td>
                         <td>
                             @if (enrollment.EnrollmentStatus == EnrollmentStatus.Approved)
@@ -260,6 +276,42 @@
         {
             await logger.LogError(ex, "Error Deleting Enrollment {Enrollment} {Error}", Enrollment, ex.Message);
             AddModuleMessage(Localizer["Message.DeleteError"], MessageType.Error);
+        }
+    }
+
+    private async Task ApproveInline(int enrollmentId)
+    {
+        try
+        {
+            var enrollment = await EnrollmentService.GetEnrollmentAsync(enrollmentId);
+            enrollment.Status = Models.EnrollmentStatus.Approved;
+            await EnrollmentService.UpdateEnrollmentAsync(enrollment);
+            await logger.LogInformation("Enrollment {EnrollmentId} Approved", enrollmentId);
+            AddModuleMessage(Localizer["Message.Approved"], MessageType.Success);
+            await LoadEnrollmentsAsync();
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Approving Enrollment {EnrollmentId} {Error}", enrollmentId, ex.Message);
+            AddModuleMessage(Localizer["Message.StatusChangeError"], MessageType.Error);
+        }
+    }
+
+    private async Task RejectInline(int enrollmentId)
+    {
+        try
+        {
+            var enrollment = await EnrollmentService.GetEnrollmentAsync(enrollmentId);
+            enrollment.Status = Models.EnrollmentStatus.Rejected;
+            await EnrollmentService.UpdateEnrollmentAsync(enrollment);
+            await logger.LogInformation("Enrollment {EnrollmentId} Rejected", enrollmentId);
+            AddModuleMessage(Localizer["Message.Rejected"], MessageType.Warning);
+            await LoadEnrollmentsAsync();
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Rejecting Enrollment {EnrollmentId} {Error}", enrollmentId, ex.Message);
+            AddModuleMessage(Localizer["Message.StatusChangeError"], MessageType.Error);
         }
     }
 
