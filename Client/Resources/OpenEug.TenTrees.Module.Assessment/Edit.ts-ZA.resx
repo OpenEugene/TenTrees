@@ -135,4 +135,16 @@
   <data name="Message.DraftLoaded" xml:space="preserve">
     <value>[XS] Draft loaded.</value>
   </data>
+  <data name="Delete" xml:space="preserve">
+    <value>[XS] Delete</value>
+  </data>
+  <data name="Dialog.Delete.Header" xml:space="preserve">
+    <value>[XS] Delete Assessment</value>
+  </data>
+  <data name="Dialog.Delete.Message" xml:space="preserve">
+    <value>[XS] Are you sure you want to delete this assessment? This cannot be undone.</value>
+  </data>
+  <data name="Message.DeleteError" xml:space="preserve">
+    <value>[XS] Error deleting assessment.</value>
+  </data>
 </root>
