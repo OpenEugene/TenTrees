@@ -82,6 +82,15 @@
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Dialog.DeleteVillage.Header" xml:space="preserve">
+    <value>Delete Village</value>
+  </data>
+  <data name="Dialog.DeleteVillage.Message" xml:space="preserve">
+    <value>Are you sure you want to delete this village? This cannot be undone.</value>
+  </data>
   <data name="Message.LoadError" xml:space="preserve">
     <value>Error loading village</value>
   </data>
@@ -90,6 +99,9 @@
   </data>
   <data name="Message.SaveError" xml:space="preserve">
     <value>Error saving village</value>
+  </data>
+  <data name="Message.DeleteError" xml:space="preserve">
+    <value>Error deleting village</value>
   </data>
   <data name="Message.ValidationError" xml:space="preserve">
     <value>Please fix the validation errors below</value>
