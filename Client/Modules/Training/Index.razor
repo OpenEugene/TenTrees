@@ -2,7 +2,7 @@
 @using OpenEug.TenTrees.Module.Village.Services
 @using OpenEug.TenTrees.Module.Cohort.Services
 @using OpenEug.TenTrees.Models
-@page "/training"
+@page "/Classes"
 
 @namespace OpenEug.TenTrees.Module.Training
 @inherits ModuleBase
@@ -22,7 +22,7 @@
     <div class="row mb-3">
         <div class="col-md-4">
             <label for="villageFilter">@Localizer["Filter.Village"]</label>
-            <select id="villageFilter" class="form-select" @bind="_villageFilter" @bind:after="LoadDataAsync">
+            <select id="villageFilter" class="form-select" @bind="_villageFilter">
                 <option value="">@Localizer["Filter.AllVillages"]</option>
                 @if (_villages != null)
                 {
@@ -33,7 +33,8 @@
                 }
             </select>
         </div>
-        <div class="col-md-4 d-flex align-items-end">
+        <div class="col-md-4 d-flex align-items-end gap-2">
+            <button class="btn btn-primary w-100" @onclick="ApplyFiltersAndRefresh">Filter</button>
             <button class="btn btn-secondary w-100" @onclick="ClearFilters">@Localizer["Action.ClearFilters"]</button>
         </div>
     </div>
@@ -43,36 +44,36 @@
     {
         <div class="row mb-3">
             <div class="col-md-3">
-                <div class="card text-center bg-success-subtle">
+                <button type="button" class="card text-center bg-success-subtle w-100" @onclick='() => ApplySummaryStatusFilter("Eligible")'>
                     <div class="card-body">
                         <h5 class="card-title">@_summary.Eligible</h5>
                         <p class="card-text">@Localizer["Status.Eligible"]</p>
                     </div>
-                </div>
+                </button>
             </div>
             <div class="col-md-3">
-                <div class="card text-center bg-warning-subtle">
+                <button type="button" class="card text-center bg-warning-subtle w-100" @onclick='() => ApplySummaryStatusFilter("InProgress")'>
                     <div class="card-body">
                         <h5 class="card-title">@_summary.InProgress</h5>
                         <p class="card-text">@Localizer["Status.InProgress"]</p>
                     </div>
-                </div>
+                </button>
             </div>
             <div class="col-md-3">
-                <div class="card text-center bg-secondary-subtle">
+                <button type="button" class="card text-center bg-secondary-subtle w-100" @onclick='() => ApplySummaryStatusFilter("NotStarted")'>
                     <div class="card-body">
                         <h5 class="card-title">@_summary.NotStarted</h5>
                         <p class="card-text">@Localizer["Status.NotStarted"]</p>
                     </div>
-                </div>
+                </button>
             </div>
             <div class="col-md-3">
-                <div class="card text-center bg-primary-subtle">
+                <button type="button" class="card text-center bg-primary-subtle w-100" @onclick="() => ApplySummaryStatusFilter(string.Empty)">
                     <div class="card-body">
                         <h5 class="card-title">@_summary.Total</h5>
                         <p class="card-text">@Localizer["Summary.Total"]</p>
                     </div>
-                </div>
+                </button>
             </div>
         </div>
     }
@@ -198,9 +199,11 @@
 
     private List<TrainingClass> _classes;
     private List<AttendanceSummaryViewModel> _attendanceSummaries;
+    private List<AttendanceSummaryViewModel> _allAttendanceSummaries;
     private List<Models.Village> _villages;
     private TrainingStatusSummary _summary;
     private string _villageFilter = "";
+    private string _summaryStatusFilter = "";
     // classId → ordered list of cohort names
     private Dictionary<int, List<string>> _classCohorts = new();
 
@@ -229,10 +232,11 @@
     {
         int? villageId = string.IsNullOrEmpty(_villageFilter) ? null : int.Parse(_villageFilter);
         _classes = await TrainingService.GetTrainingClassesAsync(ModuleState.ModuleId, villageId);
-        _attendanceSummaries = await TrainingService.GetAttendanceSummariesAsync(ModuleState.ModuleId, villageId);
+        _allAttendanceSummaries = await TrainingService.GetAttendanceSummariesAsync(ModuleState.ModuleId, villageId);
         _summary = await TrainingService.GetTrainingStatusSummaryAsync(ModuleState.ModuleId, villageId);
 
-        // Load cohort names for each class (admin users only, to avoid calling edit-only endpoints for viewers)
+        ApplySummaryFilter();
+
         _classCohorts = new();
         if (UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin))
         {
@@ -252,9 +256,34 @@
         StateHasChanged();
     }
 
+    private void ApplySummaryFilter()
+    {
+        _attendanceSummaries = _summaryStatusFilter switch
+        {
+            "Eligible" => _allAttendanceSummaries.Where(s => s.IsEligible).ToList(),
+            "InProgress" => _allAttendanceSummaries.Where(s => !s.IsEligible && s.ClassesAttended > 0).ToList(),
+            "NotStarted" => _allAttendanceSummaries.Where(s => s.ClassesAttended == 0).ToList(),
+            _ => _allAttendanceSummaries
+        };
+    }
+
+    private async Task ApplyFiltersAndRefresh()
+    {
+        await LoadDataAsync();
+    }
+
+    private async Task ApplySummaryStatusFilter(string status)
+    {
+        _summaryStatusFilter = status;
+        ApplySummaryFilter();
+        StateHasChanged();
+        await Task.CompletedTask;
+    }
+
     private async Task ClearFilters()
     {
         _villageFilter = "";
+        _summaryStatusFilter = "";
         await LoadDataAsync();
     }
 
