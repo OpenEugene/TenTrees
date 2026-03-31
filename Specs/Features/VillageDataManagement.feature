@@ -1,8 +1,8 @@
 @workflow-village @priority-high @multi-tenant
 Feature: Village-Scoped Data Access
-  As a system administrator
+  As a user with edit permissions
   I want to organize data by village
-  So that each village sees only their own data while admins see all
+  So that each village sees only their own data while authorized users see all
 
   Scenario: Mentor views village-specific growers
     Given I am mentor "Bondi" assigned to "Orpen Gate Village"
@@ -10,8 +10,8 @@ Feature: Village-Scoped Data Access
     Then I should only see growers in "Orpen Gate Village"
     And I should not see growers from "Londelozzi"
 
-  Scenario: Admin views all villages
-    Given I am logged in as administrator "Becky"
+  Scenario: Authorized user views all villages
+    Given I have village management permissions
     When I view the grower list
     Then I should see a village filter dropdown
     When I select "All Villages"
@@ -20,7 +20,7 @@ Feature: Village-Scoped Data Access
     Then I should only see growers from "Orpen Gate Village"
 
   Scenario: Add new village
-    Given I am an administrator
+    Given I have village edit permissions
     When I navigate to village management
     And I add village "Londelozzi"
     And I set village contact information
@@ -39,7 +39,7 @@ Feature: Village-Scoped Data Access
   # module. Full cohort lifecycle, assignment, and tag UI scenarios are in
   # Specs/Features/CohortManagement.feature.
 
-  Scenario: Cohort filter appears in grower list when the admin selects a village
+  Scenario: Cohort filter appears in grower list when the authorized user selects a village
     Given cohorts "Orpen Gate Village 2023" and "Orpen Gate Village 2024" exist for "Orpen Gate Village"
     When I select village "Orpen Gate Village" from the grower list village filter
     Then a cohort filter dropdown should appear
