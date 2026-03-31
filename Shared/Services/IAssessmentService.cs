@@ -13,5 +13,6 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
         Task<Models.Assessment> UpdateAssessmentAsync(Models.Assessment assessment);
         Task DeleteAssessmentAsync(int assessmentId);
         Task<bool> CanSubmitAssessmentAsync(int growerId);
+        Task<List<AssessmentListDto>> GetAssessmentListAsync(int? villageId = null, int? cohortId = null, string mentorUsername = null, int? growerId = null);
     }
 }

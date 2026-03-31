@@ -14,6 +14,8 @@ namespace OpenEug.TenTrees.Models
         [Required]
         public int GrowerId { get; set; }
 
+        public string Name { get; set; }
+
         public DateTime AssessmentDate { get; set; }
 
         // Tree Survival

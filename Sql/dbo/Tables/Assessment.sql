@@ -1,6 +1,7 @@
 CREATE TABLE [dbo].[Assessment] (
     [AssessmentId]                   INT            IDENTITY (1, 1) NOT NULL,
     [GrowerId]                       INT            NOT NULL,
+    [Name]                           NVARCHAR (100) NULL,
     [AssessmentDate]                 DATETIME2 (7)  NOT NULL,
     [TreesPlanted]                   INT            NOT NULL,
     [TreesAlive]                     INT            NOT NULL,
