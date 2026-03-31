@@ -279,42 +279,51 @@
         }
     }
 
-    private async Task ApproveInline(int enrollmentId)
+    private async Task UpdateEnrollmentStatusInline(
+        int enrollmentId,
+        Models.EnrollmentStatus status,
+        string successLogMessageTemplate,
+        string errorLogMessageTemplate,
+        string toastLocalizationKey,
+        MessageType toastMessageType)
     {
         try
         {
             var enrollment = await EnrollmentService.GetEnrollmentAsync(enrollmentId);
-            enrollment.Status = Models.EnrollmentStatus.Approved;
+            enrollment.Status = status;
             await EnrollmentService.UpdateEnrollmentAsync(enrollment);
-            await logger.LogInformation("Enrollment {EnrollmentId} Approved", enrollmentId);
-            AddModuleMessage(Localizer["Message.Approved"], MessageType.Success);
+            await logger.LogInformation(successLogMessageTemplate, enrollmentId);
+            AddModuleMessage(Localizer[toastLocalizationKey], toastMessageType);
             await LoadEnrollmentsAsync();
         }
         catch (Exception ex)
         {
-            await logger.LogError(ex, "Error Approving Enrollment {EnrollmentId} {Error}", enrollmentId, ex.Message);
+            await logger.LogError(ex, errorLogMessageTemplate, enrollmentId, ex.Message);
             AddModuleMessage(Localizer["Message.StatusChangeError"], MessageType.Error);
         }
     }
 
-    private async Task RejectInline(int enrollmentId)
+    private Task ApproveInline(int enrollmentId)
     {
-        try
-        {
-            var enrollment = await EnrollmentService.GetEnrollmentAsync(enrollmentId);
-            enrollment.Status = Models.EnrollmentStatus.Rejected;
-            await EnrollmentService.UpdateEnrollmentAsync(enrollment);
-            await logger.LogInformation("Enrollment {EnrollmentId} Rejected", enrollmentId);
-            AddModuleMessage(Localizer["Message.Rejected"], MessageType.Warning);
-            await LoadEnrollmentsAsync();
-        }
-        catch (Exception ex)
-        {
-            await logger.LogError(ex, "Error Rejecting Enrollment {EnrollmentId} {Error}", enrollmentId, ex.Message);
-            AddModuleMessage(Localizer["Message.StatusChangeError"], MessageType.Error);
-        }
+        return UpdateEnrollmentStatusInline(
+            enrollmentId,
+            Models.EnrollmentStatus.Approved,
+            "Enrollment {EnrollmentId} Approved",
+            "Error Approving Enrollment {EnrollmentId} {Error}",
+            "Message.Approved",
+            MessageType.Success);
     }
 
+    private Task RejectInline(int enrollmentId)
+    {
+        return UpdateEnrollmentStatusInline(
+            enrollmentId,
+            Models.EnrollmentStatus.Rejected,
+            "Enrollment {EnrollmentId} Rejected",
+            "Error Rejecting Enrollment {EnrollmentId} {Error}",
+            "Message.Rejected",
+            MessageType.Warning);
+    }
     private string GetEnrollmentStatusBadgeClass(Models.EnrollmentStatus status)
     {
         return status switch
