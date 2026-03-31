@@ -1,6 +1,6 @@
 @workflow-cohort @priority-high
 Feature: Cohort Management
-  As a 10 Trees Admin
+  As a user with edit permissions
   I want to organise growers and mentors into named cohorts within a village
   So that I can track program phases, run cohort-scoped reports, and manage each group independently
 
@@ -9,20 +9,20 @@ Feature: Cohort Management
 
   # ─── COHORT LIFECYCLE ────────────────────────────────────────────────────────
 
-  Scenario: Admin creates a planned cohort
-    Given I am a 10 Trees Admin
+  Scenario: Authorized user creates a planned cohort
+    Given I have cohort edit permissions
     When I create a new cohort for village "Roebuck" in year "2026"
     Then the cohort should have status "Planned"
     And the system should suggest the name "Roebuck 2026"
     And I should be able to accept or overwrite the suggested name
 
-  Scenario: Admin activates a planned cohort
+  Scenario: Authorized user activates a planned cohort
     Given cohort "Roebuck 1 2026" has status "Planned"
     When I set the cohort status to "Active"
     Then the cohort status should be "Active"
     And it should appear in active cohort filters
 
-  Scenario: Admin marks a cohort as completed
+  Scenario: Authorized user marks a cohort as completed
     Given cohort "Orpen Gate Village 2023" has status "Active"
     When I set the cohort status to "Completed"
     Then the cohort status should be "Completed"
@@ -41,7 +41,7 @@ Feature: Cohort Management
     Then the system should suggest the name "Roebuck 2 2026"
     And the existing cohort should be renameable to "Roebuck 1 2026"
 
-  Scenario: Admin saves a cohort with a custom name
+  Scenario: Authorized user saves a cohort with a custom name
     Given I am creating a cohort for village "Orpen Gate Village"
     When I enter the name "Orpen Gate Village 2023"
     And I save the cohort
@@ -63,42 +63,42 @@ Feature: Cohort Management
     And "Grace Sithole" should not be a member of any cohort
     And she can be added to a cohort later from the grower status screen
 
-  Scenario: Admin adds a grower to a second cohort
+  Scenario: Authorized user adds a grower to a second cohort
     Given grower "Sipho Nkosi" is a member of cohort "Orpen Gate Village 2023"
     And cohort "Orpen Gate Village 2024" is "Active"
     When I add "Sipho Nkosi" to cohort "Orpen Gate Village 2024"
     Then grower "Sipho Nkosi" should be a member of both cohorts
     And they should appear when filtering by either cohort
 
-  Scenario: Admin removes a grower from a cohort
+  Scenario: Authorized user removes a grower from a cohort
     Given grower "Sipho Nkosi" is a member of cohorts "Orpen Gate Village 2023" and "Orpen Gate Village 2024"
     When I remove "Sipho Nkosi" from cohort "Orpen Gate Village 2023"
     Then they should only be a member of "Orpen Gate Village 2024"
 
   # ─── CLASS ASSOCIATION ───────────────────────────────────────────────────────
 
-  Scenario: Admin links a training class to a cohort from the training edit screen
+  Scenario: Authorized user links a training class to a cohort from the training edit screen
     Given training class "PE Training Session 1" exists
     And cohort "Roebuck 1 2026" is "Active"
     When I edit "PE Training Session 1"
     And I select "Roebuck 1 2026" from the "Add cohort" dropdown
     Then "Roebuck 1 2026" should appear as a tag on "PE Training Session 1"
 
-  Scenario: Admin links a training class to a cohort from the cohort edit screen
+  Scenario: Authorized user links a training class to a cohort from the cohort edit screen
     Given cohort "Roebuck 1 2026" is "Active"
     And training class "PE Training Session 1" exists
     When I edit cohort "Roebuck 1 2026"
     And I select "PE Training Session 1" from the "Add class" dropdown
     Then "PE Training Session 1" should appear in the linked classes list for "Roebuck 1 2026"
 
-  Scenario: Admin removes a cohort from a training class with confirmation
+  Scenario: Authorized user removes a cohort from a training class with confirmation
     Given cohort "Roebuck 1 2026" is linked to training class "PE Training Session 1"
     When I click the remove button on the "Roebuck 1 2026" tag in the training edit screen
     Then I should see an inline confirmation "Remove Roebuck 1 2026? Yes / No"
     When I click "Yes"
     Then "Roebuck 1 2026" should no longer appear as a tag on "PE Training Session 1"
 
-  Scenario: Admin cancels removing a cohort tag from a training class
+  Scenario: Authorized user cancels removing a cohort tag from a training class
     Given cohort "Roebuck 1 2026" is linked to training class "PE Training Session 1"
     When I click the remove button on the "Roebuck 1 2026" tag
     Then I should see an inline confirmation
