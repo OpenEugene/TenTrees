@@ -2,7 +2,7 @@
 @using OpenEug.TenTrees.Module.Village.Services
 @using OpenEug.TenTrees.Models
 @using System.Linq
-@page "/enrollment"
+@page "/Enrollment"
 
 @namespace OpenEug.TenTrees.Module.Enrollment
 @inherits ModuleBase
@@ -41,7 +41,8 @@
                 }
             </select>
         </div>
-        <div class="col-md-4 d-flex align-items-end">
+        <div class="col-md-4 d-flex align-items-end gap-2">
+            <button class="btn btn-primary w-100" @onclick="ApplyFiltersAndRefresh">Filter</button>
             <button class="btn btn-secondary w-100" @onclick="ClearFilters">@Localizer["Action.ClearFilters"]</button>
         </div>
     </div>
@@ -51,36 +52,36 @@
     {
         <div class="row mb-3">
             <div class="col-md-3">
-                <div class="card text-center bg-warning-subtle">
+                <button type="button" class="card text-center bg-warning-subtle w-100" @onclick="() => ApplyStatusFilter(EnrollmentStatus.Pending.ToString())">
                     <div class="card-body">
                         <h5 class="card-title">@_summary.Pending</h5>
                         <p class="card-text">@Localizer["EnrollmentStatus.Pending"]</p>
                     </div>
-                </div>
+                </button>
             </div>
             <div class="col-md-3">
-                <div class="card text-center bg-success-subtle">
+                <button type="button" class="card text-center bg-success-subtle w-100" @onclick="() => ApplyStatusFilter(EnrollmentStatus.Approved.ToString())">
                     <div class="card-body">
                         <h5 class="card-title">@_summary.Approved</h5>
                         <p class="card-text">@Localizer["EnrollmentStatus.Approved"]</p>
                     </div>
-                </div>
+                </button>
             </div>
             <div class="col-md-3">
-                <div class="card text-center bg-danger-subtle">
+                <button type="button" class="card text-center bg-danger-subtle w-100" @onclick="() => ApplyStatusFilter(EnrollmentStatus.Rejected.ToString())">
                     <div class="card-body">
                         <h5 class="card-title">@_summary.Rejected</h5>
                         <p class="card-text">@Localizer["EnrollmentStatus.Rejected"]</p>
                     </div>
-                </div>
+                </button>
             </div>
             <div class="col-md-3">
-                <div class="card text-center bg-primary-subtle">
+                <button type="button" class="card text-center bg-primary-subtle w-100" @onclick="() => ApplyStatusFilter(string.Empty)">
                     <div class="card-body">
                         <h5 class="card-title">@_summary.Total</h5>
                         <p class="card-text">@Localizer["Summary.Total"]</p>
                     </div>
-                </div>
+                </button>
             </div>
         </div>
     }
@@ -228,12 +229,23 @@
         };
     }
 
+    private async Task ApplyFiltersAndRefresh()
+    {
+        await LoadEnrollmentsAsync();
+    }
+
     private async Task ClearFilters()
     {
         _statusFilter = "";
         _villageFilter = "";
         ApplyFilters();
         StateHasChanged();
+    }
+
+    private async Task ApplyStatusFilter(string status)
+    {
+        _statusFilter = status;
+        await LoadEnrollmentsAsync();
     }
 
     private async Task Delete(Models.EnrollmentListViewModel Enrollment)
@@ -299,10 +311,10 @@
     {
         return level switch
         {
-            PhotoConsentLevel.Full    => "bg-success",
+            PhotoConsentLevel.Full => "bg-success",
             PhotoConsentLevel.Limited => "bg-warning text-dark",
-            PhotoConsentLevel.None    => "bg-danger",
-            _                         => "bg-secondary"
+            PhotoConsentLevel.None => "bg-danger",
+            _ => "bg-secondary"
         };
     }
 
@@ -310,10 +322,10 @@
     {
         return level switch
         {
-            PhotoConsentLevel.Full    => Localizer["ConsentLevel.Full"],
+            PhotoConsentLevel.Full => Localizer["ConsentLevel.Full"],
             PhotoConsentLevel.Limited => Localizer["ConsentLevel.Limited"],
-            PhotoConsentLevel.None    => Localizer["ConsentLevel.None"],
-            _                         => Localizer["ConsentLevel.NotCaptured"]
+            PhotoConsentLevel.None => Localizer["ConsentLevel.None"],
+            _ => Localizer["ConsentLevel.NotCaptured"]
         };
     }
 }
