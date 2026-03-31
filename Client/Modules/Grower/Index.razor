@@ -2,7 +2,7 @@
 @using OpenEug.TenTrees.Module.Village.Services
 @using OpenEug.TenTrees.Module.Cohort.Services
 @using OpenEug.TenTrees.Models
-@page "/grower"
+@page "/Grower"
 
 @namespace OpenEug.TenTrees.Module.Grower
 @inherits ModuleBase
@@ -47,7 +47,8 @@
                 }
             </select>
         </div>
-        <div class="col-md-2 d-flex align-items-end">
+        <div class="col-md-2 d-flex align-items-end gap-2">
+            <button class="btn btn-primary w-100" @onclick="ApplyFilters">Filter</button>
             <button class="btn btn-secondary w-100" @onclick="ClearFilters">@Localizer["Action.ClearFilters"]</button>
         </div>
     </div>
@@ -57,36 +58,36 @@
     {
         <div class="row mb-3">
             <div class="col-md-3">
-                <div class="card text-center bg-success-subtle">
+                <button type="button" class="card text-center bg-success-subtle w-100" @onclick="() => ApplyStatusFilter(GrowerStatus.Active.ToString())">
                     <div class="card-body">
                         <h5 class="card-title">@_summary.Active</h5>
                         <p class="card-text">@Localizer["Status.Active"]</p>
                     </div>
-                </div>
+                </button>
             </div>
             <div class="col-md-3">
-                <div class="card text-center bg-warning-subtle">
+                <button type="button" class="card text-center bg-warning-subtle w-100" @onclick="() => ApplyStatusFilter(GrowerStatus.Inactive.ToString())">
                     <div class="card-body">
                         <h5 class="card-title">@_summary.Inactive</h5>
                         <p class="card-text">@Localizer["Status.Inactive"]</p>
                     </div>
-                </div>
+                </button>
             </div>
             <div class="col-md-3">
-                <div class="card text-center bg-secondary-subtle">
+                <button type="button" class="card text-center bg-secondary-subtle w-100" @onclick="() => ApplyStatusFilter(GrowerStatus.Exited.ToString())">
                     <div class="card-body">
                         <h5 class="card-title">@_summary.Exited</h5>
                         <p class="card-text">@Localizer["Status.Exited"]</p>
                     </div>
-                </div>
+                </button>
             </div>
             <div class="col-md-3">
-                <div class="card text-center bg-primary-subtle">
+                <button type="button" class="card text-center bg-primary-subtle w-100" @onclick="() => ApplyStatusFilter(String.Empty)">
                     <div class="card-body">
                         <h5 class="card-title">@_summary.Total</h5>
                         <p class="card-text">@Localizer["Summary.Total"]</p>
                     </div>
-                </div>
+                </button>
             </div>
         </div>
     }
@@ -265,6 +266,17 @@
     private void ClearFilters()
     {
         NavigationManager.NavigateTo(NavigateUrl());
+    }
+
+    private void ApplyFilters()
+    {
+        NavigateWithFilters();
+    }
+
+    private void ApplyStatusFilter(string status)
+    {
+        _statusFilter = status;
+        NavigateWithFilters();
     }
 
     private string BuildFilterQueryString()

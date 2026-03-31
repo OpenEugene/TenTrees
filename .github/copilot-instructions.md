@@ -18,6 +18,7 @@
 
 ## Agent / Tool Usage
 - Never run tools or agents in parallel. Always run one tool or agent at a time, sequentially. Prefer fewer tokens over faster execution.
+- Use Visual Studio MCP build tooling (run_build) instead of CLI dotnet build unless MCP build command is unavailable.
 
 ## Project Skills
 @.github/skills/oqtane-module-development/SKILL.md  
