@@ -1,0 +1,120 @@
+@using OpenEug.TenTrees.Module.TreeType.Services
+
+@namespace OpenEug.TenTrees.Module.TreeType
+@inherits ModuleBase
+@inject ITreeTypeService TreeTypeService
+@inject NavigationManager NavigationManager
+@inject IStringLocalizer<Edit> Localizer
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8 col-xl-6">
+            <form @ref="form" class="@(validated ? " was-validated" : "needs-validation")" novalidate>
+                <div class="row mb-3 align-items-center">
+                    <Label Class="col-sm-4" For="treeName" HelpText="Enter the tree type name" ResourceKey="Name">Name: </Label>
+                    <div class="col-sm-8">
+                        <input id="treeName" type="text" class="form-control" @bind="@_treeType.Name" required />
+                        <div class="invalid-feedback">Name is required.</div>
+                    </div>
+                </div>
+                <div class="row mb-3 align-items-center">
+                    <Label Class="col-sm-4" For="treeCategory" HelpText="Select the category for this tree type" ResourceKey="Category">Category: </Label>
+                    <div class="col-sm-8">
+                        <select id="treeCategory" class="form-select" @bind="@_treeType.Category" required>
+                            <option value="">-- Select Category --</option>
+                            <option value="Medicinal Trees">Medicinal Trees</option>
+                            <option value="Fruity Medicinal Trees">Fruity Medicinal Trees</option>
+                            <option value="Nut Trees">Nut Trees</option>
+                            <option value="Bushy, Herb & Medicinal Plants">Bushy, Herb & Medicinal Plants</option>
+                            <option value="Vegetable Medicinal Plants">Vegetable Medicinal Plants</option>
+                        </select>
+                        <div class="invalid-feedback">Category is required.</div>
+                    </div>
+                </div>
+                <div class="row mb-3 align-items-center">
+                    <Label Class="col-sm-4" For="sortOrder" HelpText="Display order within the category" ResourceKey="SortOrder">Sort Order: </Label>
+                    <div class="col-sm-8">
+                        <input id="sortOrder" type="number" class="form-control" @bind="@_treeType.SortOrder" min="0" />
+                    </div>
+                </div>
+                <div class="row mb-3 align-items-center">
+                    <Label Class="col-sm-4" For="isActive" HelpText="Is this tree type currently available?" ResourceKey="IsActive">Active: </Label>
+                    <div class="col-sm-8">
+                        <input id="isActive" type="checkbox" @bind="@_treeType.IsActive" />
+                    </div>
+                </div>
+            </form>
+
+            <div class="d-flex gap-2 mb-3">
+                <button type="button" class="btn btn-success" @onclick="Save">Save</button>
+                <NavLink class="btn btn-secondary" href="@NavigateUrl()">Cancel</NavLink>
+            </div>
+
+            @if (PageState.Action == "Edit")
+            {
+                <AuditInfo CreatedBy="@_treeType.CreatedBy" CreatedOn="@_treeType.CreatedOn" ModifiedBy="@_treeType.ModifiedBy" ModifiedOn="@_treeType.ModifiedOn"></AuditInfo>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    public override string Actions => "Add,Edit";
+    public override string Title => "Manage Tree Type";
+    public override bool UseAdminContainer => false;
+
+    private ElementReference form;
+    private bool validated = false;
+    private Models.TreeType _treeType = new Models.TreeType { IsActive = true };
+
+    protected override async Task OnParametersSetAsync()
+    {
+        try
+        {
+            if (PageState.Action == "Edit")
+            {
+                int treeTypeId = Int32.Parse(PageState.QueryString["id"]);
+                _treeType = await TreeTypeService.GetTreeTypeAsync(treeTypeId);
+            }
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Loading Tree Type {TreeTypeId} {Error}", PageState.QueryString.GetValueOrDefault("id"), ex.Message);
+            AddModuleMessage("Error loading tree type.", MessageType.Error);
+        }
+    }
+
+    private async Task Save()
+    {
+        try
+        {
+            validated = true;
+            var interop = new Oqtane.UI.Interop(JSRuntime);
+            if (await interop.FormValid(form))
+            {
+                if (PageState.Action == "Edit")
+                {
+                    _treeType = await TreeTypeService.UpdateTreeTypeAsync(_treeType);
+                    await logger.LogInformation("TreeType Updated {TreeType}", _treeType.Name);
+                }
+                else
+                {
+                    _treeType = await TreeTypeService.AddTreeTypeAsync(_treeType);
+                    await logger.LogInformation("TreeType Added {TreeType}", _treeType.Name);
+                }
+
+                AddModuleMessage("Tree type saved successfully.", MessageType.Success);
+                NavigationManager.NavigateTo(NavigateUrl());
+            }
+            else
+            {
+                AddModuleMessage("Please fill in all required fields.", MessageType.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Saving Tree Type {TreeType} {Error}", _treeType.Name, ex.Message);
+            AddModuleMessage("Error saving tree type.", MessageType.Error);
+        }
+    }
+}
