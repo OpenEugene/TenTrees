@@ -60,9 +60,15 @@ namespace OpenEug.TenTrees.Module.TreeType.Repository
         public Models.TreeType UpdateTreeType(Models.TreeType treeType)
         {
             using var db = _factory.CreateDbContext();
-            db.Entry(treeType).State = EntityState.Modified;
+            Models.TreeType existingTreeType = db.TreeType.Find(treeType.TreeTypeId);
+            if (existingTreeType == null)
+            {
+                return null;
+            }
+
+            db.Entry(existingTreeType).CurrentValues.SetValues(treeType);
             db.SaveChanges();
-            return treeType;
+            return existingTreeType;
         }
 
         public void DeleteTreeType(int treeTypeId)
