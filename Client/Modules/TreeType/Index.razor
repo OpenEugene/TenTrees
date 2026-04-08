@@ -1,0 +1,78 @@
+@using OpenEug.TenTrees.Module.TreeType.Services
+@page "/TreeType"
+
+@namespace OpenEug.TenTrees.Module.TreeType
+@inherits ModuleBase
+@inject ITreeTypeService TreeTypeService
+@inject NavigationManager NavigationManager
+@inject IStringLocalizer<Index> Localizer
+@page "/tree-types"
+
+@if (_treeTypes == null)
+{
+    <p role="status"><em>Loading...</em></p>
+}
+else
+{
+    <ActionLink Action="Add" Text="Add Tree Type" ResourceKey="Add" Class="btn btn-primary mb-3" Security="SecurityAccessLevel.Edit" />
+    <br />
+    @if (_treeTypes.Count != 0)
+    {
+        <Pager Items="@_treeTypes">
+            <Header>
+                <th style="width: 1px;"><span class="visually-hidden">Actions</span></th>
+                <th style="width: 1px;"><span class="visually-hidden">Actions</span></th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Sort Order</th>
+                <th>Status</th>
+            </Header>
+            <Row>
+                <td><ActionLink Action="Edit" Parameters="@($"id={context.TreeTypeId}")" ResourceKey="Edit" /></td>
+                <td><ActionDialog Header="Delete Tree Type" Message="Are you sure you want to delete this tree type?" Action="Delete" Security="SecurityAccessLevel.Edit" Class="btn btn-danger" OnClick="@(async () => await Delete(context))" ResourceKey="Delete" /></td>
+                <td>@context.Name</td>
+                <td>@context.Category</td>
+                <td>@context.SortOrder</td>
+                <td>@(context.IsActive ? "Active" : "Inactive")</td>
+            </Row>
+        </Pager>
+    }
+    else
+    {
+        <p>No tree types have been created yet.</p>
+    }
+}
+
+@code {
+
+    private List<Models.TreeType> _treeTypes;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        try
+        {
+            _treeTypes = await TreeTypeService.GetTreeTypesAsync();
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Loading Tree Types {Error}", ex.Message);
+            AddModuleMessage("Error loading tree types.", MessageType.Error);
+        }
+    }
+
+    private async Task Delete(Models.TreeType treeType)
+    {
+        try
+        {
+            await TreeTypeService.DeleteTreeTypeAsync(treeType.TreeTypeId);
+            await logger.LogInformation("TreeType Deleted {TreeType}", treeType.Name);
+            _treeTypes = await TreeTypeService.GetTreeTypesAsync();
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Deleting Tree Type {TreeType} {Error}", treeType.Name, ex.Message);
+            AddModuleMessage("Error deleting tree type.", MessageType.Error);
+        }
+    }
+}
