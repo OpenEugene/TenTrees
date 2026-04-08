@@ -390,7 +390,7 @@
 
                         if (!string.IsNullOrEmpty(assessment.DeceasedTreeTypes))
                         {
-                            if (_availableTreeTypes.Any(t => t.Name == assessment.DeceasedTreeTypes))
+                            if (_availableTreeTypes?.Any(t => t.Name == assessment.DeceasedTreeTypes) == true)
                             {
                                 _deceasedTreeTypes = assessment.DeceasedTreeTypes;
                             }
