@@ -129,11 +129,21 @@
                         </td>
                         <td>@(grower.ExitDate?.ToString("yyyy-MM-dd") ?? "-")</td>
                         <td>
-                            <ActionLink Action="Status" 
-                                       Parameters="@($"id={grower.GrowerId}&returnurl={Uri.EscapeDataString(GetReturnUrl())}")" 
-                                       Text="@Localizer["Action.ManageStatus"]" 
-                                       ResourceKey="ManageStatus" 
-                                       Class="btn btn-sm btn-primary" />
+                            <div class="d-flex gap-1">
+                                <ActionLink Action="Status" 
+                                           Parameters="@($"id={grower.GrowerId}&returnurl={Uri.EscapeDataString(GetReturnUrl())}")" 
+                                           Text="@Localizer["Action.ManageStatus"]" 
+                                           ResourceKey="ManageStatus" 
+                                           Class="btn btn-sm btn-primary" />
+                                <ActionDialog Header="Delete Grower"
+                                             Message="@($"Are you sure you wish to delete {grower.GrowerName}? This action cannot be undone.")"
+                                             Action="Delete"
+                                             Security="SecurityAccessLevel.Edit"
+                                             Class="btn btn-sm btn-danger"
+                                             OnClick="@(async () => await DeleteGrower(grower))"
+                                             ResourceKey="DeleteGrower"
+                                             Id="@grower.GrowerId.ToString()" />
+                            </div>
                         </td>
                     </tr>
                 }
@@ -322,5 +332,20 @@
             GrowerStatus.Exited => Localizer["Status.Exited"],
             _ => status.ToString()
         };
+    }
+
+    private async Task DeleteGrower(Models.Grower grower)
+    {
+        try
+        {
+            await GrowerService.DeleteGrowerAsync(grower.GrowerId, ModuleState.ModuleId);
+            await logger.LogInformation("Grower Deleted {GrowerId}", grower.GrowerId);
+            await LoadGrowersAsync();
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Deleting Grower {GrowerId} {Error}", grower.GrowerId, ex.Message);
+            AddModuleMessage(Localizer["Message.DeleteError"], MessageType.Error);
+        }
     }
 }
