@@ -1,5 +1,6 @@
 @using OpenEug.TenTrees.Module.Grower.Services
 @using OpenEug.TenTrees.Module.Cohort.Services
+@using OpenEug.TenTrees.Module.Assessment.Services
 @using OpenEug.TenTrees.Models
 @using Oqtane.UI
 
@@ -7,6 +8,7 @@
 @inherits ModuleBase
 @inject IGrowerService GrowerService
 @inject ICohortService CohortService
+@inject IAssessmentService AssessmentService
 @inject NavigationManager NavigationManager
 @inject IStringLocalizer<Status> Localizer
 @inject IJSRuntime JSRuntime
@@ -208,6 +210,63 @@ else
             </div>
         </div>
 
+        <!-- Assessment History -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5><i class="bi bi-clipboard2-check me-2" aria-hidden="true"></i>@Localizer["Section.Assessments"]</h5>
+            </div>
+            <div class="card-body">
+                @if (_assessments.Count == 0)
+                {
+                    <p class="text-muted">@Localizer["Message.NoAssessments"]</p>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-sm table-striped mb-0">
+                            <thead>
+                                <tr>
+                                    <th>@Localizer["Column.AssessmentDate"]</th>
+                                    <th>@Localizer["Column.Trees"]</th>
+                                    <th>@Localizer["Column.Permaculture"]</th>
+                                    <th>@Localizer["Column.NeedsHelp"]</th>
+                                    <th>@Localizer["Column.Notes"]</th>
+                                    <th><span class="visually-hidden">@Localizer["Column.Actions"]</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var assessment in _assessments)
+                                {
+                                    <tr>
+                                        <td>@assessment.AssessmentDate.ToString("yyyy-MM-dd")</td>
+                                        <td>@(assessment.TreesPlanted > 0 ? $"{assessment.TreesAlive * 100 / assessment.TreesPlanted}% ({assessment.TreesAlive}/{assessment.TreesPlanted})" : "N/A")</td>
+                                        <td>@assessment.PermaculturePrinciplesCount / 9</td>
+                                        <td>
+                                            @if (assessment.NeedsHelp)
+                                            {
+                                                <span class="badge bg-danger">@Localizer["Label.Yes"]</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-success">@Localizer["Label.No"]</span>
+                                            }
+                                        </td>
+                                        <td>@(string.IsNullOrWhiteSpace(assessment.Notes) ? "-" : assessment.Notes)</td>
+                                        <td>
+                                            <a href="/Assessment" class="btn btn-sm btn-outline-secondary" title="@Localizer["Action.ViewRecord"]">
+                                                <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i>
+                                                <span class="visually-hidden">@Localizer["Action.ViewRecord"]</span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+
         <!-- Back Button -->
         <div class="mt-2">
             <button class="btn btn-secondary btn-sm" @onclick="NavigateToIndex">
@@ -223,6 +282,7 @@ else
     private bool _showExitForm = false;
     private List<Models.Cohort> _growerCohorts = new();
     private List<Models.Cohort> _availableCohorts = new();
+    private List<Models.Assessment> _assessments = new();
     private int _cohortToAdd;
     private int _pendingRemoveCohortId;
     private DateTime _exitDate = DateTime.Today;
@@ -248,6 +308,7 @@ else
                 else
                 {
                     await LoadCohortDataAsync();
+                    await LoadAssessmentsAsync();
                 }
             }
         }
@@ -357,6 +418,14 @@ else
         _availableCohorts = villageCohorts
             .Where(c => !linked.Contains(c.CohortId) && c.Status != Models.CohortStatus.Completed)
             .OrderBy(c => c.Name).ToList();
+    }
+
+    private async Task LoadAssessmentsAsync()
+    {
+        var all = await AssessmentService.GetAssessmentsByGrowerAsync(_grower.GrowerId);
+        _assessments = (all ?? new List<Models.Assessment>())
+            .OrderByDescending(a => a.AssessmentDate)
+            .ToList();
     }
 
     private async Task AddGrowerCohort()
