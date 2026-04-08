@@ -17,4 +17,37 @@
     <value>[XS] Grower not found or you do not have permission to view this grower.</value>
   </data>
   <!-- Add remaining translations matching Status.resx -->
+  <data name="Section.Assessments" xml:space="preserve">
+    <value>[XS] Assessments</value>
+  </data>
+  <data name="Column.AssessmentDate" xml:space="preserve">
+    <value>[XS] Date</value>
+  </data>
+  <data name="Column.Trees" xml:space="preserve">
+    <value>[XS] Trees (Survival)</value>
+  </data>
+  <data name="Column.Permaculture" xml:space="preserve">
+    <value>[XS] Permaculture</value>
+  </data>
+  <data name="Column.NeedsHelp" xml:space="preserve">
+    <value>[XS] Needs Help</value>
+  </data>
+  <data name="Column.Notes" xml:space="preserve">
+    <value>[XS] Notes</value>
+  </data>
+  <data name="Column.Actions" xml:space="preserve">
+    <value>[XS] Actions</value>
+  </data>
+  <data name="Label.Yes" xml:space="preserve">
+    <value>[XS] Yes</value>
+  </data>
+  <data name="Label.No" xml:space="preserve">
+    <value>[XS] No</value>
+  </data>
+  <data name="Message.NoAssessments" xml:space="preserve">
+    <value>[XS] No assessments recorded yet.</value>
+  </data>
+  <data name="Action.ViewRecord" xml:space="preserve">
+    <value>[XS] View Full Record</value>
+  </data>
 </root>
