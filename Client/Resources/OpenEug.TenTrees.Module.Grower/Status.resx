@@ -105,4 +105,37 @@
   <data name="Validation.NotesRequiredForOther" xml:space="preserve">
     <value>Please provide details when selecting "Other"</value>
   </data>
+  <data name="Section.Assessments" xml:space="preserve">
+    <value>Assessments</value>
+  </data>
+  <data name="Column.AssessmentDate" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="Column.Trees" xml:space="preserve">
+    <value>Trees (Survival)</value>
+  </data>
+  <data name="Column.Permaculture" xml:space="preserve">
+    <value>Permaculture</value>
+  </data>
+  <data name="Column.NeedsHelp" xml:space="preserve">
+    <value>Needs Help</value>
+  </data>
+  <data name="Column.Notes" xml:space="preserve">
+    <value>Notes</value>
+  </data>
+  <data name="Column.Actions" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="Label.Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="Label.No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="Message.NoAssessments" xml:space="preserve">
+    <value>No assessments recorded yet.</value>
+  </data>
+  <data name="Action.ViewRecord" xml:space="preserve">
+    <value>View Full Record</value>
+  </data>
 </root>
