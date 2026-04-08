@@ -14,6 +14,7 @@ namespace OpenEug.TenTrees.Module.Village.Repository
         Models.Village AddVillage(Models.Village village);
         Models.Village UpdateVillage(Models.Village village);
         void DeleteVillage(int villageId);
+        bool HasAssociatedData(int villageId);
     }
 
     public class VillageRepository : IVillageRepository, ITransientService
@@ -75,6 +76,14 @@ namespace OpenEug.TenTrees.Module.Village.Repository
             }
             db.Village.Remove(village);
             db.SaveChanges();
+        }
+
+        public bool HasAssociatedData(int villageId)
+        {
+            using var db = _factory.CreateDbContext();
+            return db.Cohort.Any(c => c.VillageId == villageId)
+                || db.Grower.Any(g => g.VillageId == villageId)
+                || db.TrainingClass.Any(tc => tc.VillageId == villageId);
         }
     }
 }
