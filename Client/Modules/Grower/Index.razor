@@ -191,47 +191,23 @@
     // Admins see all cohorts (optionally filtered by village).
     private async Task LoadCohortsForMentorAsync()
     {
-        if (!UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin))
+        if (UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin))
+        {
+            _cohorts = !string.IsNullOrEmpty(_villageFilter) && int.TryParse(_villageFilter, out var vid)
+                ? await CohortService.GetCohortsByVillageAsync(vid)
+                : await CohortService.GetCohortsAsync();
+        }
+        else
         {
             _cohorts = await CohortService.GetCohortsByMentorAsync(PageState.User.Username);
             // Pre-restrict grower IDs to those in the mentor's cohorts
             if (_cohorts.Count > 0)
             {
-                var ids = new HashSet<int>();
-
-                // Fire all member lookups concurrently to avoid sequential N+1 latency.
-                // var memberTasks = new List<Task<IEnumerable<YourCohortMemberType>>>();
-                // foreach (var c in _cohorts)
-                // {
-                //     memberTasks.Add(CohortService.GetGrowerCohortsAsync(c.CohortId));
-                // }
-
-                //var memberResults = await Task.WhenAll(memberTasks);
-
-                // foreach (var members in memberResults)
-                // {
-                //     foreach (var m in members)
-                //     {
-                //         ids.Add(m.GrowerId);
-                //     }
-                // }
-
-                _cohortGrowerIds = ids;
+                var memberTasks = _cohorts.Select(c => CohortService.GetGrowerCohortsAsync(c.CohortId));
+                var memberResults = await Task.WhenAll(memberTasks);
+                _cohortGrowerIds = memberResults.SelectMany(m => m).Select(m => m.GrowerId).ToHashSet();
             }
         }
-    }
-
-    private async Task OnVillageFilterChanged()
-    {
-        _cohortFilter = "";
-        if (UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin))
-        {
-            _cohorts = string.IsNullOrEmpty(_villageFilter)
-                ? new()
-                : await CohortService.GetCohortsByVillageAsync(int.Parse(_villageFilter));
-            _cohortGrowerIds = null;
-        }
-        await LoadGrowersAsync();
     }
 
     private async Task LoadSummaryAsync()
