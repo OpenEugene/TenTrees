@@ -101,6 +101,6 @@
     <value>Error loading villages</value>
   </data>
   <data name="Message.DeleteError" xml:space="preserve">
-    <value>Error deleting village</value>
+    <value>Unable to delete this village. Ensure all cohorts, growers, and training classes associated with it are removed first.</value>
   </data>
 </root>

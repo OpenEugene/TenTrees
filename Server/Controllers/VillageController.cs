@@ -144,6 +144,12 @@ namespace OpenEug.TenTrees.Module.Village.Controllers
         {
             try
             {
+                if (await _villageService.HasAssociatedDataAsync(id))
+                {
+                    _logger.Log(LogLevel.Warning, this, LogFunction.Delete, "Village Delete Blocked – Village Has Associated Data {VillageId}", id);
+                    return Conflict();
+                }
+
                 await _villageService.DeleteVillageAsync(id);
                 return NoContent();
             }
