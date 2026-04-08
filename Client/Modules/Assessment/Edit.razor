@@ -298,7 +298,7 @@
     <NavLink class="btn btn-secondary" href="@NavigateUrl()">@Localizer["Cancel"]</NavLink>
     @if (PageState.Action == "Edit")
     {
-        <ActionDialog Header="@Localizer["Dialog.Delete.Header"]" Message="@Localizer["Dialog.Delete.Message"]" Action="Delete" Security="SecurityAccessLevel.Edit" Class="btn btn-danger ms-2" OnClick="@Delete" ResourceKey="Delete" />
+        <ActionDialog Header="@Localizer["Dialog.Delete.Header"]" Message="@Localizer["Dialog.Delete.Message"]" Action="Delete" Security="SecurityAccessLevel.Edit" Class="btn btn-danger ms-2" OnClick="@(async () => await Delete())" ResourceKey="Delete" />
     }
     <br /><br />
     @if (PageState.Action == "Edit")
