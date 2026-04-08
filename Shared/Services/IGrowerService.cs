@@ -14,5 +14,6 @@ namespace OpenEug.TenTrees.Module.Grower.Services
         Task<List<Models.Grower>> GetGrowersByStatusAsync(GrowerStatus status, int? villageId = null);
         Task<GrowerStatusSummary> GetStatusSummaryAsync(int? villageId = null);
         Task<Models.Grower> UpdateGrowerAsync(Models.Grower grower, int moduleId);
+        Task DeleteGrowerAsync(int growerId, int moduleId);
     }
 }
