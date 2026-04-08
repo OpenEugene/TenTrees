@@ -1,5 +1,6 @@
 @using Microsoft.AspNetCore.Components.Forms
 @using OpenEug.TenTrees.Module.Cohort.Services
+@using OpenEug.TenTrees.Module.Grower.Services
 @using OpenEug.TenTrees.Module.Village.Services
 @using OpenEug.TenTrees.Module.Training.Services
 @using OpenEug.TenTrees.Models
@@ -7,6 +8,7 @@
 @namespace OpenEug.TenTrees.Module.Cohort
 @inherits ModuleBase
 @inject ICohortService CohortService
+@inject IGrowerService GrowerService
 @inject IVillageService VillageService
 @inject ITrainingService TrainingService
 @inject NavigationManager NavigationManager
@@ -115,7 +117,7 @@
                         <table class="table table-sm align-middle mb-3">
                             <thead>
                                 <tr>
-                                    <th>Grower ID</th>
+                                    <th>Grower Name</th>
                                     <th>Joined</th>
                                     <th><span class="visually-hidden">Actions</span></th>
                                 </tr>
@@ -123,12 +125,13 @@
                             <tbody>
                                 @foreach (var gc in _growerCohorts)
                                 {
+                                    var growerName = GetGrowerName(gc.GrowerId);
                                     <tr>
-                                        <td>@gc.GrowerId</td>
+                                        <td>@growerName</td>
                                         <td>@gc.JoinedOn.ToString("d MMM yyyy")</td>
                                         <td>
                                             <button class="btn btn-sm btn-outline-danger"
-                                                    aria-label="@($"Remove grower {gc.GrowerId} from cohort")"
+                                                    aria-label="@($"Remove grower {growerName} from cohort")"
                                                     @onclick="@(async () => await RemoveGrower(gc.GrowerId))">
                                                 <span class="oi oi-minus" aria-hidden="true"></span>
                                             </button>
@@ -257,6 +260,7 @@
     private List<CohortClass> _cohortClasses = new();
     private List<TrainingClass> _allClasses = new();
     private List<TrainingClass> _availableClasses = new();
+    private Dictionary<int, string> _growerNames = new();
     private int _classToAdd;
 
     protected override async Task OnParametersSetAsync()
@@ -274,6 +278,7 @@
                 _growerCohorts = await CohortService.GetGrowerCohortsAsync(cohortId);
                 _mentorCohorts = await CohortService.GetMentorCohortsAsync(cohortId);
                 _cohortClasses = await CohortService.GetClassesForCohortAsync(cohortId);
+                await LoadGrowerNamesAsync();
                 await LoadAvailableClassesAsync();
             }
         }
@@ -390,6 +395,15 @@
             AddModuleMessage("Unable to remove grower.", MessageType.Error);
         }
     }
+
+    private async Task LoadGrowerNamesAsync()
+    {
+        var growers = await GrowerService.GetAllGrowersAsync() ?? new List<Models.Grower>();
+        _growerNames = growers.ToDictionary(g => g.GrowerId, g => g.GrowerName);
+    }
+
+    private string GetGrowerName(int growerId)
+        => _growerNames.TryGetValue(growerId, out var name) ? name : $"Grower {growerId}";
 
     private async Task RemoveMentor(string mentorId)
     {
