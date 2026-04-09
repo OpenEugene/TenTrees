@@ -20,9 +20,9 @@ namespace OpenEug.TenTrees.Models
         [Required(ErrorMessage = "Village is required")]
         public int VillageId { get; set; }
         
-        public string HouseNumber { get; set; }
+        public string? HouseNumber { get; set; }
         
-        public string IdNumber { get; set; }
+        public string? IdNumber { get; set; }
         
         public DateTime? BirthDate { get; set; }
         
@@ -32,10 +32,9 @@ namespace OpenEug.TenTrees.Models
         public bool OwnsHome { get; set; }
         
         // Enrollment metadata
-        [Required]
-        public string MentorUsername { get; set; }
+        public string? MentorUsername { get; set; }
         
-        public string MentorName { get; set; }
+        public string? MentorName { get; set; }
         
         public DateTime EnrollmentDate { get; set; }
         
@@ -70,7 +69,7 @@ namespace OpenEug.TenTrees.Models
         
         public DateTime? SignatureDate { get; set; }
         
-        public string SignatureData { get; set; }
+        public string? SignatureData { get; set; }
         
         // Cohort
         public int? CohortId { get; set; }
@@ -85,7 +84,7 @@ namespace OpenEug.TenTrees.Models
 
         public DateTime? PhotoConsentSignatureDate { get; set; }
 
-        public string PhotoConsentSignatureData { get; set; }
+        public string? PhotoConsentSignatureData { get; set; }
     }
 
     public enum EnrollmentStatus

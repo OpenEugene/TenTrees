@@ -108,7 +108,7 @@
                     <th>@Localizer["Status"]</th>
                     <th>@Localizer["Column.GrowerStatus"]</th>
                     <th>@Localizer["Column.PhotoConsent"]</th>
-                    <th style="width: 1px;"><span class="visually-hidden">Approval</span></th>
+                    <th>@Localizer["Column.Actions"]</th>
                     <th style="width: 1px;"><span class="visually-hidden">@Localizer["Column.PhotoConsentAction"]</span></th>
                 </tr>
             </thead>
@@ -139,19 +139,21 @@
                                 @GetPhotoConsentText(enrollment.PhotoConsentLevel)
                             </span>
                         </td>
-                        <td>
+                        <td class="text-nowrap">
                             @if (enrollment.EnrollmentStatus == EnrollmentStatus.Pending)
                             {
-                                <button class="btn btn-sm btn-success me-1"
-                                        aria-label="Approve @enrollment.GrowerName"
-                                        @onclick="() => ApproveInline(enrollment.EnrollmentId)">
-                                    <span class="oi oi-check" aria-hidden="true"></span>
-                                </button>
-                                <button class="btn btn-sm btn-danger"
-                                        aria-label="Reject @enrollment.GrowerName"
-                                        @onclick="() => RejectInline(enrollment.EnrollmentId)">
-                                    <span class="oi oi-x" aria-hidden="true"></span>
-                                </button>
+                                <div class="d-inline-flex gap-1 align-items-center">
+                                    <button class="btn btn-sm btn-success"
+                                            aria-label="@Localizer["Action.Approve"] @enrollment.GrowerName"
+                                            @onclick="() => ApproveInline(enrollment.EnrollmentId)">
+                                        <span class="oi oi-check" aria-hidden="true"></span>
+                                    </button>
+                                    <button class="btn btn-sm btn-danger"
+                                            aria-label="@Localizer["Action.Reject"] @enrollment.GrowerName"
+                                            @onclick="() => RejectInline(enrollment.EnrollmentId)">
+                                        <span class="oi oi-x" aria-hidden="true"></span>
+                                    </button>
+                                </div>
                             }
                         </td>
                         <td>
