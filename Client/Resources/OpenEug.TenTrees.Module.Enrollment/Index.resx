@@ -210,4 +210,31 @@
   <data name="ConsentLevel.None" xml:space="preserve">
     <value>None</value>
   </data>
+  <data name="Mentor" xml:space="preserve">
+    <value>Mentor</value>
+  </data>
+  <data name="Column.Approved" xml:space="preserve">
+    <value>Approved?</value>
+  </data>
+  <data name="Column.Actions" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="Column.PhotoConsentAction" xml:space="preserve">
+    <value>Photo Consent Action</value>
+  </data>
+  <data name="Action.Approve" xml:space="preserve">
+    <value>Approve</value>
+  </data>
+  <data name="Action.Reject" xml:space="preserve">
+    <value>Reject</value>
+  </data>
+  <data name="Message.Approved" xml:space="preserve">
+    <value>Enrollment Approved</value>
+  </data>
+  <data name="Message.Rejected" xml:space="preserve">
+    <value>Enrollment Rejected</value>
+  </data>
+  <data name="Message.StatusChangeError" xml:space="preserve">
+    <value>Error Changing Enrollment Status</value>
+  </data>
 </root>

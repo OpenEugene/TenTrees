@@ -14,14 +14,14 @@ namespace OpenEug.TenTrees.Models
         [Required]
         public int VillageId { get; set; }
 
-        public string MentorUsername { get; set; }
+        public string? MentorUsername { get; set; }
 
         [Required]
         public string GrowerName { get; set; }
 
-        public string HouseNumber { get; set; }
+        public string? HouseNumber { get; set; }
 
-        public string IdNumber { get; set; }
+        public string? IdNumber { get; set; }
 
         public DateTime? BirthDate { get; set; }
 
@@ -33,9 +33,9 @@ namespace OpenEug.TenTrees.Models
 
         public DateTime? ExitDate { get; set; }
 
-        public string ExitReason { get; set; }
+        public string? ExitReason { get; set; }
 
-        public string ExitNotes { get; set; }
+        public string? ExitNotes { get; set; }
     }
 
     public enum GrowerStatus
