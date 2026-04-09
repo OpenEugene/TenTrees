@@ -184,9 +184,13 @@
     private EnrollmentStatusSummary _summary;
     private string _statusFilter = "";
     private string _villageFilter = "";
+    private bool _loaded = false;
 
     protected override async Task OnParametersSetAsync()
     {
+        if (_loaded) return;
+        _loaded = true;
+
         try
         {
             await LoadVillagesAsync();
