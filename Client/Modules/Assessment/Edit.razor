@@ -364,6 +364,7 @@
     private string _modifiedby;
     private DateTime _modifiedon;
 
+    private bool _loaded = false;
     private bool _hasDraft = false;
     private const string DraftKey = "TenTrees_Assessment_Draft";
 
@@ -371,6 +372,9 @@
 
     protected override async Task OnParametersSetAsync()
     {
+        if (_loaded) return;
+        _loaded = true;
+
         try
         {
             var allGrowers = await GrowerService.GetActiveGrowersAsync();
