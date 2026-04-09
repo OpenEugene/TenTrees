@@ -179,5 +179,11 @@ namespace OpenEug.TenTrees.Module.Grower.Services
             }
             return Task.FromResult(grower);
         }
+
+        public Task DeleteGrowerAsync(int growerId, int moduleId)
+        {
+            _growerRepository.DeleteGrower(growerId);
+            return Task.CompletedTask;
+        }
     }
 }
