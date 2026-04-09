@@ -108,6 +108,24 @@
                     <hr />
                     <h5 class="mt-4"><span class="oi oi-people me-2" aria-hidden="true"></span>Grower Members (@_growerCohorts.Count)</h5>
 
+                    @if (_availableGrowers.Count > 0)
+                    {
+                        <div class="d-flex gap-2 align-items-center mb-2">
+                            <label class="form-label mb-0" for="growerToAdd">Add grower:</label>
+                            <select id="growerToAdd" class="form-select form-select-sm" style="width: auto;" @bind="_growerToAdd">
+                                <option value="0">— select —</option>
+                                @foreach (var g in _availableGrowers)
+                                {
+                                    <option value="@g.GrowerId">@g.GrowerName</option>
+                                }
+                            </select>
+                            <button class="btn btn-sm btn-outline-primary" @onclick="AddGrower"
+                                    disabled="@(_growerToAdd == 0)">
+                                <span class="oi oi-plus me-1" aria-hidden="true"></span> Add
+                            </button>
+                        </div>
+                    }
+
                     @if (_growerCohorts.Count == 0)
                     {
                         <p class="text-muted">No growers assigned to this cohort yet.</p>
@@ -260,8 +278,11 @@
     private List<CohortClass> _cohortClasses = new();
     private List<TrainingClass> _allClasses = new();
     private List<TrainingClass> _availableClasses = new();
+    private List<Models.Grower> _villageGrowers = new();
+    private List<Models.Grower> _availableGrowers = new();
     private Dictionary<int, string> _growerNames = new();
     private int _classToAdd;
+    private int _growerToAdd;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -387,6 +408,7 @@
         {
             await CohortService.RemoveGrowerFromCohortAsync(_cohort.CohortId, growerId);
             _growerCohorts = await CohortService.GetGrowerCohortsAsync(_cohort.CohortId);
+            RefreshAvailableGrowers();
             StateHasChanged();
         }
         catch (Exception ex)
@@ -400,6 +422,37 @@
     {
         var growers = await GrowerService.GetAllGrowersAsync() ?? new List<Models.Grower>();
         _growerNames = growers.ToDictionary(g => g.GrowerId, g => g.GrowerName);
+
+        // For the add-grower dropdown, restrict to active growers in this cohort's village.
+        _villageGrowers = await GrowerService.GetActiveGrowersAsync(_cohort.VillageId) ?? new List<Models.Grower>();
+        RefreshAvailableGrowers();
+    }
+
+    private void RefreshAvailableGrowers()
+    {
+        var assigned = _growerCohorts.Select(gc => gc.GrowerId).ToHashSet();
+        _availableGrowers = _villageGrowers
+            .Where(g => !assigned.Contains(g.GrowerId))
+            .OrderBy(g => g.GrowerName)
+            .ToList();
+    }
+
+    private async Task AddGrower()
+    {
+        if (_growerToAdd == 0) return;
+        try
+        {
+            await CohortService.AddGrowerToCohortAsync(_cohort.CohortId, _growerToAdd);
+            _growerCohorts = await CohortService.GetGrowerCohortsAsync(_cohort.CohortId);
+            _growerToAdd = 0;
+            RefreshAvailableGrowers();
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Adding Grower {GrowerId} to Cohort {Error}", _growerToAdd, ex.Message);
+            AddModuleMessage("Unable to add grower.", MessageType.Error);
+        }
     }
 
     private string GetGrowerName(int growerId)
