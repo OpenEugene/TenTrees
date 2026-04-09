@@ -14,14 +14,14 @@ namespace OpenEug.TenTrees.Models
         [Required]
         public int GrowerId { get; set; }
 
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         public DateTime AssessmentDate { get; set; }
 
         // Tree Survival
         public int TreesPlanted { get; set; }
         public int TreesAlive { get; set; }
-        public string DeceasedTreeTypes { get; set; }
+        public string? DeceasedTreeTypes { get; set; }
 
         // Permaculture Practices
         public bool TreesLookHealthy { get; set; }
@@ -45,13 +45,13 @@ namespace OpenEug.TenTrees.Models
         public bool NeedsHelp { get; set; }
 
         // Notes
-        public string Notes { get; set; }
+        public string? Notes { get; set; }
 
         // Access Control / Submission
-        public string SubmittedBy { get; set; }
+        public string? SubmittedBy { get; set; }
         public bool EnteredByAdmin { get; set; }
 
         // Frequency Tracking
-        public string FrequencyType { get; set; } // e.g., "Twice-Monthly", "Monthly"
+        public string? FrequencyType { get; set; } // e.g., "Twice-Monthly", "Monthly"
     }
 }

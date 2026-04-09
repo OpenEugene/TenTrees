@@ -22,6 +22,6 @@ namespace OpenEug.TenTrees.Models
         [Range(1, 5)]
         public int ClassNumber { get; set; }
 
-        public string Notes { get; set; }
+        public string? Notes { get; set; }
     }
 }
