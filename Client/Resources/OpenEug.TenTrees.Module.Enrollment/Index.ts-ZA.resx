@@ -63,4 +63,73 @@
   <data name="ConsentLevel.None" xml:space="preserve">
     <value>[XS] None</value>
   </data>
+  <data name="EnrollmentStatus.Pending" xml:space="preserve">
+    <value>Rindza</value>
+  </data>
+  <data name="EnrollmentStatus.Approved" xml:space="preserve">
+    <value>Amukeriwe</value>
+  </data>
+  <data name="EnrollmentStatus.Rejected" xml:space="preserve">
+    <value>Haniwile</value>
+  </data>
+  <data name="Filter.Status" xml:space="preserve">
+    <value>[XS] Filter by Status</value>
+  </data>
+  <data name="Filter.AllStatuses" xml:space="preserve">
+    <value>[XS] All Statuses</value>
+  </data>
+  <data name="Filter.Village" xml:space="preserve">
+    <value>[XS] Filter by Village</value>
+  </data>
+  <data name="Filter.AllVillages" xml:space="preserve">
+    <value>[XS] All Villages</value>
+  </data>
+  <data name="Action.ClearFilters" xml:space="preserve">
+    <value>[XS] Clear Filters</value>
+  </data>
+  <data name="Summary.Total" xml:space="preserve">
+    <value>[XS] Total</value>
+  </data>
+  <data name="Column.GrowerStatus" xml:space="preserve">
+    <value>[XS] Grower Status</value>
+  </data>
+  <data name="GrowerStatus.Active" xml:space="preserve">
+    <value>[XS] Active</value>
+  </data>
+  <data name="GrowerStatus.Inactive" xml:space="preserve">
+    <value>[XS] Inactive</value>
+  </data>
+  <data name="GrowerStatus.Exited" xml:space="preserve">
+    <value>[XS] Exited</value>
+  </data>
+  <data name="Message.Loading" xml:space="preserve">
+    <value>[XS] Loading...</value>
+  </data>
+  <data name="Mentor" xml:space="preserve">
+    <value>Muleriseri</value>
+  </data>
+  <data name="Column.Approved" xml:space="preserve">
+    <value>[XS] Approved?</value>
+  </data>
+  <data name="Column.Actions" xml:space="preserve">
+    <value>[XS] Actions</value>
+  </data>
+  <data name="Column.PhotoConsentAction" xml:space="preserve">
+    <value>[XS] Photo Consent Action</value>
+  </data>
+  <data name="Action.Approve" xml:space="preserve">
+    <value>[XS] Approve</value>
+  </data>
+  <data name="Action.Reject" xml:space="preserve">
+    <value>[XS] Reject</value>
+  </data>
+  <data name="Message.Approved" xml:space="preserve">
+    <value>[XS] Enrollment Approved</value>
+  </data>
+  <data name="Message.Rejected" xml:space="preserve">
+    <value>[XS] Enrollment Rejected</value>
+  </data>
+  <data name="Message.StatusChangeError" xml:space="preserve">
+    <value>[XS] Error Changing Enrollment Status</value>
+  </data>
 </root>

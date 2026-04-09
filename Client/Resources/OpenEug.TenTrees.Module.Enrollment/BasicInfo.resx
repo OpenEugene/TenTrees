@@ -30,7 +30,7 @@
   <data name="Section.HouseholdInfo" xml:space="preserve">
     <value>Household Information</value>
   </data>
-  <data name="TreeMentorName.Text" xml:space="preserve">
+  <data name="MentorName.Text" xml:space="preserve">
     <value>Tree Mentor Name:</value>
   </data>
   <data name="GrowerName.Text" xml:space="preserve">

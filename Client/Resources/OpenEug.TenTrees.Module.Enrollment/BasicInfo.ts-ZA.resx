@@ -30,7 +30,7 @@
   <data name="Section.HouseholdInfo" xml:space="preserve">
     <value>Mahungu ya le Kaya</value>
   </data>
-  <data name="TreeMentorName.Text" xml:space="preserve">
+  <data name="MentorName.Text" xml:space="preserve">
     <value>Vito ra Muleriseri wa Mirhi:</value>
   </data>
   <data name="GrowerName.Text" xml:space="preserve">
