@@ -13,13 +13,13 @@ namespace OpenEug.TenTrees.Models
         [Required]
         public string VillageName { get; set; }
         
-        public string ContactName { get; set; }
+        public string? ContactName { get; set; }
         
-        public string ContactPhone { get; set; }
+        public string? ContactPhone { get; set; }
         
-        public string ContactEmail { get; set; }
+        public string? ContactEmail { get; set; }
         
-        public string Notes { get; set; }
+        public string? Notes { get; set; }
         
         public bool IsActive { get; set; }
     }
