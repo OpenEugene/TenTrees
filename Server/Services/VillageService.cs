@@ -20,6 +20,7 @@ namespace OpenEug.TenTrees.Module.Village.Services
         Task<Models.Village> UpdateVillageAsync(Models.Village village);
         Task DeleteVillageAsync(int villageId);
         Task<List<Models.Village>> GetActiveVillagesAsync();
+        Task<bool> HasAssociatedDataAsync(int villageId);
     }
 
     public class ServerVillageService : IVillageService
@@ -67,6 +68,11 @@ namespace OpenEug.TenTrees.Module.Village.Services
         public Task<List<Models.Village>> GetActiveVillagesAsync()
         {
             return Task.FromResult(_villageRepository.GetVillages().Where(v => v.IsActive).ToList());
+        }
+
+        public Task<bool> HasAssociatedDataAsync(int villageId)
+        {
+            return Task.FromResult(_villageRepository.HasAssociatedData(villageId));
         }
     }
 }
