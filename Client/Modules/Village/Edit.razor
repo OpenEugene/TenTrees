@@ -53,6 +53,16 @@
             <div class="d-flex gap-2 mb-3">
                 <button type="button" class="btn btn-success" @onclick="Save">@Localizer["Save"]</button>
                 <NavLink class="btn btn-secondary" href="@NavigateUrl()">@Localizer["Cancel"]</NavLink>
+                @if (PageState.Action == "Edit")
+                {
+                    <ActionDialog Header="@Localizer["Dialog.DeleteVillage.Header"]"
+                                  Message="@Localizer["Dialog.DeleteVillage.Message"]"
+                                  Action="Delete"
+                                  Security="SecurityAccessLevel.Edit"
+                                  Class="btn btn-danger ms-auto"
+                                  OnClick="@(async () => await Delete())"
+                                  ResourceKey="Delete" />
+                }
             </div>
             
             @if (PageState.Action == "Edit")
@@ -120,6 +130,22 @@ public override bool UseAdminContainer => false;
         {
             await logger.LogError(ex, "Error Saving Village {Village} {Error}", _village.VillageName, ex.Message);
             AddModuleMessage(Localizer["Message.SaveError"], MessageType.Error);
+        }
+    }
+
+    private async Task Delete()
+    {
+        try
+        {
+            var villageName = _village.VillageName;
+            await VillageService.DeleteVillageAsync(_village.VillageId);
+            await logger.LogInformation("Village Deleted {Village}", villageName);
+            NavigationManager.NavigateTo(NavigateUrl());
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Deleting Village {Village} {Error}", _village.VillageName, ex.Message);
+            AddModuleMessage(Localizer["Message.DeleteError"], MessageType.Error);
         }
     }
 }
