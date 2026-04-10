@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Oqtane.Shared;
 using Oqtane.Enums;
 using Oqtane.Infrastructure;
+using Oqtane.Controllers;
 using OpenEug.TenTrees.Module.Assessment.Services;
 using OpenEug.TenTrees.Models;
 using System;
@@ -12,16 +13,14 @@ using System.Threading.Tasks;
 
 namespace OpenEug.TenTrees.Module.Assessment.Controllers
 {
-    [Route("api/[controller]")]
-    public class AssessmentController : Controller
+    [Route(ControllerRoutes.ApiRoute)]
+    public class AssessmentController : ModuleControllerBase
     {
         private readonly IAssessmentService _assessmentService;
-        private readonly ILogManager _logger;
 
-        public AssessmentController(IAssessmentService assessmentService, ILogManager logger)
+        public AssessmentController(IAssessmentService assessmentService, ILogManager logger, IHttpContextAccessor accessor) : base(logger, accessor)
         {
             _assessmentService = assessmentService;
-            _logger = logger;
         }
 
         [HttpGet]
