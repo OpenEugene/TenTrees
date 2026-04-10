@@ -6,3 +6,16 @@ add-notes-comments-field-to-garden-assessment-feature
 implement-problem-type-reference-data-hardcoded-crud-module
 implement-tree-type-reference-data-hardcoded-crud-module
 implement-exit-reason-reference-data-hardcoded-crud-module
+not-all-the-resx-files-are-getting-deployed
+implement-touch-based-canvas-signature-pad
+bug-village-module-no-delete-button
+bug-enrollment-approve-reject-actions-missing
+bug-grower-module-no-delete-button
+bug-assessment-module-no-delete-button
+replace-grower-id-with-name-in-cohort-edit
+fix-yes-no-dropdown-not-persisting-on-assessment
+display-assessment-history-on-grower-profile
+add-admin-backfill-growers-maintenance-ui
+add-cohort-group-management-for-organizing-growers-within-villages
+add-self-registration-and-email-verification-scenarios-to-useradministration
+assessments-paging-sorting-and-filtering
