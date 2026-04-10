@@ -131,7 +131,7 @@
                         <td>
                             <div class="d-flex gap-1">
                                 <ActionLink Action="Status" 
-                                           Parameters="@($"id={grower.GrowerId}&returnurl={Uri.EscapeDataString(GetReturnUrl())}")" 
+                                           Parameters="@($"id={grower.GrowerId}&returnurl={Uri.EscapeDataString(GetReturnUrl())}")"
                                            Text="@Localizer["Action.ManageStatus"]" 
                                            ResourceKey="ManageStatus" 
                                            Class="btn btn-sm btn-primary" />
@@ -188,10 +188,13 @@
     }
 
     // For mentors, pre-load only their assigned cohorts and restrict grower list accordingly.
-    // Admins see all cohorts (optionally filtered by village).
+    // Admins, Educators, and Project Managers see all cohorts (optionally filtered by village).
     private async Task LoadCohortsForMentorAsync()
     {
-        if (UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin))
+        bool isMentorOnly = UserSecurity.IsAuthorized(PageState.User, "Mentor")
+            && !UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin);
+
+        if (!isMentorOnly)
         {
             _cohorts = !string.IsNullOrEmpty(_villageFilter) && int.TryParse(_villageFilter, out var vid)
                 ? await CohortService.GetCohortsByVillageAsync(vid)
