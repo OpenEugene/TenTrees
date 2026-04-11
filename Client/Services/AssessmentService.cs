@@ -73,5 +73,20 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
             if (queryParams.Count > 0) url += "?" + string.Join("&", queryParams);
             return await GetJsonAsync<List<AssessmentListDto>>(url, new List<AssessmentListDto>());
         }
+
+        public async Task<List<Models.AssessmentNote>> GetNotesByAssessmentAsync(int assessmentId)
+        {
+            return await GetJsonAsync<List<Models.AssessmentNote>>($"{ApiUrl}/{assessmentId}/notes", new List<Models.AssessmentNote>());
+        }
+
+        public async Task<List<Models.AssessmentNote>> GetNotesByGrowerAsync(int growerId)
+        {
+            return await GetJsonAsync<List<Models.AssessmentNote>>($"{ApiUrl}/grower/{growerId}/notes", new List<Models.AssessmentNote>());
+        }
+
+        public async Task<Models.AssessmentNote> AddNoteAsync(Models.AssessmentNote note)
+        {
+            return await PostJsonAsync<Models.AssessmentNote>($"{ApiUrl}/{note.AssessmentId}/notes", note);
+        }
     }
 }
