@@ -10,9 +10,9 @@ namespace OpenEug.TenTrees.Module.Grower
         {
             Name = "Grower",
             Description = "Grower management for 10 Trees program - track active status and program exits",
-            Version = "1.0.5",
+            Version = "2.1.0",
             ServerManagerType = "",
-            ReleaseVersions = "1.0.0,1.0.1,1.0.2,1.0.3,1.0.4,1.0.5",
+            ReleaseVersions = "1.0.0,1.0.1,1.0.2,1.0.3,1.0.4,1.0.5,2.1.0",
             Dependencies = "OpenEug.TenTrees.Module.Village.1.0.0",
             PackageName = "OpenEug.TenTrees.Module.Grower"
         };
