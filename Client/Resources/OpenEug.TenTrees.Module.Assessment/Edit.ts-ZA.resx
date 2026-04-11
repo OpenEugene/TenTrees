@@ -87,6 +87,39 @@
   <data name="Section.Notes" xml:space="preserve">
     <value>[XS] Notes</value>
   </data>
+  <data name="Notes.Empty" xml:space="preserve">
+    <value>[XS] No notes yet. Add the first observation below.</value>
+  </data>
+  <data name="Note.TypeGeneral" xml:space="preserve">
+    <value>[XS] General</value>
+  </data>
+  <data name="Note.TypeHomeVisit" xml:space="preserve">
+    <value>[XS] Home Visit</value>
+  </data>
+  <data name="Note.PendingLabel" xml:space="preserve">
+    <value>[XS] Pending — saved when you click Save</value>
+  </data>
+  <data name="Note.RemoveAriaLabel" xml:space="preserve">
+    <value>[XS] Remove pending note</value>
+  </data>
+  <data name="Note.NeedsHelpAlert" xml:space="preserve">
+    <value>[XS] This assessment is flagged as needing help. Please describe the issue below as a Home Visit note.</value>
+  </data>
+  <data name="Note.AddLabel" xml:space="preserve">
+    <value>[XS] Add a note</value>
+  </data>
+  <data name="Note.TypeLabel" xml:space="preserve">
+    <value>[XS] Note type</value>
+  </data>
+  <data name="Note.Placeholder" xml:space="preserve">
+    <value>[XS] Observation, action taken, follow-up…</value>
+  </data>
+  <data name="Note.AddButton" xml:space="preserve">
+    <value>[XS] Add Note</value>
+  </data>
+  <data name="Note.ImmutableHint" xml:space="preserve">
+    <value>[XS] Notes are appended to the running log and cannot be edited once saved.</value>
+  </data>
   <data name="NotesPlaceholder" xml:space="preserve">
     <value>[XS] Enter any additional notes here...</value>
   </data>
@@ -146,5 +179,8 @@
   </data>
   <data name="Message.DeleteError" xml:space="preserve">
     <value>[XS] Error deleting assessment.</value>
+  </data>
+  <data name="Message.NoteSaveError" xml:space="preserve">
+    <value>[XS] One or more notes could not be saved. Please retry.</value>
   </data>
 </root>
