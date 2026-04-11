@@ -111,6 +111,7 @@
     <Build Include="dbo\Tables\TreeType.sql" />
     <Build Include="Seed_SampleGrowers.sql" />
     <None Include="Seed_TreeTypes.sql" />
+    <Build Include="Migration_AddAssessmentNoteTable.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SqlSchemaCompare1.scmp" />
