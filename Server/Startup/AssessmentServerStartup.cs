@@ -24,6 +24,7 @@ namespace OpenEug.TenTrees.Module.Assessment.Startup
         {
             services.AddTransient<IAssessmentService, ServerAssessmentService>();
             services.AddTransient<IAssessmentRepository, AssessmentRepository>();
+            services.AddTransient<IAssessmentNoteRepository, AssessmentNoteRepository>();
             services.AddTransient<ICohortRepository, CohortRepository>();
         }
     }
