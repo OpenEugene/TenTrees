@@ -161,17 +161,17 @@
     private string _statusFilter = "";
     private string _villageFilter = "";
     private string _cohortFilter = "";
-    private bool _loaded = false;
+    private bool _isLoading = false;
 
     protected override async Task OnParametersSetAsync()
     {
-        // Prevent OnParametersSetAsync from re-executing on cascading parameter
-        // updates — subsequent re-entry was racing with the initial cohort load
-        // and leaving _cohorts empty (issue #102). Filters trigger an explicit
-        // NavigateTo that re-instantiates the component, so the guard does not
-        // interfere with user-driven refreshes.
-        if (_loaded) return;
-        _loaded = true;
+        // In-flight re-entry guard: prevents a concurrent second invocation
+        // (from cascading parameter updates) from racing with the first load and
+        // leaving _cohorts empty (issue #102). Unlike a permanent flag, this
+        // resets after each load so subsequent filter navigations can re-trigger
+        // OnParametersSetAsync and pick up the new query-string values.
+        if (_isLoading) return;
+        _isLoading = true;
 
         try
         {
@@ -186,6 +186,10 @@
         {
             await logger.LogError(ex, "Error Loading Growers {Error}", ex.Message);
             AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
+        }
+        finally
+        {
+            _isLoading = false;
         }
     }
 

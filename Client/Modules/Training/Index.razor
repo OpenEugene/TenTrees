@@ -204,16 +204,16 @@
     private string _summaryStatusFilter = "";
     // classId → ordered list of cohort names
     private Dictionary<int, List<string>> _classCohorts = new();
-    private bool _loaded = false;
+    private bool _isLoading = false;
 
     protected override async Task OnParametersSetAsync()
     {
-        // Guard against OnParametersSetAsync re-entry from cascading parameter
-        // updates. When a user returned from the Edit action after creating a
-        // session, the second invocation was racing the first and leaving the
-        // new session out of _classes — see issue #125.
-        if (_loaded) return;
-        _loaded = true;
+        // In-flight re-entry guard: prevents a concurrent second invocation
+        // (from cascading parameter updates) from racing with the first load and
+        // dropping a newly-created session (issue #125). Unlike a permanent flag,
+        // this resets after each load so future parameter-driven refreshes still work.
+        if (_isLoading) return;
+        _isLoading = true;
 
         try
         {
@@ -224,6 +224,10 @@
         {
             await logger.LogError(ex, "Error Loading Training {Error}", ex.Message);
             AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
+        }
+        finally
+        {
+            _isLoading = false;
         }
     }
 
