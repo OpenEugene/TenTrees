@@ -717,11 +717,12 @@
                     assessment = await AssessmentService.AddAssessmentAsync(assessment);
                     await logger.LogInformation("Assessment Added {Assessment}", assessment);
 
-                    await PersistPendingNotesAsync(assessment.AssessmentId);
-
-                    await JSRuntime.InvokeVoidAsync("localStorage.removeItem", DraftKey);
-                    AddModuleMessage(Localizer["Message.SaveSuccess"], MessageType.Success);
-                    NavigationManager.NavigateTo(NavigateUrl());
+                    if (await PersistPendingNotesAsync(assessment.AssessmentId))
+                    {
+                        await JSRuntime.InvokeVoidAsync("localStorage.removeItem", DraftKey);
+                        AddModuleMessage(Localizer["Message.SaveSuccess"], MessageType.Success);
+                        NavigationManager.NavigateTo(NavigateUrl());
+                    }
                 }
                 else
                 {
@@ -754,11 +755,12 @@
                     await AssessmentService.UpdateAssessmentAsync(assessment);
                     await logger.LogInformation("Assessment Updated {Assessment}", assessment);
 
-                    await PersistPendingNotesAsync(assessment.AssessmentId);
-
-                    await JSRuntime.InvokeVoidAsync("localStorage.removeItem", DraftKey);
-                    AddModuleMessage(Localizer["Message.UpdateSuccess"], MessageType.Success);
-                    NavigationManager.NavigateTo(NavigateUrl());
+                    if (await PersistPendingNotesAsync(assessment.AssessmentId))
+                    {
+                        await JSRuntime.InvokeVoidAsync("localStorage.removeItem", DraftKey);
+                        AddModuleMessage(Localizer["Message.UpdateSuccess"], MessageType.Success);
+                        NavigationManager.NavigateTo(NavigateUrl());
+                    }
                 }
             }
             else
@@ -826,9 +828,11 @@
         _pendingNotes.RemoveAt(index);
     }
 
-    private async Task PersistPendingNotesAsync(int assessmentId)
+    private async Task<bool> PersistPendingNotesAsync(int assessmentId)
     {
-        if (_pendingNotes.Count == 0) return;
+        if (_pendingNotes.Count == 0) return true;
+
+        var failedNotes = new List<Models.AssessmentNote>();
 
         foreach (var note in _pendingNotes)
         {
@@ -840,10 +844,19 @@
             catch (Exception ex)
             {
                 await logger.LogError(ex, "Error Saving Assessment Note {AssessmentId} {Error}", assessmentId, ex.Message);
-                AddModuleMessage("One or more notes could not be saved. Please retry.", MessageType.Error);
+                failedNotes.Add(note);
             }
         }
 
         _pendingNotes.Clear();
+        _pendingNotes.AddRange(failedNotes);
+
+        if (_pendingNotes.Count > 0)
+        {
+            AddModuleMessage("One or more notes could not be saved. Please retry.", MessageType.Error);
+            return false;
+        }
+
+        return true;
     }
 }
