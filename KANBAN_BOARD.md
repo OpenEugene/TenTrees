@@ -13,25 +13,20 @@
 - [Implement Garden Location Mapping Module](kanban/backlog/implement-garden-location-mapping-module.md)
 - [Implement Program Reporting & Data Export Module](kanban/backlog/implement-program-reporting-data-export-module.md)
 - [Implement User Administration & Role Management](kanban/backlog/implement-user-administration-role-management.md)
-- [[Bug][Blocker] Assessment Grower dropdown is empty — /api/Assessment/growers returns 404](kanban/backlog/bug-assessment-grower-dropdown-empty-404.md) — GitHub #92
 - [[Security/RBAC] Anonymous users can access restricted pages](kanban/backlog/bug-anonymous-users-can-access-restricted-pages.md) — GitHub #83
 - [[RBAC] Mentor module is visible to Mentor and Educator roles](kanban/backlog/bug-mentor-module-visible-to-wrong-roles.md) — GitHub #84
 - [[Bug] Training page returns 404 Not Found](kanban/backlog/bug-training-page-returns-404.md) — GitHub #85
 - [[Bug] 'Add Cohort' button navigates to blank page (Oqtane routing conflict)](kanban/backlog/bug-add-cohort-button-blank-page.md) — GitHub #81
-- [[Bug] Enrollment list 'Filter by Village' dropdown does not filter results](kanban/backlog/bug-enrollment-filter-by-village-not-working.md) — GitHub #87
 - [[Bug] Cohort Edit page member/mentor/class sections are read-only](kanban/backlog/bug-cohort-edit-page-read-only-sections.md) — GitHub #89
 - [[Bug] Grower 'Manage Status' page has no UI to assign or remove a Cohort](kanban/backlog/bug-grower-manage-status-no-cohort-assignment-ui.md) — GitHub #90
 - [Fix cohort list display on grower screen](kanban/backlog/fix-cohort-list-display-on-grower-screen.md) — GitHub #102
 - [[Bug] Xitsonga localization missing for Enrollment form labels](kanban/backlog/bug-xitsonga-localization-missing-enrollment.md) — GitHub #82
 - [Feature: Role-Based Navigation — Configure Oqtane Page Permissions per Role](kanban/backlog/configure-role-based-page-permissions.md) — GitHub #100
 - [Feature: Add 2026 Tree List to Dropdown & Admin UI for Managing Tree List](kanban/backlog/add-2026-tree-list-and-admin-ui.md) — GitHub #99
-- [Populate tree dropdown with 2026 tree list](kanban/backlog/populate-tree-dropdown-with-2026-tree-list.md) — GitHub #98
-- [Enable deletion of duplicate or inaccurate enrollment records](kanban/backlog/enable-deletion-of-duplicate-enrollment-records.md) — GitHub #104
 - [Implement multiple timestamped notes on assessment records](kanban/backlog/implement-multiple-timestamped-notes-on-assessments.md) — GitHub #105
 - [Integrate home visit notes and 'needs help' flag into assessment records](kanban/backlog/integrate-home-visit-notes-and-needs-help-flag.md) — GitHub #106
 - [Add spreadsheet export for enrollment and grower data](kanban/backlog/add-spreadsheet-export-for-enrollment-and-grower-data.md) — GitHub #107
 - [Test and optimize app UI for Android phone models used by field mentors](kanban/backlog/test-and-optimize-app-ui-for-android-phone-models.md) — GitHub #108
-- [UX: Enrollment dashboard summary cards should be tappable/clickable to filter list](kanban/backlog/ux-enrollment-dashboard-cards-clickable.md) — GitHub #78
 - [Fix Grower-Mentor Assignments](kanban/backlog/fix-grower-mentor-assignments.md)
 - [Implement Cohort Management Module](kanban/backlog/implement-cohort-management-module.md)
 - [Implement Data Entry Language Independence](kanban/backlog/implement-data-entry-language-independence.md)
@@ -77,3 +72,8 @@
 - [Add Cohort/Group management for organizing growers within villages](kanban/done/add-cohort-group-management-for-organizing-growers-within-villages.md)
 - [Add self-registration and email verification scenarios to UserAdministration](kanban/done/add-self-registration-and-email-verification-scenarios-to-useradministration.md)
 - [Assessments Paging, Sorting, and Filtering](kanban/done/assessments-paging-sorting-and-filtering.md)
+- [[Bug][Blocker] Assessment Grower dropdown is empty — /api/Assessment/growers returns 404](kanban/done/bug-assessment-grower-dropdown-empty-404.md) — GitHub #92
+- [[Bug] Enrollment list 'Filter by Village' dropdown does not filter results](kanban/done/bug-enrollment-filter-by-village-not-working.md) — GitHub #87
+- [Populate tree dropdown with 2026 tree list](kanban/done/populate-tree-dropdown-with-2026-tree-list.md) — GitHub #98
+- [Enable deletion of duplicate or inaccurate enrollment records](kanban/done/enable-deletion-of-duplicate-enrollment-records.md) — GitHub #104
+- [UX: Enrollment dashboard summary cards should be tappable/clickable to filter list](kanban/done/ux-enrollment-dashboard-cards-clickable.md) — GitHub #78
