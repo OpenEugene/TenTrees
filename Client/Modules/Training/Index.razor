@@ -204,9 +204,17 @@
     private string _summaryStatusFilter = "";
     // classId → ordered list of cohort names
     private Dictionary<int, List<string>> _classCohorts = new();
+    private bool _loaded = false;
 
     protected override async Task OnParametersSetAsync()
     {
+        // Guard against OnParametersSetAsync re-entry from cascading parameter
+        // updates. When a user returned from the Edit action after creating a
+        // session, the second invocation was racing the first and leaving the
+        // new session out of _classes — see issue #125.
+        if (_loaded) return;
+        _loaded = true;
+
         try
         {
             await LoadVillagesAsync();
