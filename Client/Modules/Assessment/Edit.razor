@@ -674,6 +674,11 @@
                     return;
                 }
 
+                if (!string.IsNullOrWhiteSpace(_newNoteText))
+                {
+                    AddPendingNote();
+                }
+
                 if (PageState.Action == "Add")
                 {
                     // Check frequency rules
