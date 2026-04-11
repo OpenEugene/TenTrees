@@ -161,9 +161,18 @@
     private string _statusFilter = "";
     private string _villageFilter = "";
     private string _cohortFilter = "";
+    private bool _loaded = false;
 
     protected override async Task OnParametersSetAsync()
     {
+        // Prevent OnParametersSetAsync from re-executing on cascading parameter
+        // updates — subsequent re-entry was racing with the initial cohort load
+        // and leaving _cohorts empty (issue #102). Filters trigger an explicit
+        // NavigateTo that re-instantiates the component, so the guard does not
+        // interfere with user-driven refreshes.
+        if (_loaded) return;
+        _loaded = true;
+
         try
         {
             _statusFilter = PageState.QueryString.GetValueOrDefault("status", "");
@@ -191,25 +200,41 @@
     // Admins, Educators, and Project Managers see all cohorts (optionally filtered by village).
     private async Task LoadCohortsForMentorAsync()
     {
-        bool isMentorOnly = UserSecurity.IsAuthorized(PageState.User, "Mentor")
-            && !UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin);
+        // Isolate cohort loading so a failure (or empty result) doesn't cause the
+        // rest of the grower page to fall through to its outer catch block and
+        // leave the user with a fully-unusable screen — see issue #102.
+        try
+        {
+            bool isMentorOnly = UserSecurity.IsAuthorized(PageState.User, "Mentor")
+                && !UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin);
 
-        if (!isMentorOnly)
-        {
-            _cohorts = !string.IsNullOrEmpty(_villageFilter) && int.TryParse(_villageFilter, out var vid)
-                ? await CohortService.GetCohortsByVillageAsync(vid)
-                : await CohortService.GetCohortsAsync();
-        }
-        else
-        {
-            _cohorts = await CohortService.GetCohortsByMentorAsync(PageState.User.Username);
-            // Pre-restrict grower IDs to those in the mentor's cohorts
-            if (_cohorts.Count > 0)
+            List<Models.Cohort> cohorts;
+            if (!isMentorOnly)
             {
-                var memberTasks = _cohorts.Select(c => CohortService.GetGrowerCohortsAsync(c.CohortId));
-                var memberResults = await Task.WhenAll(memberTasks);
-                _cohortGrowerIds = memberResults.SelectMany(m => m).Select(m => m.GrowerId).ToHashSet();
+                cohorts = !string.IsNullOrEmpty(_villageFilter) && int.TryParse(_villageFilter, out var vid)
+                    ? await CohortService.GetCohortsByVillageAsync(vid)
+                    : await CohortService.GetCohortsAsync();
             }
+            else
+            {
+                cohorts = await CohortService.GetCohortsByMentorAsync(PageState.User.Username);
+                // Pre-restrict grower IDs to those in the mentor's cohorts
+                if (cohorts.Count > 0)
+                {
+                    var memberTasks = cohorts.Select(c => CohortService.GetGrowerCohortsAsync(c.CohortId));
+                    var memberResults = await Task.WhenAll(memberTasks);
+                    _cohortGrowerIds = memberResults.SelectMany(m => m).Select(m => m.GrowerId).ToHashSet();
+                }
+            }
+
+            _cohorts = cohorts ?? new List<Models.Cohort>();
+            await logger.LogInformation("Loaded {Count} cohorts for grower screen (mentorOnly={IsMentorOnly})",
+                _cohorts.Count, isMentorOnly);
+        }
+        catch (Exception ex)
+        {
+            _cohorts = new List<Models.Cohort>();
+            await logger.LogError(ex, "Error Loading Cohorts for grower screen {Error}", ex.Message);
         }
     }
 
