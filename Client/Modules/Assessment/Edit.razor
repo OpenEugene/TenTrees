@@ -151,9 +151,9 @@
                             <Label Class="col-sm-8 mb-0" For="needshelp_yes" ResourceKey="NeedsHelp">Do you need someone to help with this problem?</Label>
                             <div class="col-sm-4">
                                 <div class="btn-group w-100" role="group">
-                                    <input type="radio" class="btn-check" name="needshelp" id="needshelp_yes" autocomplete="off" checked="@(_needsHelp == true)" @onchange="@(() => _needsHelp = true)">
+                                    <input type="radio" class="btn-check" name="needshelp" id="needshelp_yes" autocomplete="off" checked="@(_needsHelp == true)" @onchange="@(() => OnNeedsHelpChanged(true))">
                                     <label class="btn btn-outline-danger" for="needshelp_yes">@Localizer["Yes"]</label>
-                                    <input type="radio" class="btn-check" name="needshelp" id="needshelp_no" autocomplete="off" checked="@(_needsHelp == false)" @onchange="@(() => _needsHelp = false)">
+                                    <input type="radio" class="btn-check" name="needshelp" id="needshelp_no" autocomplete="off" checked="@(_needsHelp == false)" @onchange="@(() => OnNeedsHelpChanged(false))">
                                     <label class="btn btn-outline-success" for="needshelp_no">@Localizer["No"]</label>
                                 </div>
                             </div>
@@ -272,15 +272,94 @@
                     </div>
                 </div>
 
-                <!-- Section 5: Notes -->
+                <!-- Section 5: Notes Log -->
                 <div class="card mb-3">
-                    <div class="card-header">
-                        <h5>@Localizer["Section.Notes"]</h5>
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">@Localizer["Section.Notes"]</h5>
+                        @if (_existingNotes.Count + _pendingNotes.Count > 0)
+                        {
+                            <span class="badge bg-secondary">@(_existingNotes.Count + _pendingNotes.Count)</span>
+                        }
                     </div>
                     <div class="card-body">
-                        <div class="row mb-2">
-                            <div class="col-sm-12">
-                                <textarea id="notes" class="form-control" @bind="@_notes" rows="4" placeholder="@Localizer["NotesPlaceholder"]"></textarea>
+                        @if (_existingNotes.Count == 0 && _pendingNotes.Count == 0)
+                        {
+                            <p class="text-muted small mb-3">@Localizer["Notes.Empty"]</p>
+                        }
+                        else
+                        {
+                            <ul class="list-unstyled mb-3">
+                                @foreach (var note in _existingNotes.OrderBy(n => n.CreatedOn))
+                                {
+                                    <li class="mb-2 pb-2 border-bottom">
+                                        <div class="mb-1">
+                                            @if (note.NoteType == AssessmentNoteTypes.HomeVisit)
+                                            {
+                                                <span class="badge bg-warning text-dark me-1">@Localizer["Note.TypeHomeVisit"]</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-secondary me-1">@Localizer["Note.TypeGeneral"]</span>
+                                            }
+                                            <small class="text-muted">@note.CreatedOn.ToLocalTime().ToString("yyyy-MM-dd HH:mm") — @note.CreatedBy</small>
+                                        </div>
+                                        <div class="text-body" style="white-space: pre-wrap;">@note.Text</div>
+                                    </li>
+                                }
+                                @for (int i = 0; i < _pendingNotes.Count; i++)
+                                {
+                                    var note = _pendingNotes[i];
+                                    var pendingIndex = i;
+                                    <li class="mb-2 pb-2 border-bottom bg-light px-2 py-2 rounded">
+                                        <div class="d-flex justify-content-between align-items-start mb-1">
+                                            <span>
+                                                @if (note.NoteType == AssessmentNoteTypes.HomeVisit)
+                                                {
+                                                    <span class="badge bg-warning text-dark me-1">@Localizer["Note.TypeHomeVisit"]</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-secondary me-1">@Localizer["Note.TypeGeneral"]</span>
+                                                }
+                                                <small class="text-muted">@Localizer["Note.PendingLabel"]</small>
+                                            </span>
+                                            <button type="button" class="btn btn-sm btn-link text-danger p-0"
+                                                    @onclick="@(() => RemovePendingNote(pendingIndex))"
+                                                    aria-label="@Localizer["Note.RemoveAriaLabel"]">
+                                                <span class="oi oi-x" aria-hidden="true"></span>
+                                            </button>
+                                        </div>
+                                        <div class="text-body" style="white-space: pre-wrap;">@note.Text</div>
+                                    </li>
+                                }
+                            </ul>
+                        }
+
+                        @if (_needsHelp)
+                        {
+                            <div class="alert alert-warning py-2 small mb-2" role="status">
+                                <span class="oi oi-warning me-1" aria-hidden="true"></span>
+                                @Localizer["Note.NeedsHelpAlert"]
+                            </div>
+                        }
+
+                        <div class="mb-2">
+                            <label for="newNoteText" class="form-label mb-1">@Localizer["Note.AddLabel"]</label>
+                            <textarea id="newNoteText" class="form-control mb-2" rows="3"
+                                      placeholder="@Localizer["Note.Placeholder"]"
+                                      @bind="_newNoteText"></textarea>
+                            <div class="d-flex align-items-center gap-2 flex-wrap">
+                                <label for="newNoteType" class="visually-hidden">@Localizer["Note.TypeLabel"]</label>
+                                <select id="newNoteType" class="form-select form-select-sm w-auto" @bind="_newNoteType">
+                                    <option value="@AssessmentNoteTypes.General">@Localizer["Note.TypeGeneral"]</option>
+                                    <option value="@AssessmentNoteTypes.HomeVisit">@Localizer["Note.TypeHomeVisit"]</option>
+                                </select>
+                                <button type="button" class="btn btn-sm btn-outline-primary"
+                                        @onclick="AddPendingNote"
+                                        disabled="@(string.IsNullOrWhiteSpace(_newNoteText))">
+                                    <span class="oi oi-plus me-1" aria-hidden="true"></span>@Localizer["Note.AddButton"]
+                                </button>
+                                <small class="text-muted ms-auto">@Localizer["Note.ImmutableHint"]</small>
                             </div>
                         </div>
                     </div>
@@ -355,8 +434,11 @@
     private bool _isGardenDesignedToCaptureWater;
     private bool _isUsingGreywater;
 
-    // Notes
-    private string _notes;
+    // Notes log
+    private List<Models.AssessmentNote> _existingNotes = new();
+    private List<Models.AssessmentNote> _pendingNotes = new();
+    private string _newNoteText = string.Empty;
+    private string _newNoteType = AssessmentNoteTypes.General;
 
     // Audit fields
     private string _createdby;
@@ -366,7 +448,13 @@
 
     private bool _loaded = false;
     private bool _hasDraft = false;
-    private const string DraftKey = "TenTrees_Assessment_Draft";
+    private const string DraftKey = "TenTrees_Assessment_Draft_V2";
+
+    private class AssessmentDraft
+    {
+        public Models.Assessment Assessment { get; set; }
+        public List<Models.AssessmentNote> PendingNotes { get; set; } = new();
+    }
 
     private int SurvivalRate => _treesPlanted > 0 ? (_treesAlive * 100 / _treesPlanted) : 0;
 
@@ -433,7 +521,7 @@
                         _isGardenDesignedToCaptureWater = assessment.IsGardenDesignedToCaptureWater;
                         _isUsingGreywater = assessment.IsUsingGreywater;
 
-                        _notes = assessment.Notes;
+                        _existingNotes = await AssessmentService.GetNotesByAssessmentAsync(_id) ?? new List<Models.AssessmentNote>();
 
                         _createdby = assessment.CreatedBy;
                         _createdon = assessment.CreatedOn;
@@ -474,30 +562,33 @@
     {
         try
         {
-            var draft = new Models.Assessment
+            var draft = new AssessmentDraft
             {
-                GrowerId = _growerId,
-                Name = _name,
-                AssessmentDate = _assessmentDate,
-                TreesPlanted = _treesPlanted,
-                TreesAlive = _treesAlive,
-                DeceasedTreeTypes = !string.IsNullOrEmpty(_deceasedTreeTypesOther) ? _deceasedTreeTypesOther : _deceasedTreeTypes,
-                HasBrokenBranches = _hasBrokenBranches,
-                HasYellowLeaves = _hasYellowLeaves,
-                HasLosingLeaves = _hasLosingLeaves,
-                HasLookDry = _hasLookDry,
-                HasPests = _hasPests,
-                NeedsHelp = _needsHelp,
-                TreesLookHealthy = _treesLookHealthy,
-                HasChemicalFertilizers = _hasChemicalFertilizers,
-                HasPesticides = _hasPesticides,
-                IsMulched = _isMulched,
-                IsMakingCompost = _isMakingCompost,
-                IsCollectingWater = _isCollectingWater,
-                HasLeakyTaps = _hasLeakyTaps,
-                IsGardenDesignedToCaptureWater = _isGardenDesignedToCaptureWater,
-                IsUsingGreywater = _isUsingGreywater,
-                Notes = _notes
+                Assessment = new Models.Assessment
+                {
+                    GrowerId = _growerId,
+                    Name = _name,
+                    AssessmentDate = _assessmentDate,
+                    TreesPlanted = _treesPlanted,
+                    TreesAlive = _treesAlive,
+                    DeceasedTreeTypes = !string.IsNullOrEmpty(_deceasedTreeTypesOther) ? _deceasedTreeTypesOther : _deceasedTreeTypes,
+                    HasBrokenBranches = _hasBrokenBranches,
+                    HasYellowLeaves = _hasYellowLeaves,
+                    HasLosingLeaves = _hasLosingLeaves,
+                    HasLookDry = _hasLookDry,
+                    HasPests = _hasPests,
+                    NeedsHelp = _needsHelp,
+                    TreesLookHealthy = _treesLookHealthy,
+                    HasChemicalFertilizers = _hasChemicalFertilizers,
+                    HasPesticides = _hasPesticides,
+                    IsMulched = _isMulched,
+                    IsMakingCompost = _isMakingCompost,
+                    IsCollectingWater = _isCollectingWater,
+                    HasLeakyTaps = _hasLeakyTaps,
+                    IsGardenDesignedToCaptureWater = _isGardenDesignedToCaptureWater,
+                    IsUsingGreywater = _isUsingGreywater
+                },
+                PendingNotes = _pendingNotes
             };
 
             var json = System.Text.Json.JsonSerializer.Serialize(draft);
@@ -519,42 +610,44 @@
             var json = await JSRuntime.InvokeAsync<string>("localStorage.getItem", DraftKey);
             if (!string.IsNullOrEmpty(json))
             {
-                var draft = System.Text.Json.JsonSerializer.Deserialize<Models.Assessment>(json);
-                if (draft != null)
+                var draft = System.Text.Json.JsonSerializer.Deserialize<AssessmentDraft>(json);
+                if (draft?.Assessment != null)
                 {
-                    _growerId = draft.GrowerId;
-                    _name = draft.Name;
-                    _assessmentDate = draft.AssessmentDate;
-                    _treesPlanted = draft.TreesPlanted;
-                    _treesAlive = draft.TreesAlive;
+                    var a = draft.Assessment;
+                    _growerId = a.GrowerId;
+                    _name = a.Name;
+                    _assessmentDate = a.AssessmentDate;
+                    _treesPlanted = a.TreesPlanted;
+                    _treesAlive = a.TreesAlive;
 
-                    if (!string.IsNullOrEmpty(draft.DeceasedTreeTypes))
+                    if (!string.IsNullOrEmpty(a.DeceasedTreeTypes))
                     {
-                        if (_availableTreeTypes != null && _availableTreeTypes.Any(t => t.Name == draft.DeceasedTreeTypes))
+                        if (_availableTreeTypes != null && _availableTreeTypes.Any(t => t.Name == a.DeceasedTreeTypes))
                         {
-                            _deceasedTreeTypes = draft.DeceasedTreeTypes;
+                            _deceasedTreeTypes = a.DeceasedTreeTypes;
                         }
                         else
                         {
-                            _deceasedTreeTypesOther = draft.DeceasedTreeTypes;
+                            _deceasedTreeTypesOther = a.DeceasedTreeTypes;
                         }
                     }
-                    _hasBrokenBranches = draft.HasBrokenBranches;
-                    _hasYellowLeaves = draft.HasYellowLeaves;
-                    _hasLosingLeaves = draft.HasLosingLeaves;
-                    _hasLookDry = draft.HasLookDry;
-                    _hasPests = draft.HasPests;
-                    _needsHelp = draft.NeedsHelp;
-                    _treesLookHealthy = draft.TreesLookHealthy;
-                    _hasChemicalFertilizers = draft.HasChemicalFertilizers;
-                    _hasPesticides = draft.HasPesticides;
-                    _isMulched = draft.IsMulched;
-                    _isMakingCompost = draft.IsMakingCompost;
-                    _isCollectingWater = draft.IsCollectingWater;
-                    _hasLeakyTaps = draft.HasLeakyTaps;
-                    _isGardenDesignedToCaptureWater = draft.IsGardenDesignedToCaptureWater;
-                    _isUsingGreywater = draft.IsUsingGreywater;
-                    _notes = draft.Notes;
+                    _hasBrokenBranches = a.HasBrokenBranches;
+                    _hasYellowLeaves = a.HasYellowLeaves;
+                    _hasLosingLeaves = a.HasLosingLeaves;
+                    _hasLookDry = a.HasLookDry;
+                    _hasPests = a.HasPests;
+                    _needsHelp = a.NeedsHelp;
+                    _treesLookHealthy = a.TreesLookHealthy;
+                    _hasChemicalFertilizers = a.HasChemicalFertilizers;
+                    _hasPesticides = a.HasPesticides;
+                    _isMulched = a.IsMulched;
+                    _isMakingCompost = a.IsMakingCompost;
+                    _isCollectingWater = a.IsCollectingWater;
+                    _hasLeakyTaps = a.HasLeakyTaps;
+                    _isGardenDesignedToCaptureWater = a.IsGardenDesignedToCaptureWater;
+                    _isUsingGreywater = a.IsUsingGreywater;
+
+                    _pendingNotes = draft.PendingNotes ?? new List<Models.AssessmentNote>();
 
                     AddModuleMessage(Localizer["Message.DraftLoaded"], MessageType.Success);
                 }
@@ -618,16 +711,18 @@
                     assessment.IsGardenDesignedToCaptureWater = _isGardenDesignedToCaptureWater;
                     assessment.IsUsingGreywater = _isUsingGreywater;
 
-                    assessment.Notes = _notes;
-                    
                     assessment.SubmittedBy = PageState.User.Username;
                     assessment.EnteredByAdmin = UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin);
-                    
+
                     assessment = await AssessmentService.AddAssessmentAsync(assessment);
                     await logger.LogInformation("Assessment Added {Assessment}", assessment);
-                    await JSRuntime.InvokeVoidAsync("localStorage.removeItem", DraftKey);
-                    AddModuleMessage(Localizer["Message.SaveSuccess"], MessageType.Success);
-                    NavigationManager.NavigateTo(NavigateUrl());
+
+                    if (await PersistPendingNotesAsync(assessment.AssessmentId))
+                    {
+                        await JSRuntime.InvokeVoidAsync("localStorage.removeItem", DraftKey);
+                        AddModuleMessage(Localizer["Message.SaveSuccess"], MessageType.Success);
+                        NavigationManager.NavigateTo(NavigateUrl());
+                    }
                 }
                 else
                 {
@@ -657,13 +752,15 @@
                     assessment.IsGardenDesignedToCaptureWater = _isGardenDesignedToCaptureWater;
                     assessment.IsUsingGreywater = _isUsingGreywater;
 
-                    assessment.Notes = _notes;
-
                     await AssessmentService.UpdateAssessmentAsync(assessment);
                     await logger.LogInformation("Assessment Updated {Assessment}", assessment);
-                    await JSRuntime.InvokeVoidAsync("localStorage.removeItem", DraftKey);
-                    AddModuleMessage(Localizer["Message.UpdateSuccess"], MessageType.Success);
-                    NavigationManager.NavigateTo(NavigateUrl());
+
+                    if (await PersistPendingNotesAsync(assessment.AssessmentId))
+                    {
+                        await JSRuntime.InvokeVoidAsync("localStorage.removeItem", DraftKey);
+                        AddModuleMessage(Localizer["Message.UpdateSuccess"], MessageType.Success);
+                        NavigationManager.NavigateTo(NavigateUrl());
+                    }
                 }
             }
             else
@@ -691,5 +788,75 @@
             await logger.LogError(ex, "Error Deleting Assessment {AssessmentId} {Error}", _id, ex.Message);
             AddModuleMessage(Localizer["Message.DeleteError"], MessageType.Error);
         }
+    }
+
+    private void OnNeedsHelpChanged(bool needsHelp)
+    {
+        _needsHelp = needsHelp;
+        if (needsHelp && string.IsNullOrWhiteSpace(_newNoteText))
+        {
+            // Pre-select the Home Visit note type so the composer is ready
+            // for the required follow-up explaining the issue.
+            _newNoteType = AssessmentNoteTypes.HomeVisit;
+        }
+    }
+
+    private void AddPendingNote()
+    {
+        if (string.IsNullOrWhiteSpace(_newNoteText))
+        {
+            return;
+        }
+
+        var type = _newNoteType == AssessmentNoteTypes.HomeVisit
+            ? AssessmentNoteTypes.HomeVisit
+            : AssessmentNoteTypes.General;
+
+        _pendingNotes.Add(new Models.AssessmentNote
+        {
+            NoteType = type,
+            Text = _newNoteText.Trim()
+        });
+
+        _newNoteText = string.Empty;
+        _newNoteType = AssessmentNoteTypes.General;
+    }
+
+    private void RemovePendingNote(int index)
+    {
+        if (index < 0 || index >= _pendingNotes.Count) return;
+        _pendingNotes.RemoveAt(index);
+    }
+
+    private async Task<bool> PersistPendingNotesAsync(int assessmentId)
+    {
+        if (_pendingNotes.Count == 0) return true;
+
+        var failedNotes = new List<Models.AssessmentNote>();
+
+        foreach (var note in _pendingNotes)
+        {
+            note.AssessmentId = assessmentId;
+            try
+            {
+                await AssessmentService.AddNoteAsync(note);
+            }
+            catch (Exception ex)
+            {
+                await logger.LogError(ex, "Error Saving Assessment Note {AssessmentId} {Error}", assessmentId, ex.Message);
+                failedNotes.Add(note);
+            }
+        }
+
+        _pendingNotes.Clear();
+        _pendingNotes.AddRange(failedNotes);
+
+        if (_pendingNotes.Count > 0)
+        {
+            AddModuleMessage(Localizer["Message.NoteSaveError"], MessageType.Error);
+            return false;
+        }
+
+        return true;
     }
 }
