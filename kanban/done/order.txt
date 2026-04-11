@@ -19,3 +19,8 @@ add-admin-backfill-growers-maintenance-ui
 add-cohort-group-management-for-organizing-growers-within-villages
 add-self-registration-and-email-verification-scenarios-to-useradministration
 assessments-paging-sorting-and-filtering
+bug-assessment-grower-dropdown-empty-404
+bug-enrollment-filter-by-village-not-working
+populate-tree-dropdown-with-2026-tree-list
+enable-deletion-of-duplicate-enrollment-records
+ux-enrollment-dashboard-cards-clickable
