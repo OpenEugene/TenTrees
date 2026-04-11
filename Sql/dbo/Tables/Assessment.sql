@@ -22,7 +22,6 @@ CREATE TABLE [dbo].[Assessment] (
     [HasLookDry]                     BIT            NOT NULL,
     [HasPests]                       BIT            NOT NULL,
     [NeedsHelp]                      BIT            NOT NULL,
-    [Notes]                          NVARCHAR (MAX) NULL,
     [SubmittedBy]                    NVARCHAR (256) NULL,
     [EnteredByAdmin]                 BIT            NOT NULL,
     [FrequencyType]                  NVARCHAR (50)  NULL,
