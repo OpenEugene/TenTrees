@@ -259,7 +259,7 @@
 </div>
 
 @code {
-    public override string Actions => "Add,Edit";
+    public override string Actions => "Edit";
     public override string Title => "Manage Cohort";
     public override bool UseAdminContainer => false;
 
@@ -290,10 +290,14 @@
         {
             _villages = await VillageService.GetActiveVillagesAsync();
 
-            if (PageState.Action == "Edit")
+            // Edit mode is distinguished by the presence of an id querystring, not
+            // by PageState.Action — Oqtane reserves the "Add" action name and
+            // intercepts it for page management, so this page is reached via the
+            // Edit action for both new and existing cohorts.
+            if (PageState.QueryString.ContainsKey("id")
+                && int.TryParse(PageState.QueryString["id"], out var cohortId))
             {
                 _isEdit = true;
-                int cohortId = int.Parse(PageState.QueryString["id"]);
                 _cohort = await CohortService.GetCohortAsync(cohortId);
                 _originalStatus = _cohort.Status;
                 _growerCohorts = await CohortService.GetGrowerCohortsAsync(cohortId);
