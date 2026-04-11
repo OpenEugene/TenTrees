@@ -275,7 +275,7 @@
                 <!-- Section 5: Notes Log -->
                 <div class="card mb-3">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">Notes</h5>
+                        <h5 class="mb-0">@Localizer["Section.Notes"]</h5>
                         @if (_existingNotes.Count + _pendingNotes.Count > 0)
                         {
                             <span class="badge bg-secondary">@(_existingNotes.Count + _pendingNotes.Count)</span>
@@ -284,7 +284,7 @@
                     <div class="card-body">
                         @if (_existingNotes.Count == 0 && _pendingNotes.Count == 0)
                         {
-                            <p class="text-muted small mb-3">No notes yet. Add the first observation below.</p>
+                            <p class="text-muted small mb-3">@Localizer["Notes.Empty"]</p>
                         }
                         else
                         {
@@ -295,11 +295,11 @@
                                         <div class="mb-1">
                                             @if (note.NoteType == AssessmentNoteTypes.HomeVisit)
                                             {
-                                                <span class="badge bg-warning text-dark me-1">Home Visit</span>
+                                                <span class="badge bg-warning text-dark me-1">@Localizer["Note.TypeHomeVisit"]</span>
                                             }
                                             else
                                             {
-                                                <span class="badge bg-secondary me-1">General</span>
+                                                <span class="badge bg-secondary me-1">@Localizer["Note.TypeGeneral"]</span>
                                             }
                                             <small class="text-muted">@note.CreatedOn.ToLocalTime().ToString("yyyy-MM-dd HH:mm") — @note.CreatedBy</small>
                                         </div>
@@ -315,17 +315,17 @@
                                             <span>
                                                 @if (note.NoteType == AssessmentNoteTypes.HomeVisit)
                                                 {
-                                                    <span class="badge bg-warning text-dark me-1">Home Visit</span>
+                                                    <span class="badge bg-warning text-dark me-1">@Localizer["Note.TypeHomeVisit"]</span>
                                                 }
                                                 else
                                                 {
-                                                    <span class="badge bg-secondary me-1">General</span>
+                                                    <span class="badge bg-secondary me-1">@Localizer["Note.TypeGeneral"]</span>
                                                 }
-                                                <small class="text-muted">Pending — saved when you click Save</small>
+                                                <small class="text-muted">@Localizer["Note.PendingLabel"]</small>
                                             </span>
                                             <button type="button" class="btn btn-sm btn-link text-danger p-0"
                                                     @onclick="@(() => RemovePendingNote(pendingIndex))"
-                                                    aria-label="Remove pending note">
+                                                    aria-label="@Localizer["Note.RemoveAriaLabel"]">
                                                 <span class="oi oi-x" aria-hidden="true"></span>
                                             </button>
                                         </div>
@@ -339,27 +339,27 @@
                         {
                             <div class="alert alert-warning py-2 small mb-2" role="status">
                                 <span class="oi oi-warning me-1" aria-hidden="true"></span>
-                                This assessment is flagged as needing help. Please describe the issue below as a Home Visit note.
+                                @Localizer["Note.NeedsHelpAlert"]
                             </div>
                         }
 
                         <div class="mb-2">
-                            <label for="newNoteText" class="form-label mb-1">Add a note</label>
+                            <label for="newNoteText" class="form-label mb-1">@Localizer["Note.AddLabel"]</label>
                             <textarea id="newNoteText" class="form-control mb-2" rows="3"
-                                      placeholder="Observation, action taken, follow-up…"
+                                      placeholder="@Localizer["Note.Placeholder"]"
                                       @bind="_newNoteText"></textarea>
                             <div class="d-flex align-items-center gap-2 flex-wrap">
-                                <label for="newNoteType" class="visually-hidden">Note type</label>
+                                <label for="newNoteType" class="visually-hidden">@Localizer["Note.TypeLabel"]</label>
                                 <select id="newNoteType" class="form-select form-select-sm w-auto" @bind="_newNoteType">
-                                    <option value="@AssessmentNoteTypes.General">General</option>
-                                    <option value="@AssessmentNoteTypes.HomeVisit">Home Visit</option>
+                                    <option value="@AssessmentNoteTypes.General">@Localizer["Note.TypeGeneral"]</option>
+                                    <option value="@AssessmentNoteTypes.HomeVisit">@Localizer["Note.TypeHomeVisit"]</option>
                                 </select>
                                 <button type="button" class="btn btn-sm btn-outline-primary"
                                         @onclick="AddPendingNote"
                                         disabled="@(string.IsNullOrWhiteSpace(_newNoteText))">
-                                    <span class="oi oi-plus me-1" aria-hidden="true"></span>Add Note
+                                    <span class="oi oi-plus me-1" aria-hidden="true"></span>@Localizer["Note.AddButton"]
                                 </button>
-                                <small class="text-muted ms-auto">Notes are appended to the running log and cannot be edited once saved.</small>
+                                <small class="text-muted ms-auto">@Localizer["Note.ImmutableHint"]</small>
                             </div>
                         </div>
                     </div>
@@ -853,7 +853,7 @@
 
         if (_pendingNotes.Count > 0)
         {
-            AddModuleMessage("One or more notes could not be saved. Please retry.", MessageType.Error);
+            AddModuleMessage(Localizer["Message.NoteSaveError"], MessageType.Error);
             return false;
         }
 
