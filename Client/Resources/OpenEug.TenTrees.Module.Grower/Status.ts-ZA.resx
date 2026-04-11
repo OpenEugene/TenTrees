@@ -50,4 +50,16 @@
   <data name="Action.ViewRecord" xml:space="preserve">
     <value>[XS] View Full Record</value>
   </data>
+  <data name="Section.Notes" xml:space="preserve">
+    <value>[XS] Notes &amp; Home Visits</value>
+  </data>
+  <data name="Notes.Empty" xml:space="preserve">
+    <value>[XS] No notes recorded for this grower yet.</value>
+  </data>
+  <data name="Note.TypeGeneral" xml:space="preserve">
+    <value>[XS] General</value>
+  </data>
+  <data name="Note.TypeHomeVisit" xml:space="preserve">
+    <value>[XS] Home Visit</value>
+  </data>
 </root>

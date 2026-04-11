@@ -15,17 +15,20 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
     public class ServerAssessmentService : IAssessmentService
     {
         private readonly IAssessmentRepository _assessmentRepository;
+        private readonly IAssessmentNoteRepository _assessmentNoteRepository;
         private readonly IGrowerRepository _growerRepository;
         private readonly ICohortRepository _cohortRepository;
         private readonly ILogManager _logger;
 
         public ServerAssessmentService(
             IAssessmentRepository assessmentRepository,
+            IAssessmentNoteRepository assessmentNoteRepository,
             IGrowerRepository growerRepository,
             ICohortRepository cohortRepository,
             ILogManager logger)
         {
             _assessmentRepository = assessmentRepository;
+            _assessmentNoteRepository = assessmentNoteRepository;
             _growerRepository = growerRepository;
             _cohortRepository = cohortRepository;
             _logger = logger;
@@ -147,6 +150,42 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
         {
             var list = _assessmentRepository.GetAssessmentList(villageId, cohortId, mentorUsername, growerId).ToList();
             return Task.FromResult(list);
+        }
+
+        public Task<List<Models.AssessmentNote>> GetNotesByAssessmentAsync(int assessmentId)
+        {
+            return Task.FromResult(_assessmentNoteRepository.GetNotesByAssessment(assessmentId).ToList());
+        }
+
+        public Task<List<Models.AssessmentNote>> GetNotesByGrowerAsync(int growerId)
+        {
+            return Task.FromResult(_assessmentNoteRepository.GetNotesByGrower(growerId).ToList());
+        }
+
+        public Task<Models.AssessmentNote> AddNoteAsync(Models.AssessmentNote note)
+        {
+            if (note == null)
+            {
+                return Task.FromResult<Models.AssessmentNote>(null);
+            }
+
+            // Normalise note type to a known value so we don't end up with
+            // arbitrary strings in the database from a malformed client.
+            if (note.NoteType != AssessmentNoteTypes.HomeVisit)
+            {
+                note.NoteType = AssessmentNoteTypes.General;
+            }
+
+            var assessment = _assessmentRepository.GetAssessment(note.AssessmentId, tracking: false);
+            if (assessment == null)
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Create, "AssessmentNote Add Failed — Assessment not found {AssessmentId}", note.AssessmentId);
+                return Task.FromResult<Models.AssessmentNote>(null);
+            }
+
+            var created = _assessmentNoteRepository.AddNote(note);
+            _logger.Log(LogLevel.Information, this, LogFunction.Create, "AssessmentNote Added {AssessmentNote}", created);
+            return Task.FromResult(created);
         }
     }
 }
