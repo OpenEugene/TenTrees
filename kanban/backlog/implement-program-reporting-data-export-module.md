@@ -71,9 +71,8 @@ Implement comprehensive reporting and data export functionality for program trac
 
 #### ✅ Access Control
 - [ ] Restrict to Centre staff roles:
-  - Admin
+  - 10 Trees Admin
   - Project Manager
-  - Executive Director
   - Educator
 - [ ] Mentors cannot access reports
 - [ ] Admin can view all villages
