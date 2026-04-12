@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 namespace OpenEug.TenTrees.Module.Mentor.Controllers
 {
     [Route(ControllerRoutes.ApiRoute)]
-    [Authorize(Roles = AppRoleNames.Admin)]
+    [Authorize(Roles = AppRoleNames.TenTreesAdmin)]
     public class MentorController : ModuleControllerBase
     {
         private readonly IMentorService _mentorService;
