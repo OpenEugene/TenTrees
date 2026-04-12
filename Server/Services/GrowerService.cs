@@ -10,7 +10,7 @@ using Oqtane.Security;
 using Oqtane.Shared;
 using OpenEug.TenTrees.Module.Grower.Repository;
 using OpenEug.TenTrees.Models;
-using AppRoleNames = OpenEug.TenTrees.Shared.RoleNames;
+using OpenEug.TenTrees.Shared;
 
 namespace OpenEug.TenTrees.Module.Grower.Services
 {
@@ -36,17 +36,11 @@ namespace OpenEug.TenTrees.Module.Grower.Services
             _alias = tenantManager.GetAlias();
         }
 
-        private bool IsMentor() => _accessor.HttpContext.User.IsInRole(AppRoleNames.Mentor);
-        private string CurrentUsername() => _accessor.HttpContext.User.Identity?.Name;
-
         public Task<Models.Grower> GetGrowerAsync(int growerId)
         {
             var grower = _growerRepository.GetGrower(growerId);
             if (grower != null && IsMentor() && grower.MentorUsername != CurrentUsername())
-            {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Mentor Access Denied Grower {GrowerId}", growerId);
                 return Task.FromResult<Models.Grower>(null);
-            }
             return Task.FromResult(grower);
         }
 
@@ -54,7 +48,9 @@ namespace OpenEug.TenTrees.Module.Grower.Services
         {
             var growers = _growerRepository.GetAllGrowers(villageId).ToList();
             if (IsMentor())
+            {
                 growers = growers.Where(g => g.MentorUsername == CurrentUsername()).ToList();
+            }
             return Task.FromResult(growers);
         }
 
@@ -62,10 +58,10 @@ namespace OpenEug.TenTrees.Module.Grower.Services
         {
             // Admin-only operation
             if (!_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.Edit) ||
-                !_accessor.HttpContext.User.IsInRole(RoleNames.Admin))
+                !_accessor.HttpContext.User.IsInRole(AppRoleNames.TenTreesAdmin))
             {
                 _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Status Toggle Attempt {GrowerId} {ModuleId}", growerId, moduleId);
-                return Task.FromResult<Models.Grower>(null);
+                throw new UnauthorizedAccessException($"Unauthorized status toggle attempt for grower {growerId} in module {moduleId}.");
             }
 
             var grower = _growerRepository.GetGrower(growerId);
@@ -100,7 +96,7 @@ namespace OpenEug.TenTrees.Module.Grower.Services
         {
             // Admin-only operation
             if (!_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.Edit) ||
-                !_accessor.HttpContext.User.IsInRole(RoleNames.Admin))
+                !_accessor.HttpContext.User.IsInRole(AppRoleNames.TenTreesAdmin))
             {
                 _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Program Exit Attempt {GrowerId} {ModuleId}", growerId, moduleId);
                 return Task.FromResult<Models.Grower>(null);
@@ -136,7 +132,9 @@ namespace OpenEug.TenTrees.Module.Grower.Services
         {
             var growers = _growerRepository.GetActiveGrowers(villageId).ToList();
             if (IsMentor())
+            {
                 growers = growers.Where(g => g.MentorUsername == CurrentUsername()).ToList();
+            }
             return Task.FromResult(growers);
         }
 
@@ -144,24 +142,26 @@ namespace OpenEug.TenTrees.Module.Grower.Services
         {
             var growers = _growerRepository.GetGrowersByStatus(status, villageId).ToList();
             if (IsMentor())
+            {
                 growers = growers.Where(g => g.MentorUsername == CurrentUsername()).ToList();
+            }
             return Task.FromResult(growers);
         }
 
         public Task<GrowerStatusSummary> GetStatusSummaryAsync(int? villageId = null)
         {
-            var summary = _growerRepository.GetStatusSummary(villageId);
             if (IsMentor())
             {
                 var growers = _growerRepository.GetGrowersByMentor(CurrentUsername()).ToList();
-                summary = new GrowerStatusSummary
+                return Task.FromResult(new GrowerStatusSummary
                 {
                     Active = growers.Count(g => g.Status == GrowerStatus.Active),
                     Inactive = growers.Count(g => g.Status == GrowerStatus.Inactive),
                     Exited = growers.Count(g => g.Status == GrowerStatus.Exited),
                     Total = growers.Count
-                };
+                });
             }
+            var summary = _growerRepository.GetStatusSummary(villageId);
             return Task.FromResult(summary);
         }
 
@@ -185,5 +185,11 @@ namespace OpenEug.TenTrees.Module.Grower.Services
             _growerRepository.DeleteGrower(growerId);
             return Task.CompletedTask;
         }
+
+        private bool IsMentor() =>
+            _accessor.HttpContext.User.IsInRole(AppRoleNames.Mentor);
+
+        private string CurrentUsername() =>
+            _accessor.HttpContext.User.Identity?.Name;
     }
 }
