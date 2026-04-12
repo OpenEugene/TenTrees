@@ -7,6 +7,7 @@ using Oqtane.Infrastructure;
 using Oqtane.Shared;
 using OpenEug.TenTrees.Models;
 using OpenEug.TenTrees.Module.Mentor.Services;
+using AppRoleNames = OpenEug.TenTrees.Shared.RoleNames;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ using System.Threading.Tasks;
 namespace OpenEug.TenTrees.Module.Mentor.Controllers
 {
     [Route(ControllerRoutes.ApiRoute)]
+    [Authorize(Roles = AppRoleNames.Admin)]
     public class MentorController : ModuleControllerBase
     {
         private readonly IMentorService _mentorService;
