@@ -66,7 +66,7 @@ else
         </div>
 
         <!-- Admin Actions (Admin-Only) -->
-        @if (UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin))
+        @if (UserSecurity.IsAuthorized(PageState.User, AppRoleNames.TenTreesAdmin))
         {
             <div class="card mb-2">
                 <div class="card-header bg-primary text-white">
@@ -100,7 +100,7 @@ else
         }
 
         <!-- Exit Program Form (Visible when ShowExitForm is true) -->
-        @if (_showExitForm && UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin))
+        @if (_showExitForm && UserSecurity.IsAuthorized(PageState.User, AppRoleNames.TenTreesAdmin))
         {
             <div class="card mb-2 border-danger">
                 <div class="card-header bg-danger text-white">
@@ -178,7 +178,7 @@ else
                         {
                             <span class="badge bg-primary d-inline-flex align-items-center gap-1 py-2 px-2">
                                 @cohort.Name
-                                @if (UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin))
+                                @if (UserSecurity.IsAuthorized(PageState.User, AppRoleNames.TenTreesAdmin))
                                 {
                                     <button class="btn-close btn-close-white ms-1"
                                             style="font-size:0.55em;"
@@ -189,7 +189,7 @@ else
                         }
                     }
 
-                    @if (UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin) && _availableCohorts.Count > 0)
+                    @if (UserSecurity.IsAuthorized(PageState.User, AppRoleNames.TenTreesAdmin) && _availableCohorts.Count > 0)
                     {
                         <select class="form-select form-select-sm d-inline-block w-auto"
                                 aria-label="Add cohort"
