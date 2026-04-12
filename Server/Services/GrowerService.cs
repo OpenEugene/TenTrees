@@ -10,6 +10,7 @@ using Oqtane.Security;
 using Oqtane.Shared;
 using OpenEug.TenTrees.Module.Grower.Repository;
 using OpenEug.TenTrees.Models;
+using AppRoleNames = OpenEug.TenTrees.Shared.RoleNames;
 
 namespace OpenEug.TenTrees.Module.Grower.Services
 {
@@ -51,7 +52,7 @@ namespace OpenEug.TenTrees.Module.Grower.Services
         {
             // Admin-only operation
             if (!_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.Edit) ||
-                !_accessor.HttpContext.User.IsInRole(RoleNames.Admin))
+                !_accessor.HttpContext.User.IsInRole(AppRoleNames.TenTreesAdmin))
             {
                 _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Status Toggle Attempt {GrowerId} {ModuleId}", growerId, moduleId);
                 return Task.FromResult<Models.Grower>(null);
@@ -89,7 +90,7 @@ namespace OpenEug.TenTrees.Module.Grower.Services
         {
             // Admin-only operation
             if (!_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.Edit) ||
-                !_accessor.HttpContext.User.IsInRole(RoleNames.Admin))
+                !_accessor.HttpContext.User.IsInRole(AppRoleNames.TenTreesAdmin))
             {
                 _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Program Exit Attempt {GrowerId} {ModuleId}", growerId, moduleId);
                 return Task.FromResult<Models.Grower>(null);
