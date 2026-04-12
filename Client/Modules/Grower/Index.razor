@@ -195,7 +195,7 @@
 
     private async Task LoadVillagesAsync()
     {
-        _villages = UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin)
+        _villages = UserSecurity.IsAuthorized(PageState.User, AppRoleNames.TenTreesAdmin)
             ? await VillageService.GetVillagesAsync()
             : await VillageService.GetActiveVillagesAsync();
     }
@@ -209,8 +209,8 @@
         // leave the user with a fully-unusable screen — see issue #102.
         try
         {
-            bool isMentorOnly = UserSecurity.IsAuthorized(PageState.User, "Mentor")
-                && !UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin);
+            bool isMentorOnly = UserSecurity.IsAuthorized(PageState.User, AppRoleNames.Mentor)
+                && !UserSecurity.IsAuthorized(PageState.User, AppRoleNames.TenTreesAdmin);
 
             List<Models.Cohort> cohorts;
             if (!isMentorOnly)
