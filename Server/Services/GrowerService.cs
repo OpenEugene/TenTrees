@@ -39,12 +39,18 @@ namespace OpenEug.TenTrees.Module.Grower.Services
         public Task<Models.Grower> GetGrowerAsync(int growerId)
         {
             var grower = _growerRepository.GetGrower(growerId);
+            if (grower != null && IsMentor() && grower.MentorUsername != CurrentUsername())
+                return Task.FromResult<Models.Grower>(null);
             return Task.FromResult(grower);
         }
 
         public Task<List<Models.Grower>> GetAllGrowersAsync(int? villageId = null)
         {
             var growers = _growerRepository.GetAllGrowers(villageId).ToList();
+            if (IsMentor())
+            {
+                growers = growers.Where(g => g.MentorUsername == CurrentUsername()).ToList();
+            }
             return Task.FromResult(growers);
         }
 
@@ -125,17 +131,36 @@ namespace OpenEug.TenTrees.Module.Grower.Services
         public Task<List<Models.Grower>> GetActiveGrowersAsync(int? villageId = null)
         {
             var growers = _growerRepository.GetActiveGrowers(villageId).ToList();
+            if (IsMentor())
+            {
+                growers = growers.Where(g => g.MentorUsername == CurrentUsername()).ToList();
+            }
             return Task.FromResult(growers);
         }
 
         public Task<List<Models.Grower>> GetGrowersByStatusAsync(GrowerStatus status, int? villageId = null)
         {
             var growers = _growerRepository.GetGrowersByStatus(status, villageId).ToList();
+            if (IsMentor())
+            {
+                growers = growers.Where(g => g.MentorUsername == CurrentUsername()).ToList();
+            }
             return Task.FromResult(growers);
         }
 
         public Task<GrowerStatusSummary> GetStatusSummaryAsync(int? villageId = null)
         {
+            if (IsMentor())
+            {
+                var growers = _growerRepository.GetGrowersByMentor(CurrentUsername()).ToList();
+                return Task.FromResult(new GrowerStatusSummary
+                {
+                    Active = growers.Count(g => g.Status == GrowerStatus.Active),
+                    Inactive = growers.Count(g => g.Status == GrowerStatus.Inactive),
+                    Exited = growers.Count(g => g.Status == GrowerStatus.Exited),
+                    Total = growers.Count
+                });
+            }
             var summary = _growerRepository.GetStatusSummary(villageId);
             return Task.FromResult(summary);
         }
@@ -160,5 +185,12 @@ namespace OpenEug.TenTrees.Module.Grower.Services
             _growerRepository.DeleteGrower(growerId);
             return Task.CompletedTask;
         }
+
+        private bool IsMentor() =>
+            _accessor.HttpContext.User.IsInRole(AppRoleNames.Mentor)
+            && !_accessor.HttpContext.User.IsInRole(AppRoleNames.TenTreesAdmin);
+
+        private string CurrentUsername() =>
+            _accessor.HttpContext.User.Identity?.Name;
     }
 }
