@@ -8,7 +8,7 @@ namespace OpenEug.TenTrees.Shared
     public static class RoleNames
     {
         // ========== Custom 10 Trees Roles ==========
-        
+
         /// <summary>
         /// Mentor - Field mentor who submits forms and views assigned village data only
         /// Permissions: Submit forms, view assigned village only
@@ -33,11 +33,17 @@ namespace OpenEug.TenTrees.Shared
         /// </summary>
         public const string ExecutiveDirector = "Executive Director";
 
-        // ========== Built-in Oqtane Roles ==========
-        
         /// <summary>
-        /// Administrators - Built-in Oqtane administrator role with full system access
-        /// Permissions: Full access including user management and system configuration
+        /// 10 Trees Admin - Programme-level administrator with full data access and user management.
+        /// Separate from the Oqtane platform Administrators role.
+        /// </summary>
+        public const string TenTreesAdmin = "10 Trees Admin";
+
+        // ========== Built-in Oqtane Roles ==========
+
+        /// <summary>
+        /// Administrators - Built-in Oqtane platform role. Use TenTreesAdmin for programme-level
+        /// admin checks; reserve this for Oqtane-level permission API calls only.
         /// </summary>
         public const string Admin = "Administrators";
 
@@ -61,10 +67,10 @@ namespace OpenEug.TenTrees.Shared
         /// </summary>
         public static bool CanViewAllVillages(string roleName)
         {
-            return roleName == Educator 
-                || roleName == ProjectManager 
-                || roleName == ExecutiveDirector 
-                || roleName == Admin;
+            return roleName == Educator
+                || roleName == ProjectManager
+                || roleName == ExecutiveDirector
+                || roleName == TenTreesAdmin;
         }
 
         /// <summary>
@@ -72,10 +78,10 @@ namespace OpenEug.TenTrees.Shared
         /// </summary>
         public static bool CanExportData(string roleName)
         {
-            return roleName == Educator 
-                || roleName == ProjectManager 
-                || roleName == ExecutiveDirector 
-                || roleName == Admin;
+            return roleName == Educator
+                || roleName == ProjectManager
+                || roleName == ExecutiveDirector
+                || roleName == TenTreesAdmin;
         }
 
         /// <summary>
@@ -83,8 +89,8 @@ namespace OpenEug.TenTrees.Shared
         /// </summary>
         public static bool CanManageUsers(string roleName)
         {
-            return roleName == ExecutiveDirector 
-                || roleName == Admin;
+            return roleName == ExecutiveDirector
+                || roleName == TenTreesAdmin;
         }
     }
 }
