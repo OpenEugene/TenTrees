@@ -2,8 +2,9 @@ namespace OpenEug.TenTrees.Shared
 {
     /// <summary>
     /// Constants for role names used in the 10 Trees application.
-    /// Custom roles are defined in the AddCustomRoles migration.
-    /// Built-in Oqtane roles are included for reference.
+    /// This class is the source of truth for the role name values used by application code.
+    /// Built-in Oqtane roles are included for reference alongside application-specific roles.
+    /// Role provisioning and assignment are configured outside this constants file.
     /// </summary>
     public static class AppRoleNames
     {
