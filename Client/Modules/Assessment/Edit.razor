@@ -468,14 +468,7 @@
             var allGrowers = await GrowerService.GetActiveGrowersAsync();
             _availableTreeTypes = await TreeTypeService.GetActiveTreeTypesAsync();
 
-            if (UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin))
-            {
-                _growers = allGrowers;
-            }
-            else
-            {
-                _growers = allGrowers.Where(g => g.MentorUsername == PageState.User.Username).ToList();
-            }
+            _growers = allGrowers;
 
             if (PageState.Action == "Edit")
             {
