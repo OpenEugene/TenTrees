@@ -7,7 +7,7 @@ using Oqtane.Infrastructure;
 using Oqtane.Shared;
 using OpenEug.TenTrees.Models;
 using OpenEug.TenTrees.Module.Mentor.Services;
-using AppRoleNames = OpenEug.TenTrees.Shared.RoleNames;
+using OpenEug.TenTrees.Shared;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
