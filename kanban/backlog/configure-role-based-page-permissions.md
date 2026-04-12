@@ -13,4 +13,4 @@ All authenticated users currently see identical menus regardless of role. Config
 
 - [ ] Establish verified access matrix defining role permissions across 23 pages/modules
 - [ ] Configure Oqtane page permissions to enforce the matrix
-- [ ] Remove unused "Executive Director" role from codebase and documentation
+- [x] Remove unused "Executive Director" role from codebase and documentation

@@ -33,7 +33,7 @@ This document provides a comprehensive Behavior-Driven Development (BDD) project
 
 - **Mentors (17 total):** Field staff collecting data on smartphones
 - **Centre Staff:** 10 Trees Admin, Project Manager, Educator (permaculture educator; final role title TBD — Rebecca to confirm with Tri)
-  *(Note: there is no Executive Director. The organisation uses a distributed leadership model. Tri — Director of Permaculture Education and Community Development — leads permaculture work; a new administrator is being hired.)*
+  *(Note: The organisation uses a distributed leadership model. Tri — Director of Permaculture Education and Community Development — leads permaculture work. Full programme admin access is handled by the **10 Trees Admin** role.)*
 - **Growers:** Women in the community receiving trees and training
 - **External Villages:** Future partner organizations using the 10 Trees brand
 
@@ -505,8 +505,7 @@ Feature: User and Access Management
       | Mentor | Yes | No | No | No |
       | Educator | Yes | Yes | Yes | No |
       | Project Manager | Yes | Yes | Yes | No |
-      | Admin | Yes | Yes | Yes | Yes |
-      | Executive Director | Yes | Yes | Yes | Yes |
+      | 10 Trees Admin | Yes | Yes | Yes | Yes |
     When a user logs in with role "Mentor"
     Then they should have permissions matching the Mentor row
 ```
