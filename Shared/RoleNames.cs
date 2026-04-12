@@ -5,7 +5,7 @@ namespace OpenEug.TenTrees.Shared
     /// Custom roles are defined in the AddCustomRoles migration.
     /// Built-in Oqtane roles are included for reference.
     /// </summary>
-    public static class RoleNames
+    public static class AppRoleNames
     {
         // ========== Custom 10 Trees Roles ==========
 
