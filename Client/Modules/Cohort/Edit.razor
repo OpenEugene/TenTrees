@@ -2,6 +2,7 @@
 @using OpenEug.TenTrees.Module.Cohort.Services
 @using OpenEug.TenTrees.Module.Grower.Services
 @using OpenEug.TenTrees.Module.Village.Services
+@using OpenEug.TenTrees.Module.Mentor.Services
 @using OpenEug.TenTrees.Module.Training.Services
 @using OpenEug.TenTrees.Models
 
@@ -11,6 +12,7 @@
 @inject IGrowerService GrowerService
 @inject IVillageService VillageService
 @inject ITrainingService TrainingService
+@inject IMentorService MentorService
 @inject NavigationManager NavigationManager
 
 <div class="container">
@@ -164,6 +166,24 @@
                     <hr />
                     <h5 class="mt-4"><span class="oi oi-person me-2" aria-hidden="true"></span>Assigned Mentors (@_mentorCohorts.Count)</h5>
 
+                    @if (_availableMentors.Count > 0)
+                    {
+                        <div class="d-flex gap-2 align-items-center mb-2">
+                            <label class="form-label mb-0" for="mentorToAdd">Add mentor:</label>
+                            <select id="mentorToAdd" class="form-select form-select-sm" style="width: auto;" @bind="_mentorToAdd">
+                                <option value="">— select —</option>
+                                @foreach (var m in _availableMentors)
+                                {
+                                    <option value="@m.Username">@m.DisplayName</option>
+                                }
+                            </select>
+                            <button class="btn btn-sm btn-outline-primary" @onclick="AddMentor"
+                                    disabled="@(string.IsNullOrEmpty(_mentorToAdd))">
+                                <span class="oi oi-plus me-1" aria-hidden="true"></span> Add
+                            </button>
+                        </div>
+                    }
+
                     @if (_mentorCohorts.Count == 0)
                     {
                         <p class="text-muted">No mentors assigned to this cohort yet.</p>
@@ -275,6 +295,9 @@
 
     private List<GrowerCohort> _growerCohorts = new();
     private List<MentorCohort> _mentorCohorts = new();
+    private List<MentorViewModel> _allMentors = new();
+    private List<MentorViewModel> _availableMentors = new();
+    private string _mentorToAdd = "";
     private List<CohortClass> _cohortClasses = new();
     private List<TrainingClass> _allClasses = new();
     private List<TrainingClass> _availableClasses = new();
@@ -301,6 +324,7 @@
                 _cohortClasses = await CohortService.GetClassesForCohortAsync(cohortId);
                 await LoadGrowerNamesAsync();
                 await LoadAvailableClassesAsync();
+                await LoadAvailableMentorsAsync();
             }
         }
         catch (Exception ex)
@@ -463,6 +487,8 @@
         try
         {
             await CohortService.RemoveMentorFromCohortAsync(_cohort.CohortId, mentorId);
+            _mentorCohorts = await CohortService.GetMentorCohortsAsync(_cohort.CohortId);
+            RefreshAvailableMentors();
             StateHasChanged();
         }
         catch (Exception ex)
@@ -470,6 +496,39 @@
             await logger.LogError(ex, "Error Removing Mentor {MentorId} from Cohort {Error}", mentorId, ex.Message);
             AddModuleMessage("Unable to remove mentor.", MessageType.Error);
         }
+    }
+
+    private async Task AddMentor()
+    {
+        if (string.IsNullOrEmpty(_mentorToAdd)) return;
+        try
+        {
+            await CohortService.AssignMentorToCohortAsync(_cohort.CohortId, _mentorToAdd);
+            _mentorCohorts = await CohortService.GetMentorCohortsAsync(_cohort.CohortId);
+            _mentorToAdd = "";
+            RefreshAvailableMentors();
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Adding Mentor {MentorId} to Cohort {Error}", _mentorToAdd, ex.Message);
+            AddModuleMessage("Unable to add mentor.", MessageType.Error);
+        }
+    }
+
+    private async Task LoadAvailableMentorsAsync()
+    {
+        _allMentors = await MentorService.GetMentorsAsync(ModuleState.ModuleId) ?? new List<MentorViewModel>();
+        RefreshAvailableMentors();
+    }
+
+    private void RefreshAvailableMentors()
+    {
+        var assigned = _mentorCohorts.Select(mc => mc.MentorUsername).ToHashSet();
+        _availableMentors = _allMentors
+            .Where(m => !assigned.Contains(m.Username) && !m.IsDeleted)
+            .OrderBy(m => m.DisplayName)
+            .ToList();
     }
 
     private async Task LoadAvailableClassesAsync()
