@@ -55,7 +55,7 @@ namespace OpenEug.TenTrees.Module.Grower.Services
                 !_accessor.HttpContext.User.IsInRole(AppRoleNames.TenTreesAdmin))
             {
                 _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Status Toggle Attempt {GrowerId} {ModuleId}", growerId, moduleId);
-                return Task.FromResult<Models.Grower>(null);
+                throw new UnauthorizedAccessException($"Unauthorized status toggle attempt for grower {growerId} in module {moduleId}.");
             }
 
             var grower = _growerRepository.GetGrower(growerId);
