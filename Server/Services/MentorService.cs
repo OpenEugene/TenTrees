@@ -12,7 +12,7 @@ using Oqtane.Shared;
 using OpenEug.TenTrees.Models;
 using OpenEug.TenTrees.Module.Mentor.Repository;
 using OpenEug.TenTrees.Module.Village.Repository;
-using AppRoleNames = OpenEug.TenTrees.Shared.RoleNames;
+using OpenEug.TenTrees.Shared;
 
 namespace OpenEug.TenTrees.Module.Mentor.Services
 {

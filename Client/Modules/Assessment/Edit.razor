@@ -710,7 +710,7 @@
                     assessment.IsUsingGreywater = _isUsingGreywater;
 
                     assessment.SubmittedBy = PageState.User.Username;
-                    assessment.EnteredByAdmin = UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin);
+                    assessment.EnteredByAdmin = UserSecurity.IsAuthorized(PageState.User, AppRoleNames.TenTreesAdmin);
 
                     assessment = await AssessmentService.AddAssessmentAsync(assessment);
                     await logger.LogInformation("Assessment Added {Assessment}", assessment);
