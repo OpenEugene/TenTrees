@@ -114,4 +114,4 @@ Administrators have full access to the platform, including user management and s
 1. Log in as an Administrator.
 2. Click the **Gear Icon** (Control Panel) in the top right corner of the navigation bar.
 3. Navigate to **User Management** > **Users** to add, edit, or delete user accounts.
-4. Navigate to **User Management** > **Roles** to manage custom roles (Mentor, Educator, Project Manager, Executive Director) and assign users to these roles.
+4. Navigate to **User Management** > **Roles** to manage custom roles (Mentor, Educator, Project Manager, 10 Trees Admin) and assign users to these roles.

@@ -42,7 +42,7 @@ Deploy the 10 Trees Digital Tracking Platform to the CodeChops MonsterASP hostin
 - [ ] Run Entity Framework migrations
 - [ ] Seed initial data:
   - Villages (e.g., Orpen Gate Village, Londelozzi)
-  - User roles (Mentor, Educator, Project Manager, Admin, Executive Director)
+  - User roles (Mentor, Educator, Project Manager, 10 Trees Admin)
   - Initial admin user account
 - [ ] Verify database connectivity from server
 - [ ] Configure backup strategy

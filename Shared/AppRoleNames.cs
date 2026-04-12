@@ -11,28 +11,22 @@ namespace OpenEug.TenTrees.Shared
         // ========== Custom 10 Trees Roles ==========
 
         /// <summary>
-        /// Mentor - Field mentor who submits forms and views assigned village data only
-        /// Permissions: Submit forms, view assigned village only
+        /// Mentor - Field mentor who submits forms and views assigned village/cohort data only
+        /// Permissions: Submit forms, view assigned village/cohort only
         /// </summary>
         public const string Mentor = "Mentor";
 
         /// <summary>
-        /// Educator - Educator who submits forms, views all villages, and exports data
-        /// Permissions: Submit forms, view all villages, export data
+        /// Educator - Educator who views all villages, adds home-visit notes, and marks class attendance
+        /// Permissions: View all villages, add notes, mark attendance
         /// </summary>
         public const string Educator = "Educator";
 
         /// <summary>
-        /// Project Manager - Project manager with same permissions as Educator
-        /// Permissions: Submit forms, view all villages, export data
+        /// Project Manager - Same as Educator, plus data export and full reporting access
+        /// Permissions: View all villages, add notes, mark attendance, export data, view reports
         /// </summary>
         public const string ProjectManager = "Project Manager";
-
-        /// <summary>
-        /// Executive Director - Executive director with full permissions including user management
-        /// Permissions: Submit forms, view all villages, export data, manage users
-        /// </summary>
-        public const string ExecutiveDirector = "Executive Director";
 
         /// <summary>
         /// 10 Trees Admin - Programme-level administrator with full data access and user management.
@@ -70,7 +64,6 @@ namespace OpenEug.TenTrees.Shared
         {
             return roleName == Educator
                 || roleName == ProjectManager
-                || roleName == ExecutiveDirector
                 || roleName == TenTreesAdmin;
         }
 
@@ -79,9 +72,7 @@ namespace OpenEug.TenTrees.Shared
         /// </summary>
         public static bool CanExportData(string roleName)
         {
-            return roleName == Educator
-                || roleName == ProjectManager
-                || roleName == ExecutiveDirector
+            return roleName == ProjectManager
                 || roleName == TenTreesAdmin;
         }
 
@@ -90,8 +81,7 @@ namespace OpenEug.TenTrees.Shared
         /// </summary>
         public static bool CanManageUsers(string roleName)
         {
-            return roleName == ExecutiveDirector
-                || roleName == TenTreesAdmin;
+            return roleName == TenTreesAdmin;
         }
     }
 }

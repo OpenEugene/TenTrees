@@ -3,21 +3,23 @@
 ## Overview
 The 10 Trees application requires four custom roles beyond the standard Oqtane roles. These roles must be created manually through the Oqtane admin UI or by running the provided SQL script.
 
+> **Note:** There is no Executive Director role. The organisation uses a distributed leadership model. Full programme data access and user management is handled by the **10 Trees Admin** role.
+
 ## Required Custom Roles
 
 | Role | Description | Permissions |
 |------|-------------|-------------|
-| **Mentor** | Field mentor who submits forms and views assigned village data only | Submit forms, view assigned village only |
-| **Educator** | Educator who submits forms, views all villages, and exports data | Submit forms, view all villages, export data |
-| **Project Manager** | Project manager with same permissions as Educator | Submit forms, view all villages, export data |
-| **Executive Director** | Executive director with full permissions including user management | Submit forms, view all villages, export data, manage users |
+| **Mentor** | Field mentor who submits forms and views assigned village/cohort data only | Submit forms, view assigned village/cohort only |
+| **Educator** | Educator who views all villages, adds home-visit notes, and marks class attendance | View all villages, add notes, mark attendance |
+| **Project Manager** | Same as Educator, plus data export and full reporting access | View all villages, add notes, mark attendance, export data, view reports |
+| **10 Trees Admin** | Programme-level administrator with full data access and user management | Full programme data access, manage users |
 
 ## Setup Methods
 
 ### Method 1: Manual Creation (Recommended for Production)
 
 1. Log in to Oqtane as an Administrator
-2. Navigate to **Control Panel** ? **User Management** ? **Roles**
+2. Navigate to **Control Panel** → **User Management** → **Roles**
 3. Click **Add Role** and create each role with these settings:
    - **Name**: (See table above)
    - **Description**: (See table above)
@@ -46,36 +48,36 @@ The 10 Trees application requires four custom roles beyond the standard Oqtane r
    ```sql
    SELECT [RoleId], [SiteId], [Name], [Description], [IsSystem]
    FROM [dbo].[Role]
-   WHERE [Name] IN ('Mentor', 'Educator', 'Project Manager', 'Executive Director')
+   WHERE [Name] IN ('Mentor', 'Educator', 'Project Manager', '10 Trees Admin')
    ORDER BY [Name]
    ```
 
 ## Using Roles in Code
 
-The `Shared/RoleNames.cs` class provides type-safe constants for all roles:
+The `Shared/AppRoleNames.cs` class provides type-safe constants for all roles:
 
 ```csharp
 using OpenEug.TenTrees.Shared;
 
 // Check specific role
-if (User.IsInRole(RoleNames.Mentor))
+if (User.IsInRole(AppRoleNames.Mentor))
 {
     // Mentor-specific logic
 }
 
 // Check permissions
-if (RoleNames.CanViewAllVillages(userRole))
+if (AppRoleNames.CanViewAllVillages(userRole))
 {
     // Show all village data
 }
 
-if (RoleNames.CanExportData(userRole))
+if (AppRoleNames.CanExportData(userRole))
 {
     // Enable export functionality
 }
 
 // Controller authorization
-[Authorize(Roles = RoleNames.Educator + "," + RoleNames.ProjectManager + "," + RoleNames.Admin)]
+[Authorize(Roles = AppRoleNames.Educator + "," + AppRoleNames.ProjectManager + "," + AppRoleNames.TenTreesAdmin)]
 public async Task<ActionResult> GetAllVillages()
 {
     // ...
@@ -84,7 +86,7 @@ public async Task<ActionResult> GetAllVillages()
 
 ## Assigning Users to Roles
 
-1. Navigate to **Control Panel** ? **User Management** ? **Users**
+1. Navigate to **Control Panel** → **User Management** → **Users**
 2. Select a user
 3. Click **Edit Roles**
 4. Select the appropriate role(s)
@@ -108,10 +110,10 @@ Mentors must also be assigned to a specific village:
 
 **Permission denied errors:**
 - Verify the user has the correct role assigned
-- Check that the role name exactly matches the constants in `RoleNames.cs`
+- Check that the role name exactly matches the constants in `AppRoleNames.cs`
 - Ensure the user is logged in and authenticated
 
 ## Related Files
-- `Shared/RoleNames.cs` - Role name constants and permission helpers
+- `Shared/AppRoleNames.cs` - Role name constants and permission helpers
 - `Server/Migrations/Scripts/CreateCustomRoles.sql` - SQL script for role creation
 - `Specs/Features/UserAdministration.feature` - BDD scenarios for role behavior
