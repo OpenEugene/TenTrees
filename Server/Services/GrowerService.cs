@@ -187,8 +187,7 @@ namespace OpenEug.TenTrees.Module.Grower.Services
         }
 
         private bool IsMentor() =>
-            _accessor.HttpContext.User.IsInRole(AppRoleNames.Mentor)
-            && !_accessor.HttpContext.User.IsInRole(AppRoleNames.TenTreesAdmin);
+            _accessor.HttpContext.User.IsInRole(AppRoleNames.Mentor);
 
         private string CurrentUsername() =>
             _accessor.HttpContext.User.Identity?.Name;
