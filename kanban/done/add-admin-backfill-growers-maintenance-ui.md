@@ -28,7 +28,7 @@ reports how many Grower records were created.
 
 ## Checklist
 
-- [ ] Add "Backfill Growers" button visible only to Admin/Executive Director roles
+- [ ] Add "Backfill Growers" button visible only to 10 Trees Admin role
 - [ ] Place in `Enrollment/Settings.razor` or as a collapsible admin panel in `Index.razor`
 - [ ] Call `POST api/Enrollment/backfill-growers?moduleId=X`
 - [ ] Display result: "N grower records created" (or "All records up to date" if 0)
