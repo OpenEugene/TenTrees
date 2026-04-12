@@ -11,8 +11,8 @@ raised and tested independently.
 
 | Issue | What changed |
 |---|---|
-| #121 / #120 / #119 / #118 / #130 / #131 | `ServerGrowerService` no longer filters by `MentorUsername`. All authenticated users now see all active growers. |
-| #122 | Downstream of #121 — selecting a grower no longer fails because the list was empty. |
+| #121 / #120 / #119 / #118 / #130 / #131 | Mentor scoping restored in `ServerGrowerService` and `ServerAssessmentService`. Mentors see only growers assigned to them via `MentorUsername`. Other roles (Educator, 10 Trees Admin, etc.) see all growers. |
+| #122 | Downstream of #121 — the grower dropdown in Assessment is now populated correctly for mentors who have assigned growers. |
 | #129 | Enrollment "Add Enrollment" button changed from `SecurityAccessLevel.Edit` to `SecurityAccessLevel.View`. Any user who can view the Enrollment page can now see the button. |
 | #84 | `MentorController` restricted to the `"10 Trees Admin"` role. The Mentor management API now returns 403 for Mentor and Educator users. |
 
@@ -29,8 +29,8 @@ raised and tested independently.
 
 ## 3. Data Prerequisites
 
-- At least 3 active growers exist in the system (they do not need to have a
-  `MentorUsername` set — that was the bug).
+- At least 3 active growers exist with `MentorUsername` set to `TestMentor`'s username.
+- At least 2 additional active growers exist assigned to a **different** mentor (or unassigned), to confirm scoping works.
 - At least one active village and one active cohort exist.
 - `TestMentor` must have **Edit** permission on the Assessment module in Oqtane (required
   for the "New Assessment" button to be visible — this is existing Oqtane configuration,
@@ -42,21 +42,28 @@ raised and tested independently.
 
 ### Phase 1 — Mentor Grower Visibility (#121, #122)
 
-**TC-121-001: Grower dropdown is populated for mentor**
+**TC-121-001: Grower dropdown shows only assigned growers for mentor**
 
 1. Log in as `TestMentor`.
 2. Navigate to Assessment → click "New Assessment".
 3. Open the Grower dropdown.
-4. **Expected**: The dropdown lists all active growers in the system — not just those with
-   `MentorUsername` matching the logged-in user. The list is not empty.
-5. **Fail signal**: Dropdown is empty or shows only growers explicitly assigned to
-   TestMentor.
+4. **Expected**: The dropdown lists only growers whose `MentorUsername` matches `TestMentor`.
+   The list is not empty (data prerequisite: at least 3 growers assigned to `TestMentor`).
+5. **Fail signal**: Dropdown is empty, or it shows growers assigned to other mentors.
 
-**TC-121-002: Grower dropdown is populated on Assessment edit**
+**TC-121-002: Mentor cannot see growers assigned to another mentor**
 
 1. Log in as `TestMentor`.
-2. Navigate directly to an existing assessment edit URL
-   (e.g. `/assessment/!/[moduleId]/Edit?id=[assessmentId]`).
+2. Navigate to Assessment → click "New Assessment".
+3. Open the Grower dropdown.
+4. **Expected**: Growers whose `MentorUsername` is a different mentor are **not** listed.
+5. **Fail signal**: Cross-mentor growers appear in the dropdown.
+
+**TC-121-003: Grower dropdown is populated on Assessment edit**
+
+1. Log in as `TestMentor`.
+2. Navigate directly to an existing assessment edit URL for an assessment belonging to one
+   of `TestMentor`'s assigned growers.
 3. **Expected**: The Grower field is populated and selectable.
 
 **TC-122-001: Notes can be saved once a grower is selected**
