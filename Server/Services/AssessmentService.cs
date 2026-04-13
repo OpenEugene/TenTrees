@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Oqtane.Enums;
 using Oqtane.Infrastructure;
 using Oqtane.Shared;
@@ -9,41 +10,67 @@ using OpenEug.TenTrees.Module.Assessment.Repository;
 using OpenEug.TenTrees.Models;
 using OpenEug.TenTrees.Module.Grower.Repository;
 using OpenEug.TenTrees.Module.Cohort.Repository;
+using OpenEug.TenTrees.Shared;
 
 namespace OpenEug.TenTrees.Module.Assessment.Services
 {
     public class ServerAssessmentService : IAssessmentService
     {
         private readonly IAssessmentRepository _assessmentRepository;
+        private readonly IAssessmentNoteRepository _assessmentNoteRepository;
         private readonly IGrowerRepository _growerRepository;
         private readonly ICohortRepository _cohortRepository;
         private readonly ILogManager _logger;
+        private readonly IHttpContextAccessor _accessor;
 
         public ServerAssessmentService(
             IAssessmentRepository assessmentRepository,
+            IAssessmentNoteRepository assessmentNoteRepository,
             IGrowerRepository growerRepository,
             ICohortRepository cohortRepository,
-            ILogManager logger)
+            ILogManager logger,
+            IHttpContextAccessor accessor)
         {
             _assessmentRepository = assessmentRepository;
+            _assessmentNoteRepository = assessmentNoteRepository;
             _growerRepository = growerRepository;
             _cohortRepository = cohortRepository;
             _logger = logger;
+            _accessor = accessor;
         }
 
         public Task<Models.Assessment> GetAssessmentAsync(int assessmentId)
         {
-            return Task.FromResult(_assessmentRepository.GetAssessment(assessmentId));
+            var assessment = _assessmentRepository.GetAssessment(assessmentId);
+            if (assessment != null && IsMentor())
+            {
+                var grower = _growerRepository.GetGrower(assessment.GrowerId);
+                if (grower == null || grower.MentorUsername != CurrentUsername())
+                    return Task.FromResult<Models.Assessment>(null);
+            }
+            return Task.FromResult(assessment);
         }
 
         public Task<List<Models.Assessment>> GetAssessmentsAsync()
         {
             var list = _assessmentRepository.GetAssessments().ToList();
+            if (IsMentor())
+            {
+                var mentorGrowerIds = _growerRepository.GetGrowersByMentor(CurrentUsername())
+                    .Select(g => g.GrowerId).ToHashSet();
+                list = list.Where(a => mentorGrowerIds.Contains(a.GrowerId)).ToList();
+            }
             return Task.FromResult(list);
         }
 
         public Task<List<Models.Assessment>> GetAssessmentsByGrowerAsync(int growerId)
         {
+            if (IsMentor())
+            {
+                var grower = _growerRepository.GetGrower(growerId);
+                if (grower == null || grower.MentorUsername != CurrentUsername())
+                    return Task.FromResult(new List<Models.Assessment>());
+            }
             return Task.FromResult(_assessmentRepository.GetAssessmentsByGrower(growerId).ToList());
         }
 
@@ -145,8 +172,52 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
 
         public Task<List<AssessmentListDto>> GetAssessmentListAsync(int? villageId = null, int? cohortId = null, string mentorUsername = null, int? growerId = null)
         {
+            if (IsMentor())
+                mentorUsername = CurrentUsername();
             var list = _assessmentRepository.GetAssessmentList(villageId, cohortId, mentorUsername, growerId).ToList();
             return Task.FromResult(list);
         }
+
+        public Task<List<Models.AssessmentNote>> GetNotesByAssessmentAsync(int assessmentId)
+        {
+            return Task.FromResult(_assessmentNoteRepository.GetNotesByAssessment(assessmentId).ToList());
+        }
+
+        public Task<List<Models.AssessmentNote>> GetNotesByGrowerAsync(int growerId)
+        {
+            return Task.FromResult(_assessmentNoteRepository.GetNotesByGrower(growerId).ToList());
+        }
+
+        public Task<Models.AssessmentNote> AddNoteAsync(Models.AssessmentNote note)
+        {
+            if (note == null)
+            {
+                return Task.FromResult<Models.AssessmentNote>(null);
+            }
+
+            // Normalise note type to a known value so we don't end up with
+            // arbitrary strings in the database from a malformed client.
+            if (note.NoteType != AssessmentNoteTypes.HomeVisit)
+            {
+                note.NoteType = AssessmentNoteTypes.General;
+            }
+
+            var assessment = _assessmentRepository.GetAssessment(note.AssessmentId, tracking: false);
+            if (assessment == null)
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Create, "AssessmentNote Add Failed — Assessment not found {AssessmentId}", note.AssessmentId);
+                return Task.FromResult<Models.AssessmentNote>(null);
+            }
+
+            var created = _assessmentNoteRepository.AddNote(note);
+            _logger.Log(LogLevel.Information, this, LogFunction.Create, "AssessmentNote Added {AssessmentNote}", created);
+            return Task.FromResult(created);
+        }
+
+        private bool IsMentor() =>
+            _accessor.HttpContext.User.IsInRole(AppRoleNames.Mentor);
+
+        private string CurrentUsername() =>
+            _accessor.HttpContext.User.Identity?.Name;
     }
 }

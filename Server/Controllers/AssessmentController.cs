@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Oqtane.Shared;
 using Oqtane.Enums;
 using Oqtane.Infrastructure;
+using Oqtane.Controllers;
 using OpenEug.TenTrees.Module.Assessment.Services;
 using OpenEug.TenTrees.Models;
 using System;
@@ -12,16 +13,14 @@ using System.Threading.Tasks;
 
 namespace OpenEug.TenTrees.Module.Assessment.Controllers
 {
-    [Route("api/[controller]")]
-    public class AssessmentController : Controller
+    [Route(ControllerRoutes.ApiRoute)]
+    public class AssessmentController : ModuleControllerBase
     {
         private readonly IAssessmentService _assessmentService;
-        private readonly ILogManager _logger;
 
-        public AssessmentController(IAssessmentService assessmentService, ILogManager logger)
+        public AssessmentController(IAssessmentService assessmentService, ILogManager logger, IHttpContextAccessor accessor) : base(logger, accessor)
         {
             _assessmentService = assessmentService;
-            _logger = logger;
         }
 
         [HttpGet]
@@ -179,6 +178,78 @@ namespace OpenEug.TenTrees.Module.Assessment.Controllers
             catch (Exception ex)
             {
                 _logger.Log(LogLevel.Error, this, LogFunction.Read, "Assessment CanSubmit Failed {GrowerId} {Error}", growerId, ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpGet("{id}/notes")]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<Models.AssessmentNote>>> GetNotes(int id)
+        {
+            try
+            {
+                var notes = await _assessmentService.GetNotesByAssessmentAsync(id);
+                return Ok(notes);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Read, "AssessmentNote Get Failed {AssessmentId} {Error}", id, ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpGet("grower/{growerId}/notes")]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<Models.AssessmentNote>>> GetNotesByGrower(int growerId)
+        {
+            try
+            {
+                var notes = await _assessmentService.GetNotesByGrowerAsync(growerId);
+                return Ok(notes);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Read, "AssessmentNote Get By Grower Failed {GrowerId} {Error}", growerId, ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpPost("{id}/notes")]
+        [Authorize]
+        public async Task<ActionResult<Models.AssessmentNote>> PostNote(int id, [FromBody] Models.AssessmentNote note)
+        {
+            try
+            {
+                if (note == null || note.AssessmentId != id)
+                {
+                    _logger.Log(LogLevel.Error, this, LogFunction.Create, "AssessmentNote Add Failed Id Mismatch {RouteId} {AssessmentId}", id, note?.AssessmentId);
+                    return BadRequest();
+                }
+
+                if (string.IsNullOrWhiteSpace(note.Text))
+                {
+                    _logger.Log(LogLevel.Error, this, LogFunction.Create, "AssessmentNote Add Failed Empty Text {AssessmentId}", id);
+                    return BadRequest();
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    _logger.Log(LogLevel.Error, this, LogFunction.Create, "AssessmentNote Add Failed Validation {AssessmentNote}", note);
+                    return BadRequest(ModelState);
+                }
+
+                var created = await _assessmentService.AddNoteAsync(note);
+                if (created == null)
+                {
+                    return NotFound();
+                }
+
+                _logger.Log(LogLevel.Information, this, LogFunction.Create, "AssessmentNote Added {AssessmentNote}", created);
+                return Ok(created);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Create, "AssessmentNote Add Failed {AssessmentId} {Error}", id, ex.ToString());
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }

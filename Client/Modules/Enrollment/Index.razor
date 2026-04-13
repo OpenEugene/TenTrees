@@ -14,7 +14,7 @@
 <div class="container">
     <!-- Action Buttons -->
     <div class="d-flex gap-2 mb-3">
-        <ActionLink Action="BasicInfo" Security="SecurityAccessLevel.Edit" Text="Add Enrollment" ResourceKey="Add" Class="btn btn-primary" />
+        <ActionLink Action="BasicInfo" Security="SecurityAccessLevel.View" Text="Add Enrollment" ResourceKey="Add" Class="btn btn-primary" />
     </div>
 
     <!-- Filter Section -->
@@ -207,7 +207,7 @@
 
     private async Task LoadVillagesAsync()
     {
-        _villages = UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin)
+        _villages = UserSecurity.IsAuthorized(PageState.User, AppRoleNames.TenTreesAdmin)
             ? await VillageService.GetVillagesAsync()
             : (await VillageService.GetActiveVillagesAsync())
                 .OrderBy(v => v.VillageName)

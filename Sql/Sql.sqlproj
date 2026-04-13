@@ -100,6 +100,7 @@
     <Build Include="dbo\Tables\TrainingClass.sql" />
     <Build Include="dbo\Tables\ClassAttendance.sql" />
     <Build Include="dbo\Tables\Assessment.sql" />
+    <Build Include="dbo\Tables\AssessmentNote.sql" />
     <Build Include="dbo\Tables\SiteTask.sql" />
     <Build Include="dbo\Tables\SiteGroupMember.sql" />
     <Build Include="dbo\Tables\SiteGroup.sql" />
@@ -110,6 +111,7 @@
     <Build Include="dbo\Tables\TreeType.sql" />
     <Build Include="Seed_SampleGrowers.sql" />
     <None Include="Seed_TreeTypes.sql" />
+    <None Include="Migration_AddAssessmentNoteTable.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SqlSchemaCompare1.scmp" />

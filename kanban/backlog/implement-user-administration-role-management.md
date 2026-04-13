@@ -69,8 +69,7 @@ Implement and enforce the following permissions:
 | Mentor | ✅ Yes | ❌ No | ❌ No | ❌ No |
 | Educator | ✅ Yes | ✅ Yes | ✅ Yes | ❌ No |
 | Project Manager | ✅ Yes | ✅ Yes | ✅ Yes | ❌ No |
-| Admin | ✅ Yes | ✅ Yes | ✅ Yes | ✅ Yes |
-| Executive Director | ✅ Yes | ✅ Yes | ✅ Yes | ✅ Yes |
+| 10 Trees Admin | ✅ Yes | ✅ Yes | ✅ Yes | ✅ Yes |
 
 - [ ] Implement role checks in UI (hide/show features)
 - [ ] Implement role checks in API (authorize attributes)

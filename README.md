@@ -59,7 +59,7 @@ Generate reports and export data:
 Multi-tenant architecture with role-based access:
 - **Mentors**: View only their assigned village
 - **Educators/Project Managers**: View all villages, export data
-- **Administrators/Executive Director**: Full access including user management
+- **10 Trees Admin**: Full access including user management
 
 ### 7. Localization & Language Support
 Comprehensive bilingual implementation:
@@ -113,8 +113,7 @@ Specs/
 | **Mentor** | Submit forms, view assigned village only |
 | **Educator** | Submit forms, view all villages, export data |
 | **Project Manager** | Same as Educator |
-| **Administrator** | Full access including user management |
-| **Executive Director** | Full access |
+| **10 Trees Admin** | Full programme data access including user management |
 
 ## Design Principles
 
