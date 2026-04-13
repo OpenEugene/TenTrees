@@ -44,9 +44,6 @@ namespace OpenEug.TenTrees.Models
         public bool HasPests { get; set; }
         public bool NeedsHelp { get; set; }
 
-        // Notes
-        public string? Notes { get; set; }
-
         // Access Control / Submission
         public string? SubmittedBy { get; set; }
         public bool EnteredByAdmin { get; set; }

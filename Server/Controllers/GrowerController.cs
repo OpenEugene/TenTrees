@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OpenEug.TenTrees.Module.Grower.Services;
 using OpenEug.TenTrees.Models;
+using Oqtane.Controllers;
 using Oqtane.Enums;
 using Oqtane.Infrastructure;
 using Oqtane.Shared;
@@ -12,16 +13,14 @@ using System.Threading.Tasks;
 
 namespace OpenEug.TenTrees.Module.Grower.Controllers
 {
-    [Route("api/[controller]")]
-    public class GrowerController : Controller
+    [Route(ControllerRoutes.ApiRoute)]
+    public class GrowerController : ModuleControllerBase
     {
         private readonly IGrowerService _growerService;
-        private readonly ILogManager _logger;
 
-        public GrowerController(IGrowerService growerService, ILogManager logger)
+        public GrowerController(IGrowerService growerService, ILogManager logger, IHttpContextAccessor accessor) : base(logger, accessor)
         {
             _growerService = growerService;
-            _logger = logger;
         }
 
         [HttpGet("{id}")]

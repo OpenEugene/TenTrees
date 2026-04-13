@@ -9,9 +9,9 @@ namespace OpenEug.TenTrees.Module.Cohort
         {
             Name = "Cohort",
             Description = "Cohort Management",
-            Version = "1.0.4",
+            Version = "2.2.0",
             ServerManagerType = "",
-            ReleaseVersions = "1.0.0,1.0.1,1.0.2,1.0.3,1.0.4",
+            ReleaseVersions = "1.0.0,1.0.1,1.0.2,1.0.3,1.0.4,2.1.0,2.2.0",
             Dependencies = ""
         };
     }

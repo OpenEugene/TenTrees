@@ -2,7 +2,7 @@
 @using OpenEug.TenTrees.Module.Village.Services
 @using OpenEug.TenTrees.Module.Cohort.Services
 @using OpenEug.TenTrees.Models
-@page "/Classes"
+@page "/training"
 
 @namespace OpenEug.TenTrees.Module.Training
 @inherits ModuleBase
@@ -204,9 +204,17 @@
     private string _summaryStatusFilter = "";
     // classId → ordered list of cohort names
     private Dictionary<int, List<string>> _classCohorts = new();
+    private bool _isLoading = false;
 
     protected override async Task OnParametersSetAsync()
     {
+        // In-flight re-entry guard: prevents a concurrent second invocation
+        // (from cascading parameter updates) from racing with the first load and
+        // dropping a newly-created session (issue #125). Unlike a permanent flag,
+        // this resets after each load so future parameter-driven refreshes still work.
+        if (_isLoading) return;
+        _isLoading = true;
+
         try
         {
             await LoadVillagesAsync();
@@ -217,11 +225,15 @@
             await logger.LogError(ex, "Error Loading Training {Error}", ex.Message);
             AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
         }
+        finally
+        {
+            _isLoading = false;
+        }
     }
 
     private async Task LoadVillagesAsync()
     {
-        _villages = UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin)
+        _villages = UserSecurity.IsAuthorized(PageState.User, AppRoleNames.TenTreesAdmin)
             ? await VillageService.GetVillagesAsync()
             : await VillageService.GetActiveVillagesAsync();
     }
@@ -236,7 +248,7 @@
         ApplySummaryFilter();
 
         _classCohorts = new();
-        if (UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin))
+        if (UserSecurity.IsAuthorized(PageState.User, AppRoleNames.TenTreesAdmin))
         {
             var allCohorts = await CohortService.GetCohortsAsync();
             var cohortById = allCohorts.ToDictionary(c => c.CohortId, c => c.Name);

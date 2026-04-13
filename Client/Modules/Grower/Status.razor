@@ -66,7 +66,7 @@ else
         </div>
 
         <!-- Admin Actions (Admin-Only) -->
-        @if (UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin))
+        @if (UserSecurity.IsAuthorized(PageState.User, AppRoleNames.TenTreesAdmin))
         {
             <div class="card mb-2">
                 <div class="card-header bg-primary text-white">
@@ -100,7 +100,7 @@ else
         }
 
         <!-- Exit Program Form (Visible when ShowExitForm is true) -->
-        @if (_showExitForm && UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin))
+        @if (_showExitForm && UserSecurity.IsAuthorized(PageState.User, AppRoleNames.TenTreesAdmin))
         {
             <div class="card mb-2 border-danger">
                 <div class="card-header bg-danger text-white">
@@ -178,7 +178,7 @@ else
                         {
                             <span class="badge bg-primary d-inline-flex align-items-center gap-1 py-2 px-2">
                                 @cohort.Name
-                                @if (UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin))
+                                @if (UserSecurity.IsAuthorized(PageState.User, AppRoleNames.TenTreesAdmin))
                                 {
                                     <button class="btn-close btn-close-white ms-1"
                                             style="font-size:0.55em;"
@@ -189,7 +189,7 @@ else
                         }
                     }
 
-                    @if (UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin) && _availableCohorts.Count > 0)
+                    @if (UserSecurity.IsAuthorized(PageState.User, AppRoleNames.TenTreesAdmin) && _availableCohorts.Count > 0)
                     {
                         <select class="form-select form-select-sm d-inline-block w-auto"
                                 aria-label="Add cohort"
@@ -251,7 +251,24 @@ else
                                                 <span class="badge bg-success">@Localizer["Label.No"]</span>
                                             }
                                         </td>
-                                        <td>@(string.IsNullOrWhiteSpace(assessment.Notes) ? "-" : assessment.Notes)</td>
+                                        <td>
+                                            @{
+                                                var noteCount = _assessmentNotes.Count(n => n.AssessmentId == assessment.AssessmentId);
+                                                var homeVisitCount = _assessmentNotes.Count(n => n.AssessmentId == assessment.AssessmentId && n.NoteType == AssessmentNoteTypes.HomeVisit);
+                                            }
+                                            @if (noteCount == 0)
+                                            {
+                                                <span class="text-muted">-</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-secondary me-1" title="Total notes">@noteCount</span>
+                                                @if (homeVisitCount > 0)
+                                                {
+                                                    <span class="badge bg-warning text-dark" title="Home visit notes">@homeVisitCount HV</span>
+                                                }
+                                            }
+                                        </td>
                                         <td>
                                             <a href="/Assessment" class="btn btn-sm btn-outline-secondary" title="@Localizer["Action.ViewRecord"]">
                                                 <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i>
@@ -263,6 +280,45 @@ else
                             </tbody>
                         </table>
                     </div>
+                }
+            </div>
+        </div>
+
+        <!-- Assessment Notes Log -->
+        <div class="card mb-3">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-journal-text me-2" aria-hidden="true"></i>@Localizer["Section.Notes"]</h5>
+                @if (_assessmentNotes.Count > 0)
+                {
+                    <span class="badge bg-secondary">@_assessmentNotes.Count</span>
+                }
+            </div>
+            <div class="card-body">
+                @if (_assessmentNotes.Count == 0)
+                {
+                    <p class="text-muted mb-0">@Localizer["Notes.Empty"]</p>
+                }
+                else
+                {
+                    <ul class="list-unstyled mb-0">
+                        @foreach (var note in _assessmentNotes)
+                        {
+                            <li class="mb-2 pb-2 border-bottom">
+                                <div class="mb-1">
+                                    @if (note.NoteType == AssessmentNoteTypes.HomeVisit)
+                                    {
+                                        <span class="badge bg-warning text-dark me-1">@Localizer["Note.TypeHomeVisit"]</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary me-1">@Localizer["Note.TypeGeneral"]</span>
+                                    }
+                                    <small class="text-muted">@note.CreatedOn.ToLocalTime().ToString("yyyy-MM-dd HH:mm") — @note.CreatedBy</small>
+                                </div>
+                                <div class="text-body" style="white-space: pre-wrap;">@note.Text</div>
+                            </li>
+                        }
+                    </ul>
                 }
             </div>
         </div>
@@ -283,6 +339,7 @@ else
     private List<Models.Cohort> _growerCohorts = new();
     private List<Models.Cohort> _availableCohorts = new();
     private List<Models.Assessment> _assessments = new();
+    private List<Models.AssessmentNote> _assessmentNotes = new();
     private int _cohortToAdd;
     private int _pendingRemoveCohortId;
     private DateTime _exitDate = DateTime.Today;
@@ -425,6 +482,11 @@ else
         var all = await AssessmentService.GetAssessmentsByGrowerAsync(_grower.GrowerId);
         _assessments = (all ?? new List<Models.Assessment>())
             .OrderByDescending(a => a.AssessmentDate)
+            .ToList();
+
+        var notes = await AssessmentService.GetNotesByGrowerAsync(_grower.GrowerId);
+        _assessmentNotes = (notes ?? new List<Models.AssessmentNote>())
+            .OrderByDescending(n => n.CreatedOn)
             .ToList();
     }
 
