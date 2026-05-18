@@ -253,5 +253,40 @@ namespace OpenEug.TenTrees.Module.Assessment.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+
+        [HttpGet("{id}/problems")]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<Models.AssessmentProblem>>> GetProblems(int id)
+        {
+            try
+            {
+                var problems = await _assessmentService.GetProblemsByAssessmentAsync(id);
+                return Ok(problems);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Read, "AssessmentProblem Get Failed {AssessmentId} {Error}", id, ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpPut("{id}/problems")]
+        [Authorize]
+        public async Task<ActionResult> PutProblems(int id, [FromBody] List<Models.AssessmentProblem> problems)
+        {
+            try
+            {
+                if (problems == null)
+                    return BadRequest();
+
+                await _assessmentService.ReplaceProblemsAsync(id, problems);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Update, "AssessmentProblem Replace Failed {AssessmentId} {Error}", id, ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
     }
 }

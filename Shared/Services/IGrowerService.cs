@@ -7,6 +7,7 @@ namespace OpenEug.TenTrees.Module.Grower.Services
     public interface IGrowerService
     {
         Task<Models.Grower> GetGrowerAsync(int growerId);
+        Task<Models.Grower> AddGrowerAsync(Models.Grower grower, int moduleId);
         Task<List<Models.Grower>> GetAllGrowersAsync(int? villageId = null);
         Task<Models.Grower> ToggleActiveStatusAsync(int growerId, int moduleId);
         Task<Models.Grower> RecordProgramExitAsync(int growerId, ProgramExitRequest request, int moduleId);

@@ -1,3 +1,12 @@
+---
+name: kanban
+description: |
+  Manage a file-system Kanban board using the KanBanLess system. Use when the user
+  asks to create, move, update, or list kanban tasks, columns, or boards.
+author: Skiller
+version: 1.0.0
+---
+
 # KanBanLess Skill
 
 Manage a Kanban board entirely in the file system.

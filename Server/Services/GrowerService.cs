@@ -21,6 +21,9 @@ namespace OpenEug.TenTrees.Module.Grower.Services
         private readonly ILogManager _logger;
         private readonly IHttpContextAccessor _accessor;
         private readonly Alias _alias;
+        private bool _userResolved;
+        private bool _isMentor;
+        private string _currentUsername;
 
         public ServerGrowerService(
             IGrowerRepository growerRepository, 
@@ -165,6 +168,22 @@ namespace OpenEug.TenTrees.Module.Grower.Services
             return Task.FromResult(summary);
         }
 
+        public Task<Models.Grower> AddGrowerAsync(Models.Grower grower, int moduleId)
+        {
+            if (_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.Edit))
+            {
+                grower.Status = GrowerStatus.Active;
+                grower = _growerRepository.AddGrower(grower);
+                _logger.Log(LogLevel.Information, this, LogFunction.Create, "Grower Added {Grower}", grower);
+            }
+            else
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Grower Add Attempt {Grower}", grower);
+                grower = null;
+            }
+            return Task.FromResult(grower);
+        }
+
         public Task<Models.Grower> UpdateGrowerAsync(Models.Grower grower, int moduleId)
         {
             if (_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.Edit))
@@ -186,10 +205,25 @@ namespace OpenEug.TenTrees.Module.Grower.Services
             return Task.CompletedTask;
         }
 
-        private bool IsMentor() =>
-            _accessor.HttpContext.User.IsInRole(AppRoleNames.Mentor);
+        private bool IsMentor()
+        {
+            ResolveUser();
+            return _isMentor;
+        }
 
-        private string CurrentUsername() =>
-            _accessor.HttpContext.User.Identity?.Name;
+        private string CurrentUsername()
+        {
+            ResolveUser();
+            return _currentUsername;
+        }
+
+        private void ResolveUser()
+        {
+            if (_userResolved) return;
+            var user = _accessor.HttpContext?.User;
+            _isMentor = user?.IsInRole(AppRoleNames.Mentor) ?? false;
+            _currentUsername = user?.Identity?.Name;
+            _userResolved = true;
+        }
     }
 }

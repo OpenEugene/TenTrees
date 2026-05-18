@@ -23,6 +23,24 @@ namespace OpenEug.TenTrees.Module.Grower.Controllers
             _growerService = growerService;
         }
 
+        [HttpPost]
+        [Authorize(Policy = PolicyNames.EditModule)]
+        public async Task<ActionResult<Models.Grower>> Post([FromBody] Models.Grower grower, int moduleId)
+        {
+            try
+            {
+                if (!ModelState.IsValid) return BadRequest(ModelState);
+                var added = await _growerService.AddGrowerAsync(grower, moduleId);
+                if (added == null) return StatusCode(StatusCodes.Status403Forbidden);
+                return Ok(added);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Create, "Grower Add Failed {Grower} {Error}", grower, ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
         [HttpGet("{id}")]
         [Authorize]
         public async Task<ActionResult<Models.Grower>> Get(int id)

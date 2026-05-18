@@ -1,0 +1,660 @@
+@using OpenEug.TenTrees.Module.Grower.Services
+@using OpenEug.TenTrees.Module.Village.Services
+@using OpenEug.TenTrees.Module.Cohort.Services
+@using OpenEug.TenTrees.Module.Assessment.Services
+@using OpenEug.TenTrees.Models
+@using Oqtane.UI
+
+@namespace OpenEug.TenTrees.Module.Grower
+@inherits ModuleBase
+@inject IGrowerService GrowerService
+@inject IVillageService VillageService
+@inject ICohortService CohortService
+@inject IAssessmentService AssessmentService
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+@inject Oqtane.Services.IModuleService ModuleService
+
+@if (_isLoading)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div>
+        <!-- Grower Info -->
+        <div class="card mb-3">
+            <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <span>@(_growerId == 0 ? "Add Grower" : "Edit Grower")</span>
+                @if (_growerId > 0)
+                {
+                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                        <span class="badge @GetStatusBadgeClass(_grower.Status)">@GetStatusText(_grower.Status)</span>
+                        @if (UserSecurity.IsAuthorized(PageState.User, AppRoleNames.TenTreesAdmin))
+                        {
+                            @if (_grower.Status == GrowerStatus.Active)
+                            {
+                                <button class="btn btn-warning btn-sm" @onclick="ToggleInactive">
+                                    <span class="oi oi-media-pause"></span> Mark Inactive
+                                </button>
+                                <button class="btn btn-danger btn-sm" @onclick="ShowExitModal">
+                                    <span class="oi oi-account-logout"></span> Record Exit
+                                </button>
+                            }
+                            else if (_grower.Status == GrowerStatus.Inactive)
+                            {
+                                <button class="btn btn-success btn-sm" @onclick="ToggleActive">
+                                    <span class="oi oi-media-play"></span> Mark Active
+                                </button>
+                                <button class="btn btn-danger btn-sm" @onclick="ShowExitModal">
+                                    <span class="oi oi-account-logout"></span> Record Exit
+                                </button>
+                            }
+                        }
+                    </div>
+                }
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" @bind="_grower.GrowerName" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Village <span class="text-danger">*</span></label>
+                        <select class="form-select" @bind="_grower.VillageId">
+                            <option value="0">-- Select Village --</option>
+                            @foreach (var v in _villages)
+                            {
+                                <option value="@v.VillageId">@v.VillageName</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">House Number</label>
+                        <input type="text" class="form-control" @bind="_grower.HouseNumber" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">ID Number</label>
+                        <input type="text" class="form-control" @bind="_grower.IdNumber" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Birth Date</label>
+                        <input type="date" class="form-control" @bind="_grower.BirthDate" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Household Size</label>
+                        <input type="number" class="form-control" min="1" @bind="_grower.HouseholdSize" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Mentor Username</label>
+                        <input type="text" class="form-control" @bind="_grower.MentorUsername" />
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-check mt-2">
+                            <input class="form-check-input" type="checkbox" id="ownsHome" @bind="_grower.OwnsHome" />
+                            <label class="form-check-label" for="ownsHome">Owns Home</label>
+                        </div>
+                    </div>
+                </div>
+
+                @if (!string.IsNullOrEmpty(_saveError))
+                {
+                    <div class="alert alert-danger mt-2">@_saveError</div>
+                }
+
+                <div class="mt-3 d-flex gap-2">
+                    <button class="btn btn-success" @onclick="SaveAsync" disabled="@_isSaving">
+                        <span class="oi oi-check"></span> @(_isSaving ? "Saving..." : "Save")
+                    </button>
+                    <button class="btn btn-secondary" @onclick="NavigateBack">
+                        <span class="oi oi-arrow-left"></span> Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        @if (_growerId > 0)
+        {
+            <!-- Trees -->
+            <div class="card mb-3">
+                <div class="card-header">Trees</div>
+                <div class="card-body">
+                    <TreeList RenderModeBoundary="RenderModeBoundary" GrowerId="@_growerId" IsReadOnly="false" />
+                </div>
+            </div>
+
+            <!-- Cohort Membership -->
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5><span class="oi oi-layers me-2" aria-hidden="true"></span>Cohorts</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex flex-wrap align-items-center gap-2">
+                        @foreach (var cohort in _growerCohorts)
+                        {
+                            @if (_pendingRemoveCohortId == cohort.CohortId)
+                            {
+                                <span class="badge bg-warning text-dark d-inline-flex align-items-center gap-1 py-2 px-2">
+                                    Remove <strong>@cohort.Name</strong>?
+                                    <button class="btn btn-sm btn-warning border-0 py-0 px-1 fw-bold"
+                                            aria-label="Confirm remove @cohort.Name"
+                                            @onclick="@(async () => await RemoveGrowerCohort(cohort.CohortId))">Yes</button>
+                                    <button class="btn btn-sm btn-outline-secondary border-0 py-0 px-1"
+                                            aria-label="Cancel remove @cohort.Name"
+                                            @onclick="@(() => _pendingRemoveCohortId = 0)">No</button>
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-primary d-inline-flex align-items-center gap-1 py-2 px-2">
+                                    @cohort.Name
+                                    @if (UserSecurity.IsAuthorized(PageState.User, AppRoleNames.TenTreesAdmin))
+                                    {
+                                        <button class="btn-close btn-close-white ms-1"
+                                                style="font-size:0.55em;"
+                                                aria-label="@($"Remove cohort {cohort.Name}")"
+                                                @onclick="@(() => _pendingRemoveCohortId = cohort.CohortId)"></button>
+                                    }
+                                </span>
+                            }
+                        }
+                        @if (_growerCohorts.Count == 0)
+                        {
+                            <span class="text-muted small">No cohorts assigned.</span>
+                        }
+                        @if (UserSecurity.IsAuthorized(PageState.User, AppRoleNames.TenTreesAdmin))
+                        {
+                            @if (_availableCohorts.Count > 0)
+                            {
+                                <select class="form-select form-select-sm w-auto"
+                                        @bind="_cohortToAdd" @bind:after="AddGrowerCohort">
+                                    <option value="0">Add to cohort</option>
+                                    @foreach (var c in _availableCohorts)
+                                    {
+                                        <option value="@c.CohortId">@c.Name</option>
+                                    }
+                                </select>
+                            }
+                            else
+                            {
+                                <span class="text-muted small"><span class="oi oi-info me-1" aria-hidden="true"></span>No cohorts available for this village.</span>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Exit info when exited -->
+            @if (_grower.Status == GrowerStatus.Exited && _grower.ExitDate.HasValue)
+            {
+                <div class="alert alert-secondary mb-2">
+                    <strong>Exited:</strong> @_grower.ExitDate.Value.ToString("yyyy-MM-dd")
+                    &nbsp;&mdash;&nbsp;<strong>Reason:</strong> @(_grower.ExitReason ?? "-")
+                    @if (!string.IsNullOrWhiteSpace(_grower.ExitNotes))
+                    {
+                        <span>&nbsp;&mdash;&nbsp;@_grower.ExitNotes</span>
+                    }
+                </div>
+            }
+
+            <!-- Exit Form -->
+            @if (_showExitForm && UserSecurity.IsAuthorized(PageState.User, AppRoleNames.TenTreesAdmin))
+            {
+                <div class="card mb-2 border-danger">
+                    <div class="card-header bg-danger text-white">
+                        <h5>Record Program Exit</h5>
+                    </div>
+                    <div class="card-body">
+                        <form @ref="_exitForm" class="@(_exitValidated ? "was-validated" : "needs-validation")" novalidate>
+                            <div class="mb-3">
+                                <label for="exitDate" class="form-label">Exit Date</label>
+                                <input id="exitDate" type="date" class="form-control" @bind="_exitDate" required />
+                                <div class="invalid-feedback">Exit date is required.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="exitReason" class="form-label">Exit Reason</label>
+                                <select id="exitReason" class="form-select" @bind="_exitReason" required>
+                                    <option value="">-- Select --</option>
+                                    <option value="MovedAway">Moved Away</option>
+                                    <option value="Deceased">Deceased</option>
+                                    <option value="Voluntary">Voluntary</option>
+                                    <option value="NonCompliance">Non-Compliance</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                                <div class="invalid-feedback">Exit reason is required.</div>
+                            </div>
+                            @if (_exitReason == "Other")
+                            {
+                                <div class="mb-3">
+                                    <label for="exitNotes" class="form-label">Notes</label>
+                                    <textarea id="exitNotes" class="form-control" rows="3" @bind="_exitNotes" required></textarea>
+                                    <div class="invalid-feedback">Notes are required when reason is Other.</div>
+                                </div>
+                            }
+                            <div class="alert alert-warning">
+                                <span class="oi oi-warning"></span> This action will record the grower as having exited the program.
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button type="button" class="btn btn-danger" @onclick="SubmitExit">Confirm Exit</button>
+                                <button type="button" class="btn btn-secondary" @onclick="CancelExit">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            }
+
+            <!-- Assessment History -->
+            <div class="card mb-3">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><span class="oi oi-clipboard me-2" aria-hidden="true"></span>Assessments</h5>
+                    @if (_assessmentModuleId.HasValue && _assessmentPagePath != null)
+                    {
+                        var returnUrl = Uri.EscapeDataString(EditUrl("Edit", $"id={_growerId}"));
+                        var addHref = NavigateUrl(_assessmentPagePath, _assessmentModuleId.Value, "Add", $"growerId={_growerId}&returnurl={returnUrl}");
+                        <a href="@addHref" class="btn btn-sm btn-primary">
+                            <span class="oi oi-plus me-1" aria-hidden="true"></span>Add Assessment
+                        </a>
+                    }
+                </div>
+                <div class="card-body">
+                    @if (_assessments.Count == 0)
+                    {
+                        <p class="text-muted">No assessments recorded.</p>
+                    }
+                    else
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-sm table-striped mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Trees</th>
+                                        <th>Permaculture</th>
+                                        <th>Needs Help</th>
+                                        <th>Notes</th>
+                                        <th><span class="visually-hidden">Actions</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var assessment in _assessments)
+                                    {
+                                        <tr>
+                                            <td>@assessment.AssessmentDate.ToString("yyyy-MM-dd")</td>
+                                            <td>@(assessment.TreesPlanted > 0 ? $"{assessment.TreesAlive * 100 / assessment.TreesPlanted}% ({assessment.TreesAlive}/{assessment.TreesPlanted})" : "N/A")</td>
+                                            <td>@assessment.PermaculturePrinciplesCount / 9</td>
+                                            <td>
+                                                @if (assessment.NeedsHelp)
+                                                {
+                                                    <span class="badge bg-danger">Yes</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-success">No</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @{
+                                                    var noteCount = _assessmentNotes.Count(n => n.AssessmentId == assessment.AssessmentId);
+                                                    var homeVisitCount = _assessmentNotes.Count(n => n.AssessmentId == assessment.AssessmentId && n.NoteType == AssessmentNoteTypes.HomeVisit);
+                                                }
+                                                @if (noteCount == 0)
+                                                {
+                                                    <span class="text-muted">-</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-secondary me-1" title="Total notes">@noteCount</span>
+                                                    @if (homeVisitCount > 0)
+                                                    {
+                                                        <span class="badge bg-warning text-dark" title="Home visit notes">@homeVisitCount HV</span>
+                                                    }
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (_assessmentModuleId.HasValue && _assessmentPagePath != null)
+                                                {
+                                                    var returnUrl = Uri.EscapeDataString(EditUrl("Edit", $"id={_growerId}"));
+                                                    var assessmentHref = NavigateUrl(_assessmentPagePath, _assessmentModuleId.Value, "Edit", $"id={assessment.AssessmentId}&returnurl={returnUrl}");
+                                                    <a href="@assessmentHref" class="btn btn-sm btn-outline-secondary" title="View Assessment">
+                                                        <span class="oi oi-external-link" aria-hidden="true"></span>
+                                                        View Assessment
+                                                    </a>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Assessment Notes Log -->
+            <div class="card mb-3">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><span class="oi oi-book me-2" aria-hidden="true"></span>Notes</h5>
+                    @if (_assessmentNotes.Count > 0)
+                    {
+                        <span class="badge bg-secondary">@_assessmentNotes.Count</span>
+                    }
+                </div>
+                <div class="card-body">
+                    @if (_assessmentNotes.Count == 0)
+                    {
+                        <p class="text-muted mb-0">No notes recorded.</p>
+                    }
+                    else
+                    {
+                        <ul class="list-unstyled mb-0">
+                            @foreach (var note in _assessmentNotes)
+                            {
+                                <li class="mb-2 pb-2 border-bottom">
+                                    <div class="mb-1">
+                                        @if (note.NoteType == AssessmentNoteTypes.HomeVisit)
+                                        {
+                                            <span class="badge bg-warning text-dark me-1">Home Visit</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary me-1">General</span>
+                                        }
+                                        <small class="text-muted">@note.CreatedOn.ToLocalTime().ToString("yyyy-MM-dd HH:mm") — @note.CreatedBy</small>
+                                    </div>
+                                    <div class="text-body" style="white-space: pre-wrap;">@note.Text</div>
+                                </li>
+                            }
+                        </ul>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    public override bool UseAdminContainer => false;
+
+    private Models.Grower _grower = new() { HouseholdSize = 1 };
+    private List<Models.Village> _villages = new();
+    private List<Models.Cohort> _growerCohorts = new();
+    private List<Models.Cohort> _availableCohorts = new();
+    private List<Models.Assessment> _assessments = new();
+    private List<Models.AssessmentNote> _assessmentNotes = new();
+    private bool _isLoading = true;
+    private bool _isSaving;
+    private string? _saveError;
+    private int _growerId;
+    private int? _assessmentModuleId;
+    private string? _assessmentPagePath;
+    private bool _showExitForm;
+    private DateTime _exitDate = DateTime.Today;
+    private string _exitReason = "";
+    private string _exitNotes = "";
+    private ElementReference _exitForm;
+    private bool _exitValidated;
+    private int _cohortToAdd;
+    private int _pendingRemoveCohortId;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        try
+        {
+            _isLoading = true;
+            _villages = await VillageService.GetActiveVillagesAsync();
+            await LoadAssessmentModuleAsync();
+
+            if (PageState.QueryString.ContainsKey("id") &&
+                int.TryParse(PageState.QueryString["id"], out var id) && id > 0)
+            {
+                _growerId = id;
+                var loaded = await GrowerService.GetGrowerAsync(_growerId);
+                if (loaded != null)
+                {
+                    _grower = loaded;
+                    await LoadCohortDataAsync();
+                    await LoadAssessmentsAsync();
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Loading Grower Edit {Error}", ex.Message);
+            AddModuleMessage("Unable to load grower.", MessageType.Error);
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private async Task SaveAsync()
+    {
+        _saveError = null;
+        if (string.IsNullOrWhiteSpace(_grower.GrowerName))
+        {
+            _saveError = "Name is required.";
+            return;
+        }
+        if (_grower.VillageId == 0)
+        {
+            _saveError = "Village is required.";
+            return;
+        }
+
+        _isSaving = true;
+        try
+        {
+            if (_growerId == 0)
+            {
+                var result = await GrowerService.AddGrowerAsync(_grower, ModuleState.ModuleId);
+                if (result != null)
+                    NavigationManager.NavigateTo(EditUrl("Edit", $"id={result.GrowerId}"));
+                else
+                    _saveError = "Unable to add grower. Please try again.";
+            }
+            else
+            {
+                var result = await GrowerService.UpdateGrowerAsync(_grower, ModuleState.ModuleId);
+                if (result == null)
+                    _saveError = "Unable to save changes. Please try again.";
+            }
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Saving Grower {Error}", ex.Message);
+            _saveError = "Unable to save grower. Please try again.";
+        }
+        finally
+        {
+            _isSaving = false;
+        }
+    }
+
+    private async Task ToggleInactive()
+    {
+        try
+        {
+            _grower = await GrowerService.ToggleActiveStatusAsync(_grower.GrowerId, ModuleState.ModuleId);
+            AddModuleMessage("Status updated.", MessageType.Success);
+            await logger.LogInformation("Grower {GrowerId} marked Inactive", _grower.GrowerId);
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Toggling Status {GrowerId} {Error}", _grower.GrowerId, ex.Message);
+            AddModuleMessage("Unable to update status.", MessageType.Error);
+        }
+    }
+
+    private async Task ToggleActive()
+    {
+        try
+        {
+            _grower = await GrowerService.ToggleActiveStatusAsync(_grower.GrowerId, ModuleState.ModuleId);
+            AddModuleMessage("Status updated.", MessageType.Success);
+            await logger.LogInformation("Grower {GrowerId} marked Active", _grower.GrowerId);
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Toggling Status {GrowerId} {Error}", _grower.GrowerId, ex.Message);
+            AddModuleMessage("Unable to update status.", MessageType.Error);
+        }
+    }
+
+    private void ShowExitModal()
+    {
+        _showExitForm = true;
+        _exitDate = DateTime.Today;
+        _exitReason = "";
+        _exitNotes = "";
+        _exitValidated = false;
+    }
+
+    private void CancelExit()
+    {
+        _showExitForm = false;
+    }
+
+    private async Task SubmitExit()
+    {
+        _exitValidated = true;
+        var interop = new Interop(JSRuntime);
+
+        if (!await interop.FormValid(_exitForm))
+            return;
+
+        try
+        {
+            var request = new ProgramExitRequest
+            {
+                GrowerId = _grower.GrowerId,
+                ExitDate = _exitDate,
+                ExitReason = _exitReason,
+                Notes = _exitNotes
+            };
+
+            _grower = await GrowerService.RecordProgramExitAsync(_grower.GrowerId, request, ModuleState.ModuleId);
+
+            if (_grower != null)
+            {
+                AddModuleMessage("Program exit recorded.", MessageType.Success);
+                await logger.LogInformation("Program Exit Recorded {GrowerId} Reason: {Reason}", _grower.GrowerId, _exitReason);
+                _showExitForm = false;
+                StateHasChanged();
+            }
+            else
+            {
+                AddModuleMessage("Unable to record program exit.", MessageType.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Recording Exit {GrowerId} {Error}", _grower.GrowerId, ex.Message);
+            AddModuleMessage("Unable to record program exit.", MessageType.Error);
+        }
+    }
+
+    private async Task LoadCohortDataAsync()
+    {
+        _growerCohorts = await CohortService.GetCohortsByGrowerAsync(_grower.GrowerId);
+        var villageCohorts = await CohortService.GetCohortsByVillageAsync(_grower.VillageId);
+        var linked = _growerCohorts.Select(c => c.CohortId).ToHashSet();
+        _availableCohorts = villageCohorts
+            .Where(c => !linked.Contains(c.CohortId) && c.Status != Models.CohortStatus.Completed)
+            .OrderBy(c => c.Name).ToList();
+    }
+
+    private async Task LoadAssessmentModuleAsync()
+    {
+        try
+        {
+            var siteModules = await ModuleService.GetModulesAsync(PageState.Site.SiteId);
+            var assessmentModule = siteModules?
+                .FirstOrDefault(m => m.ModuleDefinitionName.StartsWith("OpenEug.TenTrees.Module.Assessment"));
+            if (assessmentModule != null)
+            {
+                _assessmentModuleId = assessmentModule.ModuleId;
+                var page = PageState.Pages?.FirstOrDefault(p => p.PageId == assessmentModule.PageId);
+                _assessmentPagePath = page?.Path;
+            }
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Loading Assessment Module {Error}", ex.Message);
+        }
+    }
+
+    private async Task LoadAssessmentsAsync()
+    {
+        var all = await AssessmentService.GetAssessmentsByGrowerAsync(_grower.GrowerId);
+        _assessments = (all ?? new List<Models.Assessment>())
+            .OrderByDescending(a => a.AssessmentDate)
+            .ToList();
+
+        var notes = await AssessmentService.GetNotesByGrowerAsync(_grower.GrowerId);
+        _assessmentNotes = (notes ?? new List<Models.AssessmentNote>())
+            .OrderByDescending(n => n.CreatedOn)
+            .ToList();
+    }
+
+    private async Task AddGrowerCohort()
+    {
+        if (_cohortToAdd == 0) return;
+        try
+        {
+            await CohortService.AddGrowerToCohortAsync(_cohortToAdd, _grower.GrowerId);
+            _cohortToAdd = 0;
+            _pendingRemoveCohortId = 0;
+            await LoadCohortDataAsync();
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error adding Grower {Id} to Cohort {Error}", _grower.GrowerId, ex.Message);
+            AddModuleMessage("Unable to add cohort.", MessageType.Error);
+        }
+    }
+
+    private async Task RemoveGrowerCohort(int cohortId)
+    {
+        try
+        {
+            await CohortService.RemoveGrowerFromCohortAsync(cohortId, _grower.GrowerId);
+            _pendingRemoveCohortId = 0;
+            await LoadCohortDataAsync();
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error removing Grower {Id} from Cohort {Error}", _grower.GrowerId, ex.Message);
+            AddModuleMessage("Unable to remove cohort.", MessageType.Error);
+        }
+    }
+
+    private void NavigateBack()
+    {
+        if (PageState.QueryString.ContainsKey("returnurl"))
+            NavigationManager.NavigateTo(PageState.QueryString["returnurl"]);
+        else
+            NavigationManager.NavigateTo(NavigateUrl());
+    }
+
+    private string GetStatusBadgeClass(GrowerStatus status) => status switch
+    {
+        GrowerStatus.Active => "bg-success",
+        GrowerStatus.Inactive => "bg-warning",
+        GrowerStatus.Exited => "bg-secondary",
+        _ => "bg-light"
+    };
+
+    private string GetStatusText(GrowerStatus status) => status switch
+    {
+        GrowerStatus.Active => "Active",
+        GrowerStatus.Inactive => "Inactive",
+        GrowerStatus.Exited => "Exited",
+        _ => status.ToString()
+    };
+}

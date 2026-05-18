@@ -18,6 +18,11 @@ namespace OpenEug.TenTrees.Module.Grower.Services
             return await GetJsonAsync<Models.Grower>($"{ApiUrl}/{growerId}");
         }
 
+        public async Task<Models.Grower> AddGrowerAsync(Models.Grower grower, int moduleId)
+        {
+            return await PostJsonAsync<Models.Grower>(CreateAuthorizationPolicyUrl($"{ApiUrl}?moduleId={moduleId}", EntityNames.Module, moduleId), grower);
+        }
+
         public async Task<List<Models.Grower>> GetAllGrowersAsync(int? villageId = null)
         {
             string url = $"{ApiUrl}/all";
