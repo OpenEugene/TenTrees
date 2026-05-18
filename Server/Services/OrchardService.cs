@@ -1,7 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System;
 using Oqtane.Enums;
 using Oqtane.Infrastructure;
 using Oqtane.Shared;
@@ -67,14 +67,14 @@ namespace OpenEug.TenTrees.Module.Grower.Services
         {
             if (request == null)
             {
-                throw new ArgumentException("Tree request is required.", nameof(request));
+                throw new ArgumentNullException(nameof(request), "Tree request is required.");
             }
 
             var grower = _growerRepository.GetGrower(request.GrowerId, false);
             if (grower == null)
             {
                 _logger.Log(LogLevel.Warning, this, LogFunction.Create, "AddTree rejected. Grower not found {GrowerId}", request.GrowerId);
-                throw new ArgumentException($"Grower does not exist: {request.GrowerId}", nameof(request.GrowerId));
+                throw new ArgumentException($"Grower does not exist: {request.GrowerId}", nameof(request));
             }
 
             var orchard = _orchardRepository.GetOrDefaultOrchard(request.GrowerId);
