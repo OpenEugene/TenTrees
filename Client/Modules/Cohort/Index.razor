@@ -25,7 +25,10 @@ else
                 <option value="All">All</option>
             </select>
         </div>
-        <ActionLink Action="Edit" Text="Add Cohort" Class="btn btn-primary" Security="SecurityAccessLevel.Edit" />
+        @if (UserSecurity.IsAuthorized(PageState.User, AppRoleNames.TenTreesAdmin))
+        {
+            <ActionLink Action="Edit" Text="Add Cohort" Class="btn btn-primary" />
+        }
     </div>
 
     @if (_filtered.Count != 0)

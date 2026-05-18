@@ -20,10 +20,10 @@
 else if (_grower == null)
 {
     <div class="alert alert-danger">
-        <i class="bi bi-exclamation-triangle"></i> @Localizer["Message.GrowerNotFound"]
+        <span class="oi oi-warning"></span> @Localizer["Message.GrowerNotFound"]
     </div>
     <button class="btn btn-secondary" @onclick="NavigateToIndex">
-        <i class="bi bi-arrow-left"></i> @Localizer["Action.BackToList"]
+        <span class="oi oi-arrow-left"></span> @Localizer["Action.BackToList"]
     </button>
 }
 else
@@ -76,19 +76,19 @@ else
                     @if (_grower.Status == GrowerStatus.Active)
                     {
                         <button class="btn btn-warning mb-2" @onclick="ToggleInactive">
-                            <i class="bi bi-pause-circle"></i> @Localizer["Action.MarkInactive"]
+                            <span class="oi oi-media-pause"></span> @Localizer["Action.MarkInactive"]
                         </button>
                         <button class="btn btn-danger mb-2 ms-2" @onclick="ShowExitModal">
-                            <i class="bi bi-box-arrow-right"></i> @Localizer["Action.RecordExit"]
+                            <span class="oi oi-account-logout"></span> @Localizer["Action.RecordExit"]
                         </button>
                     }
                     else if (_grower.Status == GrowerStatus.Inactive)
                     {
                         <button class="btn btn-success mb-2" @onclick="ToggleActive">
-                            <i class="bi bi-play-circle"></i> @Localizer["Action.MarkActive"]
+                            <span class="oi oi-media-play"></span> @Localizer["Action.MarkActive"]
                         </button>
                         <button class="btn btn-danger mb-2 ms-2" @onclick="ShowExitModal">
-                            <i class="bi bi-box-arrow-right"></i> @Localizer["Action.RecordExit"]
+                            <span class="oi oi-account-logout"></span> @Localizer["Action.RecordExit"]
                         </button>
                     }
                     else if (_grower.Status == GrowerStatus.Exited)
@@ -137,7 +137,7 @@ else
                         }
 
                         <div class="alert alert-warning">
-                            <i class="bi bi-exclamation-triangle"></i> @Localizer["Modal.ExitConfirm"]
+                            <span class="oi oi-warning"></span> @Localizer["Modal.ExitConfirm"]
                         </div>
 
                         <div class="d-flex gap-2">
@@ -213,7 +213,7 @@ else
         <!-- Assessment History -->
         <div class="card mb-3">
             <div class="card-header">
-                <h5><i class="bi bi-clipboard2-check me-2" aria-hidden="true"></i>@Localizer["Section.Assessments"]</h5>
+                <h5><span class="oi oi-clipboard me-2" aria-hidden="true"></span>@Localizer["Section.Assessments"]</h5>
             </div>
             <div class="card-body">
                 @if (_assessments.Count == 0)
@@ -271,7 +271,7 @@ else
                                         </td>
                                         <td>
                                             <a href="/Assessment" class="btn btn-sm btn-outline-secondary" title="@Localizer["Action.ViewRecord"]">
-                                                <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i>
+                                                <span class="oi oi-external-link" aria-hidden="true"></span>
                                                 <span class="visually-hidden">@Localizer["Action.ViewRecord"]</span>
                                             </a>
                                         </td>
@@ -287,7 +287,7 @@ else
         <!-- Assessment Notes Log -->
         <div class="card mb-3">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0"><i class="bi bi-journal-text me-2" aria-hidden="true"></i>@Localizer["Section.Notes"]</h5>
+                <h5 class="mb-0"><span class="oi oi-book me-2" aria-hidden="true"></span>@Localizer["Section.Notes"]</h5>
                 @if (_assessmentNotes.Count > 0)
                 {
                     <span class="badge bg-secondary">@_assessmentNotes.Count</span>
@@ -326,7 +326,7 @@ else
         <!-- Back Button -->
         <div class="mt-2">
             <button class="btn btn-secondary btn-sm" @onclick="NavigateToIndex">
-                <i class="bi bi-arrow-left"></i> @Localizer["Action.BackToList"]
+                <span class="oi oi-arrow-left"></span> @Localizer["Action.BackToList"]
             </button>
         </div>
     </div>

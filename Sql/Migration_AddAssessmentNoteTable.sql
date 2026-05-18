@@ -25,13 +25,8 @@ BEGIN
         [CreatedOn]        DATETIME2 (7)  NOT NULL,
         [ModifiedBy]       NVARCHAR (256) NOT NULL,
         [ModifiedOn]       DATETIME2 (7)  NOT NULL,
-        CONSTRAINT [PK_AssessmentNote] PRIMARY KEY CLUSTERED ([AssessmentNoteId] ASC),
-        CONSTRAINT [FK_AssessmentNote_Assessment] FOREIGN KEY ([AssessmentId])
-            REFERENCES [dbo].[Assessment] ([AssessmentId]) ON DELETE CASCADE
+        CONSTRAINT [PK_AssessmentNote] PRIMARY KEY CLUSTERED ([AssessmentNoteId] ASC)
     );
-
-    CREATE NONCLUSTERED INDEX [IX_AssessmentNote_AssessmentId]
-        ON [dbo].[AssessmentNote] ([AssessmentId] ASC);
 END;
 
 -- 2. If the legacy Notes column still exists, copy every non-empty value

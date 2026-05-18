@@ -96,6 +96,11 @@ namespace OpenEug.TenTrees.Module.Cohort.Services
                 throw new InvalidOperationException("Cohort name must be unique.");
             }
 
+            if (cohort.Status == Models.CohortStatus.Active && cohort.ActivatedOn == null)
+            {
+                cohort.ActivatedOn = DateTime.UtcNow;
+            }
+
             cohort = _cohortRepository.AddCohort(cohort);
             _logger.Log(LogLevel.Information, this, LogFunction.Create, "Cohort Added {Cohort}", cohort);
             return Task.FromResult(cohort);
