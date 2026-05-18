@@ -13,6 +13,7 @@ namespace OpenEug.TenTrees.Module.Grower.Repository
         Models.Orchard GetOrDefaultOrchard(int growerId);
         Models.Orchard AddOrchard(Models.Orchard orchard);
         IEnumerable<Models.Tree> GetTrees(int orchardId);
+        IEnumerable<Models.Tree> GetTreesByOrchardIds(IEnumerable<int> orchardIds);
         Models.Tree AddTree(Models.Tree tree);
         void DeleteTree(int treeId);
     }
@@ -56,6 +57,18 @@ namespace OpenEug.TenTrees.Module.Grower.Repository
         {
             using var db = _factory.CreateDbContext();
             return db.Tree.AsNoTracking().Where(t => t.OrchardId == orchardId).ToList();
+        }
+
+        public IEnumerable<Models.Tree> GetTreesByOrchardIds(IEnumerable<int> orchardIds)
+        {
+            var orchardIdList = orchardIds.ToList();
+            if (orchardIdList.Count == 0)
+            {
+                return new List<Models.Tree>();
+            }
+
+            using var db = _factory.CreateDbContext();
+            return db.Tree.AsNoTracking().Where(t => orchardIdList.Contains(t.OrchardId)).ToList();
         }
 
         public Models.Tree AddTree(Models.Tree tree)
