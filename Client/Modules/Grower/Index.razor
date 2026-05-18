@@ -130,10 +130,10 @@
                         <td>@(grower.ExitDate?.ToString("yyyy-MM-dd") ?? "-")</td>
                         <td>
                             <div class="d-flex gap-1">
-                                <ActionLink Action="Status" 
+                                <ActionLink Action="Edit" 
                                            Parameters="@($"id={grower.GrowerId}&returnurl={Uri.EscapeDataString(GetReturnUrl())}")"
-                                           Text="@Localizer["Action.ManageStatus"]" 
-                                           ResourceKey="ManageStatus" 
+                                           Text="Edit" 
+                                           ResourceKey="EditGrower" 
                                            Class="btn btn-sm btn-primary" />
                                 <ActionDialog Header="Delete Grower"
                                              Message="@($"Are you sure you wish to delete {grower.GrowerName}? This action cannot be undone.")"

@@ -18,5 +18,8 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
         Task<List<Models.AssessmentNote>> GetNotesByAssessmentAsync(int assessmentId);
         Task<List<Models.AssessmentNote>> GetNotesByGrowerAsync(int growerId);
         Task<Models.AssessmentNote> AddNoteAsync(Models.AssessmentNote note);
+
+        Task<List<Models.AssessmentProblem>> GetProblemsByAssessmentAsync(int assessmentId);
+        Task ReplaceProblemsAsync(int assessmentId, List<Models.AssessmentProblem> problems);
     }
 }

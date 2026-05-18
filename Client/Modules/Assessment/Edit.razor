@@ -9,11 +9,18 @@
 @inject IAssessmentService AssessmentService
 @inject IGrowerService GrowerService
 @inject ITreeTypeService TreeTypeService
+@inject IOrchardService OrchardService
+@inject Oqtane.Services.IModuleService ModuleService
 @inject NavigationManager NavigationManager
 @inject IStringLocalizer<Edit> Localizer
 
 <form @ref="form" class="@(validated ? " was-validated" : "needs-validation" )" novalidate>
     <div class="container">
+        <div class="mb-2">
+            <a href="@_backUrl" class="btn btn-link ps-0 text-decoration-none">
+                <span class="oi oi-arrow-left me-1" aria-hidden="true"></span>@Localizer["Back"]
+            </a>
+        </div>
         <h3>@Localizer["FormTitle"]</h3>
 
         <div class="row">
@@ -21,14 +28,21 @@
             <div class="col-lg-6">
                 <!-- Section 1: Grower Selection -->
                 <div class="card mb-3">
-                    <div class="card-header">
-                        <h5>@Localizer["Section.GrowerInfo"]</h5>
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">@Localizer["Section.GrowerInfo"]</h5>
+                        @if (_growerId > 0 && _growerModuleId.HasValue && _growerPagePath != null)
+                        {
+                            var growerHref = NavigateUrl(_growerPagePath, _growerModuleId.Value, "Edit", $"id={_growerId}");
+                            <a href="@growerHref" class="btn btn-sm btn-outline-secondary">
+                                <span class="oi oi-person me-1" aria-hidden="true"></span>View Grower
+                            </a>
+                        }
                     </div>
                     <div class="card-body">
                         <div class="row mb-2">
                             <Label Class="col-sm-4" For="growerid" ResourceKey="Grower">Grower:</Label>
                             <div class="col-sm-8">
-                                <select id="growerid" class="form-select" @bind="@_growerId" required disabled="@(_id > 0)">
+                                <select id="growerid" class="form-select" @bind="@_growerId" @bind:after="LoadTreesAsync" required disabled="@(_id > 0)">
                                     <option value="0">@Localizer["SelectGrower"]</option>
                                     @if (_growers != null)
                                     {
@@ -114,50 +128,53 @@
                         <h5>@Localizer["Section.Problems"]</h5>
                     </div>
                     <div class="card-body">
-                        <p>@Localizer["ProblemsPrompt"]</p>
-                        <div class="mb-2">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="prob_yellow" @bind="@_hasYellowLeaves" />
-                                <Label Class="form-check-label" For="prob_yellow" ResourceKey="Problem.YellowLeaves">The trees have yellow leaves</Label>
-                            </div>
-                        </div>
-                        <div class="mb-2">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="prob_broken" @bind="@_hasBrokenBranches" />
-                                <Label Class="form-check-label" For="prob_broken" ResourceKey="Problem.BrokenBranches">The trees have broken branches</Label>
-                            </div>
-                        </div>
-                        <div class="mb-2">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="prob_losing" @bind="@_hasLosingLeaves" />
-                                <Label Class="form-check-label" For="prob_losing" ResourceKey="Problem.LosingLeaves">The trees are losing their leaves</Label>
-                            </div>
-                        </div>
-                        <div class="mb-2">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="prob_dry" @bind="@_hasLookDry" />
-                                <Label Class="form-check-label" For="prob_dry" ResourceKey="Problem.LookDry">The trees look dry</Label>
-                            </div>
-                        </div>
-                        <div class="mb-2">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="prob_pests" @bind="@_hasPests" />
-                                <Label Class="form-check-label" For="prob_pests" ResourceKey="Problem.Pests">Pests eating the plant</Label>
-                            </div>
-                        </div>
-
-                        <hr />
-                        <div class="row mb-2 align-items-center">
-                            <Label Class="col-sm-8 mb-0" For="needshelp_yes" ResourceKey="NeedsHelp">Do you need someone to help with this problem?</Label>
-                            <div class="col-sm-4">
-                                <div class="btn-group w-100" role="group">
-                                    <input type="radio" class="btn-check" name="needshelp" id="needshelp_yes" autocomplete="off" checked="@(_needsHelp == true)" @onchange="@(() => OnNeedsHelpChanged(true))">
-                                    <label class="btn btn-outline-danger" for="needshelp_yes">@Localizer["Yes"]</label>
-                                    <input type="radio" class="btn-check" name="needshelp" id="needshelp_no" autocomplete="off" checked="@(_needsHelp == false)" @onchange="@(() => OnNeedsHelpChanged(false))">
-                                    <label class="btn btn-outline-success" for="needshelp_no">@Localizer["No"]</label>
+                        @if (_trees == null || _trees.Count == 0)
+                        {
+                            <p class="text-muted">@Localizer["Problems.NoTrees"]</p>
+                        }
+                        else
+                        {
+                            @foreach (var tree in _trees)
+                            {
+                                <div class="mb-3">
+                                    <div class="fw-semibold mb-1">@tree.TreeTypeName (@tree.Quantity)</div>
+                                    @foreach (var problemType in AssessmentProblemTypes.All)
+                                    {
+                                        var treeId = tree.TreeId;
+                                        var pType = problemType;
+                                        var checkId = $"prob_{treeId}_{pType}";
+                                        var isChecked = _problems.Any(p => p.TreeId == treeId && p.ProblemType == pType);
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="@checkId"
+                                                   checked="@isChecked"
+                                                   @onchange="@(e => ToggleProblem(treeId, pType, (bool)e.Value))" />
+                                            <label class="form-check-label" for="@checkId">@AssessmentProblemTypes.DisplayName(pType)</label>
+                                        </div>
+                                    }
+                                    @if (_problems.Any(p => p.TreeId == tree.TreeId))
+                                    {
+                                        var treeId = tree.TreeId;
+                                        var needsHelp = _problems.Where(p => p.TreeId == treeId).Any(p => p.NeedsHelp);
+                                        <div class="row mt-2 align-items-center">
+                                            <div class="col-sm-8 small">@Localizer["NeedsHelp"]</div>
+                                            <div class="col-sm-4">
+                                                <div class="btn-group w-100" role="group">
+                                                    <input type="radio" class="btn-check" name="needshelp_@treeId" id="nh_yes_@treeId" autocomplete="off"
+                                                           checked="@needsHelp"
+                                                           @onchange="@(() => SetNeedsHelp(treeId, true))" />
+                                                    <label class="btn btn-sm btn-outline-danger" for="nh_yes_@treeId">@Localizer["Yes"]</label>
+                                                    <input type="radio" class="btn-check" name="needshelp_@treeId" id="nh_no_@treeId" autocomplete="off"
+                                                           checked="@(!needsHelp)"
+                                                           @onchange="@(() => SetNeedsHelp(treeId, false))" />
+                                                    <label class="btn btn-sm btn-outline-success" for="nh_no_@treeId">@Localizer["No"]</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
                                 </div>
-                            </div>
-                        </div>
+                                <hr />
+                            }
+                        }
                     </div>
                 </div>
             </div>
@@ -335,7 +352,7 @@
                             </ul>
                         }
 
-                        @if (_needsHelp)
+                        @if (_problems.Any(p => p.NeedsHelp))
                         {
                             <div class="alert alert-warning py-2 small mb-2" role="status">
                                 <span class="oi oi-warning me-1" aria-hidden="true"></span>
@@ -355,8 +372,7 @@
                                     <option value="@AssessmentNoteTypes.HomeVisit">@Localizer["Note.TypeHomeVisit"]</option>
                                 </select>
                                 <button type="button" class="btn btn-sm btn-outline-primary"
-                                        @onclick="AddPendingNote"
-                                        disabled="@(string.IsNullOrWhiteSpace(_newNoteText))">
+                                        @onclick="AddPendingNote">
                                     <span class="oi oi-plus me-1" aria-hidden="true"></span>@Localizer["Note.AddButton"]
                                 </button>
                                 <small class="text-muted ms-auto">@Localizer["Note.ImmutableHint"]</small>
@@ -374,7 +390,7 @@
     {
         <button type="button" class="btn btn-outline-info" @onclick="LoadDraft">@Localizer["LoadDraft"]</button>
     }
-    <NavLink class="btn btn-secondary" href="@NavigateUrl()">@Localizer["Cancel"]</NavLink>
+    <NavLink class="btn btn-secondary" href="@_backUrl">@Localizer["Cancel"]</NavLink>
     @if (PageState.Action == "Edit")
     {
         <ActionDialog Header="@Localizer["Dialog.Delete.Header"]"
@@ -403,6 +419,10 @@
     private int _id;
     private List<Models.Grower> _growers;
     private List<Models.TreeType> _availableTreeTypes;
+    private List<TreeDetailDto> _trees = new();
+    private List<Models.AssessmentProblem> _problems = new();
+    private int? _growerModuleId;
+    private string? _growerPagePath;
 
     // Basic Info
     private int _growerId;
@@ -447,6 +467,9 @@
     private DateTime _modifiedon;
 
     private bool _loaded = false;
+    private string _backUrl => PageState.QueryString.ContainsKey("returnurl")
+        ? Uri.UnescapeDataString(PageState.QueryString["returnurl"])
+        : NavigateUrl();
     private bool _hasDraft = false;
     private const string DraftKey = "TenTrees_Assessment_Draft_V2";
 
@@ -465,10 +488,18 @@
 
         try
         {
+            await LoadGrowerModuleAsync();
             var allGrowers = await GrowerService.GetActiveGrowersAsync();
             _availableTreeTypes = await TreeTypeService.GetActiveTreeTypesAsync();
 
             _growers = allGrowers;
+
+            if (PageState.Action == "Add" && PageState.QueryString.ContainsKey("growerId") &&
+                int.TryParse(PageState.QueryString["growerId"], out var preGrowerId) && preGrowerId > 0)
+            {
+                _growerId = preGrowerId;
+                await LoadTreesAsync();
+            }
 
             if (PageState.Action == "Edit")
             {
@@ -515,6 +546,8 @@
                         _isUsingGreywater = assessment.IsUsingGreywater;
 
                         _existingNotes = await AssessmentService.GetNotesByAssessmentAsync(_id) ?? new List<Models.AssessmentNote>();
+                        await LoadTreesAsync();
+                        _problems = await AssessmentService.GetProblemsByAssessmentAsync(_id) ?? new List<Models.AssessmentProblem>();
 
                         _createdby = assessment.CreatedBy;
                         _createdon = assessment.CreatedOn;
@@ -714,12 +747,13 @@
 
                     assessment = await AssessmentService.AddAssessmentAsync(assessment);
                     await logger.LogInformation("Assessment Added {Assessment}", assessment);
+                    await AssessmentService.ReplaceProblemsAsync(assessment.AssessmentId, _problems);
 
                     if (await PersistPendingNotesAsync(assessment.AssessmentId))
                     {
                         await JSRuntime.InvokeVoidAsync("localStorage.removeItem", DraftKey);
                         AddModuleMessage(Localizer["Message.SaveSuccess"], MessageType.Success);
-                        NavigationManager.NavigateTo(NavigateUrl());
+                        NavigationManager.NavigateTo(_backUrl);
                     }
                 }
                 else
@@ -752,12 +786,13 @@
 
                     await AssessmentService.UpdateAssessmentAsync(assessment);
                     await logger.LogInformation("Assessment Updated {Assessment}", assessment);
+                    await AssessmentService.ReplaceProblemsAsync(assessment.AssessmentId, _problems);
 
                     if (await PersistPendingNotesAsync(assessment.AssessmentId))
                     {
                         await JSRuntime.InvokeVoidAsync("localStorage.removeItem", DraftKey);
                         AddModuleMessage(Localizer["Message.UpdateSuccess"], MessageType.Success);
-                        NavigationManager.NavigateTo(NavigateUrl());
+                        NavigationManager.NavigateTo(_backUrl);
                     }
                 }
             }
@@ -779,7 +814,7 @@
         {
             await AssessmentService.DeleteAssessmentAsync(_id);
             await logger.LogInformation("Assessment Deleted {AssessmentId}", _id);
-            NavigationManager.NavigateTo(NavigateUrl());
+            NavigationManager.NavigateTo(_backUrl);
         }
         catch (Exception ex)
         {
@@ -797,6 +832,63 @@
             // for the required follow-up explaining the issue.
             _newNoteType = AssessmentNoteTypes.HomeVisit;
         }
+    }
+
+    private async Task LoadTreesAsync()
+    {
+        if (_growerId == 0)
+        {
+            _trees = new();
+            return;
+        }
+        var orchards = await OrchardService.GetOrchardsForGrowerAsync(_growerId);
+        _trees = orchards.SelectMany(o => o.Trees).ToList();
+    }
+
+    private async Task LoadGrowerModuleAsync()
+    {
+        try
+        {
+            var siteModules = await ModuleService.GetModulesAsync(PageState.Site.SiteId);
+            var growerModule = siteModules?
+                .FirstOrDefault(m => m.ModuleDefinitionName.StartsWith("OpenEug.TenTrees.Module.Grower"));
+            if (growerModule != null)
+            {
+                _growerModuleId = growerModule.ModuleId;
+                var page = PageState.Pages?.FirstOrDefault(p => p.PageId == growerModule.PageId);
+                _growerPagePath = page?.Path;
+            }
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Loading Grower Module {Error}", ex.Message);
+        }
+    }
+
+    private void ToggleProblem(int treeId, string problemType, bool isChecked)
+    {
+        if (isChecked)
+        {
+            if (!_problems.Any(p => p.TreeId == treeId && p.ProblemType == problemType))
+            {
+                _problems.Add(new Models.AssessmentProblem
+                {
+                    AssessmentId = _id,
+                    TreeId = treeId,
+                    ProblemType = problemType
+                });
+            }
+        }
+        else
+        {
+            _problems.RemoveAll(p => p.TreeId == treeId && p.ProblemType == problemType);
+        }
+    }
+
+    private void SetNeedsHelp(int treeId, bool needsHelp)
+    {
+        foreach (var p in _problems.Where(p => p.TreeId == treeId))
+            p.NeedsHelp = needsHelp;
     }
 
     private void AddPendingNote()

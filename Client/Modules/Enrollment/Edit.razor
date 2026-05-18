@@ -235,7 +235,7 @@
                 else
                 {
                     <div class="alert alert-warning mb-0">
-                        <i class="bi bi-exclamation-triangle"></i> @Localizer["Signature.NotCollected"]
+                        <span class="oi oi-warning"></span> @Localizer["Signature.NotCollected"]
                     </div>
                 }
             </div>
@@ -266,19 +266,19 @@
                                 @if (_enrollmentStatus != Models.EnrollmentStatus.Approved)
                                 {
                                     <button type="button" class="btn btn-success" @onclick="ApproveEnrollment">
-                                        <i class="bi bi-check-circle"></i> @Localizer["Action.Approve"]
+                                        <span class="oi oi-check"></span> @Localizer["Action.Approve"]
                                     </button>
                                 }
                                 @if (_enrollmentStatus != Models.EnrollmentStatus.Pending)
                                 {
                                     <button type="button" class="btn btn-warning" @onclick="SetPendingEnrollment">
-                                        <i class="bi bi-clock"></i> @Localizer["Action.SetPending"]
+                                        <span class="oi oi-clock"></span> @Localizer["Action.SetPending"]
                                     </button>
                                 }
                                 @if (_enrollmentStatus != Models.EnrollmentStatus.Rejected)
                                 {
                                     <button type="button" class="btn btn-danger" @onclick="RejectEnrollment">
-                                        <i class="bi bi-x-circle"></i> @Localizer["Action.Reject"]
+                                        <span class="oi oi-x"></span> @Localizer["Action.Reject"]
                                     </button>
                                 }
                             </div>

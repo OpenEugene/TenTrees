@@ -16,6 +16,11 @@ namespace OpenEug.TenTrees.Module.Assessment.Repository
         Models.Assessment AddAssessment(Models.Assessment assessment);
         Models.Assessment UpdateAssessment(Models.Assessment assessment);
         void DeleteAssessment(int assessmentId);
+
+        IEnumerable<AssessmentProblem> GetProblemsByAssessment(int assessmentId);
+        AssessmentProblem AddProblem(AssessmentProblem problem);
+        void DeleteProblem(int assessmentProblemId);
+        void ReplaceProblems(int assessmentId, IEnumerable<AssessmentProblem> problems);
     }
 
     public class AssessmentRepository : IAssessmentRepository, ITransientService
@@ -126,6 +131,43 @@ namespace OpenEug.TenTrees.Module.Assessment.Repository
                 db.Assessment.Remove(assessment);
                 db.SaveChanges();
             }
+        }
+
+        public IEnumerable<AssessmentProblem> GetProblemsByAssessment(int assessmentId)
+        {
+            using var db = _factory.CreateDbContext();
+            return db.AssessmentProblem
+                .Where(p => p.AssessmentId == assessmentId)
+                .OrderBy(p => p.TreeId).ThenBy(p => p.ProblemType)
+                .ToList();
+        }
+
+        public AssessmentProblem AddProblem(AssessmentProblem problem)
+        {
+            using var db = _factory.CreateDbContext();
+            db.AssessmentProblem.Add(problem);
+            db.SaveChanges();
+            return problem;
+        }
+
+        public void DeleteProblem(int assessmentProblemId)
+        {
+            using var db = _factory.CreateDbContext();
+            var problem = db.AssessmentProblem.Find(assessmentProblemId);
+            if (problem != null)
+            {
+                db.AssessmentProblem.Remove(problem);
+                db.SaveChanges();
+            }
+        }
+
+        public void ReplaceProblems(int assessmentId, IEnumerable<AssessmentProblem> problems)
+        {
+            using var db = _factory.CreateDbContext();
+            var existing = db.AssessmentProblem.Where(p => p.AssessmentId == assessmentId).ToList();
+            db.AssessmentProblem.RemoveRange(existing);
+            db.AssessmentProblem.AddRange(problems);
+            db.SaveChanges();
         }
     }
 }
