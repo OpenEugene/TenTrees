@@ -26,11 +26,19 @@ namespace OpenEug.TenTrees.Module.Grower.Services
         public Task<List<Models.OrchardWithTreesDto>> GetOrchardsForGrowerAsync(int growerId)
         {
             var orchards = _orchardRepository.GetOrchardsByGrower(growerId).ToList();
+            if (orchards.Count == 0)
+            {
+                return Task.FromResult(new List<Models.OrchardWithTreesDto>());
+            }
+
             var treeTypes = _treeTypeRepository.GetTreeTypes().ToDictionary(t => t.TreeTypeId);
+            var treesByOrchard = _orchardRepository.GetTreesByOrchardIds(orchards.Select(o => o.OrchardId))
+                .GroupBy(t => t.OrchardId)
+                .ToDictionary(g => g.Key, g => g.ToList());
 
             var result = orchards.Select(orchard =>
             {
-                var trees = _orchardRepository.GetTrees(orchard.OrchardId)
+                var trees = (treesByOrchard.GetValueOrDefault(orchard.OrchardId) ?? new List<Models.Tree>())
                     .Select(t =>
                     {
                         treeTypes.TryGetValue(t.TreeTypeId, out var treeType);
