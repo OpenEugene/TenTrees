@@ -48,6 +48,11 @@ namespace OpenEug.TenTrees.Module.Grower.Controllers
                 var result = await _orchardService.AddTreeToGrowerAsync(request, moduleId);
                 return Ok(result);
             }
+            catch (ArgumentException ex)
+            {
+                _logger.Log(LogLevel.Warning, this, LogFunction.Create, "Orchard AddTree Rejected {Request} {Error}", request, ex.Message);
+                return StatusCode(StatusCodes.Status400BadRequest, ex.Message);
+            }
             catch (Exception ex)
             {
                 _logger.Log(LogLevel.Error, this, LogFunction.Create, "Orchard AddTree Failed {Request} {Error}", request, ex.ToString());

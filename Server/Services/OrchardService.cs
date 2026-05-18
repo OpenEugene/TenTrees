@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System;
 using Oqtane.Enums;
 using Oqtane.Infrastructure;
 using Oqtane.Shared;
@@ -13,12 +14,14 @@ namespace OpenEug.TenTrees.Module.Grower.Services
     public class ServerOrchardService : IOrchardService
     {
         private readonly IOrchardRepository _orchardRepository;
+        private readonly IGrowerRepository _growerRepository;
         private readonly ITreeTypeRepository _treeTypeRepository;
         private readonly ILogManager _logger;
 
-        public ServerOrchardService(IOrchardRepository orchardRepository, ITreeTypeRepository treeTypeRepository, ILogManager logger)
+        public ServerOrchardService(IOrchardRepository orchardRepository, IGrowerRepository growerRepository, ITreeTypeRepository treeTypeRepository, ILogManager logger)
         {
             _orchardRepository = orchardRepository;
+            _growerRepository = growerRepository;
             _treeTypeRepository = treeTypeRepository;
             _logger = logger;
         }
@@ -62,6 +65,18 @@ namespace OpenEug.TenTrees.Module.Grower.Services
 
         public Task<Models.TreeDetailDto> AddTreeToGrowerAsync(Models.AddTreeRequest request, int moduleId)
         {
+            if (request == null)
+            {
+                throw new ArgumentException("Tree request is required.", nameof(request));
+            }
+
+            var grower = _growerRepository.GetGrower(request.GrowerId, false);
+            if (grower == null)
+            {
+                _logger.Log(LogLevel.Warning, this, LogFunction.Create, "AddTree rejected. Grower not found {GrowerId}", request.GrowerId);
+                throw new ArgumentException($"Grower does not exist: {request.GrowerId}", nameof(request.GrowerId));
+            }
+
             var orchard = _orchardRepository.GetOrDefaultOrchard(request.GrowerId);
             if (orchard == null)
             {

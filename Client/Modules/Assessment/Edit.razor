@@ -724,13 +724,7 @@
                     assessment.TreesPlanted = _treesPlanted;
                     assessment.TreesAlive = _treesAlive;
                     assessment.DeceasedTreeTypes = !string.IsNullOrEmpty(_deceasedTreeTypesOther) ? _deceasedTreeTypesOther : _deceasedTreeTypes;
-
-                    assessment.HasBrokenBranches = _hasBrokenBranches;
-                    assessment.HasYellowLeaves = _hasYellowLeaves;
-                    assessment.HasLosingLeaves = _hasLosingLeaves;
-                    assessment.HasLookDry = _hasLookDry;
-                    assessment.HasPests = _hasPests;
-                    assessment.NeedsHelp = _needsHelp;
+                    ApplyLegacyProblemFlags(assessment);
 
                     assessment.TreesLookHealthy = _treesLookHealthy;
                     assessment.HasChemicalFertilizers = _hasChemicalFertilizers;
@@ -766,13 +760,7 @@
                     assessment.TreesPlanted = _treesPlanted;
                     assessment.TreesAlive = _treesAlive;
                     assessment.DeceasedTreeTypes = !string.IsNullOrEmpty(_deceasedTreeTypesOther) ? _deceasedTreeTypesOther : _deceasedTreeTypes;
-
-                    assessment.HasBrokenBranches = _hasBrokenBranches;
-                    assessment.HasYellowLeaves = _hasYellowLeaves;
-                    assessment.HasLosingLeaves = _hasLosingLeaves;
-                    assessment.HasLookDry = _hasLookDry;
-                    assessment.HasPests = _hasPests;
-                    assessment.NeedsHelp = _needsHelp;
+                    ApplyLegacyProblemFlags(assessment);
 
                     assessment.TreesLookHealthy = _treesLookHealthy;
                     assessment.HasChemicalFertilizers = _hasChemicalFertilizers;
@@ -904,6 +892,23 @@
     {
         foreach (var p in _problems.Where(p => p.TreeId == treeId))
             p.NeedsHelp = needsHelp;
+    }
+
+    private void ApplyLegacyProblemFlags(Models.Assessment assessment)
+    {
+        assessment.HasBrokenBranches = _problems.Any(p => p.ProblemType == AssessmentProblemTypes.BrokenBranches);
+        assessment.HasYellowLeaves = _problems.Any(p => p.ProblemType == AssessmentProblemTypes.YellowLeaves);
+        assessment.HasLosingLeaves = _problems.Any(p => p.ProblemType == AssessmentProblemTypes.LosingLeaves);
+        assessment.HasLookDry = _problems.Any(p => p.ProblemType == AssessmentProblemTypes.LookDry);
+        assessment.HasPests = _problems.Any(p => p.ProblemType == AssessmentProblemTypes.Pests);
+        assessment.NeedsHelp = _problems.Any(p => p.NeedsHelp);
+
+        _hasBrokenBranches = assessment.HasBrokenBranches;
+        _hasYellowLeaves = assessment.HasYellowLeaves;
+        _hasLosingLeaves = assessment.HasLosingLeaves;
+        _hasLookDry = assessment.HasLookDry;
+        _hasPests = assessment.HasPests;
+        _needsHelp = assessment.NeedsHelp;
     }
 
     private void AddPendingNote()
