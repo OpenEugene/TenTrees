@@ -834,15 +834,30 @@
         }
     }
 
+    private int? _treesLoadedForGrowerId;
+
+    private void ResetProblemsForGrowerChange()
+    {
+        _problems = new();
+    }
+
     private async Task LoadTreesAsync()
     {
+        if (_treesLoadedForGrowerId.HasValue && _treesLoadedForGrowerId.Value != _growerId)
+        {
+            ResetProblemsForGrowerChange();
+        }
+
         if (_growerId == 0)
         {
             _trees = new();
+            _treesLoadedForGrowerId = _growerId;
             return;
         }
+
         var orchards = await OrchardService.GetOrchardsForGrowerAsync(_growerId);
         _trees = orchards.SelectMany(o => o.Trees).ToList();
+        _treesLoadedForGrowerId = _growerId;
     }
 
     private async Task LoadGrowerModuleAsync()
