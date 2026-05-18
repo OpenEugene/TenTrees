@@ -24,7 +24,7 @@ namespace OpenEug.TenTrees.Repository
         public virtual DbSet<Models.TreeType> TreeType { get; set; }
         public virtual DbSet<Models.Orchard> Orchard { get; set; }
         public virtual DbSet<Models.Tree> Tree { get; set; }
-            public virtual DbSet<Models.AssessmentProblem> AssessmentProblem { get; set; }
+        public virtual DbSet<Models.AssessmentProblem> AssessmentProblem { get; set; }
 
         public TenTreesContext(IDBContextDependencies dependencies) : base(dependencies)
         {
