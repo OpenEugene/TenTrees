@@ -38,8 +38,7 @@ namespace OpenEug.TenTrees.Module.Grower.Services
 
             var result = orchards.Select(orchard =>
             {
-                treesByOrchard.TryGetValue(orchard.OrchardId, out var orchardTrees);
-                var trees = (orchardTrees ?? new List<Models.Tree>())
+                var trees = (treesByOrchard.GetValueOrDefault(orchard.OrchardId) ?? new List<Models.Tree>())
                     .Select(t =>
                     {
                         treeTypes.TryGetValue(t.TreeTypeId, out var treeType);
