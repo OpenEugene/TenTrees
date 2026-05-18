@@ -32,7 +32,7 @@ namespace OpenEug.TenTrees.Shared
         /// 10 Trees Admin - Programme-level administrator with full data access and user management.
         /// Separate from the Oqtane platform Administrators role.
         /// </summary>
-        public const string TenTreesAdmin = "10 Trees Admin";
+        public const string TenTreesAdmin = "10Trees Admin";
 
         // ========== Built-in Oqtane Roles ==========
 

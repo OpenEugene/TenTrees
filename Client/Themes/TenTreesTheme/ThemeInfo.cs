@@ -17,8 +17,8 @@ namespace OpenEug.TenTrees.Theme.TenTreesTheme
             Resources = new List<Resource>()
             {
 		// obtained from https://cdnjs.com/libraries
-                new Stylesheet(Constants.BootstrapStylesheetUrl, Constants.BootstrapStylesheetIntegrity, "anonymous"),
-                new Stylesheet("~/Theme.css"),
+				new Stylesheet(Constants.BootstrapStylesheetUrl, Constants.BootstrapStylesheetIntegrity, "anonymous"),
+				new Stylesheet("~/Theme.css"),
                 new Script(Constants.BootstrapScriptUrl, Constants.BootstrapScriptIntegrity, "anonymous")
             }
         };

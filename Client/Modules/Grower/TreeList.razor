@@ -1,0 +1,187 @@
+@using OpenEug.TenTrees.Module.Grower.Services
+@using OpenEug.TenTrees.Module.TreeType.Services
+@using OpenEug.TenTrees.Models
+
+@namespace OpenEug.TenTrees.Module.Grower
+@inherits ModuleControlBase
+@inject IOrchardService OrchardService
+@inject ITreeTypeService TreeTypeService
+
+@if (_isLoading)
+{
+    <p><em>Loading trees...</em></p>
+}
+else
+{
+    <div>
+        @if (!_orchards.Any(o => o.Trees.Count > 0))
+        {
+            <p class="text-muted fst-italic">No trees recorded yet.</p>
+        }
+        else
+        {
+            <table class="table table-sm table-striped mb-2">
+                <thead>
+                    <tr>
+                        <th>Tree Type</th>
+                        <th>Category</th>
+                        <th>Qty</th>
+                        <th>Notes</th>
+                        @if (!IsReadOnly)
+                        {
+                            <th></th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var orchard in _orchards)
+                    {
+                        @foreach (var tree in orchard.Trees)
+                        {
+                            <tr>
+                                <td>@tree.TreeTypeName</td>
+                                <td>@tree.TreeTypeCategory</td>
+                                <td>@tree.Quantity</td>
+                                <td>@(tree.Notes ?? "-")</td>
+                                @if (!IsReadOnly)
+                                {
+                                    <td>
+                                        @if (_pendingDeleteTreeId == tree.TreeId)
+                                        {
+                                            <span class="me-2 text-danger small">Remove?</span>
+                                            <button class="btn btn-danger btn-sm me-1" @onclick="() => ConfirmDeleteAsync(tree.TreeId)">Yes</button>
+                                            <button class="btn btn-secondary btn-sm" @onclick="CancelDelete">No</button>
+                                        }
+                                        else
+                                        {
+                                            <button class="btn btn-outline-danger btn-sm" @onclick="() => RequestDelete(tree.TreeId)">
+                                                <span class="oi oi-trash"></span> Remove
+                                            </button>
+                                        }
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        }
+
+        @if (!IsReadOnly)
+        {
+            <div class="card">
+                <div class="card-header py-2"><strong>Add Tree</strong></div>
+                <div class="card-body py-2">
+                    <div class="row g-2 align-items-end">
+                        <div class="col-md-4">
+                            <label class="form-label mb-1">Tree Type</label>
+                            <select class="form-select form-select-sm" @bind="_newTreeTypeId">
+                                <option value="0">-- Select --</option>
+                                @foreach (var group in _treeTypeGroups)
+                                {
+                                    <optgroup label="@group.Key">
+                                        @foreach (var tt in group.Value)
+                                        {
+                                            <option value="@tt.TreeTypeId">@tt.Name</option>
+                                        }
+                                    </optgroup>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label mb-1">Quantity</label>
+                            <input type="number" class="form-control form-control-sm" min="1" @bind="_newQuantity" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label mb-1">Notes (optional)</label>
+                            <input type="text" class="form-control form-control-sm" @bind="_newNotes" />
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-primary btn-sm w-100" @onclick="AddTreeAsync" disabled="@(_newTreeTypeId == 0)">
+                                <span class="oi oi-plus"></span> Add
+                            </button>
+                        </div>
+                    </div>
+                    @if (!string.IsNullOrEmpty(_addError))
+                    {
+                        <div class="alert alert-danger mt-2 mb-0 py-1">@_addError</div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int GrowerId { get; set; }
+
+    [Parameter]
+    public bool IsReadOnly { get; set; } = false;
+
+    private List<OrchardWithTreesDto> _orchards = new();
+    private Dictionary<string, List<Models.TreeType>> _treeTypeGroups = new();
+    private bool _isLoading = true;
+    private int _newTreeTypeId;
+    private int _newQuantity = 1;
+    private string? _newNotes;
+    private int _pendingDeleteTreeId;
+    private string? _addError;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (GrowerId <= 0) return;
+        _isLoading = true;
+        _orchards = await OrchardService.GetOrchardsForGrowerAsync(GrowerId);
+        var treeTypes = await TreeTypeService.GetActiveTreeTypesAsync();
+        _treeTypeGroups = treeTypes
+            .GroupBy(t => t.Category)
+            .OrderBy(g => g.Key)
+            .ToDictionary(g => g.Key, g => g.OrderBy(t => t.SortOrder).ToList());
+        _isLoading = false;
+    }
+
+    private async Task AddTreeAsync()
+    {
+        _addError = null;
+        if (_newTreeTypeId == 0) return;
+        try
+        {
+            await OrchardService.AddTreeToGrowerAsync(new AddTreeRequest
+            {
+                GrowerId = GrowerId,
+                TreeTypeId = _newTreeTypeId,
+                Quantity = _newQuantity < 1 ? 1 : _newQuantity,
+                Notes = string.IsNullOrWhiteSpace(_newNotes) ? null : _newNotes
+            }, ModuleState.ModuleId);
+            _newTreeTypeId = 0;
+            _newQuantity = 1;
+            _newNotes = null;
+            await LoadOrchardsAsync();
+        }
+        catch
+        {
+            _addError = "Unable to add tree. Please try again.";
+        }
+    }
+
+    private async Task LoadOrchardsAsync() =>
+        _orchards = await OrchardService.GetOrchardsForGrowerAsync(GrowerId);
+
+    private void RequestDelete(int treeId) => _pendingDeleteTreeId = treeId;
+    private void CancelDelete() => _pendingDeleteTreeId = 0;
+
+    private async Task ConfirmDeleteAsync(int treeId)
+    {
+        try
+        {
+            await OrchardService.DeleteTreeAsync(treeId, ModuleState.ModuleId);
+            _pendingDeleteTreeId = 0;
+            await LoadOrchardsAsync();
+        }
+        catch
+        {
+            _addError = "Unable to remove tree. Please try again.";
+        }
+    }
+}

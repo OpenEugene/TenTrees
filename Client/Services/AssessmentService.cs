@@ -88,5 +88,15 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
         {
             return await PostJsonAsync<Models.AssessmentNote>($"{ApiUrl}/{note.AssessmentId}/notes", note);
         }
+
+        public async Task<List<Models.AssessmentProblem>> GetProblemsByAssessmentAsync(int assessmentId)
+        {
+            return await GetJsonAsync<List<Models.AssessmentProblem>>($"{ApiUrl}/{assessmentId}/problems", new List<Models.AssessmentProblem>());
+        }
+
+        public async Task ReplaceProblemsAsync(int assessmentId, List<Models.AssessmentProblem> problems)
+        {
+            await PutJsonAsync<List<Models.AssessmentProblem>>($"{ApiUrl}/{assessmentId}/problems", problems);
+        }
     }
 }

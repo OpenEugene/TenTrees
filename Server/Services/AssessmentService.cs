@@ -219,5 +219,18 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
 
         private string CurrentUsername() =>
             _accessor.HttpContext.User.Identity?.Name;
+
+        public Task<List<Models.AssessmentProblem>> GetProblemsByAssessmentAsync(int assessmentId)
+        {
+            return Task.FromResult(_assessmentRepository.GetProblemsByAssessment(assessmentId).ToList());
+        }
+
+        public Task ReplaceProblemsAsync(int assessmentId, List<Models.AssessmentProblem> problems)
+        {
+            foreach (var p in problems)
+                p.AssessmentId = assessmentId;
+            _assessmentRepository.ReplaceProblems(assessmentId, problems);
+            return Task.CompletedTask;
+        }
     }
 }
