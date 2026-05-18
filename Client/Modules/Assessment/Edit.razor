@@ -598,12 +598,6 @@
                     TreesPlanted = _treesPlanted,
                     TreesAlive = _treesAlive,
                     DeceasedTreeTypes = !string.IsNullOrEmpty(_deceasedTreeTypesOther) ? _deceasedTreeTypesOther : _deceasedTreeTypes,
-                    HasBrokenBranches = _hasBrokenBranches,
-                    HasYellowLeaves = _hasYellowLeaves,
-                    HasLosingLeaves = _hasLosingLeaves,
-                    HasLookDry = _hasLookDry,
-                    HasPests = _hasPests,
-                    NeedsHelp = _needsHelp,
                     TreesLookHealthy = _treesLookHealthy,
                     HasChemicalFertilizers = _hasChemicalFertilizers,
                     HasPesticides = _hasPesticides,
@@ -616,6 +610,7 @@
                 },
                 PendingNotes = _pendingNotes
             };
+            ApplyLegacyProblemFlags(draft.Assessment);
 
             var json = System.Text.Json.JsonSerializer.Serialize(draft);
             await JSRuntime.InvokeVoidAsync("localStorage.setItem", DraftKey, json);
@@ -902,13 +897,6 @@
         assessment.HasLookDry = _problems.Any(p => p.ProblemType == AssessmentProblemTypes.LookDry);
         assessment.HasPests = _problems.Any(p => p.ProblemType == AssessmentProblemTypes.Pests);
         assessment.NeedsHelp = _problems.Any(p => p.NeedsHelp);
-
-        _hasBrokenBranches = assessment.HasBrokenBranches;
-        _hasYellowLeaves = assessment.HasYellowLeaves;
-        _hasLosingLeaves = assessment.HasLosingLeaves;
-        _hasLookDry = assessment.HasLookDry;
-        _hasPests = assessment.HasPests;
-        _needsHelp = assessment.NeedsHelp;
     }
 
     private void AddPendingNote()
