@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Oqtane.Enums;
 using Oqtane.Infrastructure;
 using Oqtane.Shared;
@@ -21,54 +20,51 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
         private readonly IGrowerRepository _growerRepository;
         private readonly ICohortRepository _cohortRepository;
         private readonly ILogManager _logger;
-        private readonly IHttpContextAccessor _accessor;
 
         public ServerAssessmentService(
             IAssessmentRepository assessmentRepository,
             IAssessmentNoteRepository assessmentNoteRepository,
             IGrowerRepository growerRepository,
             ICohortRepository cohortRepository,
-            ILogManager logger,
-            IHttpContextAccessor accessor)
+            ILogManager logger)
         {
             _assessmentRepository = assessmentRepository;
             _assessmentNoteRepository = assessmentNoteRepository;
             _growerRepository = growerRepository;
             _cohortRepository = cohortRepository;
             _logger = logger;
-            _accessor = accessor;
         }
 
-        public Task<Models.Assessment> GetAssessmentAsync(int assessmentId)
+        public Task<Models.Assessment> GetAssessmentAsync(int assessmentId, string mentorUsername = null)
         {
             var assessment = _assessmentRepository.GetAssessment(assessmentId);
-            if (assessment != null && IsMentor())
+            if (assessment != null && mentorUsername != null)
             {
                 var grower = _growerRepository.GetGrower(assessment.GrowerId);
-                if (grower == null || grower.MentorUsername != CurrentUsername())
+                if (grower == null || grower.MentorUsername != mentorUsername)
                     return Task.FromResult<Models.Assessment>(null);
             }
             return Task.FromResult(assessment);
         }
 
-        public Task<List<Models.Assessment>> GetAssessmentsAsync()
+        public Task<List<Models.Assessment>> GetAssessmentsAsync(string mentorUsername = null)
         {
             var list = _assessmentRepository.GetAssessments().ToList();
-            if (IsMentor())
+            if (mentorUsername != null)
             {
-                var mentorGrowerIds = _growerRepository.GetGrowersByMentor(CurrentUsername())
+                var mentorGrowerIds = _growerRepository.GetGrowersByMentor(mentorUsername)
                     .Select(g => g.GrowerId).ToHashSet();
                 list = list.Where(a => mentorGrowerIds.Contains(a.GrowerId)).ToList();
             }
             return Task.FromResult(list);
         }
 
-        public Task<List<Models.Assessment>> GetAssessmentsByGrowerAsync(int growerId)
+        public Task<List<Models.Assessment>> GetAssessmentsByGrowerAsync(int growerId, string mentorUsername = null)
         {
-            if (IsMentor())
+            if (mentorUsername != null)
             {
                 var grower = _growerRepository.GetGrower(growerId);
-                if (grower == null || grower.MentorUsername != CurrentUsername())
+                if (grower == null || grower.MentorUsername != mentorUsername)
                     return Task.FromResult(new List<Models.Assessment>());
             }
             return Task.FromResult(_assessmentRepository.GetAssessmentsByGrower(growerId).ToList());
@@ -172,8 +168,6 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
 
         public Task<List<AssessmentListDto>> GetAssessmentListAsync(int? villageId = null, int? cohortId = null, string mentorUsername = null, int? growerId = null)
         {
-            if (IsMentor())
-                mentorUsername = CurrentUsername();
             var list = _assessmentRepository.GetAssessmentList(villageId, cohortId, mentorUsername, growerId).ToList();
             return Task.FromResult(list);
         }
@@ -213,12 +207,6 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
             _logger.Log(LogLevel.Information, this, LogFunction.Create, "AssessmentNote Added {AssessmentNote}", created);
             return Task.FromResult(created);
         }
-
-        private bool IsMentor() =>
-            _accessor.HttpContext.User.IsInRole(AppRoleNames.Mentor);
-
-        private string CurrentUsername() =>
-            _accessor.HttpContext.User.Identity?.Name;
 
         public Task<List<Models.AssessmentProblem>> GetProblemsByAssessmentAsync(int assessmentId)
         {

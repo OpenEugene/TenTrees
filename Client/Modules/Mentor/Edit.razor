@@ -22,9 +22,26 @@ else
                 <span class="oi oi-person me-2" aria-hidden="true"></span>
                 @(_isCreate ? "Add Mentor" : $"Edit Mentor — {_model.DisplayName}")
             </h4>
-            <NavLink href="@NavigateUrl()" class="btn btn-outline-secondary btn-sm">
-                <span class="oi oi-arrow-left me-1" aria-hidden="true"></span> Back to Mentors
-            </NavLink>
+            <div class="d-flex gap-2">
+                @if (!_isCreate)
+                {
+                    @if (_model.IsDeleted)
+                    {
+                        <button type="button" class="btn btn-outline-success btn-sm" disabled="@_isBusy" @onclick="ToggleActive">
+                            <span class="oi oi-circle-check me-1" aria-hidden="true"></span>Activate
+                        </button>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-outline-warning btn-sm" disabled="@_isBusy" @onclick="ToggleActive">
+                            <span class="oi oi-ban me-1" aria-hidden="true"></span>Deactivate
+                        </button>
+                    }
+                }
+                <NavLink href="@NavigateUrl()" class="btn btn-outline-secondary btn-sm">
+                    <span class="oi oi-arrow-left me-1" aria-hidden="true"></span> Back to Mentors
+                </NavLink>
+            </div>
         </div>
 
         <!-- Mentor form -->
@@ -203,6 +220,7 @@ else
     private bool _isLoaded;
     private bool _isCreate;
     private bool _isSaving;
+    private bool _isBusy;
     private bool _showAssignPanel;
     private int _selectedGrowerId;
     private HashSet<string> _invalidFields = new();
@@ -307,5 +325,27 @@ else
     {
         await MentorService.ReassignGrowerAsync(grower.GrowerId, null, ModuleState.ModuleId);
         await LoadGrowers();
+    }
+
+    private async Task ToggleActive()
+    {
+        _isBusy = true;
+        ClearModuleMessage();
+        try
+        {
+            var activate = _model.IsDeleted;
+            await MentorService.SetMentorActiveAsync(_model.Username, activate, ModuleState.ModuleId);
+            _model.IsDeleted = !activate;
+            AddModuleMessage($"Mentor {_model.DisplayName} {(activate ? "activated" : "deactivated")}.", MessageType.Success);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error toggling active state for {Username}", _model.Username);
+            AddModuleMessage("An error occurred. Please try again.", MessageType.Error);
+        }
+        finally
+        {
+            _isBusy = false;
+        }
     }
 }

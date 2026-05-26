@@ -6,9 +6,9 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
 {
     public interface IAssessmentService
     {
-        Task<Models.Assessment> GetAssessmentAsync(int assessmentId);
-        Task<List<Models.Assessment>> GetAssessmentsAsync();
-        Task<List<Models.Assessment>> GetAssessmentsByGrowerAsync(int growerId);
+        Task<Models.Assessment> GetAssessmentAsync(int assessmentId, string mentorUsername = null);
+        Task<List<Models.Assessment>> GetAssessmentsAsync(string mentorUsername = null);
+        Task<List<Models.Assessment>> GetAssessmentsByGrowerAsync(int growerId, string mentorUsername = null);
         Task<Models.Assessment> AddAssessmentAsync(Models.Assessment assessment);
         Task<Models.Assessment> UpdateAssessmentAsync(Models.Assessment assessment);
         Task DeleteAssessmentAsync(int assessmentId);
