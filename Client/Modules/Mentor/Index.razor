@@ -21,10 +21,10 @@ else
         </div>
 
         <!-- Filters -->
-        <div class="row mb-3">
-            <div class="col-md-4">
+        <div class="row g-2 mb-3">
+            <div class="col-12 col-md-4">
                 <label class="form-label" for="filterVillage">Village</label>
-                <select id="filterVillage" class="form-select" @bind="_villageFilter">
+                <select id="filterVillage" class="form-select" @bind="_villageFilter" @bind:after="@(() => _page = 1)">
                     <option value="0">All Villages</option>
                     @foreach (var v in _villages)
                     {
@@ -32,13 +32,13 @@ else
                     }
                 </select>
             </div>
-            <div class="col-md-4">
+            <div class="col-12 col-md-4">
                 <label class="form-label" for="filterName">Name / Username</label>
-                <input id="filterName" type="text" class="form-control" @bind="_nameFilter" @bind:event="oninput" placeholder="Search…" />
+                <input id="filterName" type="text" class="form-control" @bind="_nameFilter" @bind:event="oninput" @bind:after="@(() => _page = 1)" placeholder="Search…" />
             </div>
-            <div class="col-md-2 d-flex align-items-end">
-                <div class="form-check mb-2">
-                    <input id="showInactive" type="checkbox" class="form-check-input" @bind="_showInactive" />
+            <div class="col-12 col-md-4 d-flex align-items-end">
+                <div class="form-check">
+                    <input id="showInactive" type="checkbox" class="form-check-input" @bind="_showInactive" @bind:after="@(() => _page = 1)" />
                     <label class="form-check-label" for="showInactive">Show inactive</label>
                 </div>
             </div>
@@ -54,29 +54,59 @@ else
         }
         else
         {
-            <div class="table-responsive">
-                <table class="table table-hover align-middle">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Username</th>
-                            <th>Email</th>
-                            <th>Village</th>
-                            <th class="text-center">Growers</th>
-                            <th class="text-center">Status</th>
-                            <th><span class="visually-hidden">Actions</span></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var mentor in filtered)
-                        {
-                            <tr class="@(mentor.IsDeleted ? "table-secondary text-muted" : "")">
-                                <td>@mentor.DisplayName</td>
-                                <td><code>@mentor.Username</code></td>
-                                <td>@mentor.Email</td>
-                                <td>@(mentor.VillageName ?? "—")</td>
-                                <td class="text-center">@mentor.GrowerCount</td>
-                                <td class="text-center">
+            var totalPages = (int)Math.Ceiling(filtered.Count() / (double)_pageSize);
+            var page = Math.Clamp(_page, 1, totalPages);
+            var paged = filtered.Skip((page - 1) * _pageSize).Take(_pageSize);
+
+            <!-- Desktop column headers -->
+            <div class="d-none d-md-flex px-3 py-1 text-muted small fw-semibold border-bottom mb-1">
+                <div class="mentor-col-name">Name</div>
+                <div class="mentor-col-username">Username</div>
+                <div class="mentor-col-email">Email</div>
+                <div class="mentor-col-village">Village</div>
+                <div class="mentor-col-growers">Growers</div>
+                <div class="mentor-col-status">Status</div>
+                <div class="mentor-col-actions"><span class="visually-hidden">Actions</span></div>
+            </div>
+
+            <div class="row row-cols-1 g-2">
+                @foreach (var mentor in paged)
+                {
+                    <div class="col">
+                        <div class="card @(mentor.IsDeleted ? "border-secondary text-muted" : "")">
+                            <div class="card-body d-md-flex align-items-center py-2 px-3">
+
+                                <!-- Name -->
+                                <div class="mentor-col-name fw-semibold mb-2 mb-md-0">
+                                    @mentor.DisplayName
+                                </div>
+
+                                <!-- Username -->
+                                <div class="mentor-col-username mb-1 mb-md-0">
+                                    <span class="oi oi-person me-1 d-md-none" aria-hidden="true"></span>
+                                    <code>@mentor.Username</code>
+                                </div>
+
+                                <!-- Email -->
+                                <div class="mentor-col-email mb-1 mb-md-0 text-truncate">
+                                    <span class="oi oi-envelope-closed me-1 d-md-none" aria-hidden="true"></span>
+                                    @mentor.Email
+                                </div>
+
+                                <!-- Village -->
+                                <div class="mentor-col-village mb-1 mb-md-0">
+                                    <span class="oi oi-map-marker me-1 d-md-none" aria-hidden="true"></span>
+                                    @(mentor.VillageName ?? "—")
+                                </div>
+
+                                <!-- Growers -->
+                                <div class="mentor-col-growers mb-1 mb-md-0">
+                                    <span class="oi oi-leaf me-1 d-md-none" aria-hidden="true"></span>
+                                    @mentor.GrowerCount<span class="d-md-none"> grower@(mentor.GrowerCount == 1 ? "" : "s")</span>
+                                </div>
+
+                                <!-- Status badge -->
+                                <div class="mentor-col-status mb-2 mb-md-0">
                                     @if (mentor.IsDeleted)
                                     {
                                         <span class="badge bg-secondary">Inactive</span>
@@ -85,41 +115,48 @@ else
                                     {
                                         <span class="badge bg-success">Active</span>
                                     }
-                                </td>
-                                <td>
-                                    <div class="d-flex gap-1">
-                                        <ActionLink Action="Edit"
-                                                    Parameters="@($"username={Uri.EscapeDataString(mentor.Username)}")"
-                                                    Class="btn btn-sm btn-outline-primary"
-                                                    AltText="@($"Edit {mentor.DisplayName}")"
-                                                    IconName="pencil" />
-                                        @if (mentor.IsDeleted)
-                                        {
-                                            <button type="button"
-                                                    class="btn btn-sm btn-outline-success"
-                                                    aria-label="@($"Activate {mentor.DisplayName}")"
-                                                    disabled="@_isBusy"
-                                                    @onclick="@(() => ToggleActive(mentor, true))">
-                                                <span class="oi oi-circle-check" aria-hidden="true"></span>
-                                            </button>
-                                        }
-                                        else
-                                        {
-                                            <button type="button"
-                                                    class="btn btn-sm btn-outline-warning"
-                                                    aria-label="@($"Deactivate {mentor.DisplayName}")"
-                                                    disabled="@_isBusy"
-                                                    @onclick="@(() => ToggleActive(mentor, false))">
-                                                <span class="oi oi-ban" aria-hidden="true"></span>
-                                            </button>
-                                        }
-                                    </div>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+                                </div>
+
+                                <!-- Actions -->
+                                <div class="mentor-col-actions d-flex gap-2 flex-shrink-0">
+                                    <a href="@EditUrl("Edit",$"username={Uri.EscapeDataString(mentor.Username)}")"
+                                       class="btn btn-sm btn-outline-primary"
+                                       aria-label="@($"Edit {mentor.DisplayName}")">
+                                        <span class="oi oi-pencil" aria-hidden="true"></span>
+                                        <span class="d-none d-md-inline ms-1">Edit</span>
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                }
             </div>
+
+            @if (totalPages > 1)
+            {
+                <nav aria-label="Mentor list navigation" class="mt-3">
+                    <ul class="pagination justify-content-center flex-wrap">
+                        <li class="page-item @(page <= 1 ? "disabled" : "")">
+                            <button class="page-link" @onclick="@(() => _page = page - 1)" disabled="@(page <= 1)" aria-label="Previous">
+                                <span class="oi oi-chevron-left" aria-hidden="true"></span>
+                            </button>
+                        </li>
+                        @for (var i = 1; i <= totalPages; i++)
+                        {
+                            var p = i;
+                            <li class="page-item @(p == page ? "active" : "")">
+                                <button class="page-link" @onclick="@(() => _page = p)" aria-current="@(p == page ? "page" : null)">@p</button>
+                            </li>
+                        }
+                        <li class="page-item @(page >= totalPages ? "disabled" : "")">
+                            <button class="page-link" @onclick="@(() => _page = page + 1)" disabled="@(page >= totalPages)" aria-label="Next">
+                                <span class="oi oi-chevron-right" aria-hidden="true"></span>
+                            </button>
+                        </li>
+                    </ul>
+                </nav>
+            }
         }
     </div>
 }
@@ -128,10 +165,11 @@ else
     private List<MentorViewModel> _mentors = new();
     private List<Village> _villages = new();
     private bool _isLoaded;
-    private bool _isBusy;
     private int _villageFilter;
     private string _nameFilter = "";
     private bool _showInactive;
+    private int _page = 1;
+    private const int _pageSize = 12;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -160,25 +198,15 @@ else
 
         return q.OrderBy(m => m.DisplayName);
     }
-
-    private async Task ToggleActive(MentorViewModel mentor, bool activate)
-    {
-        _isBusy = true;
-        ClearModuleMessage();
-        try
-        {
-            await MentorService.SetMentorActiveAsync(mentor.Username, activate, ModuleState.ModuleId);
-            mentor.IsDeleted = !activate;
-            AddModuleMessage($"Mentor {mentor.DisplayName} {(activate ? "activated" : "deactivated")}.", MessageType.Success);
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error toggling mentor active state for {Username}", mentor.Username);
-            AddModuleMessage("An error occurred. Please try again.", MessageType.Error);
-        }
-        finally
-        {
-            _isBusy = false;
-        }
-    }
 }
+
+<style>
+    /* Column widths — applied to both the header row and every card row on md+ */
+    .mentor-col-name     { flex: 0 0 22%; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: .75rem; }
+    .mentor-col-username { flex: 0 0 15%; min-width: 0; padding-right: .75rem; }
+    .mentor-col-email    { flex: 0 0 25%; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: .75rem; }
+    .mentor-col-village  { flex: 0 0 16%; min-width: 0; padding-right: .75rem; }
+    .mentor-col-growers  { flex: 0 0 9%;  min-width: 0; padding-right: .75rem; }
+    .mentor-col-status   { flex: 0 0 5%;  min-width: 0; padding-right: .75rem; }
+    .mentor-col-actions  { flex: 0 0 8%;  min-width: 0; white-space: nowrap; }
+</style>

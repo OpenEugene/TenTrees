@@ -19,12 +19,12 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
 
         private string ApiUrl => CreateApiUrl("Assessment");
 
-        public async Task<Models.Assessment> GetAssessmentAsync(int assessmentId)
+        public async Task<Models.Assessment> GetAssessmentAsync(int assessmentId, string mentorUsername = null)
         {
             return await GetJsonAsync<Models.Assessment>($"{ApiUrl}/{assessmentId}");
         }
 
-        public async Task<List<Models.Assessment>> GetAssessmentsAsync()
+        public async Task<List<Models.Assessment>> GetAssessmentsAsync(string mentorUsername = null)
         {
             try
             {
@@ -37,7 +37,7 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
             }
         }
 
-        public async Task<List<Models.Assessment>> GetAssessmentsByGrowerAsync(int growerId)
+        public async Task<List<Models.Assessment>> GetAssessmentsByGrowerAsync(int growerId, string mentorUsername = null)
         {
             return await GetJsonAsync<List<Models.Assessment>>($"{ApiUrl}/grower/{growerId}", new List<Models.Assessment>());
         }
