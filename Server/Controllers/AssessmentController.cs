@@ -7,6 +7,7 @@ using Oqtane.Infrastructure;
 using Oqtane.Controllers;
 using OpenEug.TenTrees.Module.Assessment.Services;
 using OpenEug.TenTrees.Models;
+using OpenEug.TenTrees.Shared;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -23,13 +24,16 @@ namespace OpenEug.TenTrees.Module.Assessment.Controllers
             _assessmentService = assessmentService;
         }
 
+        private string MentorUsername() =>
+            User.IsInRole(AppRoleNames.Mentor) ? User.Identity?.Name : null;
+
         [HttpGet]
         [Authorize]
         public async Task<ActionResult<IEnumerable<Models.Assessment>>> Get()
         {
             try
             {
-                var assessments = await _assessmentService.GetAssessmentsAsync();
+                var assessments = await _assessmentService.GetAssessmentsAsync(MentorUsername());
                 return Ok(assessments);
             }
             catch (Exception ex)
@@ -45,7 +49,8 @@ namespace OpenEug.TenTrees.Module.Assessment.Controllers
         {
             try
             {
-                var list = await _assessmentService.GetAssessmentListAsync(villageId, cohortId, mentor, growerId);
+                var list = await _assessmentService.GetAssessmentListAsync(villageId, cohortId,
+                    MentorUsername() ?? mentor, growerId);
                 return Ok(list);
             }
             catch (Exception ex)
@@ -61,7 +66,7 @@ namespace OpenEug.TenTrees.Module.Assessment.Controllers
         {
             try
             {
-                var assessment = await _assessmentService.GetAssessmentAsync(id);
+                var assessment = await _assessmentService.GetAssessmentAsync(id, MentorUsername());
                 if (assessment == null)
                 {
                     return NotFound();
@@ -82,7 +87,7 @@ namespace OpenEug.TenTrees.Module.Assessment.Controllers
         {
             try
             {
-                var assessments = await _assessmentService.GetAssessmentsByGrowerAsync(growerId);
+                var assessments = await _assessmentService.GetAssessmentsByGrowerAsync(growerId, MentorUsername());
                 return Ok(assessments);
             }
             catch (Exception ex)
