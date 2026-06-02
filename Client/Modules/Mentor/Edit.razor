@@ -18,10 +18,15 @@ else
 {
     <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h4>
-                <span class="oi oi-person me-2" aria-hidden="true"></span>
-                @(_isCreate ? "Add Mentor" : $"Edit Mentor — {_model.DisplayName}")
-            </h4>
+            <div class="d-flex align-items-center gap-2">
+                <NavLink href="@NavigateUrl(PageState.Page.Path, PageState.QueryString)" class="btn btn-outline-secondary btn-sm">
+                    <span class="oi oi-arrow-left me-1" aria-hidden="true"></span> Back
+                </NavLink>
+                <h4 class="mb-0">
+                    <span class="oi oi-person me-2" aria-hidden="true"></span>
+                    @(_isCreate ? "Add Mentor" : $"Edit Mentor — {_model.DisplayName}")
+                </h4>
+            </div>
             <div class="d-flex gap-2">
                 @if (!_isCreate)
                 {
@@ -38,9 +43,6 @@ else
                         </button>
                     }
                 }
-                <NavLink href="@NavigateUrl()" class="btn btn-outline-secondary btn-sm">
-                    <span class="oi oi-arrow-left me-1" aria-hidden="true"></span> Back to Mentors
-                </NavLink>
             </div>
         </div>
 
@@ -123,7 +125,7 @@ else
                             <span>Save</span>
                         }
                     </button>
-                    <NavLink href="@NavigateUrl()" class="btn btn-outline-secondary">Cancel</NavLink>
+                    <NavLink href="@NavigateUrl(PageState.Page.Path, PageState.QueryString)" class="btn btn-outline-secondary">Cancel</NavLink>
                 </div>
             </div>
         </div>
@@ -284,7 +286,7 @@ else
                     await ScrollToPageTop();
                     return;
                 }
-                NavigationManager.NavigateTo(NavigateUrl());
+                NavigationManager.NavigateTo(NavigateUrl(PageState.Page.Path, PageState.QueryString));
             }
             else
             {
