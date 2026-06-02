@@ -20,27 +20,48 @@ else
             <ActionLink Action="Edit" Text="Add Mentor" IconName="plus" Class="btn btn-primary" />
         </div>
 
-        <!-- Filters -->
-        <div class="row g-2 mb-3">
-            <div class="col-12 col-md-4">
-                <label class="form-label" for="filterVillage">Village</label>
-                <select id="filterVillage" class="form-select" @bind="_villageFilter" @bind:after="@(() => _page = 1)">
-                    <option value="0">All Villages</option>
-                    @foreach (var v in _villages)
-                    {
-                        <option value="@v.VillageId">@v.VillageName</option>
-                    }
-                </select>
-            </div>
-            <div class="col-12 col-md-4">
-                <label class="form-label" for="filterName">Name / Username</label>
-                <input id="filterName" type="text" class="form-control" @bind="_nameFilter" @bind:event="oninput" @bind:after="@(() => _page = 1)" placeholder="Search…" />
-            </div>
-            <div class="col-12 col-md-4 d-flex align-items-end">
-                <div class="form-check">
-                    <input id="showInactive" type="checkbox" class="form-check-input" @bind="_showInactive" @bind:after="@(() => _page = 1)" />
-                    <label class="form-check-label" for="showInactive">Show inactive</label>
+        <!-- Filter / Sort bar -->
+        <div class="d-flex flex-wrap align-items-end justify-content-between gap-2 mb-3">
+            <!-- Filters (left) -->
+            <div class="d-flex flex-wrap gap-2">
+                <div>
+                    <label class="form-label" for="filterVillage">Village</label>
+                    <select id="filterVillage" class="form-select" @bind="_villageFilter" @bind:after="@(() => _page = 1)">
+                        <option value="0">All Villages</option>
+                        @foreach (var v in _villages)
+                        {
+                            <option value="@v.VillageId">@v.VillageName</option>
+                        }
+                    </select>
                 </div>
+                <div>
+                    <label class="form-label" for="filterName">Name / Username</label>
+                    <input id="filterName" type="text" class="form-control" @bind="_nameFilter" @bind:event="oninput" @bind:after="@(() => _page = 1)" placeholder="Search…" />
+                </div>
+                <div class="d-flex align-items-end">
+                    <div class="form-check">
+                        <input id="showInactive" type="checkbox" class="form-check-input" @bind="_showInactive" @bind:after="@(() => _page = 1)" />
+                        <label class="form-check-label" for="showInactive">Show inactive</label>
+                    </div>
+                </div>
+            </div>
+            <!-- Sort (right) -->
+            <div class="d-flex align-items-end gap-2">
+                <div>
+                    <label class="form-label" for="sortBy">Sort by</label>
+                    <select id="sortBy" class="form-select" @bind="_sortBy">
+                        <option value="lastname">Last Name</option>
+                        <option value="firstname">First Name</option>
+                        <option value="username">Username</option>
+                        <option value="email">Email</option>
+                        <option value="village">Village</option>
+                        <option value="growers">Growers</option>
+                        <option value="status">Status</option>
+                    </select>
+                </div>
+                <button class="btn btn-outline-secondary" @onclick="ToggleSortDir" title="@(_sortAsc ? "Ascending" : "Descending")" aria-label="Toggle sort direction">
+                    <span class="oi @(_sortAsc ? "oi-sort-ascending" : "oi-sort-descending")" aria-hidden="true"></span>
+                </button>
             </div>
         </div>
 
@@ -170,6 +191,10 @@ else
     private bool _showInactive;
     private int _page = 1;
     private const int _pageSize = 12;
+    private string _sortBy = "lastname";
+    private bool _sortAsc = true;
+
+    private void ToggleSortDir() => _sortAsc = !_sortAsc;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -196,7 +221,26 @@ else
                 (m.Username?.ToLowerInvariant().Contains(f) ?? false));
         }
 
-        return q.OrderBy(m => m.DisplayName);
+        IEnumerable<MentorViewModel> ordered = _sortBy switch
+        {
+            "firstname" => q.OrderBy(m => SplitName(m.DisplayName).First),
+            "username"  => q.OrderBy(m => m.Username),
+            "email"     => q.OrderBy(m => m.Email),
+            "village"   => q.OrderBy(m => m.VillageName),
+            "growers"   => q.OrderBy(m => m.GrowerCount),
+            "status"    => q.OrderBy(m => m.IsDeleted),
+            _           => q.OrderBy(m => SplitName(m.DisplayName).Last)
+                             .ThenBy(m => SplitName(m.DisplayName).First),
+        };
+        return _sortAsc ? ordered : ordered.Reverse();
+    }
+
+    private static (string Last, string First) SplitName(string fullName)
+    {
+        var trimmed = fullName?.Trim() ?? string.Empty;
+        var idx = trimmed.LastIndexOf(' ');
+        return idx < 0 ? (trimmed, string.Empty) : (trimmed[(idx + 1)..], trimmed[..idx]);
+    }
     }
 }
 

@@ -25,7 +25,14 @@ else
         <!-- Grower Info -->
         <div class="card mb-3">
             <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
-                <span>@(_growerId == 0 ? "Add Grower" : "Edit Grower")</span>
+                <div class="d-flex align-items-center gap-2">
+                    <a href="@NavigateUrl(PageState.Page.Path, PageState.QueryString)"
+                       class="btn btn-sm btn-outline-secondary"
+                       aria-label="Back to grower list">
+                        <span class="oi oi-arrow-left" aria-hidden="true"></span> Back
+                    </a>
+                    <span>@(_growerId == 0 ? "Add Grower" : "Edit Grower")</span>
+                </div>
                 @if (_growerId > 0)
                 {
                     <div class="d-flex align-items-center gap-2 flex-wrap">
@@ -636,10 +643,7 @@ else
 
     private void NavigateBack()
     {
-        if (PageState.QueryString.ContainsKey("returnurl"))
-            NavigationManager.NavigateTo(PageState.QueryString["returnurl"]);
-        else
-            NavigationManager.NavigateTo(NavigateUrl());
+        NavigationManager.NavigateTo(NavigateUrl(PageState.Page.Path, PageState.QueryString));
     }
 
     private string GetStatusBadgeClass(GrowerStatus status) => status switch
