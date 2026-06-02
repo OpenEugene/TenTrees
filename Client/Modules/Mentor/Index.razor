@@ -7,6 +7,7 @@
 @inherits ModuleBase
 @inject IMentorService MentorService
 @inject IVillageService VillageService
+@inject NavigationManager NavigationManager
 
 @if (!_isLoaded)
 {
@@ -20,27 +21,48 @@ else
             <ActionLink Action="Edit" Text="Add Mentor" IconName="plus" Class="btn btn-primary" />
         </div>
 
-        <!-- Filters -->
-        <div class="row g-2 mb-3">
-            <div class="col-12 col-md-4">
-                <label class="form-label" for="filterVillage">Village</label>
-                <select id="filterVillage" class="form-select" @bind="_villageFilter" @bind:after="@(() => _page = 1)">
-                    <option value="0">All Villages</option>
-                    @foreach (var v in _villages)
-                    {
-                        <option value="@v.VillageId">@v.VillageName</option>
-                    }
-                </select>
-            </div>
-            <div class="col-12 col-md-4">
-                <label class="form-label" for="filterName">Name / Username</label>
-                <input id="filterName" type="text" class="form-control" @bind="_nameFilter" @bind:event="oninput" @bind:after="@(() => _page = 1)" placeholder="Search…" />
-            </div>
-            <div class="col-12 col-md-4 d-flex align-items-end">
-                <div class="form-check">
-                    <input id="showInactive" type="checkbox" class="form-check-input" @bind="_showInactive" @bind:after="@(() => _page = 1)" />
-                    <label class="form-check-label" for="showInactive">Show inactive</label>
+        <!-- Filter / Sort bar -->
+        <div class="d-flex flex-wrap align-items-end justify-content-between gap-2 mb-3">
+            <!-- Filters (left) -->
+            <div class="d-flex flex-wrap gap-2">
+                <div>
+                    <label class="form-label" for="filterVillage">Village</label>
+                    <select id="filterVillage" class="form-select" @bind="_villageFilter" @bind:after="NavigateWithFilters">
+                        <option value="0">All Villages</option>
+                        @foreach (var v in _villages)
+                        {
+                            <option value="@v.VillageId">@v.VillageName</option>
+                        }
+                    </select>
                 </div>
+                <div>
+                    <label class="form-label" for="filterName">Name / Username</label>
+                    <input id="filterName" type="text" class="form-control" @bind="_nameFilter" @bind:event="oninput" @bind:after="NavigateWithFilters" placeholder="Search…" />
+                </div>
+                <div class="d-flex align-items-end">
+                    <div class="form-check">
+                        <input id="showInactive" type="checkbox" class="form-check-input" @bind="_showInactive" @bind:after="NavigateWithFilters" />
+                        <label class="form-check-label" for="showInactive">Show inactive</label>
+                    </div>
+                </div>
+            </div>
+            <!-- Sort (right) -->
+            <div class="d-flex align-items-end gap-2">
+                <div>
+                    <label class="form-label" for="sortBy">Sort by</label>
+                    <select id="sortBy" class="form-select" @bind="_sortBy" @bind:after="NavigateWithFilters">
+                        <option value="lastname">Last Name</option>
+                        <option value="firstname">First Name</option>
+                        <option value="username">Username</option>
+                        <option value="email">Email</option>
+                        <option value="village">Village</option>
+                        <option value="growers">Growers</option>
+                        <option value="status">Status</option>
+                    </select>
+                </div>
+                <button class="btn btn-outline-secondary" @onclick="ToggleSortDirAndNavigate" title="@(_sortAsc ? "Ascending" : "Descending")" aria-label="Toggle sort direction">
+                    <span class="oi @(_sortAsc ? "oi-sort-ascending" : "oi-sort-descending")" aria-hidden="true"></span>
+                </button>
             </div>
         </div>
 
@@ -105,26 +127,31 @@ else
                                     @mentor.GrowerCount<span class="d-md-none"> grower@(mentor.GrowerCount == 1 ? "" : "s")</span>
                                 </div>
 
-                                <!-- Status badge -->
-                                <div class="mentor-col-status mb-2 mb-md-0">
-                                    @if (mentor.IsDeleted)
-                                    {
-                                        <span class="badge bg-secondary">Inactive</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge bg-success">Active</span>
-                                    }
-                                </div>
+                                <!-- Status + Actions (same row on mobile, separate columns on md+) -->
+                                <div class="d-flex d-md-contents align-items-center justify-content-between mt-1 mt-md-0">
 
-                                <!-- Actions -->
-                                <div class="mentor-col-actions d-flex gap-2 flex-shrink-0">
-                                    <a href="@EditUrl("Edit",$"username={Uri.EscapeDataString(mentor.Username)}")"
-                                       class="btn btn-sm btn-outline-primary"
-                                       aria-label="@($"Edit {mentor.DisplayName}")">
-                                        <span class="oi oi-pencil" aria-hidden="true"></span>
-                                        <span class="d-none d-md-inline ms-1">Edit</span>
-                                    </a>
+                                    <!-- Status badge -->
+                                    <div class="mentor-col-status mb-0 mb-md-0">
+                                        @if (mentor.IsDeleted)
+                                        {
+                                            <span class="badge bg-secondary">Inactive</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-success">Active</span>
+                                        }
+                                    </div>
+
+                                    <!-- Actions -->
+                                    <div class="mentor-col-actions gap-2 flex-shrink-0">
+                                        <a href="@EditUrl("Edit",$"username={Uri.EscapeDataString(mentor.Username)}&{BuildFilterQueryString()}")"
+                                           class="btn btn-sm btn-outline-primary"
+                                           aria-label="@($"Edit {mentor.DisplayName}")">
+                                            <span class="oi oi-pencil" aria-hidden="true"></span>
+                                            <span class="d-none d-lg-inline ms-1">Edit</span>
+                                        </a>
+                                    </div>
+
                                 </div>
 
                             </div>
@@ -170,10 +197,44 @@ else
     private bool _showInactive;
     private int _page = 1;
     private const int _pageSize = 12;
+    private string _sortBy = "lastname";
+    private bool _sortAsc = true;
+
+    private void ToggleSortDir() => _sortAsc = !_sortAsc;
+
+    private void ToggleSortDirAndNavigate()
+    {
+        _sortAsc = !_sortAsc;
+        NavigateWithFilters();
+    }
+
+    private string BuildFilterQueryString()
+    {
+        var parts = new List<string>();
+        if (_villageFilter > 0)            parts.Add($"villageId={_villageFilter}");
+        if (!string.IsNullOrEmpty(_nameFilter)) parts.Add($"name={Uri.EscapeDataString(_nameFilter)}");
+        if (_showInactive)                 parts.Add("showInactive=1");
+        if (_sortBy != "lastname")         parts.Add($"sortBy={Uri.EscapeDataString(_sortBy)}");
+        if (!_sortAsc)                     parts.Add("sortDesc=1");
+        return string.Join("&", parts);
+    }
+
+    private void NavigateWithFilters()
+    {
+        _page = 1;
+        NavigationManager.NavigateTo(NavigateUrl(PageState.Page.Path, BuildFilterQueryString()));
+    }
 
     protected override async Task OnParametersSetAsync()
     {
-        _mentors = await MentorService.GetMentorsAsync(ModuleState.ModuleId) ?? new List<MentorViewModel>();
+        if (PageState.QueryString.TryGetValue("villageId", out var vid) && int.TryParse(vid, out var villageId))
+            _villageFilter = villageId;
+        _nameFilter   = PageState.QueryString.GetValueOrDefault("name", "");
+        _showInactive = PageState.QueryString.ContainsKey("showInactive");
+        _sortBy       = PageState.QueryString.GetValueOrDefault("sortBy", "lastname");
+        _sortAsc      = !PageState.QueryString.ContainsKey("sortDesc");
+
+        _mentors  = await MentorService.GetMentorsAsync(ModuleState.ModuleId) ?? new List<MentorViewModel>();
         _villages = await VillageService.GetVillagesAsync() ?? new List<Village>();
         _isLoaded = true;
     }
@@ -196,7 +257,25 @@ else
                 (m.Username?.ToLowerInvariant().Contains(f) ?? false));
         }
 
-        return q.OrderBy(m => m.DisplayName);
+        IEnumerable<MentorViewModel> ordered = _sortBy switch
+        {
+            "firstname" => q.OrderBy(m => SplitName(m.DisplayName).First),
+            "username"  => q.OrderBy(m => m.Username),
+            "email"     => q.OrderBy(m => m.Email),
+            "village"   => q.OrderBy(m => m.VillageName),
+            "growers"   => q.OrderBy(m => m.GrowerCount),
+            "status"    => q.OrderBy(m => m.IsDeleted),
+            _           => q.OrderBy(m => SplitName(m.DisplayName).Last)
+                             .ThenBy(m => SplitName(m.DisplayName).First),
+        };
+        return _sortAsc ? ordered : ordered.Reverse();
+    }
+
+    private static (string Last, string First) SplitName(string fullName)
+    {
+        var trimmed = fullName?.Trim() ?? string.Empty;
+        var idx = trimmed.LastIndexOf(' ');
+        return idx < 0 ? (trimmed, string.Empty) : (trimmed[(idx + 1)..], trimmed[..idx]);
     }
 }
 
@@ -208,5 +287,5 @@ else
     .mentor-col-village  { flex: 0 0 16%; min-width: 0; padding-right: .75rem; }
     .mentor-col-growers  { flex: 0 0 9%;  min-width: 0; padding-right: .75rem; }
     .mentor-col-status   { flex: 0 0 5%;  min-width: 0; padding-right: .75rem; }
-    .mentor-col-actions  { flex: 0 0 8%;  min-width: 0; white-space: nowrap; }
+    .mentor-col-actions  { flex: 1 1 auto; min-width: 0; white-space: nowrap; display: flex; justify-content: flex-end; }
 </style>
