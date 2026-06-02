@@ -13,43 +13,62 @@
 @inject IStringLocalizer<Index> Localizer
 
 <div class="container">
-    <!-- Filter Section -->
-    <div class="row mb-3">
-        <div class="col-md-4">
-            <label for="statusFilter">@Localizer["Filter.Status"]</label>
-            <select id="statusFilter" class="form-select" @bind="_statusFilter" @bind:after="NavigateWithFilters">
-                <option value="">@Localizer["Filter.AllStatuses"]</option>
-                <option value="@GrowerStatus.Active">@Localizer["Status.Active"]</option>
-                <option value="@GrowerStatus.Inactive">@Localizer["Status.Inactive"]</option>
-                <option value="@GrowerStatus.Exited">@Localizer["Status.Exited"]</option>
-            </select>
-        </div>
-        <div class="col-md-3">
-            <label for="villageFilter">@Localizer["Filter.Village"]</label>
-            <select id="villageFilter" class="form-select" @bind="_villageFilter" @bind:after="NavigateWithFilters">
-                <option value="">@Localizer["Filter.AllVillages"]</option>
-                @if (_villages != null)
-                {
-                    @foreach (var village in _villages)
+    <!-- Filter / Sort bar -->
+    <div class="d-flex flex-wrap align-items-end justify-content-between gap-2 mb-3">
+        <!-- Filters (left) -->
+        <div class="d-flex flex-wrap gap-2">
+            <div>
+                <label for="statusFilter" class="form-label">@Localizer["Filter.Status"]</label>
+                <select id="statusFilter" class="form-select" @bind="_statusFilter" @bind:after="NavigateWithFilters">
+                    <option value="">@Localizer["Filter.AllStatuses"]</option>
+                    <option value="@GrowerStatus.Active">@Localizer["Status.Active"]</option>
+                    <option value="@GrowerStatus.Inactive">@Localizer["Status.Inactive"]</option>
+                    <option value="@GrowerStatus.Exited">@Localizer["Status.Exited"]</option>
+                </select>
+            </div>
+            <div>
+                <label for="villageFilter" class="form-label">@Localizer["Filter.Village"]</label>
+                <select id="villageFilter" class="form-select" @bind="_villageFilter" @bind:after="NavigateWithFilters">
+                    <option value="">@Localizer["Filter.AllVillages"]</option>
+                    @if (_villages != null)
                     {
-                        <option value="@village.VillageId">@village.VillageName</option>
+                        @foreach (var village in _villages)
+                        {
+                            <option value="@village.VillageId">@village.VillageName</option>
+                        }
                     }
-                }
-            </select>
+                </select>
+            </div>
+            <div>
+                <label for="cohortFilter" class="form-label">Cohort</label>
+                <select id="cohortFilter" class="form-select" @bind="_cohortFilter" @bind:after="LoadGrowersAsync">
+                    <option value="">All Cohorts</option>
+                    @foreach (var cohort in _cohorts)
+                    {
+                        <option value="@cohort.CohortId">@cohort.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="d-flex align-items-end gap-2">
+                <button class="btn btn-primary" @onclick="ApplyFilters">Filter</button>
+                <button class="btn btn-secondary" @onclick="ClearFilters">@Localizer["Action.ClearFilters"]</button>
+            </div>
         </div>
-        <div class="col-md-3">
-            <label for="cohortFilter">Cohort</label>
-            <select id="cohortFilter" class="form-select" @bind="_cohortFilter" @bind:after="LoadGrowersAsync">
-                <option value="">All Cohorts</option>
-                @foreach (var cohort in _cohorts)
-                {
-                    <option value="@cohort.CohortId">@cohort.Name</option>
-                }
-            </select>
-        </div>
-        <div class="col-md-2 d-flex align-items-end gap-2">
-            <button class="btn btn-primary w-100" @onclick="ApplyFilters">Filter</button>
-            <button class="btn btn-secondary w-100" @onclick="ClearFilters">@Localizer["Action.ClearFilters"]</button>
+        <!-- Sort (right) -->
+        <div class="d-flex align-items-end gap-2">
+            <div>
+                <label for="sortBy" class="form-label">Sort by</label>
+                <select id="sortBy" class="form-select" @bind="_sortBy" @bind:after="NavigateWithFilters">
+                    <option value="lastname">Last Name</option>
+                    <option value="firstname">First Name</option>
+                    <option value="village">Village</option>
+                    <option value="status">Status</option>
+                    <option value="exitdate">Exit Date</option>
+                </select>
+            </div>
+            <button class="btn btn-outline-secondary" @onclick="ToggleSortDirAndNavigate" title="@(_sortAsc ? "Ascending" : "Descending")" aria-label="Toggle sort direction">
+                <span class="oi @(_sortAsc ? "oi-sort-ascending" : "oi-sort-descending")" aria-hidden="true"></span>
+            </button>
         </div>
     </div>
 
@@ -114,7 +133,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var grower in _growers)
+                @foreach (var grower in SortedGrowers())
                 {
                     var rowClass = grower.Status == GrowerStatus.Inactive ? "table-warning" :
                                    grower.Status == GrowerStatus.Exited ? "table-secondary" : "";
@@ -131,7 +150,7 @@
                         <td>
                             <div class="d-flex gap-1">
                                 <ActionLink Action="Edit" 
-                                           Parameters="@($"id={grower.GrowerId}&returnurl={Uri.EscapeDataString(GetReturnUrl())}")"
+                                           Parameters="@($"id={grower.GrowerId}&{BuildFilterQueryString()}")"
                                            Text="Edit" 
                                            ResourceKey="EditGrower" 
                                            Class="btn btn-sm btn-primary" />
@@ -162,6 +181,16 @@
     private string _villageFilter = "";
     private string _cohortFilter = "";
     private bool _isLoading = false;
+    private string _sortBy = "lastname";
+    private bool _sortAsc = true;
+
+    private void ToggleSortDir() => _sortAsc = !_sortAsc;
+
+    private void ToggleSortDirAndNavigate()
+    {
+        _sortAsc = !_sortAsc;
+        NavigateWithFilters();
+    }
 
     protected override async Task OnParametersSetAsync()
     {
@@ -177,6 +206,8 @@
         {
             _statusFilter = PageState.QueryString.GetValueOrDefault("status", "");
             _villageFilter = PageState.QueryString.GetValueOrDefault("villageId", "");
+            _sortBy = PageState.QueryString.GetValueOrDefault("sortBy", "lastname");
+            _sortAsc = !PageState.QueryString.ContainsKey("sortDesc");
             await LoadVillagesAsync();
             await LoadCohortsForMentorAsync();
             await LoadSummaryAsync();
@@ -279,6 +310,27 @@
         StateHasChanged();
     }
 
+    private static (string Last, string First) SplitName(string fullName)
+    {
+        var trimmed = fullName?.Trim() ?? string.Empty;
+        var idx = trimmed.LastIndexOf(' ');
+        return idx < 0 ? (trimmed, string.Empty) : (trimmed[(idx + 1)..], trimmed[..idx]);
+    }
+
+    private IEnumerable<Models.Grower> SortedGrowers()
+    {
+        IOrderedEnumerable<Models.Grower> sorted = _sortBy switch
+        {
+            "firstname" => _growers.OrderBy(g => SplitName(g.GrowerName).First),
+            "village"   => _growers.OrderBy(g => GetVillageName(g.VillageId)),
+            "status"    => _growers.OrderBy(g => g.Status),
+            "exitdate"  => _growers.OrderBy(g => g.ExitDate),
+            _           => _growers.OrderBy(g => SplitName(g.GrowerName).Last)
+                                    .ThenBy(g => SplitName(g.GrowerName).First),
+        };
+        return _sortAsc ? sorted : sorted.Reverse();
+    }
+
     private void ClearFilters()
     {
         NavigationManager.NavigateTo(NavigateUrl());
@@ -300,19 +352,15 @@
         var parts = new List<string>();
         if (!string.IsNullOrEmpty(_statusFilter))  parts.Add($"status={Uri.EscapeDataString(_statusFilter)}");
         if (!string.IsNullOrEmpty(_villageFilter)) parts.Add($"villageId={Uri.EscapeDataString(_villageFilter)}");
+        if (_sortBy != "lastname")                 parts.Add($"sortBy={Uri.EscapeDataString(_sortBy)}");
+        if (!_sortAsc)                             parts.Add("sortDesc=1");
         return string.Join("&", parts);
     }
 
     private void NavigateWithFilters()
     {
         var queryString = BuildFilterQueryString();
-        NavigationManager.NavigateTo(NavigateUrl(PageState.Page.Path, queryString));
-    }
-
-    private string GetReturnUrl()
-    {
-        var queryString = BuildFilterQueryString();
-        return NavigateUrl(PageState.Page.Path, queryString);
+        NavigationManager.NavigateTo(EditUrl("", queryString));
     }
 
     private string GetVillageName(int villageId)
