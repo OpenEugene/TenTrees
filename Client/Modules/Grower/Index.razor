@@ -49,9 +49,9 @@
                     }
                 </select>
             </div>
-            <div class="d-flex align-items-end gap-2">
-                <button class="btn btn-primary" @onclick="ApplyFilters">Filter</button>
-                <button class="btn btn-secondary" @onclick="ClearFilters">@Localizer["Action.ClearFilters"]</button>
+            <div>
+                <label for="nameFilter" class="form-label">Name</label>
+                <input id="nameFilter" type="text" class="form-control" @bind="_nameFilter" @bind:event="oninput" @bind:after="NavigateWithFilters" placeholder="Search…" />
             </div>
         </div>
         <!-- Sort (right) -->
@@ -180,6 +180,7 @@
     private string _statusFilter = "";
     private string _villageFilter = "";
     private string _cohortFilter = "";
+    private string _nameFilter = "";
     private bool _isLoading = false;
     private string _sortBy = "lastname";
     private bool _sortAsc = true;
@@ -206,6 +207,7 @@
         {
             _statusFilter = PageState.QueryString.GetValueOrDefault("status", "");
             _villageFilter = PageState.QueryString.GetValueOrDefault("villageId", "");
+            _nameFilter = PageState.QueryString.GetValueOrDefault("name", "");
             _sortBy = PageState.QueryString.GetValueOrDefault("sortBy", "lastname");
             _sortAsc = !PageState.QueryString.ContainsKey("sortDesc");
             await LoadVillagesAsync();
@@ -306,6 +308,13 @@
             _growers = _growers.Where(g => _cohortGrowerIds.Contains(g.GrowerId)).ToList();
         }
 
+        // Apply name filter
+        if (!string.IsNullOrWhiteSpace(_nameFilter))
+        {
+            var f = _nameFilter.Trim().ToLowerInvariant();
+            _growers = _growers.Where(g => g.GrowerName?.ToLowerInvariant().Contains(f) ?? false).ToList();
+        }
+
         await LoadSummaryAsync();
         StateHasChanged();
     }
@@ -331,16 +340,6 @@
         return _sortAsc ? sorted : sorted.Reverse();
     }
 
-    private void ClearFilters()
-    {
-        NavigationManager.NavigateTo(NavigateUrl());
-    }
-
-    private void ApplyFilters()
-    {
-        NavigateWithFilters();
-    }
-
     private void ApplyStatusFilter(string status)
     {
         _statusFilter = status;
@@ -352,6 +351,7 @@
         var parts = new List<string>();
         if (!string.IsNullOrEmpty(_statusFilter))  parts.Add($"status={Uri.EscapeDataString(_statusFilter)}");
         if (!string.IsNullOrEmpty(_villageFilter)) parts.Add($"villageId={Uri.EscapeDataString(_villageFilter)}");
+        if (!string.IsNullOrEmpty(_nameFilter))    parts.Add($"name={Uri.EscapeDataString(_nameFilter)}");
         if (_sortBy != "lastname")                 parts.Add($"sortBy={Uri.EscapeDataString(_sortBy)}");
         if (!_sortAsc)                             parts.Add("sortDesc=1");
         return string.Join("&", parts);
@@ -360,7 +360,7 @@
     private void NavigateWithFilters()
     {
         var queryString = BuildFilterQueryString();
-        NavigationManager.NavigateTo(EditUrl("", queryString));
+        NavigationManager.NavigateTo(NavigateUrl(PageState.Page.Path, queryString));
     }
 
     private string GetVillageName(int villageId)
