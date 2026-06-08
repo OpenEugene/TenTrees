@@ -178,16 +178,8 @@ namespace OpenEug.TenTrees.Module.Grower.Services
 
         public Task<Models.Grower> UpdateGrowerAsync(Models.Grower grower, int moduleId)
         {
-            if (_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.Edit))
-            {
-                grower = _growerRepository.UpdateGrower(grower);
-                _logger.Log(LogLevel.Information, this, LogFunction.Update, "Grower Updated {Grower}", grower);
-            }
-            else
-            {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Grower Update Attempt {Grower}", grower);
-                grower = null;
-            }
+            grower = _growerRepository.UpdateGrower(grower);
+            _logger.Log(LogLevel.Information, this, LogFunction.Update, "Grower Updated {Grower}", grower);
             return Task.FromResult(grower);
         }
 

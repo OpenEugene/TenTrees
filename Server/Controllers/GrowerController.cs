@@ -179,7 +179,7 @@ namespace OpenEug.TenTrees.Module.Grower.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize]
+        [Authorize(Policy = PolicyNames.EditModule)]
         public async Task<ActionResult<Models.Grower>> Put(int id, [FromBody] Models.Grower grower, int moduleId)
         {
             try
