@@ -58,32 +58,32 @@ namespace OpenEug.TenTrees.Module.Grower.Repository
                 query = query.Where(g => g.VillageId == villageId.Value);
             }
 
-            return query.ToList();
+            return query.OrderBy(g => g.GrowerName).ToList();
         }
 
         public IEnumerable<Models.Grower> GetGrowersByVillage(int villageId)
         {
             using var db = _factory.CreateDbContext();
-            return db.Grower.Where(g => g.VillageId == villageId).ToList();
+            return db.Grower.Where(g => g.VillageId == villageId).OrderBy(g => g.GrowerName).ToList();
         }
 
         public IEnumerable<Models.Grower> GetGrowersByMentor(string mentorUsername)
         {
             using var db = _factory.CreateDbContext();
-            return db.Grower.Where(g => g.MentorUsername == mentorUsername).ToList();
+            return db.Grower.Where(g => g.MentorUsername == mentorUsername).OrderBy(g => g.GrowerName).ToList();
         }
 
         public IEnumerable<Models.Grower> GetGrowersByStatus(GrowerStatus status, int? villageId = null)
         {
             using var db = _factory.CreateDbContext();
             var query = db.Grower.Where(g => g.Status == status);
-            
+
             if (villageId.HasValue)
             {
                 query = query.Where(g => g.VillageId == villageId.Value);
             }
-            
-            return query.ToList();
+
+            return query.OrderBy(g => g.GrowerName).ToList();
         }
 
         public IEnumerable<Models.Grower> GetActiveGrowers(int? villageId = null)

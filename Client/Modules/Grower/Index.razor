@@ -123,7 +123,8 @@
                         <td>@grower.GrowerName</td>
                         <td>@GetVillageName(grower.VillageId)</td>
                         <td>
-                            <span class="badge @GetStatusBadgeClass(grower.Status)">
+                            <span class="badge @GetStatusBadgeClass(grower.Status)"
+                                  title="@GetStatusDescription(grower.Status)">
                                 @GetStatusText(grower.Status)
                             </span>
                         </td>
@@ -341,6 +342,14 @@
             _ => status.ToString()
         };
     }
+
+    private string GetStatusDescription(GrowerStatus status) => status switch
+    {
+        GrowerStatus.Active => "Currently participating in the program.",
+        GrowerStatus.Inactive => "Temporarily paused (e.g. illness or travel) but has not left the program.",
+        GrowerStatus.Exited => "Has permanently left the program.",
+        _ => string.Empty
+    };
 
     private async Task DeleteGrower(Models.Grower grower)
     {
