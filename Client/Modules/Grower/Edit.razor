@@ -29,7 +29,11 @@ else
                 @if (_growerId > 0)
                 {
                     <div class="d-flex align-items-center gap-2 flex-wrap">
-                        <span class="badge @GetStatusBadgeClass(_grower.Status)">@GetStatusText(_grower.Status)</span>
+                        <span class="badge @GetStatusBadgeClass(_grower.Status)"
+                              title="@GetStatusDescription(_grower.Status)"
+                              aria-label="Status: @GetStatusText(_grower.Status) â€” @GetStatusDescription(_grower.Status)">
+                            @GetStatusText(_grower.Status)
+                        </span>
                         @if (UserSecurity.IsAuthorized(PageState.User, AppRoleNames.TenTreesAdmin))
                         {
                             @if (_grower.Status == GrowerStatus.Active)
@@ -360,7 +364,7 @@ else
                                         {
                                             <span class="badge bg-secondary me-1">General</span>
                                         }
-                                        <small class="text-muted">@note.CreatedOn.ToLocalTime().ToString("yyyy-MM-dd HH:mm") — @note.CreatedBy</small>
+                                        <small class="text-muted">@note.CreatedOn.ToLocalTime().ToString("yyyy-MM-dd HH:mm") ï¿½ @note.CreatedBy</small>
                                     </div>
                                     <div class="text-body" style="white-space: pre-wrap;">@note.Text</div>
                                 </li>
@@ -656,5 +660,13 @@ else
         GrowerStatus.Inactive => "Inactive",
         GrowerStatus.Exited => "Exited",
         _ => status.ToString()
+    };
+
+    private string GetStatusDescription(GrowerStatus status) => status switch
+    {
+        GrowerStatus.Active => "Currently participating in the program.",
+        GrowerStatus.Inactive => "Temporarily paused (e.g. illness or travel) but has not left the program.",
+        GrowerStatus.Exited => "Has permanently left the program.",
+        _ => string.Empty
     };
 }
