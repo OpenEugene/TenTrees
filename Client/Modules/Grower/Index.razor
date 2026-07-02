@@ -179,9 +179,15 @@
 
         try
         {
-            _statusFilter = PageState.QueryString.GetValueOrDefault("status", "");
-            _villageFilter = PageState.QueryString.GetValueOrDefault("villageId", "");
-            _cohortFilter = PageState.QueryString.GetValueOrDefault("cohortId", "");
+            var status = PageState.QueryString.GetValueOrDefault("status", "");
+            _statusFilter = Enum.TryParse<GrowerStatus>(status, out _) ? status : "";
+
+            var village = PageState.QueryString.GetValueOrDefault("villageId", "");
+            _villageFilter = int.TryParse(village, out _) ? village : "";
+
+            var cohort = PageState.QueryString.GetValueOrDefault("cohortId", "");
+            _cohortFilter = int.TryParse(cohort, out _) ? cohort : "";
+
             _currentPage = ParsePage(PageState.QueryString.GetValueOrDefault("page"));
             await LoadVillagesAsync();
             await LoadCohortsForMentorAsync();
