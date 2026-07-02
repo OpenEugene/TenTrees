@@ -352,9 +352,22 @@
     private DateTime _createdon;
     private string _modifiedby;
     private DateTime _modifiedon;
-    private string _backUrl => PageState.QueryString.ContainsKey("returnurl")
-        ? Uri.UnescapeDataString(PageState.QueryString["returnurl"])
-        : NavigateUrl();
+    private string _backUrl
+    {
+        get
+        {
+            if (!PageState.QueryString.ContainsKey("returnurl"))
+            {
+                return NavigateUrl();
+            }
+
+            var decoded = Uri.UnescapeDataString(PageState.QueryString["returnurl"]);
+
+            return Uri.TryCreate(decoded, UriKind.Relative, out _) && !decoded.StartsWith("//")
+                ? decoded
+                : NavigateUrl();
+        }
+    }
 
     protected override async Task OnParametersSetAsync()
     {
