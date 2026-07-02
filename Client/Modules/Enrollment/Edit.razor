@@ -290,7 +290,7 @@
     </div>
     
     <button type="button" class="btn btn-success" @onclick="Save">@Localizer["Save"]</button>
-    <NavLink class="btn btn-secondary" href="@NavigateUrl()">@Localizer["Cancel"]</NavLink>
+    <NavLink class="btn btn-secondary" href="@_backUrl">@Localizer["Cancel"]</NavLink>
     <br /><br />
     @if (PageState.Action == "Edit")
     {
@@ -352,6 +352,22 @@
     private DateTime _createdon;
     private string _modifiedby;
     private DateTime _modifiedon;
+    private string _backUrl
+    {
+        get
+        {
+            if (!PageState.QueryString.ContainsKey("returnurl"))
+            {
+                return NavigateUrl();
+            }
+
+            var decoded = Uri.UnescapeDataString(PageState.QueryString["returnurl"]);
+
+            return Uri.TryCreate(decoded, UriKind.Relative, out _) && !decoded.StartsWith("//")
+                ? decoded
+                : NavigateUrl();
+        }
+    }
 
     protected override async Task OnParametersSetAsync()
     {
@@ -526,7 +542,7 @@
                     await logger.LogInformation("Enrollment Updated {Enrollment}", Enrollment);
                     AddModuleMessage(Localizer["Message.UpdateSuccess"], MessageType.Success);
                 }
-                NavigationManager.NavigateTo(NavigateUrl());
+                NavigationManager.NavigateTo(_backUrl);
             }
             else
             {
