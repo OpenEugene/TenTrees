@@ -197,7 +197,8 @@
 
         try
         {
-            _statusFilter = PageState.QueryString.GetValueOrDefault("status", "");
+            var status = PageState.QueryString.GetValueOrDefault("status", "");
+            _statusFilter = Enum.TryParse<EnrollmentStatus>(status, out _) ? status : "";
             _villageFilter = PageState.QueryString.GetValueOrDefault("villageId", "");
             _currentPage = ParsePage(PageState.QueryString.GetValueOrDefault("page"));
             await LoadVillagesAsync();
