@@ -657,8 +657,15 @@ else
 
     private string GetBackUrl()
     {
-        return PageState.QueryString.ContainsKey("returnurl")
-            ? Uri.UnescapeDataString(PageState.QueryString["returnurl"])
+        if (!PageState.QueryString.ContainsKey("returnurl"))
+        {
+            return NavigateUrl();
+        }
+
+        var decoded = Uri.UnescapeDataString(PageState.QueryString["returnurl"]);
+
+        return Uri.TryCreate(decoded, UriKind.Relative, out _) && !decoded.StartsWith("//")
+            ? decoded
             : NavigateUrl();
     }
 
