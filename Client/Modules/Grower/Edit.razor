@@ -250,7 +250,7 @@ else
                     <h5 class="mb-0"><span class="oi oi-clipboard me-2" aria-hidden="true"></span>Assessments</h5>
                     @if (_assessmentModuleId.HasValue && _assessmentPagePath != null)
                     {
-                        var returnUrl = Uri.EscapeDataString(EditUrl("Edit", $"id={_growerId}"));
+                        var returnUrl = GetAssessmentReturnUrl();
                         var addHref = NavigateUrl(_assessmentPagePath, _assessmentModuleId.Value, "Add", $"growerId={_growerId}&returnurl={returnUrl}");
                         <a href="@addHref" class="btn btn-sm btn-primary">
                             <span class="oi oi-plus me-1" aria-hidden="true"></span>Add Assessment
@@ -314,7 +314,7 @@ else
                                             <td>
                                                 @if (_assessmentModuleId.HasValue && _assessmentPagePath != null)
                                                 {
-                                                    var returnUrl = Uri.EscapeDataString(EditUrl("Edit", $"id={_growerId}"));
+                                                    var returnUrl = GetAssessmentReturnUrl();
                                                     var assessmentHref = NavigateUrl(_assessmentPagePath, _assessmentModuleId.Value, "Edit", $"id={assessment.AssessmentId}&returnurl={returnUrl}");
                                                     <a href="@assessmentHref" class="btn btn-sm btn-outline-secondary" title="View Assessment">
                                                         <span class="oi oi-external-link" aria-hidden="true"></span>
@@ -360,7 +360,7 @@ else
                                         {
                                             <span class="badge bg-secondary me-1">General</span>
                                         }
-                                        <small class="text-muted">@note.CreatedOn.ToLocalTime().ToString("yyyy-MM-dd HH:mm") — @note.CreatedBy</small>
+                                        <small class="text-muted">@note.CreatedOn.ToLocalTime().ToString("yyyy-MM-dd HH:mm") ï¿½ @note.CreatedBy</small>
                                     </div>
                                     <div class="text-body" style="white-space: pre-wrap;">@note.Text</div>
                                 </li>
@@ -450,7 +450,7 @@ else
             {
                 var result = await GrowerService.AddGrowerAsync(_grower, ModuleState.ModuleId);
                 if (result != null)
-                    NavigationManager.NavigateTo(EditUrl("Edit", $"id={result.GrowerId}"));
+                    NavigationManager.NavigateTo(EditUrl("Edit", BuildEditParameters(result.GrowerId)));
                 else
                     _saveError = "Unable to add grower. Please try again.";
             }
@@ -636,10 +636,30 @@ else
 
     private void NavigateBack()
     {
+        NavigationManager.NavigateTo(GetBackUrl());
+    }
+
+    private string GetAssessmentReturnUrl()
+    {
+        return Uri.EscapeDataString(EditUrl("Edit", BuildEditParameters(_growerId)));
+    }
+
+    private string BuildEditParameters(int growerId)
+    {
+        var parameters = $"id={growerId}";
         if (PageState.QueryString.ContainsKey("returnurl"))
-            NavigationManager.NavigateTo(PageState.QueryString["returnurl"]);
-        else
-            NavigationManager.NavigateTo(NavigateUrl());
+        {
+            parameters += $"&returnurl={Uri.EscapeDataString(GetBackUrl())}";
+        }
+
+        return parameters;
+    }
+
+    private string GetBackUrl()
+    {
+        return PageState.QueryString.ContainsKey("returnurl")
+            ? Uri.UnescapeDataString(PageState.QueryString["returnurl"])
+            : NavigateUrl();
     }
 
     private string GetStatusBadgeClass(GrowerStatus status) => status switch

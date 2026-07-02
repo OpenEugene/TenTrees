@@ -21,7 +21,7 @@
     <div class="row mb-3">
         <div class="col-md-4">
             <label for="statusFilter">@Localizer["Filter.Status"]</label>
-            <select id="statusFilter" class="form-select" @bind="_statusFilter" @bind:after="LoadEnrollmentsAsync">
+            <select id="statusFilter" class="form-select" @bind="_statusFilter">
                 <option value="">@Localizer["Filter.AllStatuses"]</option>
                 <option value="@EnrollmentStatus.Pending">@Localizer["EnrollmentStatus.Pending"]</option>
                 <option value="@EnrollmentStatus.Approved">@Localizer["EnrollmentStatus.Approved"]</option>
@@ -30,7 +30,7 @@
         </div>
         <div class="col-md-4">
             <label for="villageFilter">@Localizer["Filter.Village"]</label>
-            <select id="villageFilter" class="form-select" @bind="_villageFilter" @bind:after="LoadEnrollmentsAsync">
+            <select id="villageFilter" class="form-select" @bind="_villageFilter">
                 <option value="">@Localizer["Filter.AllVillages"]</option>
                 @if (_villages != null)
                 {
@@ -97,77 +97,79 @@
     }
     else
     {
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th style="width: 1px;"><span class="visually-hidden">Edit</span></th>
-                    <th style="width: 1px;"><span class="visually-hidden">Delete</span></th>
-                    <th>@Localizer["Grower"]</th>
-                    <th>@Localizer["Mentor"]</th>
-                    <th>@Localizer["Village"]</th>
-                    <th>@Localizer["Status"]</th>
-                    <th>@Localizer["Column.GrowerStatus"]</th>
-                    <th>@Localizer["Column.PhotoConsent"]</th>
-                    <th>@Localizer["Column.Actions"]</th>
-                    <th style="width: 1px;"><span class="visually-hidden">@Localizer["Column.PhotoConsentAction"]</span></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var enrollment in _Enrollments)
-                {
-                    var rowClass = enrollment.EnrollmentStatus == EnrollmentStatus.Pending ? "table-warning" :
-                                   enrollment.EnrollmentStatus == EnrollmentStatus.Rejected ? "table-danger" : "";
-
-                    <tr class="@rowClass">
-                        <td><ActionLink Action="Edit" Parameters="@($"id={enrollment.EnrollmentId}")" ResourceKey="Edit" /></td>
-                        <td><ActionDialog Header="Delete Enrollment" Message="Are You Sure You Wish To Delete This Enrollment?" Action="Delete" Security="SecurityAccessLevel.Edit" Class="btn btn-danger" OnClick="@(async () => await Delete(enrollment))" ResourceKey="Delete" Id="@enrollment.EnrollmentId.ToString()" /></td>
-                        <td>@enrollment.GrowerName</td>
-                        <td>@enrollment.MentorUserName</td>
-                        <td>@(string.IsNullOrEmpty(enrollment.VillageName) ? Localizer["UnknownVillage"] : enrollment.VillageName)</td>
-                        <td>
-                            <span class="badge @GetEnrollmentStatusBadgeClass(enrollment.EnrollmentStatus)">
-                                @GetEnrollmentStatusText(enrollment.EnrollmentStatus)
-                            </span>
-                        </td>
-                        <td>
-                            <span class="badge @GetGrowerStatusBadgeClass(enrollment.GrowerStatus)">
-                                @GetGrowerStatusText(enrollment.GrowerStatus)
-                            </span>
-                        </td>
-                        <td>
-                            <span class="badge @GetPhotoConsentBadgeClass(enrollment.PhotoConsentLevel)">
-                                @GetPhotoConsentText(enrollment.PhotoConsentLevel)
-                            </span>
-                        </td>
-                        <td class="text-nowrap">
-                            @if (enrollment.EnrollmentStatus == EnrollmentStatus.Pending)
-                            {
-                                <div class="d-inline-flex gap-1 align-items-center">
-                                    <button class="btn btn-sm btn-success"
-                                            aria-label="@Localizer["Action.Approve"] @enrollment.GrowerName"
-                                            @onclick="() => ApproveInline(enrollment.EnrollmentId)">
-                                        <span class="oi oi-check" aria-hidden="true"></span>
-                                    </button>
-                                    <button class="btn btn-sm btn-danger"
-                                            aria-label="@Localizer["Action.Reject"] @enrollment.GrowerName"
-                                            @onclick="() => RejectInline(enrollment.EnrollmentId)">
-                                        <span class="oi oi-x" aria-hidden="true"></span>
-                                    </button>
-                                </div>
-                            }
-                        </td>
-                        <td>
-                            @if (enrollment.EnrollmentStatus == EnrollmentStatus.Approved)
-                            {
-                                <ActionLink Action="PhotoConsent"
-                                            Parameters="@($"id={enrollment.EnrollmentId}")"
-                                            ResourceKey="PhotoConsent" />
-                            }
-                        </td>
-                    </tr>
+        <Pager Items="@_Enrollments"
+               Format="Table"
+               Class="table table-striped"
+               PageSize="@_pageSize.ToString()"
+               CurrentPage="@_currentPage.ToString()"
+               OnPageChange="HandlePageChange">
+            <Header>
+                <th style="width: 1px;"><span class="visually-hidden">Edit</span></th>
+                <th style="width: 1px;"><span class="visually-hidden">Delete</span></th>
+                <th>@Localizer["Grower"]</th>
+                <th>@Localizer["Mentor"]</th>
+                <th>@Localizer["Village"]</th>
+                <th>@Localizer["Status"]</th>
+                <th>@Localizer["Column.GrowerStatus"]</th>
+                <th>@Localizer["Column.PhotoConsent"]</th>
+                <th>@Localizer["Column.Actions"]</th>
+                <th style="width: 1px;"><span class="visually-hidden">@Localizer["Column.PhotoConsentAction"]</span></th>
+            </Header>
+            <Row>
+                @{
+                    var rowClass = context.EnrollmentStatus == EnrollmentStatus.Pending ? "table-warning" :
+                                   context.EnrollmentStatus == EnrollmentStatus.Rejected ? "table-danger" : "";
                 }
-            </tbody>
-        </table>
+
+                <tr class="@rowClass">
+                    <td><ActionLink Action="Edit" Parameters="@($"id={context.EnrollmentId}&returnurl={Uri.EscapeDataString(GetReturnUrl())}")" ResourceKey="Edit" /></td>
+                    <td><ActionDialog Header="Delete Enrollment" Message="Are You Sure You Wish To Delete This Enrollment?" Action="Delete" Security="SecurityAccessLevel.Edit" Class="btn btn-danger" OnClick="@(async () => await Delete(context))" ResourceKey="Delete" Id="@context.EnrollmentId.ToString()" /></td>
+                    <td>@context.GrowerName</td>
+                    <td>@context.MentorUserName</td>
+                    <td>@(string.IsNullOrEmpty(context.VillageName) ? Localizer["UnknownVillage"] : context.VillageName)</td>
+                    <td>
+                        <span class="badge @GetEnrollmentStatusBadgeClass(context.EnrollmentStatus)">
+                            @GetEnrollmentStatusText(context.EnrollmentStatus)
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge @GetGrowerStatusBadgeClass(context.GrowerStatus)">
+                            @GetGrowerStatusText(context.GrowerStatus)
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge @GetPhotoConsentBadgeClass(context.PhotoConsentLevel)">
+                            @GetPhotoConsentText(context.PhotoConsentLevel)
+                        </span>
+                    </td>
+                    <td class="text-nowrap">
+                        @if (context.EnrollmentStatus == EnrollmentStatus.Pending)
+                        {
+                            <div class="d-inline-flex gap-1 align-items-center">
+                                <button class="btn btn-sm btn-success"
+                                        aria-label="@Localizer["Action.Approve"] @context.GrowerName"
+                                        @onclick="() => ApproveInline(context.EnrollmentId)">
+                                    <span class="oi oi-check" aria-hidden="true"></span>
+                                </button>
+                                <button class="btn btn-sm btn-danger"
+                                        aria-label="@Localizer["Action.Reject"] @context.GrowerName"
+                                        @onclick="() => RejectInline(context.EnrollmentId)">
+                                    <span class="oi oi-x" aria-hidden="true"></span>
+                                </button>
+                            </div>
+                        }
+                    </td>
+                    <td>
+                        @if (context.EnrollmentStatus == EnrollmentStatus.Approved)
+                        {
+                            <ActionLink Action="PhotoConsent"
+                                        Parameters="@($"id={context.EnrollmentId}")"
+                                        ResourceKey="PhotoConsent" />
+                        }
+                    </td>
+                </tr>
+            </Row>
+        </Pager>
     }
 </div>
 
@@ -184,17 +186,23 @@
     private EnrollmentStatusSummary _summary;
     private string _statusFilter = "";
     private string _villageFilter = "";
-    private bool _loaded = false;
+    private bool _isLoading = false;
+    private int _currentPage = 1;
+    private const int _pageSize = 20;
 
     protected override async Task OnParametersSetAsync()
     {
-        if (_loaded) return;
-        _loaded = true;
+        if (_isLoading) return;
+        _isLoading = true;
 
         try
         {
+            _statusFilter = PageState.QueryString.GetValueOrDefault("status", "");
+            _villageFilter = PageState.QueryString.GetValueOrDefault("villageId", "");
+            _currentPage = ParsePage(PageState.QueryString.GetValueOrDefault("page"));
             await LoadVillagesAsync();
-            _allEnrollments = await EnrollmentService.GetEnrollmentListViewModelsAsync();
+            _allEnrollments = await EnrollmentService.GetEnrollmentListViewModelsAsync()
+                ?? new List<Models.EnrollmentListViewModel>();
             ApplyFilters();
             CalculateSummary();
         }
@@ -202,6 +210,10 @@
         {
             await logger.LogError(ex, "Error Loading Enrollment {Error}", ex.Message);
             AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
+        }
+        finally
+        {
+            _isLoading = false;
         }
     }
 
@@ -216,7 +228,8 @@
 
     private async Task LoadEnrollmentsAsync()
     {
-        _allEnrollments = await EnrollmentService.GetEnrollmentListViewModelsAsync();
+        _allEnrollments = await EnrollmentService.GetEnrollmentListViewModelsAsync()
+            ?? new List<Models.EnrollmentListViewModel>();
         ApplyFilters();
         CalculateSummary();
         StateHasChanged();
@@ -251,23 +264,60 @@
         };
     }
 
-    private async Task ApplyFiltersAndRefresh()
+    private void ApplyFiltersAndRefresh()
     {
-        await LoadEnrollmentsAsync();
+        _currentPage = 1;
+        NavigateWithFilters();
     }
 
-    private async Task ClearFilters()
+    private void ClearFilters()
     {
         _statusFilter = "";
         _villageFilter = "";
-        ApplyFilters();
-        StateHasChanged();
+        _currentPage = 1;
+        NavigationManager.NavigateTo(NavigateUrl());
     }
 
-    private async Task ApplyStatusFilter(string status)
+    private void ApplyStatusFilter(string status)
     {
         _statusFilter = status;
-        await LoadEnrollmentsAsync();
+        _currentPage = 1;
+        NavigateWithFilters();
+    }
+
+    private void HandlePageChange(int page)
+    {
+        if (page == _currentPage)
+        {
+            return;
+        }
+
+        _currentPage = page;
+        NavigateWithFilters(includePage: true);
+    }
+
+    private void NavigateWithFilters(bool includePage = false)
+    {
+        NavigationManager.NavigateTo(NavigateUrl(PageState.Page.Path, BuildFilterQueryString(includePage)));
+    }
+
+    private string BuildFilterQueryString(bool includePage = false)
+    {
+        var parts = new List<string>();
+        if (!string.IsNullOrEmpty(_statusFilter)) parts.Add($"status={Uri.EscapeDataString(_statusFilter)}");
+        if (!string.IsNullOrEmpty(_villageFilter)) parts.Add($"villageId={Uri.EscapeDataString(_villageFilter)}");
+        if (includePage && _currentPage > 1) parts.Add($"page={_currentPage}");
+        return string.Join("&", parts);
+    }
+
+    private string GetReturnUrl()
+    {
+        return NavigateUrl(PageState.Page.Path, BuildFilterQueryString(includePage: true));
+    }
+
+    private static int ParsePage(string value)
+    {
+        return int.TryParse(value, out var page) && page > 0 ? page : 1;
     }
 
     private async Task Delete(Models.EnrollmentListViewModel Enrollment)
