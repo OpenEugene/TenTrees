@@ -21,7 +21,7 @@
     <div class="row mb-3">
         <div class="col-md-4">
             <label for="statusFilter">@Localizer["Filter.Status"]</label>
-            <select id="statusFilter" class="form-select" @bind="_statusFilter">
+            <select id="statusFilter" class="form-select" @bind="_statusFilter" @bind:after="ApplyFiltersAndRefresh">
                 <option value="">@Localizer["Filter.AllStatuses"]</option>
                 <option value="@EnrollmentStatus.Pending">@Localizer["EnrollmentStatus.Pending"]</option>
                 <option value="@EnrollmentStatus.Approved">@Localizer["EnrollmentStatus.Approved"]</option>
@@ -30,7 +30,7 @@
         </div>
         <div class="col-md-4">
             <label for="villageFilter">@Localizer["Filter.Village"]</label>
-            <select id="villageFilter" class="form-select" @bind="_villageFilter">
+            <select id="villageFilter" class="form-select" @bind="_villageFilter" @bind:after="ApplyFiltersAndRefresh">
                 <option value="">@Localizer["Filter.AllVillages"]</option>
                 @if (_villages != null)
                 {
