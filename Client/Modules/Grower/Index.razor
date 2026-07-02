@@ -39,7 +39,7 @@
         </div>
         <div class="col-md-3">
             <label for="cohortFilter">Cohort</label>
-            <select id="cohortFilter" class="form-select" @bind="_cohortFilter" @bind:after="LoadGrowersAsync">
+            <select id="cohortFilter" class="form-select" @bind="_cohortFilter" @bind:after="NavigateWithFilters">
                 <option value="">All Cohorts</option>
                 @foreach (var cohort in _cohorts)
                 {
@@ -103,52 +103,54 @@
     }
     else
     {
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>@Localizer["Column.GrowerName"]</th>
-                    <th>@Localizer["Column.Village"]</th>
-                    <th>@Localizer["Column.Status"]</th>
-                    <th>@Localizer["Column.ExitDate"]</th>
-                    <th>@Localizer["Column.Actions"]</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var grower in _growers)
-                {
-                    var rowClass = grower.Status == GrowerStatus.Inactive ? "table-warning" :
-                                   grower.Status == GrowerStatus.Exited ? "table-secondary" : "";
-                    
-                    <tr class="@rowClass">
-                        <td>@grower.GrowerName</td>
-                        <td>@GetVillageName(grower.VillageId)</td>
-                        <td>
-                            <span class="badge @GetStatusBadgeClass(grower.Status)">
-                                @GetStatusText(grower.Status)
-                            </span>
-                        </td>
-                        <td>@(grower.ExitDate?.ToString("yyyy-MM-dd") ?? "-")</td>
-                        <td>
-                            <div class="d-flex gap-1">
-                                <ActionLink Action="Edit" 
-                                           Parameters="@($"id={grower.GrowerId}&returnurl={Uri.EscapeDataString(GetReturnUrl())}")"
-                                           Text="Edit" 
-                                           ResourceKey="EditGrower" 
-                                           Class="btn btn-sm btn-primary" />
-                                <ActionDialog Header="Delete Grower"
-                                             Message="@($"Are you sure you wish to delete {grower.GrowerName}? This action cannot be undone.")"
-                                             Action="Delete"
-                                             Security="SecurityAccessLevel.Edit"
-                                             Class="btn btn-sm btn-danger"
-                                             OnClick="@(async () => await DeleteGrower(grower))"
-                                             ResourceKey="DeleteGrower"
-                                             Id="@grower.GrowerId.ToString()" />
-                            </div>
-                        </td>
-                    </tr>
+        <Pager Items="@_growers"
+               Format="Table"
+               Class="table table-striped"
+               PageSize="@_pageSize.ToString()"
+               CurrentPage="@_currentPage.ToString()"
+               OnPageChange="HandlePageChange">
+            <Header>
+                <th>@Localizer["Column.GrowerName"]</th>
+                <th>@Localizer["Column.Village"]</th>
+                <th>@Localizer["Column.Status"]</th>
+                <th>@Localizer["Column.ExitDate"]</th>
+                <th>@Localizer["Column.Actions"]</th>
+            </Header>
+            <Row>
+                @{
+                    var rowClass = context.Status == GrowerStatus.Inactive ? "table-warning" :
+                                   context.Status == GrowerStatus.Exited ? "table-secondary" : "";
                 }
-            </tbody>
-        </table>
+                
+                <tr class="@rowClass">
+                    <td>@context.GrowerName</td>
+                    <td>@GetVillageName(context.VillageId)</td>
+                    <td>
+                        <span class="badge @GetStatusBadgeClass(context.Status)">
+                            @GetStatusText(context.Status)
+                        </span>
+                    </td>
+                    <td>@(context.ExitDate?.ToString("yyyy-MM-dd") ?? "-")</td>
+                    <td>
+                        <div class="d-flex gap-1">
+                            <ActionLink Action="Edit" 
+                                       Parameters="@($"id={context.GrowerId}&returnurl={Uri.EscapeDataString(GetReturnUrl())}")"
+                                       Text="Edit" 
+                                       ResourceKey="EditGrower" 
+                                       Class="btn btn-sm btn-primary" />
+                            <ActionDialog Header="Delete Grower"
+                                         Message="@($"Are you sure you wish to delete {context.GrowerName}? This action cannot be undone.")"
+                                         Action="Delete"
+                                         Security="SecurityAccessLevel.Edit"
+                                         Class="btn btn-sm btn-danger"
+                                         OnClick="@(async () => await DeleteGrower(context))"
+                                         ResourceKey="DeleteGrower"
+                                         Id="@context.GrowerId.ToString()" />
+                        </div>
+                    </td>
+                </tr>
+            </Row>
+        </Pager>
     }
 </div>
 
@@ -162,6 +164,8 @@
     private string _villageFilter = "";
     private string _cohortFilter = "";
     private bool _isLoading = false;
+    private int _currentPage = 1;
+    private const int _pageSize = 20;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -175,8 +179,16 @@
 
         try
         {
-            _statusFilter = PageState.QueryString.GetValueOrDefault("status", "");
-            _villageFilter = PageState.QueryString.GetValueOrDefault("villageId", "");
+            var status = PageState.QueryString.GetValueOrDefault("status", "");
+            _statusFilter = Enum.TryParse<GrowerStatus>(status, out _) ? status : "";
+
+            var village = PageState.QueryString.GetValueOrDefault("villageId", "");
+            _villageFilter = int.TryParse(village, out _) ? village : "";
+
+            var cohort = PageState.QueryString.GetValueOrDefault("cohortId", "");
+            _cohortFilter = int.TryParse(cohort, out _) ? cohort : "";
+
+            _currentPage = ParsePage(PageState.QueryString.GetValueOrDefault("page"));
             await LoadVillagesAsync();
             await LoadCohortsForMentorAsync();
             await LoadSummaryAsync();
@@ -286,20 +298,24 @@
 
     private void ApplyFilters()
     {
+        _currentPage = 1;
         NavigateWithFilters();
     }
 
     private void ApplyStatusFilter(string status)
     {
         _statusFilter = status;
+        _currentPage = 1;
         NavigateWithFilters();
     }
 
-    private string BuildFilterQueryString()
+    private string BuildFilterQueryString(bool includePage = false)
     {
         var parts = new List<string>();
         if (!string.IsNullOrEmpty(_statusFilter))  parts.Add($"status={Uri.EscapeDataString(_statusFilter)}");
         if (!string.IsNullOrEmpty(_villageFilter)) parts.Add($"villageId={Uri.EscapeDataString(_villageFilter)}");
+        if (!string.IsNullOrEmpty(_cohortFilter)) parts.Add($"cohortId={Uri.EscapeDataString(_cohortFilter)}");
+        if (includePage && _currentPage > 1) parts.Add($"page={_currentPage}");
         return string.Join("&", parts);
     }
 
@@ -309,10 +325,26 @@
         NavigationManager.NavigateTo(NavigateUrl(PageState.Page.Path, queryString));
     }
 
+    private void HandlePageChange(int page)
+    {
+        if (page == _currentPage)
+        {
+            return;
+        }
+
+        _currentPage = page;
+        NavigationManager.NavigateTo(NavigateUrl(PageState.Page.Path, BuildFilterQueryString(includePage: true)));
+    }
+
     private string GetReturnUrl()
     {
-        var queryString = BuildFilterQueryString();
+        var queryString = BuildFilterQueryString(includePage: true);
         return NavigateUrl(PageState.Page.Path, queryString);
+    }
+
+    private static int ParsePage(string value)
+    {
+        return int.TryParse(value, out var page) && page > 0 ? page : 1;
     }
 
     private string GetVillageName(int villageId)
