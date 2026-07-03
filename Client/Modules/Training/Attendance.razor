@@ -178,7 +178,14 @@ else
 
     private void NavigateToIndex()
     {
-        NavigationManager.NavigateTo(NavigateUrl());
+        if (PageState.QueryString.ContainsKey("returnurl"))
+        {
+            NavigationManager.NavigateTo(Uri.UnescapeDataString(PageState.QueryString["returnurl"]));
+        }
+        else
+        {
+            NavigationManager.NavigateTo(NavigateUrl());
+        }
     }
 
     private string GetCompletedBadgeClass(GrowerAttendanceEntry entry)

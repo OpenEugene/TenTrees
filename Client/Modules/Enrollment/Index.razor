@@ -121,53 +121,51 @@
                                    context.EnrollmentStatus == EnrollmentStatus.Rejected ? "table-danger" : "";
                 }
 
-                <tr class="@rowClass">
-                    <td><ActionLink Action="Edit" Parameters="@($"id={context.EnrollmentId}&returnurl={Uri.EscapeDataString(GetReturnUrl())}")" ResourceKey="Edit" /></td>
-                    <td><ActionDialog Header="Delete Enrollment" Message="Are You Sure You Wish To Delete This Enrollment?" Action="Delete" Security="SecurityAccessLevel.Edit" Class="btn btn-danger" OnClick="@(async () => await Delete(context))" ResourceKey="Delete" Id="@context.EnrollmentId.ToString()" /></td>
-                    <td>@context.GrowerName</td>
-                    <td>@context.MentorUserName</td>
-                    <td>@(string.IsNullOrEmpty(context.VillageName) ? Localizer["UnknownVillage"] : context.VillageName)</td>
-                    <td>
-                        <span class="badge @GetEnrollmentStatusBadgeClass(context.EnrollmentStatus)">
-                            @GetEnrollmentStatusText(context.EnrollmentStatus)
-                        </span>
-                    </td>
-                    <td>
-                        <span class="badge @GetGrowerStatusBadgeClass(context.GrowerStatus)">
-                            @GetGrowerStatusText(context.GrowerStatus)
-                        </span>
-                    </td>
-                    <td>
-                        <span class="badge @GetPhotoConsentBadgeClass(context.PhotoConsentLevel)">
-                            @GetPhotoConsentText(context.PhotoConsentLevel)
-                        </span>
-                    </td>
-                    <td class="text-nowrap">
-                        @if (context.EnrollmentStatus == EnrollmentStatus.Pending)
-                        {
-                            <div class="d-inline-flex gap-1 align-items-center">
-                                <button class="btn btn-sm btn-success"
-                                        aria-label="@Localizer["Action.Approve"] @context.GrowerName"
-                                        @onclick="() => ApproveInline(context.EnrollmentId)">
-                                    <span class="oi oi-check" aria-hidden="true"></span>
-                                </button>
-                                <button class="btn btn-sm btn-danger"
-                                        aria-label="@Localizer["Action.Reject"] @context.GrowerName"
-                                        @onclick="() => RejectInline(context.EnrollmentId)">
-                                    <span class="oi oi-x" aria-hidden="true"></span>
-                                </button>
-                            </div>
-                        }
-                    </td>
-                    <td>
-                        @if (context.EnrollmentStatus == EnrollmentStatus.Approved)
-                        {
-                            <ActionLink Action="PhotoConsent"
-                                        Parameters="@($"id={context.EnrollmentId}")"
-                                        ResourceKey="PhotoConsent" />
-                        }
-                    </td>
-                </tr>
+                <td class="@rowClass"><ActionLink Action="Edit" Parameters="@($"id={context.EnrollmentId}&returnurl={Uri.EscapeDataString(GetReturnUrl())}")" ResourceKey="Edit" /></td>
+                <td class="@rowClass"><ActionDialog Header="Delete Enrollment" Message="Are You Sure You Wish To Delete This Enrollment?" Action="Delete" Security="SecurityAccessLevel.Edit" Class="btn btn-danger" OnClick="@(async () => await Delete(context))" ResourceKey="Delete" Id="@context.EnrollmentId.ToString()" /></td>
+                <td class="@rowClass">@context.GrowerName</td>
+                <td class="@rowClass">@context.MentorUserName</td>
+                <td class="@rowClass">@(string.IsNullOrEmpty(context.VillageName) ? Localizer["UnknownVillage"] : context.VillageName)</td>
+                <td class="@rowClass">
+                    <span class="badge @GetEnrollmentStatusBadgeClass(context.EnrollmentStatus)">
+                        @GetEnrollmentStatusText(context.EnrollmentStatus)
+                    </span>
+                </td>
+                <td class="@rowClass">
+                    <span class="badge @GetGrowerStatusBadgeClass(context.GrowerStatus)">
+                        @GetGrowerStatusText(context.GrowerStatus)
+                    </span>
+                </td>
+                <td class="@rowClass">
+                    <span class="badge @GetPhotoConsentBadgeClass(context.PhotoConsentLevel)">
+                        @GetPhotoConsentText(context.PhotoConsentLevel)
+                    </span>
+                </td>
+                <td class="text-nowrap @rowClass">
+                    @if (context.EnrollmentStatus == EnrollmentStatus.Pending)
+                    {
+                        <div class="d-inline-flex gap-1 align-items-center">
+                            <button class="btn btn-sm btn-success"
+                                    aria-label="@Localizer["Action.Approve"] @context.GrowerName"
+                                    @onclick="() => ApproveInline(context.EnrollmentId)">
+                                <span class="oi oi-check" aria-hidden="true"></span>
+                            </button>
+                            <button class="btn btn-sm btn-danger"
+                                    aria-label="@Localizer["Action.Reject"] @context.GrowerName"
+                                    @onclick="() => RejectInline(context.EnrollmentId)">
+                                <span class="oi oi-x" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                    }
+                </td>
+                <td class="@rowClass">
+                    @if (context.EnrollmentStatus == EnrollmentStatus.Approved)
+                    {
+                        <ActionLink Action="PhotoConsent"
+                                    Parameters="@($"id={context.EnrollmentId}")"
+                                    ResourceKey="PhotoConsent" />
+                    }
+                </td>
             </Row>
         </Pager>
     }
