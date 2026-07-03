@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
   <data name="Filter.Status" xml:space="preserve">
     <value>Filter by Status</value>
   </data>
@@ -14,6 +26,15 @@
   </data>
   <data name="Action.ClearFilters" xml:space="preserve">
     <value>Clear Filters</value>
+  </data>
+  <data name="Filter.Cohort" xml:space="preserve">
+    <value>Cohort</value>
+  </data>
+  <data name="Filter.AllCohorts" xml:space="preserve">
+    <value>All Cohorts</value>
+  </data>
+  <data name="Action.Filter" xml:space="preserve">
+    <value>Filter</value>
   </data>
   <data name="Status.Active" xml:space="preserve">
     <value>Active</value>
@@ -56,5 +77,14 @@
   </data>
   <data name="UnknownVillage" xml:space="preserve">
     <value>Unknown Village</value>
+  </data>
+  <data name="EditGrower" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="Dialog.DeleteGrower.Header" xml:space="preserve">
+    <value>Delete Grower</value>
+  </data>
+  <data name="Dialog.DeleteGrower.Message" xml:space="preserve">
+    <value>Are you sure you wish to delete {0}? This action cannot be undone.</value>
   </data>
 </root>

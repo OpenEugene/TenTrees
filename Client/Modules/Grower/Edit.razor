@@ -14,10 +14,11 @@
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JSRuntime
 @inject Oqtane.Services.IModuleService ModuleService
+@inject IStringLocalizer<Edit> Localizer
 
 @if (_isLoading)
 {
-    <p><em>Loading...</em></p>
+    <p><em>@Localizer["Message.Loading"]</em></p>
 }
 else
 {
@@ -25,7 +26,7 @@ else
         <!-- Grower Info -->
         <div class="card mb-3">
             <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
-                <span>@(_growerId == 0 ? "Add Grower" : "Edit Grower")</span>
+                <span>@(_growerId == 0 ? Localizer["Title.Add"] : Localizer["Title.Edit"])</span>
                 @if (_growerId > 0)
                 {
                     <div class="d-flex align-items-center gap-2 flex-wrap">
@@ -35,19 +36,19 @@ else
                             @if (_grower.Status == GrowerStatus.Active)
                             {
                                 <button class="btn btn-warning btn-sm" @onclick="ToggleInactive">
-                                    <span class="oi oi-media-pause"></span> Mark Inactive
+                                    <span class="oi oi-media-pause"></span> @Localizer["Action.MarkInactive"]
                                 </button>
                                 <button class="btn btn-danger btn-sm" @onclick="ShowExitModal">
-                                    <span class="oi oi-account-logout"></span> Record Exit
+                                    <span class="oi oi-account-logout"></span> @Localizer["Action.RecordExit"]
                                 </button>
                             }
                             else if (_grower.Status == GrowerStatus.Inactive)
                             {
                                 <button class="btn btn-success btn-sm" @onclick="ToggleActive">
-                                    <span class="oi oi-media-play"></span> Mark Active
+                                    <span class="oi oi-media-play"></span> @Localizer["Action.MarkActive"]
                                 </button>
                                 <button class="btn btn-danger btn-sm" @onclick="ShowExitModal">
-                                    <span class="oi oi-account-logout"></span> Record Exit
+                                    <span class="oi oi-account-logout"></span> @Localizer["Action.RecordExit"]
                                 </button>
                             }
                         }
@@ -57,13 +58,13 @@ else
             <div class="card-body">
                 <div class="row g-3">
                     <div class="col-md-6">
-                        <label class="form-label">Name <span class="text-danger">*</span></label>
+                        <label class="form-label">@Localizer["Field.Name"] <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" @bind="_grower.GrowerName" />
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Village <span class="text-danger">*</span></label>
+                        <label class="form-label">@Localizer["Field.Village"] <span class="text-danger">*</span></label>
                         <select class="form-select" @bind="_grower.VillageId">
-                            <option value="0">-- Select Village --</option>
+                            <option value="0">@Localizer["Field.SelectVillage"]</option>
                             @foreach (var v in _villages)
                             {
                                 <option value="@v.VillageId">@v.VillageName</option>
@@ -71,29 +72,29 @@ else
                         </select>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">House Number</label>
+                        <label class="form-label">@Localizer["Field.HouseNumber"]</label>
                         <input type="text" class="form-control" @bind="_grower.HouseNumber" />
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">ID Number</label>
+                        <label class="form-label">@Localizer["Field.IdNumber"]</label>
                         <input type="text" class="form-control" @bind="_grower.IdNumber" />
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">Birth Date</label>
+                        <label class="form-label">@Localizer["Field.BirthDate"]</label>
                         <input type="date" class="form-control" @bind="_grower.BirthDate" />
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">Household Size</label>
+                        <label class="form-label">@Localizer["Field.HouseholdSize"]</label>
                         <input type="number" class="form-control" min="1" @bind="_grower.HouseholdSize" />
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">Mentor Username</label>
+                        <label class="form-label">@Localizer["Field.MentorUsername"]</label>
                         <input type="text" class="form-control" @bind="_grower.MentorUsername" />
                     </div>
                     <div class="col-md-4">
                         <div class="form-check mt-2">
                             <input class="form-check-input" type="checkbox" id="ownsHome" @bind="_grower.OwnsHome" />
-                            <label class="form-check-label" for="ownsHome">Owns Home</label>
+                            <label class="form-check-label" for="ownsHome">@Localizer["Field.OwnsHome"]</label>
                         </div>
                     </div>
                 </div>
@@ -105,10 +106,10 @@ else
 
                 <div class="mt-3 d-flex gap-2">
                     <button class="btn btn-success" @onclick="SaveAsync" disabled="@_isSaving">
-                        <span class="oi oi-check"></span> @(_isSaving ? "Saving..." : "Save")
+                        <span class="oi oi-check"></span> @(_isSaving ? Localizer["Action.Saving"] : Localizer["Action.Save"])
                     </button>
                     <button class="btn btn-secondary" @onclick="NavigateBack">
-                        <span class="oi oi-arrow-left"></span> Cancel
+                        <span class="oi oi-arrow-left"></span> @Localizer["Action.Cancel"]
                     </button>
                 </div>
             </div>
@@ -118,7 +119,7 @@ else
         {
             <!-- Trees -->
             <div class="card mb-3">
-                <div class="card-header">Trees</div>
+                <div class="card-header">@Localizer["Section.Trees"]</div>
                 <div class="card-body">
                     <TreeList RenderModeBoundary="RenderModeBoundary" GrowerId="@_growerId" IsReadOnly="false" />
                 </div>
@@ -127,7 +128,7 @@ else
             <!-- Cohort Membership -->
             <div class="card mb-3">
                 <div class="card-header">
-                    <h5><span class="oi oi-layers me-2" aria-hidden="true"></span>Cohorts</h5>
+                    <h5><span class="oi oi-layers me-2" aria-hidden="true"></span>@Localizer["Section.Cohorts"]</h5>
                 </div>
                 <div class="card-body">
                     <div class="d-flex flex-wrap align-items-center gap-2">
@@ -136,13 +137,13 @@ else
                             @if (_pendingRemoveCohortId == cohort.CohortId)
                             {
                                 <span class="badge bg-warning text-dark d-inline-flex align-items-center gap-1 py-2 px-2">
-                                    Remove <strong>@cohort.Name</strong>?
+                                    @Localizer["Label.Remove"] <strong>@cohort.Name</strong>?
                                     <button class="btn btn-sm btn-warning border-0 py-0 px-1 fw-bold"
-                                            aria-label="Confirm remove @cohort.Name"
-                                            @onclick="@(async () => await RemoveGrowerCohort(cohort.CohortId))">Yes</button>
+                                            aria-label="@string.Format(Localizer["AriaLabel.ConfirmRemoveCohort"], cohort.Name)"
+                                            @onclick="@(async () => await RemoveGrowerCohort(cohort.CohortId))">@Localizer["Label.Yes"]</button>
                                     <button class="btn btn-sm btn-outline-secondary border-0 py-0 px-1"
-                                            aria-label="Cancel remove @cohort.Name"
-                                            @onclick="@(() => _pendingRemoveCohortId = 0)">No</button>
+                                            aria-label="@string.Format(Localizer["AriaLabel.CancelRemoveCohort"], cohort.Name)"
+                                            @onclick="@(() => _pendingRemoveCohortId = 0)">@Localizer["Label.No"]</button>
                                 </span>
                             }
                             else
@@ -153,7 +154,7 @@ else
                                     {
                                         <button class="btn-close btn-close-white ms-1"
                                                 style="font-size:0.55em;"
-                                                aria-label="@($"Remove cohort {cohort.Name}")"
+                                                aria-label="@string.Format(Localizer["AriaLabel.RemoveCohort"], cohort.Name)"
                                                 @onclick="@(() => _pendingRemoveCohortId = cohort.CohortId)"></button>
                                     }
                                 </span>
@@ -161,7 +162,7 @@ else
                         }
                         @if (_growerCohorts.Count == 0)
                         {
-                            <span class="text-muted small">No cohorts assigned.</span>
+                            <span class="text-muted small">@Localizer["Message.NoCohortsAssigned"]</span>
                         }
                         @if (UserSecurity.IsAuthorized(PageState.User, AppRoleNames.TenTreesAdmin))
                         {
@@ -169,7 +170,7 @@ else
                             {
                                 <select class="form-select form-select-sm w-auto"
                                         @bind="_cohortToAdd" @bind:after="AddGrowerCohort">
-                                    <option value="0">Add to cohort</option>
+                                    <option value="0">@Localizer["Field.AddToCohort"]</option>
                                     @foreach (var c in _availableCohorts)
                                     {
                                         <option value="@c.CohortId">@c.Name</option>
@@ -178,7 +179,7 @@ else
                             }
                             else
                             {
-                                <span class="text-muted small"><span class="oi oi-info me-1" aria-hidden="true"></span>No cohorts available for this village.</span>
+                                <span class="text-muted small"><span class="oi oi-info me-1" aria-hidden="true"></span>@Localizer["Message.NoCohortsAvailable"]</span>
                             }
                         }
                     </div>
@@ -189,8 +190,8 @@ else
             @if (_grower.Status == GrowerStatus.Exited && _grower.ExitDate.HasValue)
             {
                 <div class="alert alert-secondary mb-2">
-                    <strong>Exited:</strong> @_grower.ExitDate.Value.ToString("yyyy-MM-dd")
-                    &nbsp;&mdash;&nbsp;<strong>Reason:</strong> @(_grower.ExitReason ?? "-")
+                    <strong>@Localizer["Label.Exited"]</strong> @_grower.ExitDate.Value.ToString("yyyy-MM-dd")
+                    &nbsp;&mdash;&nbsp;<strong>@Localizer["Label.Reason"]</strong> @(_grower.ExitReason ?? "-")
                     @if (!string.IsNullOrWhiteSpace(_grower.ExitNotes))
                     {
                         <span>&nbsp;&mdash;&nbsp;@_grower.ExitNotes</span>
@@ -203,41 +204,41 @@ else
             {
                 <div class="card mb-2 border-danger">
                     <div class="card-header bg-danger text-white">
-                        <h5>Record Program Exit</h5>
+                        <h5>@Localizer["Modal.ExitTitle"]</h5>
                     </div>
                     <div class="card-body">
                         <form @ref="_exitForm" class="@(_exitValidated ? "was-validated" : "needs-validation")" novalidate>
                             <div class="mb-3">
-                                <label for="exitDate" class="form-label">Exit Date</label>
+                                <label for="exitDate" class="form-label">@Localizer["Field.ExitDate"]</label>
                                 <input id="exitDate" type="date" class="form-control" @bind="_exitDate" required />
-                                <div class="invalid-feedback">Exit date is required.</div>
+                                <div class="invalid-feedback">@Localizer["Validation.ExitDateRequired"]</div>
                             </div>
                             <div class="mb-3">
-                                <label for="exitReason" class="form-label">Exit Reason</label>
+                                <label for="exitReason" class="form-label">@Localizer["Field.ExitReason"]</label>
                                 <select id="exitReason" class="form-select" @bind="_exitReason" required>
-                                    <option value="">-- Select --</option>
-                                    <option value="MovedAway">Moved Away</option>
-                                    <option value="Deceased">Deceased</option>
-                                    <option value="Voluntary">Voluntary</option>
-                                    <option value="NonCompliance">Non-Compliance</option>
-                                    <option value="Other">Other</option>
+                                    <option value="">@Localizer["Field.SelectGeneric"]</option>
+                                    <option value="MovedAway">@Localizer["ExitReason.MovedAway"]</option>
+                                    <option value="Deceased">@Localizer["ExitReason.Deceased"]</option>
+                                    <option value="Voluntary">@Localizer["ExitReason.Voluntary"]</option>
+                                    <option value="NonCompliance">@Localizer["ExitReason.NonCompliance"]</option>
+                                    <option value="Other">@Localizer["ExitReason.Other"]</option>
                                 </select>
-                                <div class="invalid-feedback">Exit reason is required.</div>
+                                <div class="invalid-feedback">@Localizer["Validation.ExitReasonRequired"]</div>
                             </div>
                             @if (_exitReason == "Other")
                             {
                                 <div class="mb-3">
-                                    <label for="exitNotes" class="form-label">Notes</label>
+                                    <label for="exitNotes" class="form-label">@Localizer["Field.Notes"]</label>
                                     <textarea id="exitNotes" class="form-control" rows="3" @bind="_exitNotes" required></textarea>
-                                    <div class="invalid-feedback">Notes are required when reason is Other.</div>
+                                    <div class="invalid-feedback">@Localizer["Validation.NotesRequiredForOther"]</div>
                                 </div>
                             }
                             <div class="alert alert-warning">
-                                <span class="oi oi-warning"></span> This action will record the grower as having exited the program.
+                                <span class="oi oi-warning"></span> @Localizer["Message.ExitWarning"]
                             </div>
                             <div class="d-flex gap-2">
-                                <button type="button" class="btn btn-danger" @onclick="SubmitExit">Confirm Exit</button>
-                                <button type="button" class="btn btn-secondary" @onclick="CancelExit">Cancel</button>
+                                <button type="button" class="btn btn-danger" @onclick="SubmitExit">@Localizer["Action.ConfirmExit"]</button>
+                                <button type="button" class="btn btn-secondary" @onclick="CancelExit">@Localizer["Action.Cancel"]</button>
                             </div>
                         </form>
                     </div>
@@ -247,20 +248,20 @@ else
             <!-- Assessment History -->
             <div class="card mb-3">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0"><span class="oi oi-clipboard me-2" aria-hidden="true"></span>Assessments</h5>
+                    <h5 class="mb-0"><span class="oi oi-clipboard me-2" aria-hidden="true"></span>@Localizer["Section.Assessments"]</h5>
                     @if (_assessmentModuleId.HasValue && _assessmentPagePath != null)
                     {
                         var returnUrl = GetAssessmentReturnUrl();
                         var addHref = NavigateUrl(_assessmentPagePath, _assessmentModuleId.Value, "Add", $"growerId={_growerId}&returnurl={returnUrl}");
                         <a href="@addHref" class="btn btn-sm btn-primary">
-                            <span class="oi oi-plus me-1" aria-hidden="true"></span>Add Assessment
+                            <span class="oi oi-plus me-1" aria-hidden="true"></span>@Localizer["Action.AddAssessment"]
                         </a>
                     }
                 </div>
                 <div class="card-body">
                     @if (_assessments.Count == 0)
                     {
-                        <p class="text-muted">No assessments recorded.</p>
+                        <p class="text-muted">@Localizer["Message.NoAssessments"]</p>
                     }
                     else
                     {
@@ -268,12 +269,12 @@ else
                             <table class="table table-sm table-striped mb-0">
                                 <thead>
                                     <tr>
-                                        <th>Date</th>
-                                        <th>Trees</th>
-                                        <th>Permaculture</th>
-                                        <th>Needs Help</th>
-                                        <th>Notes</th>
-                                        <th><span class="visually-hidden">Actions</span></th>
+                                        <th>@Localizer["Column.Date"]</th>
+                                        <th>@Localizer["Column.Trees"]</th>
+                                        <th>@Localizer["Column.Permaculture"]</th>
+                                        <th>@Localizer["Column.NeedsHelp"]</th>
+                                        <th>@Localizer["Column.Notes"]</th>
+                                        <th><span class="visually-hidden">@Localizer["Column.Actions"]</span></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -281,16 +282,16 @@ else
                                     {
                                         <tr>
                                             <td>@assessment.AssessmentDate.ToString("yyyy-MM-dd")</td>
-                                            <td>@(assessment.TreesPlanted > 0 ? $"{assessment.TreesAlive * 100 / assessment.TreesPlanted}% ({assessment.TreesAlive}/{assessment.TreesPlanted})" : "N/A")</td>
+                                            <td>@(assessment.TreesPlanted > 0 ? $"{assessment.TreesAlive * 100 / assessment.TreesPlanted}% ({assessment.TreesAlive}/{assessment.TreesPlanted})" : Localizer["Label.NotApplicable"])</td>
                                             <td>@assessment.PermaculturePrinciplesCount / 9</td>
                                             <td>
                                                 @if (assessment.NeedsHelp)
                                                 {
-                                                    <span class="badge bg-danger">Yes</span>
+                                                    <span class="badge bg-danger">@Localizer["Label.Yes"]</span>
                                                 }
                                                 else
                                                 {
-                                                    <span class="badge bg-success">No</span>
+                                                    <span class="badge bg-success">@Localizer["Label.No"]</span>
                                                 }
                                             </td>
                                             <td>
@@ -304,10 +305,10 @@ else
                                                 }
                                                 else
                                                 {
-                                                    <span class="badge bg-secondary me-1" title="Total notes">@noteCount</span>
+                                                    <span class="badge bg-secondary me-1" title="@Localizer["Tooltip.TotalNotes"]">@noteCount</span>
                                                     @if (homeVisitCount > 0)
                                                     {
-                                                        <span class="badge bg-warning text-dark" title="Home visit notes">@homeVisitCount HV</span>
+                                                        <span class="badge bg-warning text-dark" title="@Localizer["Tooltip.HomeVisitNotes"]">@homeVisitCount @Localizer["Label.HomeVisitAbbrev"]</span>
                                                     }
                                                 }
                                             </td>
@@ -316,9 +317,9 @@ else
                                                 {
                                                     var returnUrl = GetAssessmentReturnUrl();
                                                     var assessmentHref = NavigateUrl(_assessmentPagePath, _assessmentModuleId.Value, "Edit", $"id={assessment.AssessmentId}&returnurl={returnUrl}");
-                                                    <a href="@assessmentHref" class="btn btn-sm btn-outline-secondary" title="View Assessment">
+                                                    <a href="@assessmentHref" class="btn btn-sm btn-outline-secondary" title="@Localizer["Action.ViewAssessment"]">
                                                         <span class="oi oi-external-link" aria-hidden="true"></span>
-                                                        View Assessment
+                                                        @Localizer["Action.ViewAssessment"]
                                                     </a>
                                                 }
                                             </td>
@@ -334,7 +335,7 @@ else
             <!-- Assessment Notes Log -->
             <div class="card mb-3">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0"><span class="oi oi-book me-2" aria-hidden="true"></span>Notes</h5>
+                    <h5 class="mb-0"><span class="oi oi-book me-2" aria-hidden="true"></span>@Localizer["Section.Notes"]</h5>
                     @if (_assessmentNotes.Count > 0)
                     {
                         <span class="badge bg-secondary">@_assessmentNotes.Count</span>
@@ -343,7 +344,7 @@ else
                 <div class="card-body">
                     @if (_assessmentNotes.Count == 0)
                     {
-                        <p class="text-muted mb-0">No notes recorded.</p>
+                        <p class="text-muted mb-0">@Localizer["Notes.Empty"]</p>
                     }
                     else
                     {
@@ -354,11 +355,11 @@ else
                                     <div class="mb-1">
                                         @if (note.NoteType == AssessmentNoteTypes.HomeVisit)
                                         {
-                                            <span class="badge bg-warning text-dark me-1">Home Visit</span>
+                                            <span class="badge bg-warning text-dark me-1">@Localizer["Note.TypeHomeVisit"]</span>
                                         }
                                         else
                                         {
-                                            <span class="badge bg-secondary me-1">General</span>
+                                            <span class="badge bg-secondary me-1">@Localizer["Note.TypeGeneral"]</span>
                                         }
                                         <small class="text-muted">@note.CreatedOn.ToLocalTime().ToString("yyyy-MM-dd HH:mm") &mdash; @note.CreatedBy</small>
                                     </div>
@@ -421,7 +422,7 @@ else
         catch (Exception ex)
         {
             await logger.LogError(ex, "Error Loading Grower Edit {Error}", ex.Message);
-            AddModuleMessage("Unable to load grower.", MessageType.Error);
+            AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
         }
         finally
         {
@@ -434,12 +435,12 @@ else
         _saveError = null;
         if (string.IsNullOrWhiteSpace(_grower.GrowerName))
         {
-            _saveError = "Name is required.";
+            _saveError = Localizer["Validation.NameRequired"];
             return;
         }
         if (_grower.VillageId == 0)
         {
-            _saveError = "Village is required.";
+            _saveError = Localizer["Validation.VillageRequired"];
             return;
         }
 
@@ -452,19 +453,19 @@ else
                 if (result != null)
                     NavigationManager.NavigateTo(EditUrl("Edit", BuildEditParameters(result.GrowerId)));
                 else
-                    _saveError = "Unable to add grower. Please try again.";
+                    _saveError = Localizer["Message.AddError"];
             }
             else
             {
                 var result = await GrowerService.UpdateGrowerAsync(_grower, ModuleState.ModuleId);
                 if (result == null)
-                    _saveError = "Unable to save changes. Please try again.";
+                    _saveError = Localizer["Message.UpdateError"];
             }
         }
         catch (Exception ex)
         {
             await logger.LogError(ex, "Error Saving Grower {Error}", ex.Message);
-            _saveError = "Unable to save grower. Please try again.";
+            _saveError = Localizer["Message.SaveError"];
         }
         finally
         {
@@ -477,14 +478,14 @@ else
         try
         {
             _grower = await GrowerService.ToggleActiveStatusAsync(_grower.GrowerId, ModuleState.ModuleId);
-            AddModuleMessage("Status updated.", MessageType.Success);
+            AddModuleMessage(Localizer["Message.StatusUpdated"], MessageType.Success);
             await logger.LogInformation("Grower {GrowerId} marked Inactive", _grower.GrowerId);
             StateHasChanged();
         }
         catch (Exception ex)
         {
             await logger.LogError(ex, "Error Toggling Status {GrowerId} {Error}", _grower.GrowerId, ex.Message);
-            AddModuleMessage("Unable to update status.", MessageType.Error);
+            AddModuleMessage(Localizer["Message.StatusUpdateError"], MessageType.Error);
         }
     }
 
@@ -493,14 +494,14 @@ else
         try
         {
             _grower = await GrowerService.ToggleActiveStatusAsync(_grower.GrowerId, ModuleState.ModuleId);
-            AddModuleMessage("Status updated.", MessageType.Success);
+            AddModuleMessage(Localizer["Message.StatusUpdated"], MessageType.Success);
             await logger.LogInformation("Grower {GrowerId} marked Active", _grower.GrowerId);
             StateHasChanged();
         }
         catch (Exception ex)
         {
             await logger.LogError(ex, "Error Toggling Status {GrowerId} {Error}", _grower.GrowerId, ex.Message);
-            AddModuleMessage("Unable to update status.", MessageType.Error);
+            AddModuleMessage(Localizer["Message.StatusUpdateError"], MessageType.Error);
         }
     }
 
@@ -540,20 +541,20 @@ else
 
             if (_grower != null)
             {
-                AddModuleMessage("Program exit recorded.", MessageType.Success);
+                AddModuleMessage(Localizer["Message.ExitRecorded"], MessageType.Success);
                 await logger.LogInformation("Program Exit Recorded {GrowerId} Reason: {Reason}", _grower.GrowerId, _exitReason);
                 _showExitForm = false;
                 StateHasChanged();
             }
             else
             {
-                AddModuleMessage("Unable to record program exit.", MessageType.Error);
+                AddModuleMessage(Localizer["Message.ExitRecordError"], MessageType.Error);
             }
         }
         catch (Exception ex)
         {
             await logger.LogError(ex, "Error Recording Exit {GrowerId} {Error}", _grower.GrowerId, ex.Message);
-            AddModuleMessage("Unable to record program exit.", MessageType.Error);
+            AddModuleMessage(Localizer["Message.ExitRecordError"], MessageType.Error);
         }
     }
 
@@ -614,7 +615,7 @@ else
         catch (Exception ex)
         {
             await logger.LogError(ex, "Error adding Grower {Id} to Cohort {Error}", _grower.GrowerId, ex.Message);
-            AddModuleMessage("Unable to add cohort.", MessageType.Error);
+            AddModuleMessage(Localizer["Message.AddCohortError"], MessageType.Error);
         }
     }
 
@@ -630,7 +631,7 @@ else
         catch (Exception ex)
         {
             await logger.LogError(ex, "Error removing Grower {Id} from Cohort {Error}", _grower.GrowerId, ex.Message);
-            AddModuleMessage("Unable to remove cohort.", MessageType.Error);
+            AddModuleMessage(Localizer["Message.RemoveCohortError"], MessageType.Error);
         }
     }
 
@@ -679,9 +680,9 @@ else
 
     private string GetStatusText(GrowerStatus status) => status switch
     {
-        GrowerStatus.Active => "Active",
-        GrowerStatus.Inactive => "Inactive",
-        GrowerStatus.Exited => "Exited",
+        GrowerStatus.Active => Localizer["Status.Active"],
+        GrowerStatus.Inactive => Localizer["Status.Inactive"],
+        GrowerStatus.Exited => Localizer["Status.Exited"],
         _ => status.ToString()
     };
 }

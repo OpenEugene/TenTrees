@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
   <!-- Xitsonga translations needed - coordinate with Trygive/Quentan -->
   <data name="Filter.Status" xml:space="preserve">
     <value>[XS] Filter by Status</value>
@@ -16,5 +28,65 @@
   <data name="Status.Exited" xml:space="preserve">
     <value>[XS] Exited</value>
   </data>
-  <!-- Add remaining translations matching Index.resx -->
+  <data name="Filter.Village" xml:space="preserve">
+    <value>Hlawula hi Rixaka</value>
+  </data>
+  <data name="Filter.AllVillages" xml:space="preserve">
+    <value>Matiko Hinkwawo</value>
+  </data>
+  <data name="Action.ClearFilters" xml:space="preserve">
+    <value>Susa Swihlawulo</value>
+  </data>
+  <data name="Filter.Cohort" xml:space="preserve">
+    <value>Cohort</value>
+  </data>
+  <data name="Filter.AllCohorts" xml:space="preserve">
+    <value>Ma-Cohort Hinkwawo</value>
+  </data>
+  <data name="Action.Filter" xml:space="preserve">
+    <value>Hlawula</value>
+  </data>
+  <data name="Summary.Total" xml:space="preserve">
+    <value>Nhlayo Hinkwayo</value>
+  </data>
+  <data name="Message.Loading" xml:space="preserve">
+    <value>Yi laviseka...</value>
+  </data>
+  <data name="Message.NoGrowers" xml:space="preserve">
+    <value>A ku na valimi lava kumekeke</value>
+  </data>
+  <data name="Message.LoadError" xml:space="preserve">
+    <value>Xihoxo xo layisa valimi</value>
+  </data>
+  <data name="Column.GrowerName" xml:space="preserve">
+    <value>Vito ra Mulimi</value>
+  </data>
+  <data name="Column.Village" xml:space="preserve">
+    <value>Rixaka</value>
+  </data>
+  <data name="Column.Status" xml:space="preserve">
+    <value>Xiyimo</value>
+  </data>
+  <data name="Column.ExitDate" xml:space="preserve">
+    <value>Siku ro Huma</value>
+  </data>
+  <data name="Column.Actions" xml:space="preserve">
+    <value>Swiendlo</value>
+  </data>
+  <data name="Action.ManageStatus" xml:space="preserve">
+    <value>Lawula Xiyimo</value>
+  </data>
+  <data name="UnknownVillage" xml:space="preserve">
+    <value>Rixaka ri nga Tiviwi</value>
+  </data>
+  <data name="EditGrower" xml:space="preserve">
+    <value>Lulamisa</value>
+  </data>
+  <data name="Dialog.DeleteGrower.Header" xml:space="preserve">
+    <value>Susa Mulimi</value>
+  </data>
+  <data name="Dialog.DeleteGrower.Message" xml:space="preserve">
+    <value>U cinisekile leswaku u lava ku susa {0}? Xiendlo lexi a xi nge hundzuleki.</value>
+  </data>
+  <!-- Remaining [XS] entries above still need real Xitsonga review - coordinate with Trygive/Quentan -->
 </root>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Title" xml:space="preserve">
+    <value>Mentors</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Add Mentor</value>
+  </data>
+  <data name="Message.Loading" xml:space="preserve">
+    <value>Loading...</value>
+  </data>
+  <data name="Message.NoMentors" xml:space="preserve">
+    <value>No mentors found.</value>
+  </data>
+  <data name="Filter.Village" xml:space="preserve">
+    <value>Village</value>
+  </data>
+  <data name="Filter.AllVillages" xml:space="preserve">
+    <value>All Villages</value>
+  </data>
+  <data name="Filter.Name" xml:space="preserve">
+    <value>Name / Username</value>
+  </data>
+  <data name="Filter.SearchPlaceholder" xml:space="preserve">
+    <value>Search…</value>
+  </data>
+  <data name="Filter.ShowInactive" xml:space="preserve">
+    <value>Show inactive</value>
+  </data>
+  <data name="Column.Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Column.Username" xml:space="preserve">
+    <value>Username</value>
+  </data>
+  <data name="Column.Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="Column.Village" xml:space="preserve">
+    <value>Village</value>
+  </data>
+  <data name="Column.Growers" xml:space="preserve">
+    <value>Growers</value>
+  </data>
+  <data name="Column.Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="Column.Actions" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="Label.Grower" xml:space="preserve">
+    <value>grower</value>
+  </data>
+  <data name="Label.Growers" xml:space="preserve">
+    <value>growers</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>Inactive</value>
+  </data>
+  <data name="Action.Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="AriaLabel.EditMentor" xml:space="preserve">
+    <value>Edit {0}</value>
+  </data>
+  <data name="AriaLabel.MentorListNavigation" xml:space="preserve">
+    <value>Mentor list navigation</value>
+  </data>
+  <data name="AriaLabel.Previous" xml:space="preserve">
+    <value>Previous</value>
+  </data>
+  <data name="AriaLabel.Next" xml:space="preserve">
+    <value>Next</value>
+  </data>
+</root>

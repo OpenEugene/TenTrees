@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Message.Loading" xml:space="preserve">
+    <value>Loading trees...</value>
+  </data>
+  <data name="Message.NoTrees" xml:space="preserve">
+    <value>No trees recorded yet.</value>
+  </data>
+  <data name="Column.TreeType" xml:space="preserve">
+    <value>Tree Type</value>
+  </data>
+  <data name="Column.Category" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="Column.Qty" xml:space="preserve">
+    <value>Qty</value>
+  </data>
+  <data name="Column.Notes" xml:space="preserve">
+    <value>Notes</value>
+  </data>
+  <data name="Label.RemoveConfirm" xml:space="preserve">
+    <value>Remove?</value>
+  </data>
+  <data name="Label.Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="Label.No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="Action.Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="Section.AddTree" xml:space="preserve">
+    <value>Add Tree</value>
+  </data>
+  <data name="Field.TreeType" xml:space="preserve">
+    <value>Tree Type</value>
+  </data>
+  <data name="Field.SelectGeneric" xml:space="preserve">
+    <value>-- Select --</value>
+  </data>
+  <data name="Field.Quantity" xml:space="preserve">
+    <value>Quantity</value>
+  </data>
+  <data name="Field.NotesOptional" xml:space="preserve">
+    <value>Notes (optional)</value>
+  </data>
+  <data name="Action.Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="Message.AddError" xml:space="preserve">
+    <value>Unable to add tree. Please try again.</value>
+  </data>
+  <data name="Message.RemoveError" xml:space="preserve">
+    <value>Unable to remove tree. Please try again.</value>
+  </data>
+</root>

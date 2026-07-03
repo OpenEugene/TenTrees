@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Name" xml:space="preserve">
+    <value>Vito</value>
+  </data>
+  <data name="Category" xml:space="preserve">
+    <value>Xigaba</value>
+  </data>
+  <data name="SortOrder" xml:space="preserve">
+    <value>Ndzendzevutano</value>
+  </data>
+  <data name="IsActive" xml:space="preserve">
+    <value>Yi tirhaka</value>
+  </data>
+  <data name="Message.LoadError" xml:space="preserve">
+    <value>Xihoxo xo layisa muxaka wa murhi.</value>
+  </data>
+  <data name="Message.SaveSuccess" xml:space="preserve">
+    <value>Muxaka wa murhi wu hlayisiwile hi ndlela leyi humeleleke.</value>
+  </data>
+  <data name="Message.SaveValidation" xml:space="preserve">
+    <value>Kombela u tata swiyimo hinkwaswo leswi lavekaka.</value>
+  </data>
+  <data name="Message.SaveError" xml:space="preserve">
+    <value>Xihoxo xo hlayisa muxaka wa murhi.</value>
+  </data>
+  <data name="Validation.NameRequired" xml:space="preserve">
+    <value>Vito ri laveka.</value>
+  </data>
+  <data name="Field.SelectCategory" xml:space="preserve">
+    <value>-- Hlawula Xigaba --</value>
+  </data>
+  <data name="Validation.CategoryRequired" xml:space="preserve">
+    <value>Xigaba xi laveka.</value>
+  </data>
+  <data name="Action.Save" xml:space="preserve">
+    <value>Hlayisa</value>
+  </data>
+  <data name="Action.Cancel" xml:space="preserve">
+    <value>Khansela</value>
+  </data>
+</root>

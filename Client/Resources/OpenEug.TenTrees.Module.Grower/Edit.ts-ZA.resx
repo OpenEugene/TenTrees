@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Message.Loading" xml:space="preserve">
+    <value>Yi laviseka...</value>
+  </data>
+  <data name="Title.Add" xml:space="preserve">
+    <value>Engetela Mulimi</value>
+  </data>
+  <data name="Title.Edit" xml:space="preserve">
+    <value>Lulamisa Mulimi</value>
+  </data>
+  <data name="Action.MarkInactive" xml:space="preserve">
+    <value>Kombisa tanihi A yi Tirhiki</value>
+  </data>
+  <data name="Action.RecordExit" xml:space="preserve">
+    <value>Tsala ku Huma</value>
+  </data>
+  <data name="Action.MarkActive" xml:space="preserve">
+    <value>Kombisa tanihi Yi Tirhaka</value>
+  </data>
+  <data name="Field.Name" xml:space="preserve">
+    <value>Vito</value>
+  </data>
+  <data name="Field.Village" xml:space="preserve">
+    <value>Rixaka</value>
+  </data>
+  <data name="Field.SelectVillage" xml:space="preserve">
+    <value>-- Hlawula Rixaka --</value>
+  </data>
+  <data name="Field.HouseNumber" xml:space="preserve">
+    <value>Nomboro ya Yindlu</value>
+  </data>
+  <data name="Field.IdNumber" xml:space="preserve">
+    <value>Nomboro ya ID</value>
+  </data>
+  <data name="Field.BirthDate" xml:space="preserve">
+    <value>Siku ra Vutswalo</value>
+  </data>
+  <data name="Field.HouseholdSize" xml:space="preserve">
+    <value>Nhlayo ya Vanhu eKaya</value>
+  </data>
+  <data name="Field.MentorUsername" xml:space="preserve">
+    <value>Vito ro Nghena ra Muleriseri</value>
+  </data>
+  <data name="Field.OwnsHome" xml:space="preserve">
+    <value>Va ni Yindlu ya Vona</value>
+  </data>
+  <data name="Action.Saving" xml:space="preserve">
+    <value>Yi hlayisiwa...</value>
+  </data>
+  <data name="Action.Save" xml:space="preserve">
+    <value>Hlayisa</value>
+  </data>
+  <data name="Action.Cancel" xml:space="preserve">
+    <value>Khansela</value>
+  </data>
+  <data name="Section.Trees" xml:space="preserve">
+    <value>Mirhi</value>
+  </data>
+  <data name="Section.Cohorts" xml:space="preserve">
+    <value>Ma-Cohort</value>
+  </data>
+  <data name="Label.Remove" xml:space="preserve">
+    <value>Susa</value>
+  </data>
+  <data name="AriaLabel.ConfirmRemoveCohort" xml:space="preserve">
+    <value>Tiyisisa ku susa {0}</value>
+  </data>
+  <data name="AriaLabel.CancelRemoveCohort" xml:space="preserve">
+    <value>Rhimisa ku susa {0}</value>
+  </data>
+  <data name="AriaLabel.RemoveCohort" xml:space="preserve">
+    <value>Susa cohort {0}</value>
+  </data>
+  <data name="Label.Yes" xml:space="preserve">
+    <value>Ina</value>
+  </data>
+  <data name="Label.No" xml:space="preserve">
+    <value>E-e</value>
+  </data>
+  <data name="Message.NoCohortsAssigned" xml:space="preserve">
+    <value>A ku na ma-cohort lama averiweke.</value>
+  </data>
+  <data name="Field.AddToCohort" xml:space="preserve">
+    <value>Engetela eka cohort</value>
+  </data>
+  <data name="Message.NoCohortsAvailable" xml:space="preserve">
+    <value>A ku na ma-cohort lama kumekaka eka rixaka leri.</value>
+  </data>
+  <data name="Label.Exited" xml:space="preserve">
+    <value>U Humile:</value>
+  </data>
+  <data name="Label.Reason" xml:space="preserve">
+    <value>Xivangelo:</value>
+  </data>
+  <data name="Modal.ExitTitle" xml:space="preserve">
+    <value>Tsala ku Huma eka Nongonoko</value>
+  </data>
+  <data name="Field.ExitDate" xml:space="preserve">
+    <value>Siku ro Huma</value>
+  </data>
+  <data name="Validation.ExitDateRequired" xml:space="preserve">
+    <value>Siku ro huma ri laveka.</value>
+  </data>
+  <data name="Field.ExitReason" xml:space="preserve">
+    <value>Xivangelo xo Huma</value>
+  </data>
+  <data name="Field.SelectGeneric" xml:space="preserve">
+    <value>-- Hlawula --</value>
+  </data>
+  <data name="ExitReason.MovedAway" xml:space="preserve">
+    <value>U Rhurhile</value>
+  </data>
+  <data name="ExitReason.Deceased" xml:space="preserve">
+    <value>U File</value>
+  </data>
+  <data name="ExitReason.Voluntary" xml:space="preserve">
+    <value>Hi Ku Tirhandza</value>
+  </data>
+  <data name="ExitReason.NonCompliance" xml:space="preserve">
+    <value>Ku Nga Landzeleli Milawu</value>
+  </data>
+  <data name="ExitReason.Other" xml:space="preserve">
+    <value>Swin'wana</value>
+  </data>
+  <data name="Validation.ExitReasonRequired" xml:space="preserve">
+    <value>Xivangelo xo huma xi laveka.</value>
+  </data>
+  <data name="Field.Notes" xml:space="preserve">
+    <value>Tinotsi</value>
+  </data>
+  <data name="Validation.NotesRequiredForOther" xml:space="preserve">
+    <value>Tinotsi ti laveka loko xivangelo ku ri Swin'wana.</value>
+  </data>
+  <data name="Message.ExitWarning" xml:space="preserve">
+    <value>Xiendlo lexi xi ta tsala mulimi tanihi loyi a humeke eka nongonoko.</value>
+  </data>
+  <data name="Action.ConfirmExit" xml:space="preserve">
+    <value>Tiyisisa ku Huma</value>
+  </data>
+  <data name="Section.Assessments" xml:space="preserve">
+    <value>Swikambelo</value>
+  </data>
+  <data name="Action.AddAssessment" xml:space="preserve">
+    <value>Engetela Xikambelo</value>
+  </data>
+  <data name="Message.NoAssessments" xml:space="preserve">
+    <value>A ku na swikambelo leswi tsariweke.</value>
+  </data>
+  <data name="Column.Date" xml:space="preserve">
+    <value>Siku</value>
+  </data>
+  <data name="Column.Trees" xml:space="preserve">
+    <value>Mirhi</value>
+  </data>
+  <data name="Column.Permaculture" xml:space="preserve">
+    <value>Permaculture</value>
+  </data>
+  <data name="Column.NeedsHelp" xml:space="preserve">
+    <value>U Lava Mpfuno</value>
+  </data>
+  <data name="Column.Notes" xml:space="preserve">
+    <value>Tinotsi</value>
+  </data>
+  <data name="Column.Actions" xml:space="preserve">
+    <value>Swiendlo</value>
+  </data>
+  <data name="Label.NotApplicable" xml:space="preserve">
+    <value>N/A</value>
+  </data>
+  <data name="Tooltip.TotalNotes" xml:space="preserve">
+    <value>Tinotsi Hinkwato</value>
+  </data>
+  <data name="Tooltip.HomeVisitNotes" xml:space="preserve">
+    <value>Tinotsi ta Ndzendzeleko wa Kaya</value>
+  </data>
+  <data name="Label.HomeVisitAbbrev" xml:space="preserve">
+    <value>NK</value>
+  </data>
+  <data name="Action.ViewAssessment" xml:space="preserve">
+    <value>Vona Xikambelo</value>
+  </data>
+  <data name="Section.Notes" xml:space="preserve">
+    <value>Tinotsi</value>
+  </data>
+  <data name="Notes.Empty" xml:space="preserve">
+    <value>A ku na tinotsi leti tsariweke.</value>
+  </data>
+  <data name="Note.TypeHomeVisit" xml:space="preserve">
+    <value>Ndzendzeleko wa Kaya</value>
+  </data>
+  <data name="Note.TypeGeneral" xml:space="preserve">
+    <value>Ntolovelo</value>
+  </data>
+  <data name="Validation.NameRequired" xml:space="preserve">
+    <value>Vito ri laveka.</value>
+  </data>
+  <data name="Validation.VillageRequired" xml:space="preserve">
+    <value>Rixaka ri laveka.</value>
+  </data>
+  <data name="Message.AddError" xml:space="preserve">
+    <value>A ndzi swi koti ku engetela mulimi. Kombela u ringeta nakambe.</value>
+  </data>
+  <data name="Message.UpdateError" xml:space="preserve">
+    <value>A ndzi swi koti ku hlayisa switshuxo. Kombela u ringeta nakambe.</value>
+  </data>
+  <data name="Message.SaveError" xml:space="preserve">
+    <value>A ndzi swi koti ku hlayisa mulimi. Kombela u ringeta nakambe.</value>
+  </data>
+  <data name="Message.LoadError" xml:space="preserve">
+    <value>A ndzi swi koti ku layisa mulimi.</value>
+  </data>
+  <data name="Message.StatusUpdated" xml:space="preserve">
+    <value>Xiyimo xi hundzuriwile.</value>
+  </data>
+  <data name="Message.StatusUpdateError" xml:space="preserve">
+    <value>A ndzi swi koti ku hundzula xiyimo.</value>
+  </data>
+  <data name="Message.ExitRecorded" xml:space="preserve">
+    <value>Ku huma eka nongonoko ku tsariwile.</value>
+  </data>
+  <data name="Message.ExitRecordError" xml:space="preserve">
+    <value>A ndzi swi koti ku tsala ku huma eka nongonoko.</value>
+  </data>
+  <data name="Message.AddCohortError" xml:space="preserve">
+    <value>A ndzi swi koti ku engetela cohort.</value>
+  </data>
+  <data name="Message.RemoveCohortError" xml:space="preserve">
+    <value>A ndzi swi koti ku susa cohort.</value>
+  </data>
+  <data name="Status.Active" xml:space="preserve">
+    <value>Yi tirhaka</value>
+  </data>
+  <data name="Status.Inactive" xml:space="preserve">
+    <value>A yi tirhiki</value>
+  </data>
+  <data name="Status.Exited" xml:space="preserve">
+    <value>U Humile</value>
+  </data>
+</root>

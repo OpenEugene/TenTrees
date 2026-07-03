@@ -13,45 +13,45 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Title.AddSession" xml:space="preserve">
-    <value>Add Training Session</value>
+    <value>Engetela Nkarhi wo Leha</value>
   </data>
   <data name="Title.EditSession" xml:space="preserve">
-    <value>Edit Training Session</value>
+    <value>Lulamisa Nkarhi wo Leha</value>
   </data>
   <data name="Section.SessionDetails" xml:space="preserve">
-    <value>Session Details</value>
+    <value>Vuxokoxoko bya Nkarhi</value>
   </data>
   <data name="ClassName" xml:space="preserve">
-    <value>Class Name:</value>
+    <value>Vito ra Klasi:</value>
   </data>
   <data name="ClassDate" xml:space="preserve">
-    <value>Date:</value>
+    <value>Siku:</value>
   </data>
   <data name="Village" xml:space="preserve">
-    <value>Village:</value>
+    <value>Rixaka:</value>
   </data>
   <data name="ClassNumber" xml:space="preserve">
-    <value>Class Number (1-5):</value>
+    <value>Nomboro ya Klasi (1-5):</value>
   </data>
   <data name="Notes" xml:space="preserve">
-    <value>Notes:</value>
+    <value>Tinotsi:</value>
   </data>
   <data name="SelectVillage" xml:space="preserve">
-    <value>-- Select Village --</value>
+    <value>-- Hlawula Rixaka --</value>
   </data>
   <data name="SelectClassNumber" xml:space="preserve">
-    <value>-- Select --</value>
+    <value>-- Hlawula --</value>
   </data>
   <data name="Action.Save" xml:space="preserve">
-    <value>Save</value>
+    <value>Hlayisa</value>
   </data>
   <data name="Action.Cancel" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Khansela</value>
   </data>
   <data name="Message.LoadError" xml:space="preserve">
-    <value>Error loading training session</value>
+    <value>Xihoxo xo layisa nkarhi wo leha</value>
   </data>
   <data name="Message.SaveError" xml:space="preserve">
-    <value>Error saving training session</value>
+    <value>Xihoxo xo hlayisa nkarhi wo leha</value>
   </data>
 </root>

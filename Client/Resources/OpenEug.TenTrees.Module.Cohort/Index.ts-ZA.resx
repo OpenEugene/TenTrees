@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Message.Loading" xml:space="preserve">
+    <value>Yi laviseka...</value>
+  </data>
+  <data name="Filter.StatusLabel" xml:space="preserve">
+    <value>Xiyimo:</value>
+  </data>
+  <data name="Filter.ActiveAndPlanned" xml:space="preserve">
+    <value>Lama Tirhaka na Lama Lulamiseriweke</value>
+  </data>
+  <data name="Filter.All" xml:space="preserve">
+    <value>Hinkwawo</value>
+  </data>
+  <data name="Status.Planned" xml:space="preserve">
+    <value>Lulamiseriwile</value>
+  </data>
+  <data name="Status.Active" xml:space="preserve">
+    <value>Yi tirhaka</value>
+  </data>
+  <data name="Status.Completed" xml:space="preserve">
+    <value>Yi Herile</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Engetela Cohort</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Lulamisa</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Susa</value>
+  </data>
+  <data name="Column.Actions" xml:space="preserve">
+    <value>Swiendlo</value>
+  </data>
+  <data name="Column.Name" xml:space="preserve">
+    <value>Vito</value>
+  </data>
+  <data name="Column.Village" xml:space="preserve">
+    <value>Rixaka</value>
+  </data>
+  <data name="Column.Status" xml:space="preserve">
+    <value>Xiyimo</value>
+  </data>
+  <data name="Column.Members" xml:space="preserve">
+    <value>Swirho</value>
+  </data>
+  <data name="Column.Activated" xml:space="preserve">
+    <value>Yi Sunguriwile</value>
+  </data>
+  <data name="Dialog.DeleteCohort.Header" xml:space="preserve">
+    <value>Susa Cohort</value>
+  </data>
+  <data name="Dialog.DeleteCohort.Message" xml:space="preserve">
+    <value>Susa cohort "{0}"? Xiendlo lexi a xi nge hundzuleki.</value>
+  </data>
+  <data name="Message.NoCohorts" xml:space="preserve">
+    <value>A ku na ma-cohort lama kumekeke.</value>
+  </data>
+  <data name="Message.LoadError" xml:space="preserve">
+    <value>A ndzi swi koti ku layisa ma-cohort.</value>
+  </data>
+  <data name="Message.DeleteError" xml:space="preserve">
+    <value>A ndzi swi koti ku susa cohort.</value>
+  </data>
+</root>

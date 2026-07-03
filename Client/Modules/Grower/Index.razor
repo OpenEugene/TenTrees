@@ -38,9 +38,9 @@
             </select>
         </div>
         <div class="col-md-3">
-            <label for="cohortFilter">Cohort</label>
+            <label for="cohortFilter">@Localizer["Filter.Cohort"]</label>
             <select id="cohortFilter" class="form-select" @bind="_cohortFilter" @bind:after="NavigateWithFilters">
-                <option value="">All Cohorts</option>
+                <option value="">@Localizer["Filter.AllCohorts"]</option>
                 @foreach (var cohort in _cohorts)
                 {
                     <option value="@cohort.CohortId">@cohort.Name</option>
@@ -48,7 +48,7 @@
             </select>
         </div>
         <div class="col-md-2 d-flex align-items-end gap-2">
-            <button class="btn btn-primary w-100" @onclick="ApplyFilters">Filter</button>
+            <button class="btn btn-primary w-100" @onclick="ApplyFilters">@Localizer["Action.Filter"]</button>
             <button class="btn btn-secondary w-100" @onclick="ClearFilters">@Localizer["Action.ClearFilters"]</button>
         </div>
     </div>
@@ -132,13 +132,13 @@
                 <td class="@rowClass">@(context.ExitDate?.ToString("yyyy-MM-dd") ?? "-")</td>
                 <td class="@rowClass">
                     <div class="d-flex gap-1">
-                        <ActionLink Action="Edit" 
+                        <ActionLink Action="Edit"
                                    Parameters="@($"id={context.GrowerId}&returnurl={Uri.EscapeDataString(GetReturnUrl())}")"
-                                   Text="Edit" 
-                                   ResourceKey="EditGrower" 
+                                   Text="@Localizer["EditGrower"]"
+                                   ResourceKey="EditGrower"
                                    Class="btn btn-sm btn-primary" />
-                        <ActionDialog Header="Delete Grower"
-                                     Message="@($"Are you sure you wish to delete {context.GrowerName}? This action cannot be undone.")"
+                        <ActionDialog Header="@Localizer["Dialog.DeleteGrower.Header"]"
+                                     Message="@string.Format(Localizer["Dialog.DeleteGrower.Message"], context.GrowerName)"
                                      Action="Delete"
                                      Security="SecurityAccessLevel.Edit"
                                      Class="btn btn-sm btn-danger"

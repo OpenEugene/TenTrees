@@ -7,25 +7,26 @@
 @inherits ModuleBase
 @inject IMentorService MentorService
 @inject IVillageService VillageService
+@inject IStringLocalizer<Index> Localizer
 
 @if (!_isLoaded)
 {
-    <p role="status"><em>Loading...</em></p>
+    <p role="status"><em>@Localizer["Message.Loading"]</em></p>
 }
 else
 {
     <div class="container-fluid">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h4><span class="oi oi-people me-2" aria-hidden="true"></span>Mentors</h4>
-            <ActionLink Action="Edit" Text="Add Mentor" IconName="plus" Class="btn btn-primary" />
+            <h4><span class="oi oi-people me-2" aria-hidden="true"></span>@Localizer["Title"]</h4>
+            <ActionLink Action="Edit" Text="@Localizer["Add"]" ResourceKey="Add" IconName="plus" Class="btn btn-primary" />
         </div>
 
         <!-- Filters -->
         <div class="row g-2 mb-3">
             <div class="col-12 col-md-4">
-                <label class="form-label" for="filterVillage">Village</label>
+                <label class="form-label" for="filterVillage">@Localizer["Filter.Village"]</label>
                 <select id="filterVillage" class="form-select" @bind="_villageFilter" @bind:after="@(() => _page = 1)">
-                    <option value="0">All Villages</option>
+                    <option value="0">@Localizer["Filter.AllVillages"]</option>
                     @foreach (var v in _villages)
                     {
                         <option value="@v.VillageId">@v.VillageName</option>
@@ -33,13 +34,13 @@ else
                 </select>
             </div>
             <div class="col-12 col-md-4">
-                <label class="form-label" for="filterName">Name / Username</label>
-                <input id="filterName" type="text" class="form-control" @bind="_nameFilter" @bind:event="oninput" @bind:after="@(() => _page = 1)" placeholder="Search…" />
+                <label class="form-label" for="filterName">@Localizer["Filter.Name"]</label>
+                <input id="filterName" type="text" class="form-control" @bind="_nameFilter" @bind:event="oninput" @bind:after="@(() => _page = 1)" placeholder="@Localizer["Filter.SearchPlaceholder"]" />
             </div>
             <div class="col-12 col-md-4 d-flex align-items-end">
                 <div class="form-check">
                     <input id="showInactive" type="checkbox" class="form-check-input" @bind="_showInactive" @bind:after="@(() => _page = 1)" />
-                    <label class="form-check-label" for="showInactive">Show inactive</label>
+                    <label class="form-check-label" for="showInactive">@Localizer["Filter.ShowInactive"]</label>
                 </div>
             </div>
         </div>
@@ -50,7 +51,7 @@ else
 
         @if (!filtered.Any())
         {
-            <p class="text-muted">No mentors found.</p>
+            <p class="text-muted">@Localizer["Message.NoMentors"]</p>
         }
         else
         {
@@ -60,13 +61,13 @@ else
 
             <!-- Desktop column headers -->
             <div class="d-none d-md-flex px-3 py-1 text-muted small fw-semibold border-bottom mb-1">
-                <div class="mentor-col-name">Name</div>
-                <div class="mentor-col-username">Username</div>
-                <div class="mentor-col-email">Email</div>
-                <div class="mentor-col-village">Village</div>
-                <div class="mentor-col-growers">Growers</div>
-                <div class="mentor-col-status">Status</div>
-                <div class="mentor-col-actions"><span class="visually-hidden">Actions</span></div>
+                <div class="mentor-col-name">@Localizer["Column.Name"]</div>
+                <div class="mentor-col-username">@Localizer["Column.Username"]</div>
+                <div class="mentor-col-email">@Localizer["Column.Email"]</div>
+                <div class="mentor-col-village">@Localizer["Column.Village"]</div>
+                <div class="mentor-col-growers">@Localizer["Column.Growers"]</div>
+                <div class="mentor-col-status">@Localizer["Column.Status"]</div>
+                <div class="mentor-col-actions"><span class="visually-hidden">@Localizer["Column.Actions"]</span></div>
             </div>
 
             <div class="row row-cols-1 g-2">
@@ -102,18 +103,18 @@ else
                                 <!-- Growers -->
                                 <div class="mentor-col-growers mb-1 mb-md-0">
                                     <span class="oi oi-leaf me-1 d-md-none" aria-hidden="true"></span>
-                                    @mentor.GrowerCount<span class="d-md-none"> grower@(mentor.GrowerCount == 1 ? "" : "s")</span>
+                                    @mentor.GrowerCount<span class="d-md-none"> @(mentor.GrowerCount == 1 ? Localizer["Label.Grower"] : Localizer["Label.Growers"])</span>
                                 </div>
 
                                 <!-- Status badge -->
                                 <div class="mentor-col-status mb-2 mb-md-0">
                                     @if (mentor.IsDeleted)
                                     {
-                                        <span class="badge bg-secondary">Inactive</span>
+                                        <span class="badge bg-secondary">@Localizer["Inactive"]</span>
                                     }
                                     else
                                     {
-                                        <span class="badge bg-success">Active</span>
+                                        <span class="badge bg-success">@Localizer["Active"]</span>
                                     }
                                 </div>
 
@@ -121,9 +122,9 @@ else
                                 <div class="mentor-col-actions d-flex gap-2 flex-shrink-0">
                                     <a href="@EditUrl("Edit",$"username={Uri.EscapeDataString(mentor.Username)}")"
                                        class="btn btn-sm btn-outline-primary"
-                                       aria-label="@($"Edit {mentor.DisplayName}")">
+                                       aria-label="@string.Format(Localizer["AriaLabel.EditMentor"], mentor.DisplayName)">
                                         <span class="oi oi-pencil" aria-hidden="true"></span>
-                                        <span class="d-none d-md-inline ms-1">Edit</span>
+                                        <span class="d-none d-md-inline ms-1">@Localizer["Action.Edit"]</span>
                                     </a>
                                 </div>
 
@@ -135,10 +136,10 @@ else
 
             @if (totalPages > 1)
             {
-                <nav aria-label="Mentor list navigation" class="mt-3">
+                <nav aria-label="@Localizer["AriaLabel.MentorListNavigation"]" class="mt-3">
                     <ul class="pagination justify-content-center flex-wrap">
                         <li class="page-item @(page <= 1 ? "disabled" : "")">
-                            <button class="page-link" @onclick="@(() => _page = page - 1)" disabled="@(page <= 1)" aria-label="Previous">
+                            <button class="page-link" @onclick="@(() => _page = page - 1)" disabled="@(page <= 1)" aria-label="@Localizer["AriaLabel.Previous"]">
                                 <span class="oi oi-chevron-left" aria-hidden="true"></span>
                             </button>
                         </li>
@@ -150,7 +151,7 @@ else
                             </li>
                         }
                         <li class="page-item @(page >= totalPages ? "disabled" : "")">
-                            <button class="page-link" @onclick="@(() => _page = page + 1)" disabled="@(page >= totalPages)" aria-label="Next">
+                            <button class="page-link" @onclick="@(() => _page = page + 1)" disabled="@(page >= totalPages)" aria-label="@Localizer["AriaLabel.Next"]">
                                 <span class="oi oi-chevron-right" aria-hidden="true"></span>
                             </button>
                         </li>

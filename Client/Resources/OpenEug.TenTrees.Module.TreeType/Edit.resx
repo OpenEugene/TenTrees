@@ -82,4 +82,19 @@
   <data name="Message.SaveError" xml:space="preserve">
     <value>Error saving tree type.</value>
   </data>
+  <data name="Validation.NameRequired" xml:space="preserve">
+    <value>Name is required.</value>
+  </data>
+  <data name="Field.SelectCategory" xml:space="preserve">
+    <value>-- Select Category --</value>
+  </data>
+  <data name="Validation.CategoryRequired" xml:space="preserve">
+    <value>Category is required.</value>
+  </data>
+  <data name="Action.Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Action.Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
 </root>

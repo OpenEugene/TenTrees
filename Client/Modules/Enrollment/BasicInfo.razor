@@ -77,9 +77,9 @@
                     @if (_cohorts != null && _cohorts.Count > 0)
                     {
                         <div class="mb-3">
-                            <label class="form-label fw-bold" for="cohortid">Cohort (optional):</label>
+                            <label class="form-label fw-bold" for="cohortid">@Localizer["CohortOptional"]</label>
                             <select id="cohortid" class="form-select form-select-lg" @bind="@_cohortId">
-                                <option value="0">— none —</option>
+                                <option value="0">@Localizer["NoneOption"]</option>
                                 @foreach (var cohort in _cohorts)
                                 {
                                     <option value="@cohort.CohortId">@cohort.Name</option>

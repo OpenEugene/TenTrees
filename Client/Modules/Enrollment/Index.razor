@@ -14,7 +14,7 @@
 <div class="container">
     <!-- Action Buttons -->
     <div class="d-flex gap-2 mb-3">
-        <ActionLink Action="BasicInfo" Security="SecurityAccessLevel.View" Text="Add Enrollment" ResourceKey="Add" Class="btn btn-primary" />
+        <ActionLink Action="BasicInfo" Security="SecurityAccessLevel.View" Text="@Localizer["Add"]" ResourceKey="Add" Class="btn btn-primary" />
     </div>
 
     <!-- Filter Section -->
@@ -42,7 +42,7 @@
             </select>
         </div>
         <div class="col-md-4 d-flex align-items-end gap-2">
-            <button class="btn btn-primary w-100" @onclick="ApplyFiltersAndRefresh">Filter</button>
+            <button class="btn btn-primary w-100" @onclick="ApplyFiltersAndRefresh">@Localizer["Action.Filter"]</button>
             <button class="btn btn-secondary w-100" @onclick="ClearFilters">@Localizer["Action.ClearFilters"]</button>
         </div>
     </div>
@@ -104,8 +104,8 @@
                CurrentPage="@_currentPage.ToString()"
                OnPageChange="HandlePageChange">
             <Header>
-                <th style="width: 1px;"><span class="visually-hidden">Edit</span></th>
-                <th style="width: 1px;"><span class="visually-hidden">Delete</span></th>
+                <th style="width: 1px;"><span class="visually-hidden">@Localizer["Edit"]</span></th>
+                <th style="width: 1px;"><span class="visually-hidden">@Localizer["Delete"]</span></th>
                 <th>@Localizer["Grower"]</th>
                 <th>@Localizer["Mentor"]</th>
                 <th>@Localizer["Village"]</th>
@@ -122,7 +122,7 @@
                 }
 
                 <td class="@rowClass"><ActionLink Action="Edit" Parameters="@($"id={context.EnrollmentId}&returnurl={Uri.EscapeDataString(GetReturnUrl())}")" ResourceKey="Edit" /></td>
-                <td class="@rowClass"><ActionDialog Header="Delete Enrollment" Message="Are You Sure You Wish To Delete This Enrollment?" Action="Delete" Security="SecurityAccessLevel.Edit" Class="btn btn-danger" OnClick="@(async () => await Delete(context))" ResourceKey="Delete" Id="@context.EnrollmentId.ToString()" /></td>
+                <td class="@rowClass"><ActionDialog Header="@Localizer["Dialog.DeleteEnrollment.Header"]" Message="@Localizer["Dialog.DeleteEnrollment.Message"]" Action="Delete" Security="SecurityAccessLevel.Edit" Class="btn btn-danger" OnClick="@(async () => await Delete(context))" ResourceKey="Delete" Id="@context.EnrollmentId.ToString()" /></td>
                 <td class="@rowClass">@context.GrowerName</td>
                 <td class="@rowClass">@context.MentorUserName</td>
                 <td class="@rowClass">@(string.IsNullOrEmpty(context.VillageName) ? Localizer["UnknownVillage"] : context.VillageName)</td>
