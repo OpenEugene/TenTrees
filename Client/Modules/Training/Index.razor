@@ -96,51 +96,47 @@
                 }
                 else
                 {
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th style="width: 1px;">&nbsp;</th>
-                                <th style="width: 1px;">&nbsp;</th>
-                                <th>@Localizer["Column.ClassName"]</th>
-                                <th>@Localizer["Column.ClassNumber"]</th>
-                                <th>@Localizer["Column.Date"]</th>
-                                <th>@Localizer["Column.Village"]</th>
-                                <th>Cohorts</th>
-                                <th>@Localizer["Column.Actions"]</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var tc in _classes)
-                            {
-                                <tr>
-                                    <td><ActionLink Action="Edit" Parameters="@($"id={tc.TrainingClassId}")" ResourceKey="Edit" /></td>
-                                    <td><ActionDialog Header="Delete Session" Message="@Localizer["Message.ConfirmDelete"]" Action="Delete" Security="SecurityAccessLevel.Edit" Class="btn btn-danger" OnClick="@(async () => await DeleteClass(tc))" ResourceKey="Delete" Id="@tc.TrainingClassId.ToString()" /></td>
-                                    <td>@tc.ClassName</td>
-                                    <td>
-                                        <span class="badge bg-info">@tc.ClassNumber @Localizer["Label.OfTotal"]</span>
-                                    </td>
-                                    <td>@tc.ClassDate.ToString("yyyy-MM-dd")</td>
-                                    <td>@GetVillageName(tc.VillageId)</td>
-                                    <td>
-                                        @if (_classCohorts.TryGetValue(tc.TrainingClassId, out var cohorts))
-                                        {
-                                            @foreach (var name in cohorts)
-                                            {
-                                                <span class="badge bg-primary me-1">@name</span>
-                                            }
-                                        }
-                                    </td>
-                                    <td>
-                                        <ActionLink Action="Attendance"
-                                                   Parameters="@($"id={tc.TrainingClassId}")"
-                                                   Text="@Localizer["Action.MarkAttendance"]"
-                                                   ResourceKey="MarkAttendance"
-                                                   Class="btn btn-sm btn-primary" />
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+                    <Pager Items="@_classes"
+                           Format="Table"
+                           Class="table table-striped"
+                           PageSize="@Int32.MaxValue.ToString()">
+                        <Header>
+                            <th style="width: 1px;"><span class="visually-hidden">@Localizer["Action.Edit"]</span></th>
+                            <th style="width: 1px;"><span class="visually-hidden">@Localizer["Action.Delete"]</span></th>
+                            <th>@Localizer["Column.ClassName"]</th>
+                            <th>@Localizer["Column.ClassNumber"]</th>
+                            <th>@Localizer["Column.Date"]</th>
+                            <th>@Localizer["Column.Village"]</th>
+                            <th>Cohorts</th>
+                            <th>@Localizer["Column.Actions"]</th>
+                        </Header>
+                        <Row>
+                            <td><ActionLink Action="Edit" Parameters="@($"id={context.TrainingClassId}&returnurl={Uri.EscapeDataString(GetReturnUrl())}")" ResourceKey="Edit" /></td>
+                            <td><ActionDialog Header="Delete Session" Message="@Localizer["Message.ConfirmDelete"]" Action="Delete" Security="SecurityAccessLevel.Edit" Class="btn btn-danger" OnClick="@(async () => await DeleteClass(context))" ResourceKey="Delete" Id="@context.TrainingClassId.ToString()" /></td>
+                            <td>@context.ClassName</td>
+                            <td>
+                                <span class="badge bg-info">@context.ClassNumber @Localizer["Label.OfTotal"]</span>
+                            </td>
+                            <td>@context.ClassDate.ToString("yyyy-MM-dd")</td>
+                            <td>@GetVillageName(context.VillageId)</td>
+                            <td>
+                                @if (_classCohorts.TryGetValue(context.TrainingClassId, out var cohorts))
+                                {
+                                    @foreach (var name in cohorts)
+                                    {
+                                        <span class="badge bg-primary me-1">@name</span>
+                                    }
+                                }
+                            </td>
+                            <td>
+                                <ActionLink Action="Attendance"
+                                           Parameters="@($"id={context.TrainingClassId}&returnurl={Uri.EscapeDataString(GetReturnUrl())}")"
+                                           Text="@Localizer["Action.MarkAttendance"]"
+                                           ResourceKey="MarkAttendance"
+                                           Class="btn btn-sm btn-primary" />
+                            </td>
+                        </Row>
+                    </Pager>
                 }
             </div>
         </div>
@@ -160,34 +156,31 @@
                 }
                 else
                 {
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>@Localizer["Column.GrowerName"]</th>
-                                <th>@Localizer["Column.Village"]</th>
-                                <th>@Localizer["Column.Attended"]</th>
-                                <th>@Localizer["Column.Status"]</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var summary in _attendanceSummaries)
-                            {
-                                var rowClass = summary.IsEligible ? "" :
-                                               summary.ClassesAttended > 0 ? "table-warning" : "";
-
-                                <tr class="@rowClass">
-                                    <td>@summary.GrowerName</td>
-                                    <td>@(summary.VillageName ?? Localizer["UnknownVillage"])</td>
-                                    <td>@summary.ClassesAttended @Localizer["Label.Of"] @summary.TotalRequired</td>
-                                    <td>
-                                        <span class="badge @GetEligibilityBadgeClass(summary)">
-                                            @GetEligibilityText(summary)
-                                        </span>
-                                    </td>
-                                </tr>
+                    <Pager Items="@_attendanceSummaries"
+                           Format="Table"
+                           Class="table table-striped"
+                           PageSize="@_pageSize.ToString()">
+                        <Header>
+                            <th>@Localizer["Column.GrowerName"]</th>
+                            <th>@Localizer["Column.Village"]</th>
+                            <th>@Localizer["Column.Attended"]</th>
+                            <th>@Localizer["Column.Status"]</th>
+                        </Header>
+                        <Row>
+                            @{
+                                var rowClass = context.IsEligible ? "" :
+                                               context.ClassesAttended > 0 ? "table-warning" : "";
                             }
-                        </tbody>
-                    </table>
+                            <td class="@rowClass">@context.GrowerName</td>
+                            <td class="@rowClass">@(context.VillageName ?? Localizer["UnknownVillage"])</td>
+                            <td class="@rowClass">@context.ClassesAttended @Localizer["Label.Of"] @context.TotalRequired</td>
+                            <td class="@rowClass">
+                                <span class="badge @GetEligibilityBadgeClass(context)">
+                                    @GetEligibilityText(context)
+                                </span>
+                            </td>
+                        </Row>
+                    </Pager>
                 }
             </div>
         </div>
@@ -205,6 +198,7 @@
     // classId → ordered list of cohort names
     private Dictionary<int, List<string>> _classCohorts = new();
     private bool _isLoading = false;
+    private const int _pageSize = 20;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -310,6 +304,12 @@
             await logger.LogError(ex, "Error Deleting Training Class {ClassName} {Error}", trainingClass.ClassName, ex.Message);
             AddModuleMessage(Localizer["Message.DeleteError"], MessageType.Error);
         }
+    }
+
+    private string GetReturnUrl()
+    {
+        var queryString = $"villageId={Uri.EscapeDataString(_villageFilter)}&summaryStatus={Uri.EscapeDataString(_summaryStatusFilter)}";
+        return NavigateUrl(PageState.Page.Path, queryString);
     }
 
     private string GetVillageName(int villageId)

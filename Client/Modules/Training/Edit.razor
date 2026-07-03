@@ -223,7 +223,7 @@
                     await logger.LogInformation("Training Class Added {ClassName}", _className);
                 }
 
-                NavigationManager.NavigateTo(NavigateUrl());
+                NavigationManager.NavigateTo(GetBackUrl());
             }
             catch (Exception ex)
             {
@@ -235,7 +235,17 @@
 
     private void Cancel()
     {
-        NavigationManager.NavigateTo(NavigateUrl());
+        NavigationManager.NavigateTo(GetBackUrl());
+    }
+
+    private string GetBackUrl()
+    {
+        if (PageState.QueryString.ContainsKey("returnurl"))
+        {
+            return Uri.UnescapeDataString(PageState.QueryString["returnurl"]);
+        }
+
+        return NavigateUrl();
     }
 
     private Task RefreshAvailableCohortsAsync()

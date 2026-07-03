@@ -121,34 +121,32 @@
                     var rowClass = context.Status == GrowerStatus.Inactive ? "table-warning" :
                                    context.Status == GrowerStatus.Exited ? "table-secondary" : "";
                 }
-                
-                <tr class="@rowClass">
-                    <td>@context.GrowerName</td>
-                    <td>@GetVillageName(context.VillageId)</td>
-                    <td>
-                        <span class="badge @GetStatusBadgeClass(context.Status)">
-                            @GetStatusText(context.Status)
-                        </span>
-                    </td>
-                    <td>@(context.ExitDate?.ToString("yyyy-MM-dd") ?? "-")</td>
-                    <td>
-                        <div class="d-flex gap-1">
-                            <ActionLink Action="Edit" 
-                                       Parameters="@($"id={context.GrowerId}&returnurl={Uri.EscapeDataString(GetReturnUrl())}")"
-                                       Text="Edit" 
-                                       ResourceKey="EditGrower" 
-                                       Class="btn btn-sm btn-primary" />
-                            <ActionDialog Header="Delete Grower"
-                                         Message="@($"Are you sure you wish to delete {context.GrowerName}? This action cannot be undone.")"
-                                         Action="Delete"
-                                         Security="SecurityAccessLevel.Edit"
-                                         Class="btn btn-sm btn-danger"
-                                         OnClick="@(async () => await DeleteGrower(context))"
-                                         ResourceKey="DeleteGrower"
-                                         Id="@context.GrowerId.ToString()" />
-                        </div>
-                    </td>
-                </tr>
+
+                <td class="@rowClass">@context.GrowerName</td>
+                <td class="@rowClass">@GetVillageName(context.VillageId)</td>
+                <td class="@rowClass">
+                    <span class="badge @GetStatusBadgeClass(context.Status)">
+                        @GetStatusText(context.Status)
+                    </span>
+                </td>
+                <td class="@rowClass">@(context.ExitDate?.ToString("yyyy-MM-dd") ?? "-")</td>
+                <td class="@rowClass">
+                    <div class="d-flex gap-1">
+                        <ActionLink Action="Edit" 
+                                   Parameters="@($"id={context.GrowerId}&returnurl={Uri.EscapeDataString(GetReturnUrl())}")"
+                                   Text="Edit" 
+                                   ResourceKey="EditGrower" 
+                                   Class="btn btn-sm btn-primary" />
+                        <ActionDialog Header="Delete Grower"
+                                     Message="@($"Are you sure you wish to delete {context.GrowerName}? This action cannot be undone.")"
+                                     Action="Delete"
+                                     Security="SecurityAccessLevel.Edit"
+                                     Class="btn btn-sm btn-danger"
+                                     OnClick="@(async () => await DeleteGrower(context))"
+                                     ResourceKey="DeleteGrower"
+                                     Id="@context.GrowerId.ToString()" />
+                    </div>
+                </td>
             </Row>
         </Pager>
     }
