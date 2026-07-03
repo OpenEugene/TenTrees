@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
   <!-- Xitsonga translations needed - coordinate with Trygive/Quentan -->
   <data name="Page.Title" xml:space="preserve">
     <value>[XS] Manage Grower Status</value>
@@ -61,5 +73,47 @@
   </data>
   <data name="Note.TypeHomeVisit" xml:space="preserve">
     <value>[XS] Home Visit</value>
+  </data>
+  <data name="Section.Cohorts" xml:space="preserve">
+    <value>Ma-Cohort</value>
+  </data>
+  <data name="Label.Remove" xml:space="preserve">
+    <value>Susa</value>
+  </data>
+  <data name="AriaLabel.ConfirmRemoveCohort" xml:space="preserve">
+    <value>Tiyisisa ku susa {0}</value>
+  </data>
+  <data name="AriaLabel.CancelRemoveCohort" xml:space="preserve">
+    <value>Rhimisa ku susa {0}</value>
+  </data>
+  <data name="AriaLabel.RemoveCohort" xml:space="preserve">
+    <value>Susa cohort {0}</value>
+  </data>
+  <data name="AriaLabel.AddCohort" xml:space="preserve">
+    <value>Engetela cohort</value>
+  </data>
+  <data name="Field.AddCohortPlaceholder" xml:space="preserve">
+    <value>+ Engetela cohort…</value>
+  </data>
+  <data name="Message.NoCohortsAssigned" xml:space="preserve">
+    <value>A ku na ma-cohort lama averiweke.</value>
+  </data>
+  <data name="Label.NotApplicable" xml:space="preserve">
+    <value>N/A</value>
+  </data>
+  <data name="Tooltip.TotalNotes" xml:space="preserve">
+    <value>Tinotsi Hinkwato</value>
+  </data>
+  <data name="Tooltip.HomeVisitNotes" xml:space="preserve">
+    <value>Tinotsi ta Ndzendzeleko wa Kaya</value>
+  </data>
+  <data name="Label.HomeVisitAbbrev" xml:space="preserve">
+    <value>NK</value>
+  </data>
+  <data name="Message.AddCohortError" xml:space="preserve">
+    <value>A ndzi swi koti ku engetela cohort.</value>
+  </data>
+  <data name="Message.RemoveCohortError" xml:space="preserve">
+    <value>A ndzi swi koti ku susa cohort.</value>
   </data>
 </root>

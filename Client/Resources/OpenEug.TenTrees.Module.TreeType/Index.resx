@@ -91,4 +91,19 @@
   <data name="Column.Status" xml:space="preserve">
     <value>Status</value>
   </data>
+  <data name="Column.Actions" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="Dialog.DeleteTreeType.Header" xml:space="preserve">
+    <value>Delete Tree Type</value>
+  </data>
+  <data name="Dialog.DeleteTreeType.Message" xml:space="preserve">
+    <value>Are you sure you want to delete this tree type?</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>Inactive</value>
+  </data>
 </root>

@@ -12,18 +12,19 @@
 @inject IVillageService VillageService
 @inject ICohortService CohortService
 @inject NavigationManager NavigationManager
+@inject IStringLocalizer<Index> Localizer
 
 <div class="container">
     <div class="d-flex gap-2 mb-3">
-        <ActionLink Action="Add" Security="SecurityAccessLevel.Edit" Text="New Assessment" ResourceKey="Add" Class="btn btn-primary" />
+        <ActionLink Action="Add" Security="SecurityAccessLevel.Edit" Text="@Localizer["Add"]" ResourceKey="Add" Class="btn btn-primary" />
     </div>
 
     <!-- Cascading Filters: Village → Cohort → Mentor → Grower -->
     <div class="row mb-3">
         <div class="col-md-3">
-            <label for="villageFilter">Village</label>
+            <label for="villageFilter">@Localizer["Filter.Village"]</label>
             <select id="villageFilter" class="form-select" @bind="_selectedVillageId" @bind:after="OnVillageChanged">
-                <option value="">All</option>
+                <option value="">@Localizer["Filter.All"]</option>
                 @if (_villages != null)
                 {
                     @foreach (var v in _villages)
@@ -34,9 +35,9 @@
             </select>
         </div>
         <div class="col-md-3">
-            <label for="cohortFilter">Cohort</label>
+            <label for="cohortFilter">@Localizer["Filter.Cohort"]</label>
             <select id="cohortFilter" class="form-select" @bind="_selectedCohortId" @bind:after="OnCohortChanged">
-                <option value="">All</option>
+                <option value="">@Localizer["Filter.All"]</option>
                 @foreach (var c in _cohortOptions)
                 {
                     <option value="@c.CohortId">@c.Name</option>
@@ -44,9 +45,9 @@
             </select>
         </div>
         <div class="col-md-2">
-            <label for="mentorFilter">Mentor</label>
+            <label for="mentorFilter">@Localizer["Filter.Mentor"]</label>
             <select id="mentorFilter" class="form-select" @bind="_selectedMentor" @bind:after="OnMentorChanged">
-                <option value="">All</option>
+                <option value="">@Localizer["Filter.All"]</option>
                 @foreach (var m in _mentorOptions)
                 {
                     <option value="@m">@m</option>
@@ -54,9 +55,9 @@
             </select>
         </div>
         <div class="col-md-2">
-            <label for="growerFilter">Grower</label>
+            <label for="growerFilter">@Localizer["Filter.Grower"]</label>
             <select id="growerFilter" class="form-select" @bind="_selectedGrowerId" @bind:after="OnGrowerChanged">
-                <option value="">All</option>
+                <option value="">@Localizer["Filter.All"]</option>
                 @foreach (var g in _growerOptions)
                 {
                     <option value="@g.GrowerId">@g.GrowerName</option>
@@ -64,17 +65,17 @@
             </select>
         </div>
         <div class="col-md-2 d-flex align-items-end">
-            <button class="btn btn-secondary w-100" @onclick="ClearFilters">Clear Filters</button>
+            <button class="btn btn-secondary w-100" @onclick="ClearFilters">@Localizer["Action.ClearFilters"]</button>
         </div>
     </div>
 
     @if (_assessments == null)
     {
-        <p><em>Loading...</em></p>
+        <p><em>@Localizer["Message.Loading"]</em></p>
     }
     else if (_assessments.Count == 0)
     {
-        <p>No assessments found.</p>
+        <p>@Localizer["Message.DisplayNone"]</p>
     }
     else
     {
@@ -82,29 +83,29 @@
             <Header>
                 <th style="width: 1px;">&nbsp;</th>
                 <th style="width: 1px;">&nbsp;</th>
-                <th>Date</th>
-                <th>Grower</th>
-                <th>Village</th>
-                <th>Survival Rate</th>
-                <th>Permaculture</th>
-                <th>Needs Help</th>
+                <th>@Localizer["Column.Date"]</th>
+                <th>@Localizer["Column.Grower"]</th>
+                <th>@Localizer["Column.Village"]</th>
+                <th>@Localizer["Column.SurvivalRate"]</th>
+                <th>@Localizer["Column.PermacultureScore"]</th>
+                <th>@Localizer["Column.NeedsHelp"]</th>
             </Header>
             <Row>
                 <td><ActionLink Action="Edit" Parameters="@($"id={context.AssessmentId}")" ResourceKey="Edit" /></td>
-                <td><ActionDialog Header="Delete Assessment" Message="Are You Sure You Wish To Delete This Assessment?" Action="Delete" Security="SecurityAccessLevel.Edit" Class="btn btn-danger" OnClick="@(async () => await Delete(context))" ResourceKey="Delete" Id="@context.AssessmentId.ToString()" /></td>
+                <td><ActionDialog Header="@Localizer["Dialog.DeleteAssessment.Header"]" Message="@Localizer["Dialog.DeleteAssessment.Message"]" Action="Delete" Security="SecurityAccessLevel.Edit" Class="btn btn-danger" OnClick="@(async () => await Delete(context))" ResourceKey="Delete" Id="@context.AssessmentId.ToString()" /></td>
                 <td>@context.AssessmentDate.ToShortDateString()</td>
                 <td>@context.GrowerName</td>
                 <td>@context.VillageName</td>
-                <td>@(context.TreesPlanted > 0 ? $"{context.TreesAlive * 100 / context.TreesPlanted}% ({context.TreesAlive}/{context.TreesPlanted})" : "N/A")</td>
+                <td>@(context.TreesPlanted > 0 ? $"{context.TreesAlive * 100 / context.TreesPlanted}% ({context.TreesAlive}/{context.TreesPlanted})" : Localizer["Label.NotApplicable"])</td>
                 <td>@context.PermaculturePrinciplesCount / 9</td>
                 <td>
                     @if (context.NeedsHelp)
                     {
-                        <span class="badge bg-danger">Yes</span>
+                        <span class="badge bg-danger">@Localizer["Yes"]</span>
                     }
                     else
                     {
-                        <span class="badge bg-success">No</span>
+                        <span class="badge bg-success">@Localizer["No"]</span>
                     }
                 </td>
             </Row>
@@ -146,7 +147,7 @@
         catch (Exception ex)
         {
             await logger.LogError(ex, "Error Loading Assessments {Error}", ex.Message);
-            AddModuleMessage("Error loading assessments.", MessageType.Error);
+            AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
         }
     }
 
@@ -326,7 +327,7 @@
         catch (Exception ex)
         {
             await logger.LogError(ex, "Error Deleting Assessment {AssessmentId} {Error}", assessment.AssessmentId, ex.Message);
-            AddModuleMessage("Error deleting assessment.", MessageType.Error);
+            AddModuleMessage(Localizer["Message.DeleteError"], MessageType.Error);
         }
     }
 

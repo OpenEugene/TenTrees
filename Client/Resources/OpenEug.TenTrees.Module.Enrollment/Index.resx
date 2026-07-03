@@ -174,6 +174,15 @@
   <data name="Action.ClearFilters" xml:space="preserve">
     <value>Clear Filters</value>
   </data>
+  <data name="Action.Filter" xml:space="preserve">
+    <value>Filter</value>
+  </data>
+  <data name="Dialog.DeleteEnrollment.Header" xml:space="preserve">
+    <value>Delete Enrollment</value>
+  </data>
+  <data name="Dialog.DeleteEnrollment.Message" xml:space="preserve">
+    <value>Are You Sure You Wish To Delete This Enrollment?</value>
+  </data>
   <data name="Summary.Total" xml:space="preserve">
     <value>Total</value>
   </data>

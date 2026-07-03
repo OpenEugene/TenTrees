@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Message.Loading" xml:space="preserve">
+    <value>Mirhi yi laviseka...</value>
+  </data>
+  <data name="Message.NoTrees" xml:space="preserve">
+    <value>A ku si na murhi lowu tsariweke.</value>
+  </data>
+  <data name="Column.TreeType" xml:space="preserve">
+    <value>Muxaka wa Murhi</value>
+  </data>
+  <data name="Column.Category" xml:space="preserve">
+    <value>Xigaba</value>
+  </data>
+  <data name="Column.Qty" xml:space="preserve">
+    <value>Nh.</value>
+  </data>
+  <data name="Column.Notes" xml:space="preserve">
+    <value>Tinotsi</value>
+  </data>
+  <data name="Label.RemoveConfirm" xml:space="preserve">
+    <value>Susa?</value>
+  </data>
+  <data name="Label.Yes" xml:space="preserve">
+    <value>Ina</value>
+  </data>
+  <data name="Label.No" xml:space="preserve">
+    <value>E-e</value>
+  </data>
+  <data name="Action.Remove" xml:space="preserve">
+    <value>Susa</value>
+  </data>
+  <data name="Section.AddTree" xml:space="preserve">
+    <value>Engetela Murhi</value>
+  </data>
+  <data name="Field.TreeType" xml:space="preserve">
+    <value>Muxaka wa Murhi</value>
+  </data>
+  <data name="Field.SelectGeneric" xml:space="preserve">
+    <value>-- Hlawula --</value>
+  </data>
+  <data name="Field.Quantity" xml:space="preserve">
+    <value>Nhlayo</value>
+  </data>
+  <data name="Field.NotesOptional" xml:space="preserve">
+    <value>Tinotsi (a hi laveko)</value>
+  </data>
+  <data name="Action.Add" xml:space="preserve">
+    <value>Engetela</value>
+  </data>
+  <data name="Message.AddError" xml:space="preserve">
+    <value>A ndzi swi koti ku engetela murhi. Kombela u ringeta nakambe.</value>
+  </data>
+  <data name="Message.RemoveError" xml:space="preserve">
+    <value>A ndzi swi koti ku susa murhi. Kombela u ringeta nakambe.</value>
+  </data>
+</root>

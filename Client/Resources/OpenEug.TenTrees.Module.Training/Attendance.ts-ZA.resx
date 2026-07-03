@@ -13,54 +13,54 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Message.Loading" xml:space="preserve">
-    <value>Loading...</value>
+    <value>Yi laviseka...</value>
   </data>
   <data name="Message.LoadError" xml:space="preserve">
-    <value>Error loading attendance data</value>
+    <value>Xihoxo xo layisa mahungu ya vukona</value>
   </data>
   <data name="Message.SaveError" xml:space="preserve">
-    <value>Error saving attendance</value>
+    <value>Xihoxo xo hlayisa vukona</value>
   </data>
   <data name="Message.AttendanceSaved" xml:space="preserve">
-    <value>Attendance saved successfully</value>
+    <value>Vukona byi hlayisiwile hi ndlela leyi humeleleke</value>
   </data>
   <data name="Message.NoGrowers" xml:space="preserve">
-    <value>No growers found for this village</value>
+    <value>A ku na valimi lava kumekeke eka rixaka leri</value>
   </data>
   <data name="Section.MarkAttendance" xml:space="preserve">
-    <value>Mark Attendance</value>
+    <value>Tsala Vukona</value>
   </data>
   <data name="Label.Date" xml:space="preserve">
-    <value>Date</value>
+    <value>Siku</value>
   </data>
   <data name="Label.ClassNumber" xml:space="preserve">
-    <value>Class Number</value>
+    <value>Nomboro ya Klasi</value>
   </data>
   <data name="Label.OfTotal" xml:space="preserve">
-    <value>of 5</value>
+    <value>eka 5</value>
   </data>
   <data name="Label.Of" xml:space="preserve">
-    <value>of</value>
+    <value>eka</value>
   </data>
   <data name="Label.Completed" xml:space="preserve">
-    <value>completed</value>
+    <value>yi herile</value>
   </data>
   <data name="Column.Present" xml:space="preserve">
-    <value>Present</value>
+    <value>U Kona</value>
   </data>
   <data name="Column.GrowerName" xml:space="preserve">
-    <value>Grower Name</value>
+    <value>Vito ra Mulimi</value>
   </data>
   <data name="Column.Completed" xml:space="preserve">
-    <value>Completed</value>
+    <value>Yi Herile</value>
   </data>
   <data name="Action.SaveAttendance" xml:space="preserve">
-    <value>Save Attendance</value>
+    <value>Hlayisa Vukona</value>
   </data>
   <data name="Action.Cancel" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Khansela</value>
   </data>
   <data name="Action.BackToList" xml:space="preserve">
-    <value>Back to Training List</value>
+    <value>Vuya eka Nxaxamelo wo Leha</value>
   </data>
 </root>

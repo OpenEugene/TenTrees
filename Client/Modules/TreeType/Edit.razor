@@ -14,21 +14,21 @@
                     <Label Class="col-sm-4" For="treeName" HelpText="Enter the tree type name" ResourceKey="Name">Name: </Label>
                     <div class="col-sm-8">
                         <input id="treeName" type="text" class="form-control" @bind="@_treeType.Name" required />
-                        <div class="invalid-feedback">Name is required.</div>
+                        <div class="invalid-feedback">@Localizer["Validation.NameRequired"]</div>
                     </div>
                 </div>
                 <div class="row mb-3 align-items-center">
                     <Label Class="col-sm-4" For="treeCategory" HelpText="Select the category for this tree type" ResourceKey="Category">Category: </Label>
                     <div class="col-sm-8">
                         <select id="treeCategory" class="form-select" @bind="@_treeType.Category" required>
-                            <option value="">-- Select Category --</option>
+                            <option value="">@Localizer["Field.SelectCategory"]</option>
                             <option value="Medicinal Trees">Medicinal Trees</option>
                             <option value="Fruity Medicinal Trees">Fruity Medicinal Trees</option>
                             <option value="Nut Trees">Nut Trees</option>
                             <option value="Bushy, Herb & Medicinal Plants">Bushy, Herb & Medicinal Plants</option>
                             <option value="Vegetable Medicinal Plants">Vegetable Medicinal Plants</option>
                         </select>
-                        <div class="invalid-feedback">Category is required.</div>
+                        <div class="invalid-feedback">@Localizer["Validation.CategoryRequired"]</div>
                     </div>
                 </div>
                 <div class="row mb-3 align-items-center">
@@ -46,8 +46,8 @@
             </form>
 
             <div class="d-flex gap-2 mb-3">
-                <button type="button" class="btn btn-success" @onclick="Save">Save</button>
-                <NavLink class="btn btn-secondary" href="@NavigateUrl()">Cancel</NavLink>
+                <button type="button" class="btn btn-success" @onclick="Save">@Localizer["Action.Save"]</button>
+                <NavLink class="btn btn-secondary" href="@NavigateUrl()">@Localizer["Action.Cancel"]</NavLink>
             </div>
 
             @if (PageState.Action == "Edit")
@@ -80,7 +80,7 @@
         catch (Exception ex)
         {
             await logger.LogError(ex, "Error Loading Tree Type {TreeTypeId} {Error}", PageState.QueryString.GetValueOrDefault("id"), ex.Message);
-            AddModuleMessage("Error loading tree type.", MessageType.Error);
+            AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
         }
     }
 
@@ -103,18 +103,18 @@
                     await logger.LogInformation("TreeType Added {TreeType}", _treeType.Name);
                 }
 
-                AddModuleMessage("Tree type saved successfully.", MessageType.Success);
+                AddModuleMessage(Localizer["Message.SaveSuccess"], MessageType.Success);
                 NavigationManager.NavigateTo(NavigateUrl());
             }
             else
             {
-                AddModuleMessage("Please fill in all required fields.", MessageType.Error);
+                AddModuleMessage(Localizer["Message.SaveValidation"], MessageType.Error);
             }
         }
         catch (Exception ex)
         {
             await logger.LogError(ex, "Error Saving Tree Type {TreeType} {Error}", _treeType.Name, ex.Message);
-            AddModuleMessage("Error saving tree type.", MessageType.Error);
+            AddModuleMessage(Localizer["Message.SaveError"], MessageType.Error);
         }
     }
 }

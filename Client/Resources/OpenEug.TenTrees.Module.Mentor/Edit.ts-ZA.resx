@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Message.Loading" xml:space="preserve">
+    <value>Yi laviseka...</value>
+  </data>
+  <data name="Title.Add" xml:space="preserve">
+    <value>Engetela Muleriseri</value>
+  </data>
+  <data name="Title.Edit" xml:space="preserve">
+    <value>Lulamisa Muleriseri — {0}</value>
+  </data>
+  <data name="Action.Activate" xml:space="preserve">
+    <value>Yimisa</value>
+  </data>
+  <data name="Action.Deactivate" xml:space="preserve">
+    <value>Yimisa ku Tirha</value>
+  </data>
+  <data name="Action.BackToMentors" xml:space="preserve">
+    <value>Vuya eka Vareleseri</value>
+  </data>
+  <data name="Section.AccountDetails" xml:space="preserve">
+    <value>Vuxokoxoko bya Akhawunti</value>
+  </data>
+  <data name="Field.DisplayName" xml:space="preserve">
+    <value>Vito leri Kombisiwaka</value>
+  </data>
+  <data name="Field.Username" xml:space="preserve">
+    <value>Vito ro Nghena</value>
+  </data>
+  <data name="Field.Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="Field.Village" xml:space="preserve">
+    <value>Rixaka</value>
+  </data>
+  <data name="Field.SelectVillage" xml:space="preserve">
+    <value>— Hlawula rixaka —</value>
+  </data>
+  <data name="Field.Password" xml:space="preserve">
+    <value>Phasiwedi (a hi laveko)</value>
+  </data>
+  <data name="Field.PasswordHint" xml:space="preserve">
+    <value>Siyani lexi handle ka nchumu kuze ku endliwe phasiwedi ya nkarhinyana hi ku titirhela.</value>
+  </data>
+  <data name="Field.MarkEmailVerified" xml:space="preserve">
+    <value>Kombisa email tanihi leyi tiyisisiweke</value>
+  </data>
+  <data name="Action.Saving" xml:space="preserve">
+    <value>Yi hlayisiwa…</value>
+  </data>
+  <data name="Action.Save" xml:space="preserve">
+    <value>Hlayisa</value>
+  </data>
+  <data name="Action.Cancel" xml:space="preserve">
+    <value>Khansela</value>
+  </data>
+  <data name="Section.AssignedGrowers" xml:space="preserve">
+    <value>Valimi lava Averiweke ({0})</value>
+  </data>
+  <data name="Action.AssignGrower" xml:space="preserve">
+    <value>Avela Mulimi</value>
+  </data>
+  <data name="Field.GrowerToAssign" xml:space="preserve">
+    <value>Mulimi loyi a nga averiwaka</value>
+  </data>
+  <data name="Field.SelectGrower" xml:space="preserve">
+    <value>— Hlawula mulimi —</value>
+  </data>
+  <data name="Label.CurrentlyAssigned" xml:space="preserve">
+    <value> (sweswi: {0})</value>
+  </data>
+  <data name="Action.Assign" xml:space="preserve">
+    <value>Avela</value>
+  </data>
+  <data name="Message.NoAssignedGrowers" xml:space="preserve">
+    <value>A ku na mulimi la averiweke eka muleriseri loyi sweswi.</value>
+  </data>
+  <data name="Column.Grower" xml:space="preserve">
+    <value>Mulimi</value>
+  </data>
+  <data name="Column.Village" xml:space="preserve">
+    <value>Rixaka</value>
+  </data>
+  <data name="Column.Status" xml:space="preserve">
+    <value>Xiyimo</value>
+  </data>
+  <data name="Column.Actions" xml:space="preserve">
+    <value>Swiendlo</value>
+  </data>
+  <data name="AriaLabel.Unassign" xml:space="preserve">
+    <value>Susa {0} eka nkarhi</value>
+  </data>
+  <data name="Message.RequiredFields" xml:space="preserve">
+    <value>Swi laveka: {0}</value>
+  </data>
+  <data name="Message.CreateError" xml:space="preserve">
+    <value>A ndzi swi koti ku tumbuluxa muleriseri. Vito ro nghena ri nga ha va ri tirhisiwile.</value>
+  </data>
+  <data name="Message.UpdateError" xml:space="preserve">
+    <value>A ndzi swi koti ku hundzula phrofayili ya muleriseri.</value>
+  </data>
+  <data name="Message.UpdateSuccess" xml:space="preserve">
+    <value>Phrofayili ya muleriseri yi hundzuriwile.</value>
+  </data>
+  <data name="Message.SaveError" xml:space="preserve">
+    <value>Xihoxo lexi nga langutiwangiki xi humelele. Kombela u ringeta nakambe.</value>
+  </data>
+  <data name="Message.Activated" xml:space="preserve">
+    <value>Muleriseri {0} u yimisiwile.</value>
+  </data>
+  <data name="Message.Deactivated" xml:space="preserve">
+    <value>Muleriseri {0} u yimisiwile ku tirha.</value>
+  </data>
+  <data name="Message.ToggleError" xml:space="preserve">
+    <value>Xihoxo xi humelele. Kombela u ringeta nakambe.</value>
+  </data>
+</root>

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Message.Loading" xml:space="preserve">
+    <value>Loading...</value>
+  </data>
+  <data name="Section.CohortDetails" xml:space="preserve">
+    <value>Cohort Details</value>
+  </data>
+  <data name="Field.Village" xml:space="preserve">
+    <value>Village</value>
+  </data>
+  <data name="Field.SelectVillage" xml:space="preserve">
+    <value>— select village —</value>
+  </data>
+  <data name="Field.Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Field.Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="Field.SelectGeneric" xml:space="preserve">
+    <value>— select —</value>
+  </data>
+  <data name="Label.Suggested" xml:space="preserve">
+    <value>Suggested:</value>
+  </data>
+  <data name="Status.Planned" xml:space="preserve">
+    <value>Planned</value>
+  </data>
+  <data name="Status.Active" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="Status.Completed" xml:space="preserve">
+    <value>Completed</value>
+  </data>
+  <data name="Message.CompletedCannotReactivate" xml:space="preserve">
+    <value>Completed cohorts cannot be reactivated.</value>
+  </data>
+  <data name="Action.Saving" xml:space="preserve">
+    <value>Saving...</value>
+  </data>
+  <data name="Action.Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Action.Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Action.Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="Section.GrowerMembers" xml:space="preserve">
+    <value>Grower Members ({0})</value>
+  </data>
+  <data name="Action.AddGrowerLabel" xml:space="preserve">
+    <value>Add grower:</value>
+  </data>
+  <data name="Message.NoGrowersAssigned" xml:space="preserve">
+    <value>No growers assigned to this cohort yet.</value>
+  </data>
+  <data name="Column.GrowerName" xml:space="preserve">
+    <value>Grower Name</value>
+  </data>
+  <data name="Column.Joined" xml:space="preserve">
+    <value>Joined</value>
+  </data>
+  <data name="Column.Actions" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="AriaLabel.RemoveGrower" xml:space="preserve">
+    <value>Remove grower {0} from cohort</value>
+  </data>
+  <data name="Section.AssignedMentors" xml:space="preserve">
+    <value>Assigned Mentors ({0})</value>
+  </data>
+  <data name="Action.AddMentorLabel" xml:space="preserve">
+    <value>Add mentor:</value>
+  </data>
+  <data name="Message.NoMentorsAssigned" xml:space="preserve">
+    <value>No mentors assigned to this cohort yet.</value>
+  </data>
+  <data name="Column.MentorId" xml:space="preserve">
+    <value>Mentor ID</value>
+  </data>
+  <data name="Column.Assigned" xml:space="preserve">
+    <value>Assigned</value>
+  </data>
+  <data name="AriaLabel.RemoveMentor" xml:space="preserve">
+    <value>Remove mentor {0} from cohort</value>
+  </data>
+  <data name="Section.LinkedClasses" xml:space="preserve">
+    <value>Linked Classes ({0})</value>
+  </data>
+  <data name="Action.AddClassLabel" xml:space="preserve">
+    <value>Add class:</value>
+  </data>
+  <data name="Message.NoClassesLinked" xml:space="preserve">
+    <value>No classes linked to this cohort.</value>
+  </data>
+  <data name="Column.ClassName" xml:space="preserve">
+    <value>Class Name</value>
+  </data>
+  <data name="Column.Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="Label.ClassFallbackName" xml:space="preserve">
+    <value>Class {0}</value>
+  </data>
+  <data name="AriaLabel.RemoveClass" xml:space="preserve">
+    <value>Remove class {0} from cohort</value>
+  </data>
+  <data name="Message.RequiredFields" xml:space="preserve">
+    <value>Required: {0}</value>
+  </data>
+  <data name="Message.CannotReactivateWarning" xml:space="preserve">
+    <value>A completed cohort cannot be reactivated.</value>
+  </data>
+  <data name="Message.LoadError" xml:space="preserve">
+    <value>Unable to load cohort.</value>
+  </data>
+  <data name="Message.SaveError" xml:space="preserve">
+    <value>Unable to save cohort.</value>
+  </data>
+  <data name="Message.RemoveGrowerError" xml:space="preserve">
+    <value>Unable to remove grower.</value>
+  </data>
+  <data name="Message.AddGrowerError" xml:space="preserve">
+    <value>Unable to add grower.</value>
+  </data>
+  <data name="Label.GrowerFallbackName" xml:space="preserve">
+    <value>Grower {0}</value>
+  </data>
+  <data name="Message.RemoveMentorError" xml:space="preserve">
+    <value>Unable to remove mentor.</value>
+  </data>
+  <data name="Message.AddMentorError" xml:space="preserve">
+    <value>Unable to add mentor.</value>
+  </data>
+  <data name="Message.AddClassError" xml:space="preserve">
+    <value>Unable to add class.</value>
+  </data>
+  <data name="Message.RemoveClassError" xml:space="preserve">
+    <value>Unable to remove class.</value>
+  </data>
+</root>

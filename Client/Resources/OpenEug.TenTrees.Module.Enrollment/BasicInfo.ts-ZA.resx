@@ -87,4 +87,10 @@
   <data name="Message.Error" xml:space="preserve">
     <value>Xiphiqo xi humelele. Kombela u ringeta nakambe.</value>
   </data>
+  <data name="CohortOptional" xml:space="preserve">
+    <value>Cohort (ku hlawula):</value>
+  </data>
+  <data name="NoneOption" xml:space="preserve">
+    <value>— a swi na nchumu —</value>
+  </data>
 </root>

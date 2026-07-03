@@ -63,6 +63,12 @@
   <data name="Select" xml:space="preserve">
     <value>-- Select --</value>
   </data>
+  <data name="CohortOptional" xml:space="preserve">
+    <value>Cohort (optional):</value>
+  </data>
+  <data name="NoneOption" xml:space="preserve">
+    <value>— none —</value>
+  </data>
   <data name="Yes" xml:space="preserve">
     <value>Yes</value>
   </data>

@@ -14,6 +14,7 @@
 @inject ITrainingService TrainingService
 @inject IMentorService MentorService
 @inject NavigationManager NavigationManager
+@inject IStringLocalizer<Edit> Localizer
 
 <div class="container">
     <div class="row justify-content-center">
@@ -21,15 +22,15 @@
 
             @if (!_isLoaded)
             {
-                <p role="status"><em>Loading...</em></p>
+                <p role="status"><em>@Localizer["Message.Loading"]</em></p>
             }
             else
             {
                 @* ── Cohort details ──────────────────────────────────────────── *@
-                <h5><span class="oi oi-layers me-2" aria-hidden="true"></span>Cohort Details</h5>
+                <h5><span class="oi oi-layers me-2" aria-hidden="true"></span>@Localizer["Section.CohortDetails"]</h5>
 
                 <div class="row mb-3 align-items-center">
-                    <label class="col-sm-3 col-form-label" for="village">Village</label>
+                    <label class="col-sm-3 col-form-label" for="village">@Localizer["Field.Village"]</label>
                     <div class="col-sm-9">
                         <InputSelect id="village"
                                      class="@($"form-select {(_invalidFields.Contains("VillageId") ? "is-invalid" : string.Empty)}")"
@@ -39,7 +40,7 @@
                                      aria-required="true"
                                      aria-invalid="@(_invalidFields.Contains("VillageId") ? "true" : null)"
                                      disabled="@_isEdit">
-                            <option value="0">— select village —</option>
+                            <option value="0">@Localizer["Field.SelectVillage"]</option>
                             @foreach (var v in _villages)
                             {
                                 <option value="@v.VillageId">@v.VillageName</option>
@@ -49,7 +50,7 @@
                 </div>
 
                 <div class="row mb-3 align-items-center">
-                    <label class="col-sm-3 col-form-label" for="name">Name</label>
+                    <label class="col-sm-3 col-form-label" for="name">@Localizer["Field.Name"]</label>
                     <div class="col-sm-9">
                         <input id="name" type="text"
                                class="form-control @(_invalidFields.Contains("Name") ? "is-invalid" : "")"
@@ -59,26 +60,26 @@
                         @if (_suggestedName != null && _suggestedName != _cohort.Name)
                         {
                             <div class="form-text">
-                                Suggested: <a href="#" @onclick="UseSuggestedName" @onclick:preventDefault>@_suggestedName</a>
+                                @Localizer["Label.Suggested"] <a href="#" @onclick="UseSuggestedName" @onclick:preventDefault>@_suggestedName</a>
                             </div>
                         }
                     </div>
                 </div>
 
                 <div class="row mb-3 align-items-center">
-                    <label class="col-sm-3 col-form-label" for="status">Status</label>
+                    <label class="col-sm-3 col-form-label" for="status">@Localizer["Field.Status"]</label>
                     <div class="col-sm-9">
                         <select id="status" class="form-select" @bind="_cohort.Status">
-                            <option value="@CohortStatus.Planned">Planned</option>
-                            <option value="@CohortStatus.Active">Active</option>
+                            <option value="@CohortStatus.Planned">@Localizer["Status.Planned"]</option>
+                            <option value="@CohortStatus.Active">@Localizer["Status.Active"]</option>
                             @if (_isEdit)
                             {
-                                <option value="@CohortStatus.Completed">Completed</option>
+                                <option value="@CohortStatus.Completed">@Localizer["Status.Completed"]</option>
                             }
                         </select>
                         @if (_isEdit && _originalStatus == CohortStatus.Completed)
                         {
-                            <div class="form-text text-warning">Completed cohorts cannot be reactivated.</div>
+                            <div class="form-text text-warning">@Localizer["Message.CompletedCannotReactivate"]</div>
                         }
                     </div>
                 </div>
@@ -88,16 +89,16 @@
                         @if (_isSaving)
                         {
                             <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
-                            <span>Saving...</span>
+                            <span>@Localizer["Action.Saving"]</span>
                         }
                         else
                         {
                             <span class="oi oi-check me-1" aria-hidden="true"></span>
-                            <span>Save</span>
+                            <span>@Localizer["Action.Save"]</span>
                         }
                     </button>
                     <NavLink class="btn btn-secondary" href="@NavigateUrl()">
-                        <span class="oi oi-x me-1" aria-hidden="true"></span> Cancel
+                        <span class="oi oi-x me-1" aria-hidden="true"></span> @Localizer["Action.Cancel"]
                     </NavLink>
                 </div>
 
@@ -108,14 +109,14 @@
 
                     @* ── Grower membership ───────────────────────────────────── *@
                     <hr />
-                    <h5 class="mt-4"><span class="oi oi-people me-2" aria-hidden="true"></span>Grower Members (@_growerCohorts.Count)</h5>
+                    <h5 class="mt-4"><span class="oi oi-people me-2" aria-hidden="true"></span>@string.Format(Localizer["Section.GrowerMembers"], _growerCohorts.Count)</h5>
 
                     @if (_availableGrowers.Count > 0)
                     {
                         <div class="d-flex gap-2 align-items-center mb-2">
-                            <label class="form-label mb-0" for="growerToAdd">Add grower:</label>
+                            <label class="form-label mb-0" for="growerToAdd">@Localizer["Action.AddGrowerLabel"]</label>
                             <select id="growerToAdd" class="form-select form-select-sm" style="width: auto;" @bind="_growerToAdd">
-                                <option value="0">— select —</option>
+                                <option value="0">@Localizer["Field.SelectGeneric"]</option>
                                 @foreach (var g in _availableGrowers)
                                 {
                                     <option value="@g.GrowerId">@g.GrowerName</option>
@@ -123,23 +124,23 @@
                             </select>
                             <button class="btn btn-sm btn-outline-primary" @onclick="AddGrower"
                                     disabled="@(_growerToAdd == 0)">
-                                <span class="oi oi-plus me-1" aria-hidden="true"></span> Add
+                                <span class="oi oi-plus me-1" aria-hidden="true"></span> @Localizer["Action.Add"]
                             </button>
                         </div>
                     }
 
                     @if (_growerCohorts.Count == 0)
                     {
-                        <p class="text-muted">No growers assigned to this cohort yet.</p>
+                        <p class="text-muted">@Localizer["Message.NoGrowersAssigned"]</p>
                     }
                     else
                     {
                         <table class="table table-sm align-middle mb-3">
                             <thead>
                                 <tr>
-                                    <th>Grower Name</th>
-                                    <th>Joined</th>
-                                    <th><span class="visually-hidden">Actions</span></th>
+                                    <th>@Localizer["Column.GrowerName"]</th>
+                                    <th>@Localizer["Column.Joined"]</th>
+                                    <th><span class="visually-hidden">@Localizer["Column.Actions"]</span></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -151,7 +152,7 @@
                                         <td>@gc.JoinedOn.ToString("d MMM yyyy")</td>
                                         <td>
                                             <button class="btn btn-sm btn-outline-danger"
-                                                    aria-label="@($"Remove grower {growerName} from cohort")"
+                                                    aria-label="@string.Format(Localizer["AriaLabel.RemoveGrower"], growerName)"
                                                     @onclick="@(async () => await RemoveGrower(gc.GrowerId))">
                                                 <span class="oi oi-minus" aria-hidden="true"></span>
                                             </button>
@@ -164,14 +165,14 @@
 
                     @* ── Mentor assignment ───────────────────────────────────── *@
                     <hr />
-                    <h5 class="mt-4"><span class="oi oi-person me-2" aria-hidden="true"></span>Assigned Mentors (@_mentorCohorts.Count)</h5>
+                    <h5 class="mt-4"><span class="oi oi-person me-2" aria-hidden="true"></span>@string.Format(Localizer["Section.AssignedMentors"], _mentorCohorts.Count)</h5>
 
                     @if (_availableMentors.Count > 0)
                     {
                         <div class="d-flex gap-2 align-items-center mb-2">
-                            <label class="form-label mb-0" for="mentorToAdd">Add mentor:</label>
+                            <label class="form-label mb-0" for="mentorToAdd">@Localizer["Action.AddMentorLabel"]</label>
                             <select id="mentorToAdd" class="form-select form-select-sm" style="width: auto;" @bind="_mentorToAdd">
-                                <option value="">— select —</option>
+                                <option value="">@Localizer["Field.SelectGeneric"]</option>
                                 @foreach (var m in _availableMentors)
                                 {
                                     <option value="@m.Username">@m.DisplayName</option>
@@ -179,23 +180,23 @@
                             </select>
                             <button class="btn btn-sm btn-outline-primary" @onclick="AddMentor"
                                     disabled="@(string.IsNullOrEmpty(_mentorToAdd))">
-                                <span class="oi oi-plus me-1" aria-hidden="true"></span> Add
+                                <span class="oi oi-plus me-1" aria-hidden="true"></span> @Localizer["Action.Add"]
                             </button>
                         </div>
                     }
 
                     @if (_mentorCohorts.Count == 0)
                     {
-                        <p class="text-muted">No mentors assigned to this cohort yet.</p>
+                        <p class="text-muted">@Localizer["Message.NoMentorsAssigned"]</p>
                     }
                     else
                     {
                         <table class="table table-sm align-middle mb-3">
                             <thead>
                                 <tr>
-                                    <th>Mentor ID</th>
-                                    <th>Assigned</th>
-                                    <th><span class="visually-hidden">Actions</span></th>
+                                    <th>@Localizer["Column.MentorId"]</th>
+                                    <th>@Localizer["Column.Assigned"]</th>
+                                    <th><span class="visually-hidden">@Localizer["Column.Actions"]</span></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -206,7 +207,7 @@
                                         <td>@mc.AssignedOn.ToString("d MMM yyyy")</td>
                                         <td>
                                             <button class="btn btn-sm btn-outline-danger"
-                                                    aria-label="@($"Remove mentor {mc.MentorUsername} from cohort")"
+                                                    aria-label="@string.Format(Localizer["AriaLabel.RemoveMentor"], mc.MentorUsername)"
                                                     @onclick="@(async () => await RemoveMentor(mc.MentorUsername))">
                                                 <span class="oi oi-minus" aria-hidden="true"></span>
                                             </button>
@@ -219,14 +220,14 @@
 
                     @* ── Class association ──────────────────────────────────── *@
                     <hr />
-                    <h5 class="mt-4"><span class="oi oi-book me-2" aria-hidden="true"></span>Linked Classes (@_cohortClasses.Count)</h5>
+                    <h5 class="mt-4"><span class="oi oi-book me-2" aria-hidden="true"></span>@string.Format(Localizer["Section.LinkedClasses"], _cohortClasses.Count)</h5>
 
                     @if (_availableClasses.Count > 0)
                     {
                         <div class="d-flex gap-2 align-items-center mb-2">
-                            <label class="form-label mb-0" for="classToAdd">Add class:</label>
+                            <label class="form-label mb-0" for="classToAdd">@Localizer["Action.AddClassLabel"]</label>
                             <select id="classToAdd" class="form-select form-select-sm" style="width: auto;" @bind="_classToAdd">
-                                <option value="0">— select —</option>
+                                <option value="0">@Localizer["Field.SelectGeneric"]</option>
                                 @foreach (var c in _availableClasses)
                                 {
                                     <option value="@c.TrainingClassId">@c.ClassName (@c.ClassDate.ToString("d MMM yyyy"))</option>
@@ -234,23 +235,23 @@
                             </select>
                             <button class="btn btn-sm btn-outline-primary" @onclick="AddClass"
                                     disabled="@(_classToAdd == 0)">
-                                <span class="oi oi-plus" aria-hidden="true"></span> Add
+                                <span class="oi oi-plus" aria-hidden="true"></span> @Localizer["Action.Add"]
                             </button>
                         </div>
                     }
 
                     @if (_cohortClasses.Count == 0)
                     {
-                        <p class="text-muted">No classes linked to this cohort.</p>
+                        <p class="text-muted">@Localizer["Message.NoClassesLinked"]</p>
                     }
                     else
                     {
                         <table class="table table-sm align-middle mb-3">
                             <thead>
                                 <tr>
-                                    <th>Class Name</th>
-                                    <th>Date</th>
-                                    <th><span class="visually-hidden">Actions</span></th>
+                                    <th>@Localizer["Column.ClassName"]</th>
+                                    <th>@Localizer["Column.Date"]</th>
+                                    <th><span class="visually-hidden">@Localizer["Column.Actions"]</span></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -258,11 +259,11 @@
                                 {
                                     var cls = _allClasses.FirstOrDefault(c => c.TrainingClassId == cc.TrainingClassId);
                                     <tr>
-                                        <td>@(cls?.ClassName ?? $"Class {cc.TrainingClassId}")</td>
+                                        <td>@(cls?.ClassName ?? string.Format(Localizer["Label.ClassFallbackName"], cc.TrainingClassId))</td>
                                         <td>@(cls?.ClassDate.ToString("d MMM yyyy") ?? "—")</td>
                                         <td>
                                             <button class="btn btn-sm btn-outline-danger"
-                                                    aria-label="@($"Remove class {cls?.ClassName ?? cc.TrainingClassId.ToString()} from cohort")"
+                                                    aria-label="@string.Format(Localizer["AriaLabel.RemoveClass"], cls?.ClassName ?? cc.TrainingClassId.ToString())"
                                                     @onclick="@(async () => await RemoveClass(cc.TrainingClassId))">
                                                 <span class="oi oi-minus" aria-hidden="true"></span>
                                             </button>
@@ -334,7 +335,7 @@
         catch (Exception ex)
         {
             await logger.LogError(ex, "Error Loading Cohort {Error}", ex.Message);
-            AddModuleMessage("Unable to load cohort.", MessageType.Error);
+            AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
         }
         finally
         {
@@ -386,12 +387,12 @@
         _cohort.Name = _cohort.Name?.Trim();
 
         var missing = new List<string>();
-        if (_cohort.VillageId == 0) { _invalidFields.Add("VillageId"); missing.Add("Village"); }
-        if (string.IsNullOrWhiteSpace(_cohort.Name)) { _invalidFields.Add("Name"); missing.Add("Name"); }
+        if (_cohort.VillageId == 0) { _invalidFields.Add("VillageId"); missing.Add(Localizer["Field.Village"]); }
+        if (string.IsNullOrWhiteSpace(_cohort.Name)) { _invalidFields.Add("Name"); missing.Add(Localizer["Field.Name"]); }
 
         if (missing.Count > 0)
         {
-            AddModuleMessage($"Required: {string.Join(", ", missing)}", MessageType.Warning);
+            AddModuleMessage(string.Format(Localizer["Message.RequiredFields"], string.Join(", ", missing)), MessageType.Warning);
             await ScrollToPageTop();
             return;
         }
@@ -399,7 +400,7 @@
         // Guard: completed cohorts cannot be reverted
         if (_isEdit && _originalStatus == CohortStatus.Completed && _cohort.Status != CohortStatus.Completed)
         {
-            AddModuleMessage("A completed cohort cannot be reactivated.", MessageType.Warning);
+            AddModuleMessage(Localizer["Message.CannotReactivateWarning"], MessageType.Warning);
             _cohort.Status = CohortStatus.Completed;
             return;
         }
@@ -422,7 +423,7 @@
         catch (Exception ex)
         {
             await logger.LogError(ex, "Error Saving Cohort {Cohort} {Error}", _cohort.Name, ex.Message);
-            AddModuleMessage("Unable to save cohort.", MessageType.Error);
+            AddModuleMessage(Localizer["Message.SaveError"], MessageType.Error);
         }
         finally
         {
@@ -442,7 +443,7 @@
         catch (Exception ex)
         {
             await logger.LogError(ex, "Error Removing Grower {GrowerId} from Cohort {Error}", growerId, ex.Message);
-            AddModuleMessage("Unable to remove grower.", MessageType.Error);
+            AddModuleMessage(Localizer["Message.RemoveGrowerError"], MessageType.Error);
         }
     }
 
@@ -479,12 +480,12 @@
         catch (Exception ex)
         {
             await logger.LogError(ex, "Error Adding Grower {GrowerId} to Cohort {Error}", _growerToAdd, ex.Message);
-            AddModuleMessage("Unable to add grower.", MessageType.Error);
+            AddModuleMessage(Localizer["Message.AddGrowerError"], MessageType.Error);
         }
     }
 
     private string GetGrowerName(int growerId)
-        => _growerNames.TryGetValue(growerId, out var name) ? name : $"Grower {growerId}";
+        => _growerNames.TryGetValue(growerId, out var name) ? name : string.Format(Localizer["Label.GrowerFallbackName"], growerId);
 
     private async Task RemoveMentor(string mentorId)
     {
@@ -498,7 +499,7 @@
         catch (Exception ex)
         {
             await logger.LogError(ex, "Error Removing Mentor {MentorId} from Cohort {Error}", mentorId, ex.Message);
-            AddModuleMessage("Unable to remove mentor.", MessageType.Error);
+            AddModuleMessage(Localizer["Message.RemoveMentorError"], MessageType.Error);
         }
     }
 
@@ -516,7 +517,7 @@
         catch (Exception ex)
         {
             await logger.LogError(ex, "Error Adding Mentor {MentorId} to Cohort {Error}", _mentorToAdd, ex.Message);
-            AddModuleMessage("Unable to add mentor.", MessageType.Error);
+            AddModuleMessage(Localizer["Message.AddMentorError"], MessageType.Error);
         }
     }
 
@@ -558,7 +559,7 @@
         catch (Exception ex)
         {
             await logger.LogError(ex, "Error Adding Class {ClassId} to Cohort {Error}", _classToAdd, ex.Message);
-            AddModuleMessage("Unable to add class.", MessageType.Error);
+            AddModuleMessage(Localizer["Message.AddClassError"], MessageType.Error);
         }
     }
 
@@ -566,7 +567,7 @@
     {
         if (!trainingClassId.HasValue)
         {
-            AddModuleMessage("Unable to remove class.", MessageType.Error);
+            AddModuleMessage(Localizer["Message.RemoveClassError"], MessageType.Error);
             return;
         }
 
@@ -580,7 +581,7 @@
         catch (Exception ex)
         {
             await logger.LogError(ex, "Error Removing Class {ClassId} from Cohort {Error}", trainingClassId, ex.Message);
-            AddModuleMessage("Unable to remove class.", MessageType.Error);
+            AddModuleMessage(Localizer["Message.RemoveClassError"], MessageType.Error);
         }
     }
 

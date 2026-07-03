@@ -34,7 +34,7 @@
             </select>
         </div>
         <div class="col-md-4 d-flex align-items-end gap-2">
-            <button class="btn btn-primary w-100" @onclick="ApplyFiltersAndRefresh">Filter</button>
+            <button class="btn btn-primary w-100" @onclick="ApplyFiltersAndRefresh">@Localizer["Action.Filter"]</button>
             <button class="btn btn-secondary w-100" @onclick="ClearFilters">@Localizer["Action.ClearFilters"]</button>
         </div>
     </div>
@@ -107,12 +107,12 @@
                             <th>@Localizer["Column.ClassNumber"]</th>
                             <th>@Localizer["Column.Date"]</th>
                             <th>@Localizer["Column.Village"]</th>
-                            <th>Cohorts</th>
+                            <th>@Localizer["Column.Cohorts"]</th>
                             <th>@Localizer["Column.Actions"]</th>
                         </Header>
                         <Row>
                             <td><ActionLink Action="Edit" Parameters="@($"id={context.TrainingClassId}&returnurl={Uri.EscapeDataString(GetReturnUrl())}")" ResourceKey="Edit" /></td>
-                            <td><ActionDialog Header="Delete Session" Message="@Localizer["Message.ConfirmDelete"]" Action="Delete" Security="SecurityAccessLevel.Edit" Class="btn btn-danger" OnClick="@(async () => await DeleteClass(context))" ResourceKey="Delete" Id="@context.TrainingClassId.ToString()" /></td>
+                            <td><ActionDialog Header="@Localizer["Dialog.DeleteSession.Header"]" Message="@Localizer["Message.ConfirmDelete"]" Action="Delete" Security="SecurityAccessLevel.Edit" Class="btn btn-danger" OnClick="@(async () => await DeleteClass(context))" ResourceKey="Delete" Id="@context.TrainingClassId.ToString()" /></td>
                             <td>@context.ClassName</td>
                             <td>
                                 <span class="badge bg-info">@context.ClassNumber @Localizer["Label.OfTotal"]</span>

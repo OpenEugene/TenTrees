@@ -156,7 +156,7 @@ else
         <!-- Cohort Membership -->
         <div class="card mb-3">
             <div class="card-header">
-                <h5><span class="oi oi-layers me-2" aria-hidden="true"></span>Cohorts</h5>
+                <h5><span class="oi oi-layers me-2" aria-hidden="true"></span>@Localizer["Section.Cohorts"]</h5>
             </div>
             <div class="card-body">
                 <div class="d-flex flex-wrap align-items-center gap-2">
@@ -165,13 +165,13 @@ else
                         @if (_pendingRemoveCohortId == cohort.CohortId)
                         {
                             <span class="badge bg-warning text-dark d-inline-flex align-items-center gap-1 py-2 px-2">
-                                Remove <strong>@cohort.Name</strong>?
+                                @Localizer["Label.Remove"] <strong>@cohort.Name</strong>?
                                 <button class="btn btn-sm btn-warning border-0 py-0 px-1 fw-bold"
-                                        aria-label="Confirm remove @cohort.Name"
-                                        @onclick="@(async () => await RemoveGrowerCohort(cohort.CohortId))">Yes</button>
+                                        aria-label="@string.Format(Localizer["AriaLabel.ConfirmRemoveCohort"], cohort.Name)"
+                                        @onclick="@(async () => await RemoveGrowerCohort(cohort.CohortId))">@Localizer["Label.Yes"]</button>
                                 <button class="btn btn-sm btn-outline-secondary border-0 py-0 px-1"
-                                        aria-label="Cancel remove @cohort.Name"
-                                        @onclick="@(() => _pendingRemoveCohortId = 0)">No</button>
+                                        aria-label="@string.Format(Localizer["AriaLabel.CancelRemoveCohort"], cohort.Name)"
+                                        @onclick="@(() => _pendingRemoveCohortId = 0)">@Localizer["Label.No"]</button>
                             </span>
                         }
                         else
@@ -182,7 +182,7 @@ else
                                 {
                                     <button class="btn-close btn-close-white ms-1"
                                             style="font-size:0.55em;"
-                                            aria-label="@($"Remove cohort {cohort.Name}")"
+                                            aria-label="@string.Format(Localizer["AriaLabel.RemoveCohort"], cohort.Name)"
                                             @onclick="@(() => _pendingRemoveCohortId = cohort.CohortId)"></button>
                                 }
                             </span>
@@ -192,9 +192,9 @@ else
                     @if (UserSecurity.IsAuthorized(PageState.User, AppRoleNames.TenTreesAdmin) && _availableCohorts.Count > 0)
                     {
                         <select class="form-select form-select-sm d-inline-block w-auto"
-                                aria-label="Add cohort"
+                                aria-label="@Localizer["AriaLabel.AddCohort"]"
                                 @bind="_cohortToAdd" @bind:after="AddGrowerCohort">
-                            <option value="0">+ Add cohort…</option>
+                            <option value="0">@Localizer["Field.AddCohortPlaceholder"]</option>
                             @foreach (var c in _availableCohorts)
                             {
                                 <option value="@c.CohortId">@c.Name</option>
@@ -204,7 +204,7 @@ else
 
                     @if (_growerCohorts.Count == 0 && _availableCohorts.Count == 0)
                     {
-                        <span class="text-muted small">No cohorts assigned.</span>
+                        <span class="text-muted small">@Localizer["Message.NoCohortsAssigned"]</span>
                     }
                 </div>
             </div>
@@ -239,7 +239,7 @@ else
                                 {
                                     <tr>
                                         <td>@assessment.AssessmentDate.ToString("yyyy-MM-dd")</td>
-                                        <td>@(assessment.TreesPlanted > 0 ? $"{assessment.TreesAlive * 100 / assessment.TreesPlanted}% ({assessment.TreesAlive}/{assessment.TreesPlanted})" : "N/A")</td>
+                                        <td>@(assessment.TreesPlanted > 0 ? $"{assessment.TreesAlive * 100 / assessment.TreesPlanted}% ({assessment.TreesAlive}/{assessment.TreesPlanted})" : Localizer["Label.NotApplicable"])</td>
                                         <td>@assessment.PermaculturePrinciplesCount / 9</td>
                                         <td>
                                             @if (assessment.NeedsHelp)
@@ -262,10 +262,10 @@ else
                                             }
                                             else
                                             {
-                                                <span class="badge bg-secondary me-1" title="Total notes">@noteCount</span>
+                                                <span class="badge bg-secondary me-1" title="@Localizer["Tooltip.TotalNotes"]">@noteCount</span>
                                                 @if (homeVisitCount > 0)
                                                 {
-                                                    <span class="badge bg-warning text-dark" title="Home visit notes">@homeVisitCount HV</span>
+                                                    <span class="badge bg-warning text-dark" title="@Localizer["Tooltip.HomeVisitNotes"]">@homeVisitCount @Localizer["Label.HomeVisitAbbrev"]</span>
                                                 }
                                             }
                                         </td>
@@ -504,7 +504,7 @@ else
         catch (Exception ex)
         {
             await logger.LogError(ex, "Error adding Grower {Id} to Cohort {Error}", _grower.GrowerId, ex.Message);
-            AddModuleMessage("Unable to add cohort.", MessageType.Error);
+            AddModuleMessage(Localizer["Message.AddCohortError"], MessageType.Error);
         }
     }
 
@@ -520,7 +520,7 @@ else
         catch (Exception ex)
         {
             await logger.LogError(ex, "Error removing Grower {Id} from Cohort {Error}", _grower.GrowerId, ex.Message);
-            AddModuleMessage("Unable to remove cohort.", MessageType.Error);
+            AddModuleMessage(Localizer["Message.RemoveCohortError"], MessageType.Error);
         }
     }
 

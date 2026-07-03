@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Message.Loading" xml:space="preserve">
+    <value>Yi laviseka...</value>
+  </data>
+  <data name="Section.CohortDetails" xml:space="preserve">
+    <value>Vuxokoxoko bya Cohort</value>
+  </data>
+  <data name="Field.Village" xml:space="preserve">
+    <value>Rixaka</value>
+  </data>
+  <data name="Field.SelectVillage" xml:space="preserve">
+    <value>— hlawula rixaka —</value>
+  </data>
+  <data name="Field.Name" xml:space="preserve">
+    <value>Vito</value>
+  </data>
+  <data name="Field.Status" xml:space="preserve">
+    <value>Xiyimo</value>
+  </data>
+  <data name="Field.SelectGeneric" xml:space="preserve">
+    <value>— hlawula —</value>
+  </data>
+  <data name="Label.Suggested" xml:space="preserve">
+    <value>Ku Ringanyetiwaka:</value>
+  </data>
+  <data name="Status.Planned" xml:space="preserve">
+    <value>Lulamiseriwile</value>
+  </data>
+  <data name="Status.Active" xml:space="preserve">
+    <value>Yi tirhaka</value>
+  </data>
+  <data name="Status.Completed" xml:space="preserve">
+    <value>Yi Herile</value>
+  </data>
+  <data name="Message.CompletedCannotReactivate" xml:space="preserve">
+    <value>Ma-cohort lama heleke a ma nge vuyeli emahlweni.</value>
+  </data>
+  <data name="Action.Saving" xml:space="preserve">
+    <value>Yi hlayisiwa...</value>
+  </data>
+  <data name="Action.Save" xml:space="preserve">
+    <value>Hlayisa</value>
+  </data>
+  <data name="Action.Cancel" xml:space="preserve">
+    <value>Khansela</value>
+  </data>
+  <data name="Action.Add" xml:space="preserve">
+    <value>Engetela</value>
+  </data>
+  <data name="Section.GrowerMembers" xml:space="preserve">
+    <value>Valimi Swirho ({0})</value>
+  </data>
+  <data name="Action.AddGrowerLabel" xml:space="preserve">
+    <value>Engetela mulimi:</value>
+  </data>
+  <data name="Message.NoGrowersAssigned" xml:space="preserve">
+    <value>A ku si na mulimi la averiweke eka cohort leyi.</value>
+  </data>
+  <data name="Column.GrowerName" xml:space="preserve">
+    <value>Vito ra Mulimi</value>
+  </data>
+  <data name="Column.Joined" xml:space="preserve">
+    <value>U Joyinile</value>
+  </data>
+  <data name="Column.Actions" xml:space="preserve">
+    <value>Swiendlo</value>
+  </data>
+  <data name="AriaLabel.RemoveGrower" xml:space="preserve">
+    <value>Susa mulimi {0} eka cohort</value>
+  </data>
+  <data name="Section.AssignedMentors" xml:space="preserve">
+    <value>Vareleseri lava Averiweke ({0})</value>
+  </data>
+  <data name="Action.AddMentorLabel" xml:space="preserve">
+    <value>Engetela muleriseri:</value>
+  </data>
+  <data name="Message.NoMentorsAssigned" xml:space="preserve">
+    <value>A ku si na muleriseri la averiweke eka cohort leyi.</value>
+  </data>
+  <data name="Column.MentorId" xml:space="preserve">
+    <value>ID ya Muleriseri</value>
+  </data>
+  <data name="Column.Assigned" xml:space="preserve">
+    <value>U Averiwile</value>
+  </data>
+  <data name="AriaLabel.RemoveMentor" xml:space="preserve">
+    <value>Susa muleriseri {0} eka cohort</value>
+  </data>
+  <data name="Section.LinkedClasses" xml:space="preserve">
+    <value>Tiklasi leti Hlanganisiweke ({0})</value>
+  </data>
+  <data name="Action.AddClassLabel" xml:space="preserve">
+    <value>Engetela klasi:</value>
+  </data>
+  <data name="Message.NoClassesLinked" xml:space="preserve">
+    <value>A ku na klasi leyi hlanganisiweke na cohort leyi.</value>
+  </data>
+  <data name="Column.ClassName" xml:space="preserve">
+    <value>Vito ra Klasi</value>
+  </data>
+  <data name="Column.Date" xml:space="preserve">
+    <value>Siku</value>
+  </data>
+  <data name="Label.ClassFallbackName" xml:space="preserve">
+    <value>Klasi {0}</value>
+  </data>
+  <data name="AriaLabel.RemoveClass" xml:space="preserve">
+    <value>Susa klasi {0} eka cohort</value>
+  </data>
+  <data name="Message.RequiredFields" xml:space="preserve">
+    <value>Swi laveka: {0}</value>
+  </data>
+  <data name="Message.CannotReactivateWarning" xml:space="preserve">
+    <value>Cohort leyi heleke a yi nge vuyeli emahlweni.</value>
+  </data>
+  <data name="Message.LoadError" xml:space="preserve">
+    <value>A ndzi swi koti ku layisa cohort.</value>
+  </data>
+  <data name="Message.SaveError" xml:space="preserve">
+    <value>A ndzi swi koti ku hlayisa cohort.</value>
+  </data>
+  <data name="Message.RemoveGrowerError" xml:space="preserve">
+    <value>A ndzi swi koti ku susa mulimi.</value>
+  </data>
+  <data name="Message.AddGrowerError" xml:space="preserve">
+    <value>A ndzi swi koti ku engetela mulimi.</value>
+  </data>
+  <data name="Label.GrowerFallbackName" xml:space="preserve">
+    <value>Mulimi {0}</value>
+  </data>
+  <data name="Message.RemoveMentorError" xml:space="preserve">
+    <value>A ndzi swi koti ku susa muleriseri.</value>
+  </data>
+  <data name="Message.AddMentorError" xml:space="preserve">
+    <value>A ndzi swi koti ku engetela muleriseri.</value>
+  </data>
+  <data name="Message.AddClassError" xml:space="preserve">
+    <value>A ndzi swi koti ku engetela klasi.</value>
+  </data>
+  <data name="Message.RemoveClassError" xml:space="preserve">
+    <value>A ndzi swi koti ku susa klasi.</value>
+  </data>
+</root>

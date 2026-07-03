@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Title" xml:space="preserve">
+    <value>Vareleseri</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Engetela Muleriseri</value>
+  </data>
+  <data name="Message.Loading" xml:space="preserve">
+    <value>Yi laviseka...</value>
+  </data>
+  <data name="Message.NoMentors" xml:space="preserve">
+    <value>A ku na vareleseri lava kumekeke.</value>
+  </data>
+  <data name="Filter.Village" xml:space="preserve">
+    <value>Rixaka</value>
+  </data>
+  <data name="Filter.AllVillages" xml:space="preserve">
+    <value>Matiko Hinkwawo</value>
+  </data>
+  <data name="Filter.Name" xml:space="preserve">
+    <value>Vito / Vito ro Nghena</value>
+  </data>
+  <data name="Filter.SearchPlaceholder" xml:space="preserve">
+    <value>Lavisisa…</value>
+  </data>
+  <data name="Filter.ShowInactive" xml:space="preserve">
+    <value>Kombisa lava nga tirhiki</value>
+  </data>
+  <data name="Column.Name" xml:space="preserve">
+    <value>Vito</value>
+  </data>
+  <data name="Column.Username" xml:space="preserve">
+    <value>Vito ro Nghena</value>
+  </data>
+  <data name="Column.Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="Column.Village" xml:space="preserve">
+    <value>Rixaka</value>
+  </data>
+  <data name="Column.Growers" xml:space="preserve">
+    <value>Valimi</value>
+  </data>
+  <data name="Column.Status" xml:space="preserve">
+    <value>Xiyimo</value>
+  </data>
+  <data name="Column.Actions" xml:space="preserve">
+    <value>Swiendlo</value>
+  </data>
+  <data name="Label.Grower" xml:space="preserve">
+    <value>mulimi</value>
+  </data>
+  <data name="Label.Growers" xml:space="preserve">
+    <value>valimi</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>Yi tirhaka</value>
+  </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>A yi tirhiki</value>
+  </data>
+  <data name="Action.Edit" xml:space="preserve">
+    <value>Lulamisa</value>
+  </data>
+  <data name="AriaLabel.EditMentor" xml:space="preserve">
+    <value>Lulamisa {0}</value>
+  </data>
+  <data name="AriaLabel.MentorListNavigation" xml:space="preserve">
+    <value>Ku famba eka nxaxamelo wa vareleseri</value>
+  </data>
+  <data name="AriaLabel.Previous" xml:space="preserve">
+    <value>Leyi Hundzeke</value>
+  </data>
+  <data name="AriaLabel.Next" xml:space="preserve">
+    <value>Landzelaka</value>
+  </data>
+</root>

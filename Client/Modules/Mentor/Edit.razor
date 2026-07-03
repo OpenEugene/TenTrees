@@ -9,10 +9,11 @@
 @inject IVillageService VillageService
 @inject IGrowerService GrowerService
 @inject NavigationManager NavigationManager
+@inject IStringLocalizer<Edit> Localizer
 
 @if (!_isLoaded)
 {
-    <p role="status"><em>Loading...</em></p>
+    <p role="status"><em>@Localizer["Message.Loading"]</em></p>
 }
 else
 {
@@ -20,7 +21,7 @@ else
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h4>
                 <span class="oi oi-person me-2" aria-hidden="true"></span>
-                @(_isCreate ? "Add Mentor" : $"Edit Mentor — {_model.DisplayName}")
+                @(_isCreate ? Localizer["Title.Add"] : string.Format(Localizer["Title.Edit"], _model.DisplayName))
             </h4>
             <div class="d-flex gap-2">
                 @if (!_isCreate)
@@ -28,29 +29,29 @@ else
                     @if (_model.IsDeleted)
                     {
                         <button type="button" class="btn btn-outline-success btn-sm" disabled="@_isBusy" @onclick="ToggleActive">
-                            <span class="oi oi-circle-check me-1" aria-hidden="true"></span>Activate
+                            <span class="oi oi-circle-check me-1" aria-hidden="true"></span>@Localizer["Action.Activate"]
                         </button>
                     }
                     else
                     {
                         <button type="button" class="btn btn-outline-warning btn-sm" disabled="@_isBusy" @onclick="ToggleActive">
-                            <span class="oi oi-ban me-1" aria-hidden="true"></span>Deactivate
+                            <span class="oi oi-ban me-1" aria-hidden="true"></span>@Localizer["Action.Deactivate"]
                         </button>
                     }
                 }
                 <NavLink href="@NavigateUrl()" class="btn btn-outline-secondary btn-sm">
-                    <span class="oi oi-arrow-left me-1" aria-hidden="true"></span> Back to Mentors
+                    <span class="oi oi-arrow-left me-1" aria-hidden="true"></span> @Localizer["Action.BackToMentors"]
                 </NavLink>
             </div>
         </div>
 
         <!-- Mentor form -->
         <div class="card mb-4">
-            <div class="card-header">Account Details</div>
+            <div class="card-header">@Localizer["Section.AccountDetails"]</div>
             <div class="card-body">
                 <div class="row mb-3">
                     <div class="col-md-6">
-                        <label class="form-label" for="displayName">Display Name</label>
+                        <label class="form-label" for="displayName">@Localizer["Field.DisplayName"]</label>
                         <input id="displayName" type="text"
                                class="form-control @(_invalidFields.Contains("DisplayName") ? "is-invalid" : "")"
                                @bind="_model.DisplayName"
@@ -58,7 +59,7 @@ else
                                aria-invalid="@(_invalidFields.Contains("DisplayName") ? "true" : null)" />
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label" for="username">Username</label>
+                        <label class="form-label" for="username">@Localizer["Field.Username"]</label>
                         <input id="username" type="text"
                                class="form-control @(_invalidFields.Contains("Username") ? "is-invalid" : "")"
                                @bind="_model.Username"
@@ -69,7 +70,7 @@ else
                 </div>
                 <div class="row mb-3">
                     <div class="col-md-6">
-                        <label class="form-label" for="email">Email</label>
+                        <label class="form-label" for="email">@Localizer["Field.Email"]</label>
                         <input id="email" type="email"
                                class="form-control @(_invalidFields.Contains("Email") ? "is-invalid" : "")"
                                @bind="_model.Email"
@@ -77,13 +78,13 @@ else
                                aria-invalid="@(_invalidFields.Contains("Email") ? "true" : null)" />
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label" for="village">Village</label>
+                        <label class="form-label" for="village">@Localizer["Field.Village"]</label>
                         <select id="village"
                                 class="form-select @(_invalidFields.Contains("VillageId") ? "is-invalid" : "")"
                                 @bind="_model.VillageId"
                                 aria-required="true"
                                 aria-invalid="@(_invalidFields.Contains("VillageId") ? "true" : null)">
-                            <option value="0">— Select village —</option>
+                            <option value="0">@Localizer["Field.SelectVillage"]</option>
                             @foreach (var v in _villages)
                             {
                                 <option value="@v.VillageId">@v.VillageName</option>
@@ -95,17 +96,17 @@ else
                 {
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label class="form-label" for="password">Password (optional)</label>
+                            <label class="form-label" for="password">@Localizer["Field.Password"]</label>
                             <input id="password" type="password"
                                    class="form-control"
                                    @bind="_model.Password"
                                    autocomplete="new-password" />
-                            <div class="form-text">Leave blank to auto-generate a temporary password.</div>
+                            <div class="form-text">@Localizer["Field.PasswordHint"]</div>
                         </div>
                         <div class="col-md-6 d-flex align-items-end">
                             <div class="form-check mb-3">
                                 <input id="emailConfirmed" type="checkbox" class="form-check-input" @bind="_model.EmailConfirmed" />
-                                <label class="form-check-label" for="emailConfirmed">Mark email as verified</label>
+                                <label class="form-check-label" for="emailConfirmed">@Localizer["Field.MarkEmailVerified"]</label>
                             </div>
                         </div>
                     </div>
@@ -115,15 +116,15 @@ else
                         @if (_isSaving)
                         {
                             <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
-                            <span>Saving…</span>
+                            <span>@Localizer["Action.Saving"]</span>
                         }
                         else
                         {
                             <span class="oi oi-check me-1" aria-hidden="true"></span>
-                            <span>Save</span>
+                            <span>@Localizer["Action.Save"]</span>
                         }
                     </button>
-                    <NavLink href="@NavigateUrl()" class="btn btn-outline-secondary">Cancel</NavLink>
+                    <NavLink href="@NavigateUrl()" class="btn btn-outline-secondary">@Localizer["Action.Cancel"]</NavLink>
                 </div>
             </div>
         </div>
@@ -133,9 +134,9 @@ else
         {
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <span>Assigned Growers (@_assignedGrowers.Count)</span>
+                    <span>@string.Format(Localizer["Section.AssignedGrowers"], _assignedGrowers.Count)</span>
                     <button type="button" class="btn btn-sm btn-outline-primary" @onclick="ToggleAssignPanel">
-                        <span class="oi oi-plus me-1" aria-hidden="true"></span> Assign Grower
+                        <span class="oi oi-plus me-1" aria-hidden="true"></span> @Localizer["Action.AssignGrower"]
                     </button>
                 </div>
                 <div class="card-body">
@@ -143,13 +144,13 @@ else
                     {
                         <div class="row g-2 mb-3 p-2 border rounded bg-light">
                             <div class="col-md-8">
-                                <label class="form-label" for="growerSelect">Grower to assign</label>
+                                <label class="form-label" for="growerSelect">@Localizer["Field.GrowerToAssign"]</label>
                                 <select id="growerSelect" class="form-select" @bind="_selectedGrowerId">
-                                    <option value="0">— Select grower —</option>
+                                    <option value="0">@Localizer["Field.SelectGrower"]</option>
                                     @foreach (var g in _availableGrowers)
                                     {
                                         <option value="@g.GrowerId">
-                                            @g.GrowerName@(g.MentorUsername != null ? $" (currently: {g.MentorUsername})" : "")
+                                            @g.GrowerName@(g.MentorUsername != null ? string.Format(Localizer["Label.CurrentlyAssigned"], g.MentorUsername) : "")
                                         </option>
                                     }
                                 </select>
@@ -158,7 +159,7 @@ else
                                 <button type="button" class="btn btn-primary w-100"
                                         disabled="@(_selectedGrowerId == 0)"
                                         @onclick="AssignGrower">
-                                    Assign
+                                    @Localizer["Action.Assign"]
                                 </button>
                             </div>
                         </div>
@@ -166,17 +167,17 @@ else
 
                     @if (!_assignedGrowers.Any())
                     {
-                        <p class="text-muted">No growers currently assigned to this mentor.</p>
+                        <p class="text-muted">@Localizer["Message.NoAssignedGrowers"]</p>
                     }
                     else
                     {
                         <table class="table table-sm align-middle">
                             <thead>
                                 <tr>
-                                    <th>Grower</th>
-                                    <th>Village</th>
-                                    <th>Status</th>
-                                    <th><span class="visually-hidden">Actions</span></th>
+                                    <th>@Localizer["Column.Grower"]</th>
+                                    <th>@Localizer["Column.Village"]</th>
+                                    <th>@Localizer["Column.Status"]</th>
+                                    <th><span class="visually-hidden">@Localizer["Column.Actions"]</span></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -189,7 +190,7 @@ else
                                         <td>
                                             <button type="button"
                                                     class="btn btn-sm btn-outline-danger"
-                                                    aria-label="@($"Unassign {g.GrowerName}")"
+                                                    aria-label="@string.Format(Localizer["AriaLabel.Unassign"], g.GrowerName)"
                                                     @onclick="@(() => UnassignGrower(g))">
                                                 <span class="oi oi-x" aria-hidden="true"></span>
                                             </button>
@@ -260,14 +261,14 @@ else
         _invalidFields.Clear();
 
         var missing = new List<string>();
-        if (string.IsNullOrWhiteSpace(_model.DisplayName)) { _invalidFields.Add("DisplayName"); missing.Add("Display Name"); }
-        if (_isCreate && string.IsNullOrWhiteSpace(_model.Username)) { _invalidFields.Add("Username"); missing.Add("Username"); }
-        if (string.IsNullOrWhiteSpace(_model.Email)) { _invalidFields.Add("Email"); missing.Add("Email"); }
-        if (_model.VillageId == 0) { _invalidFields.Add("VillageId"); missing.Add("Village"); }
+        if (string.IsNullOrWhiteSpace(_model.DisplayName)) { _invalidFields.Add("DisplayName"); missing.Add(Localizer["Field.DisplayName"]); }
+        if (_isCreate && string.IsNullOrWhiteSpace(_model.Username)) { _invalidFields.Add("Username"); missing.Add(Localizer["Field.Username"]); }
+        if (string.IsNullOrWhiteSpace(_model.Email)) { _invalidFields.Add("Email"); missing.Add(Localizer["Field.Email"]); }
+        if (_model.VillageId == 0) { _invalidFields.Add("VillageId"); missing.Add(Localizer["Field.Village"]); }
 
         if (missing.Count > 0)
         {
-            AddModuleMessage($"Required: {string.Join(", ", missing)}", MessageType.Warning);
+            AddModuleMessage(string.Format(Localizer["Message.RequiredFields"], string.Join(", ", missing)), MessageType.Warning);
             await ScrollToPageTop();
             return;
         }
@@ -280,7 +281,7 @@ else
                 var result = await MentorService.CreateMentorAsync(_model, ModuleState.ModuleId);
                 if (result == null)
                 {
-                    AddModuleMessage("Could not create mentor. The username may already be taken.", MessageType.Error);
+                    AddModuleMessage(Localizer["Message.CreateError"], MessageType.Error);
                     await ScrollToPageTop();
                     return;
                 }
@@ -291,17 +292,17 @@ else
                 var result = await MentorService.UpdateMentorProfileAsync(_model, ModuleState.ModuleId);
                 if (result == null)
                 {
-                    AddModuleMessage("Could not update mentor profile.", MessageType.Error);
+                    AddModuleMessage(Localizer["Message.UpdateError"], MessageType.Error);
                     await ScrollToPageTop();
                     return;
                 }
-                AddModuleMessage("Mentor profile updated.", MessageType.Success);
+                AddModuleMessage(Localizer["Message.UpdateSuccess"], MessageType.Success);
             }
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "Error saving mentor {Username}", _model.Username);
-            AddModuleMessage("An unexpected error occurred. Please try again.", MessageType.Error);
+            AddModuleMessage(Localizer["Message.SaveError"], MessageType.Error);
             await ScrollToPageTop();
         }
         finally
@@ -336,12 +337,12 @@ else
             var activate = _model.IsDeleted;
             await MentorService.SetMentorActiveAsync(_model.Username, activate, ModuleState.ModuleId);
             _model.IsDeleted = !activate;
-            AddModuleMessage($"Mentor {_model.DisplayName} {(activate ? "activated" : "deactivated")}.", MessageType.Success);
+            AddModuleMessage(string.Format(activate ? Localizer["Message.Activated"] : Localizer["Message.Deactivated"], _model.DisplayName), MessageType.Success);
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "Error toggling active state for {Username}", _model.Username);
-            AddModuleMessage("An error occurred. Please try again.", MessageType.Error);
+            AddModuleMessage(Localizer["Message.ToggleError"], MessageType.Error);
         }
         finally
         {

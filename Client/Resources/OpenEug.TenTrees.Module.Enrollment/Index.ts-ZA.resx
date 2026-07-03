@@ -132,4 +132,13 @@
   <data name="Message.StatusChangeError" xml:space="preserve">
     <value>[XS] Error Changing Enrollment Status</value>
   </data>
+  <data name="Action.Filter" xml:space="preserve">
+    <value>Hlawula</value>
+  </data>
+  <data name="Dialog.DeleteEnrollment.Header" xml:space="preserve">
+    <value>Susa Nkandziyiso</value>
+  </data>
+  <data name="Dialog.DeleteEnrollment.Message" xml:space="preserve">
+    <value>U cinisekile leswaku u lava ku susa nkandziyiso lowu?</value>
+  </data>
 </root>
