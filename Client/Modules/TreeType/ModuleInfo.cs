@@ -9,9 +9,9 @@ namespace OpenEug.TenTrees.Module.TreeType
         {
             Name = "TreeType",
             Description = "Tree Type Management",
-            Version = "2.2.0",
+            Version = "2.5.0",
             ServerManagerType = "",
-            ReleaseVersions = "1.0.0,2.1.0,2.2.0",
+            ReleaseVersions = "1.0.0,2.1.0,2.2.0,2.3.0,2.4.0,2.5.0",
             Dependencies = ""
         };
     }
