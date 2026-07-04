@@ -46,22 +46,22 @@
     <value>Rixaka ri nga Tiviwi</value>
   </data>
   <data name="Column.PhotoConsent" xml:space="preserve">
-    <value>[XS] Photo Consent</value>
+    <value>Nvumelano wa Swifaniso</value>
   </data>
   <data name="PhotoConsent" xml:space="preserve">
-    <value>[XS] Photo Consent</value>
+    <value>Nvumelano wa Swifaniso</value>
   </data>
   <data name="ConsentLevel.NotCaptured" xml:space="preserve">
-    <value>[XS] Not Captured</value>
+    <value>A yi si Tsariwa</value>
   </data>
   <data name="ConsentLevel.Full" xml:space="preserve">
-    <value>[XS] Full</value>
+    <value>Hinkwayo</value>
   </data>
   <data name="ConsentLevel.Limited" xml:space="preserve">
-    <value>[XS] Limited</value>
+    <value>Yi Pimiweke</value>
   </data>
   <data name="ConsentLevel.None" xml:space="preserve">
-    <value>[XS] None</value>
+    <value>A yi kona</value>
   </data>
   <data name="EnrollmentStatus.Pending" xml:space="preserve">
     <value>Rindza</value>
@@ -73,64 +73,64 @@
     <value>Haniwile</value>
   </data>
   <data name="Filter.Status" xml:space="preserve">
-    <value>[XS] Filter by Status</value>
+    <value>Hlawula hi Xiyimo</value>
   </data>
   <data name="Filter.AllStatuses" xml:space="preserve">
-    <value>[XS] All Statuses</value>
+    <value>Swiyimo Hinkwaswo</value>
   </data>
   <data name="Filter.Village" xml:space="preserve">
-    <value>[XS] Filter by Village</value>
+    <value>Hlawula hi Rixaka</value>
   </data>
   <data name="Filter.AllVillages" xml:space="preserve">
-    <value>[XS] All Villages</value>
+    <value>Matiko Hinkwawo</value>
   </data>
   <data name="Action.ClearFilters" xml:space="preserve">
-    <value>[XS] Clear Filters</value>
+    <value>Susa Swihlawulo</value>
   </data>
   <data name="Summary.Total" xml:space="preserve">
-    <value>[XS] Total</value>
+    <value>Nhlayo Hinkwayo</value>
   </data>
   <data name="Column.GrowerStatus" xml:space="preserve">
-    <value>[XS] Grower Status</value>
+    <value>Xiyimo xa Mulimi</value>
   </data>
   <data name="GrowerStatus.Active" xml:space="preserve">
-    <value>[XS] Active</value>
+    <value>Yi tirhaka</value>
   </data>
   <data name="GrowerStatus.Inactive" xml:space="preserve">
-    <value>[XS] Inactive</value>
+    <value>A yi tirhiki</value>
   </data>
   <data name="GrowerStatus.Exited" xml:space="preserve">
-    <value>[XS] Exited</value>
+    <value>U Humile</value>
   </data>
   <data name="Message.Loading" xml:space="preserve">
-    <value>[XS] Loading...</value>
+    <value>Yi laviseka...</value>
   </data>
   <data name="Mentor" xml:space="preserve">
     <value>Muleriseri</value>
   </data>
   <data name="Column.Approved" xml:space="preserve">
-    <value>[XS] Approved?</value>
+    <value>Xi Amukeriwile?</value>
   </data>
   <data name="Column.Actions" xml:space="preserve">
-    <value>[XS] Actions</value>
+    <value>Swiendlo</value>
   </data>
   <data name="Column.PhotoConsentAction" xml:space="preserve">
-    <value>[XS] Photo Consent Action</value>
+    <value>Xiendlo xa Nvumelano wa Swifaniso</value>
   </data>
   <data name="Action.Approve" xml:space="preserve">
-    <value>[XS] Approve</value>
+    <value>Amukela</value>
   </data>
   <data name="Action.Reject" xml:space="preserve">
-    <value>[XS] Reject</value>
+    <value>Hanisa</value>
   </data>
   <data name="Message.Approved" xml:space="preserve">
-    <value>[XS] Enrollment Approved</value>
+    <value>Nkandziyiso wu Amukeriwile</value>
   </data>
   <data name="Message.Rejected" xml:space="preserve">
-    <value>[XS] Enrollment Rejected</value>
+    <value>Nkandziyiso wu Haniwile</value>
   </data>
   <data name="Message.StatusChangeError" xml:space="preserve">
-    <value>[XS] Error Changing Enrollment Status</value>
+    <value>Xihoxo xo Hundzula Xiyimo xa Nkandziyiso</value>
   </data>
   <data name="Action.Filter" xml:space="preserve">
     <value>Hlawula</value>

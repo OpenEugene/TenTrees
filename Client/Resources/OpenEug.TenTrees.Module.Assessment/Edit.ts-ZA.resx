@@ -13,37 +13,37 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="FormTitle" xml:space="preserve">
-    <value>[XS] Garden Assessment</value>
+    <value>Xikambelo xa Nsimu</value>
   </data>
   <data name="Section.GrowerInfo" xml:space="preserve">
-    <value>[XS] Grower Information</value>
+    <value>Mahungu ya Mulimi</value>
   </data>
   <data name="Grower" xml:space="preserve">
-    <value>[XS] Grower</value>
+    <value>Mulimi</value>
   </data>
   <data name="SelectGrower" xml:space="preserve">
-    <value>[XS] -- Select Grower --</value>
+    <value>-- Hlawula Mulimi --</value>
   </data>
   <data name="Date" xml:space="preserve">
-    <value>[XS] Assessment Date</value>
+    <value>Siku ra Xikambelo</value>
   </data>
   <data name="Section.TreeSurvival" xml:space="preserve">
-    <value>[XS] Tree Survival</value>
+    <value>Vupona bya Mirhi</value>
   </data>
   <data name="TreesPlanted" xml:space="preserve">
-    <value>[XS] Trees Planted</value>
+    <value>Mirhi leyi Byariweke</value>
   </data>
   <data name="TreesAlive" xml:space="preserve">
-    <value>[XS] Trees Still Alive</value>
+    <value>Mirhi leyi ha Hanyaka</value>
   </data>
   <data name="DeceasedTrees" xml:space="preserve">
     <value>[XS] If any died, which ones?</value>
   </data>
   <data name="SurvivalRate" xml:space="preserve">
-    <value>[XS] Survival Rate</value>
+    <value>Nhlayo ya Vupona</value>
   </data>
   <data name="Section.Problems" xml:space="preserve">
-    <value>[XS] Problems</value>
+    <value>Swiphiqo</value>
   </data>
   <data name="ProblemsPrompt" xml:space="preserve">
     <value>[XS] Which problems do you observe?</value>
@@ -67,7 +67,7 @@
     <value>[XS] Do you need someone to help with this problem?</value>
   </data>
   <data name="Section.Permaculture" xml:space="preserve">
-    <value>[XS] Permaculture Practices</value>
+    <value>Mikhuva ya Permaculture</value>
   </data>
   <data name="Practice.Healthy" xml:space="preserve">
     <value>[XS] Do the trees look healthy?</value>
@@ -97,100 +97,100 @@
     <value>[XS] Are they using greywater?</value>
   </data>
   <data name="Section.Notes" xml:space="preserve">
-    <value>[XS] Notes</value>
+    <value>Tinotsi</value>
   </data>
   <data name="Notes.Empty" xml:space="preserve">
     <value>[XS] No notes yet. Add the first observation below.</value>
   </data>
   <data name="Note.TypeGeneral" xml:space="preserve">
-    <value>[XS] General</value>
+    <value>Ntolovelo</value>
   </data>
   <data name="Note.TypeHomeVisit" xml:space="preserve">
-    <value>[XS] Home Visit</value>
+    <value>Ndzendzeleko wa Kaya</value>
   </data>
   <data name="Note.PendingLabel" xml:space="preserve">
     <value>[XS] Pending — saved when you click Save</value>
   </data>
   <data name="Note.RemoveAriaLabel" xml:space="preserve">
-    <value>[XS] Remove pending note</value>
+    <value>Susa xitsalwana lexi yimeleke</value>
   </data>
   <data name="Note.NeedsHelpAlert" xml:space="preserve">
     <value>[XS] This assessment is flagged as needing help. Please describe the issue below as a Home Visit note.</value>
   </data>
   <data name="Note.AddLabel" xml:space="preserve">
-    <value>[XS] Add a note</value>
+    <value>Engetela ntsalwa</value>
   </data>
   <data name="Note.TypeLabel" xml:space="preserve">
-    <value>[XS] Note type</value>
+    <value>Muxaka wa ntsalwa</value>
   </data>
   <data name="Note.Placeholder" xml:space="preserve">
-    <value>[XS] Observation, action taken, follow-up…</value>
+    <value>Ndzavisiso, xiendlo lexi endliweke, ku landzelela…</value>
   </data>
   <data name="Note.AddButton" xml:space="preserve">
-    <value>[XS] Add Note</value>
+    <value>Engetela Ntsalwa</value>
   </data>
   <data name="Note.ImmutableHint" xml:space="preserve">
     <value>[XS] Notes are appended to the running log and cannot be edited once saved.</value>
   </data>
   <data name="NotesPlaceholder" xml:space="preserve">
-    <value>[XS] Enter any additional notes here...</value>
+    <value>Nghenisa tinotsi tin'wana laha...</value>
   </data>
   <data name="Save" xml:space="preserve">
-    <value>[XS] Save</value>
+    <value>Hlayisa</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>[XS] Cancel</value>
+    <value>Khansela</value>
   </data>
   <data name="Yes" xml:space="preserve">
-    <value>[XS] Yes</value>
+    <value>Ina</value>
   </data>
   <data name="No" xml:space="preserve">
-    <value>[XS] No</value>
+    <value>E-e</value>
   </data>
   <data name="Message.SelectGrower" xml:space="preserve">
-    <value>[XS] Please select a grower.</value>
+    <value>Kombela u hlawula mulimi.</value>
   </data>
   <data name="Message.FrequencyError" xml:space="preserve">
     <value>[XS] An assessment was submitted too recently for this grower.</value>
   </data>
   <data name="Message.SaveSuccess" xml:space="preserve">
-    <value>[XS] Your assessment has been saved.</value>
+    <value>Xikambelo xa wena xi hlayisiwile.</value>
   </data>
   <data name="Message.UpdateSuccess" xml:space="preserve">
-    <value>[XS] Assessment updated successfully.</value>
+    <value>Xikambelo xi hundzuriwile hi ndlela leyi humeleleke.</value>
   </data>
   <data name="Message.SaveValidation" xml:space="preserve">
-    <value>[XS] Please correct the errors on the form.</value>
+    <value>Kombela u lulamisa swihoxo swa fomo.</value>
   </data>
   <data name="Message.SaveError" xml:space="preserve">
-    <value>[XS] Error saving assessment.</value>
+    <value>Xihoxo xo hlayisa xikambelo.</value>
   </data>
   <data name="Message.LoadError" xml:space="preserve">
-    <value>[XS] Error loading assessment.</value>
+    <value>Xihoxo xo layisa xikambelo.</value>
   </data>
   <data name="SaveDraft" xml:space="preserve">
-    <value>[XS] Save Draft</value>
+    <value>Hlayisa Dirafu</value>
   </data>
   <data name="LoadDraft" xml:space="preserve">
-    <value>[XS] Load Draft</value>
+    <value>Layisa Dirafu</value>
   </data>
   <data name="Message.DraftSaved" xml:space="preserve">
-    <value>[XS] Draft saved locally.</value>
+    <value>Dirafu yi hlayisiwile eka riqhingho ra wena.</value>
   </data>
   <data name="Message.DraftLoaded" xml:space="preserve">
-    <value>[XS] Draft loaded.</value>
+    <value>Dirafu yi layisiwile.</value>
   </data>
   <data name="Delete" xml:space="preserve">
-    <value>[XS] Delete</value>
+    <value>Susa</value>
   </data>
   <data name="Dialog.Delete.Header" xml:space="preserve">
-    <value>[XS] Delete Assessment</value>
+    <value>Susa Xikambelo</value>
   </data>
   <data name="Dialog.Delete.Message" xml:space="preserve">
-    <value>[XS] Are you sure you want to delete this assessment? This cannot be undone.</value>
+    <value>U cinisekile leswaku u lava ku susa xikambelo lexi? Xiendlo lexi a xi nge hundzuleki.</value>
   </data>
   <data name="Message.DeleteError" xml:space="preserve">
-    <value>[XS] Error deleting assessment.</value>
+    <value>Xihoxo xo susa xikambelo.</value>
   </data>
   <data name="Message.NoteSaveError" xml:space="preserve">
     <value>[XS] One or more notes could not be saved. Please retry.</value>

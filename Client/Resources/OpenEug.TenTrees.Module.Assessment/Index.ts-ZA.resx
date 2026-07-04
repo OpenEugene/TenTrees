@@ -13,46 +13,46 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Add" xml:space="preserve">
-    <value>[XS] New Assessment</value>
+    <value>Xikambelo Lexintshwa</value>
   </data>
   <data name="Message.Loading" xml:space="preserve">
-    <value>[XS] Loading...</value>
+    <value>Yi laviseka...</value>
   </data>
   <data name="Message.DisplayNone" xml:space="preserve">
-    <value>[XS] No assessments found.</value>
+    <value>A ku na swikambelo leswi kumekeke.</value>
   </data>
   <data name="Column.Date" xml:space="preserve">
-    <value>[XS] Date</value>
+    <value>Siku</value>
   </data>
   <data name="Column.Grower" xml:space="preserve">
-    <value>[XS] Grower</value>
+    <value>Mulimi</value>
   </data>
   <data name="Column.SurvivalRate" xml:space="preserve">
-    <value>[XS] Survival Rate</value>
+    <value>Nhlayo ya Vupona</value>
   </data>
   <data name="Column.PermacultureScore" xml:space="preserve">
-    <value>[XS] Permaculture Score</value>
+    <value>Score ya Permaculture</value>
   </data>
   <data name="Column.NeedsHelp" xml:space="preserve">
-    <value>[XS] Needs Help</value>
+    <value>Swi Lava Mpfuno</value>
   </data>
   <data name="Yes" xml:space="preserve">
-    <value>[XS] Yes</value>
+    <value>Ina</value>
   </data>
   <data name="No" xml:space="preserve">
-    <value>[XS] No</value>
+    <value>E-e</value>
   </data>
   <data name="Edit" xml:space="preserve">
-    <value>[XS] Edit</value>
+    <value>Lulamisa</value>
   </data>
   <data name="Delete" xml:space="preserve">
-    <value>[XS] Delete</value>
+    <value>Susa</value>
   </data>
   <data name="Message.LoadError" xml:space="preserve">
-    <value>[XS] Error loading assessments.</value>
+    <value>Xihoxo xo layisa swikambelo.</value>
   </data>
   <data name="Message.DeleteError" xml:space="preserve">
-    <value>[XS] Error deleting assessment.</value>
+    <value>Xihoxo xo susa xikambelo.</value>
   </data>
   <data name="Column.Village" xml:space="preserve">
     <value>Rixaka</value>
