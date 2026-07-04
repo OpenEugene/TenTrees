@@ -12,67 +12,65 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <!-- Xitsonga translations needed - coordinate with Trygive/Quentan -->
   <data name="Page.Title" xml:space="preserve">
-    <value>[XS] Manage Grower Status</value>
+    <value>Lawula Xiyimo xa Mulimi</value>
   </data>
   <data name="Action.MarkInactive" xml:space="preserve">
-    <value>[XS] Mark as Inactive</value>
+    <value>Kombisa tanihi A yi Tirhiki</value>
   </data>
   <data name="Action.MarkActive" xml:space="preserve">
-    <value>[XS] Mark as Active</value>
+    <value>Kombisa tanihi Yi Tirhaka</value>
   </data>
   <data name="Action.RecordExit" xml:space="preserve">
-    <value>[XS] Record Program Exit</value>
+    <value>Tsala ku Huma eka Nongonoko</value>
   </data>
   <data name="Message.GrowerNotFound" xml:space="preserve">
     <value>[XS] Grower not found or you do not have permission to view this grower.</value>
   </data>
-  <!-- Add remaining translations matching Status.resx -->
   <data name="Section.Assessments" xml:space="preserve">
-    <value>[XS] Assessments</value>
+    <value>Swikambelo</value>
   </data>
   <data name="Column.AssessmentDate" xml:space="preserve">
-    <value>[XS] Date</value>
+    <value>Siku</value>
   </data>
   <data name="Column.Trees" xml:space="preserve">
-    <value>[XS] Trees (Survival)</value>
+    <value>Mirhi (Vupona)</value>
   </data>
   <data name="Column.Permaculture" xml:space="preserve">
-    <value>[XS] Permaculture</value>
+    <value>Permaculture</value>
   </data>
   <data name="Column.NeedsHelp" xml:space="preserve">
-    <value>[XS] Needs Help</value>
+    <value>Swi Lava Mpfuno</value>
   </data>
   <data name="Column.Notes" xml:space="preserve">
-    <value>[XS] Notes</value>
+    <value>Tinotsi</value>
   </data>
   <data name="Column.Actions" xml:space="preserve">
-    <value>[XS] Actions</value>
+    <value>Swiendlo</value>
   </data>
   <data name="Label.Yes" xml:space="preserve">
-    <value>[XS] Yes</value>
+    <value>Ina</value>
   </data>
   <data name="Label.No" xml:space="preserve">
-    <value>[XS] No</value>
+    <value>E-e</value>
   </data>
   <data name="Message.NoAssessments" xml:space="preserve">
-    <value>[XS] No assessments recorded yet.</value>
+    <value>A ku na swikambelo leswi tsariweke.</value>
   </data>
   <data name="Action.ViewRecord" xml:space="preserve">
-    <value>[XS] View Full Record</value>
+    <value>Vona Nongonoko Hinkwawo</value>
   </data>
   <data name="Section.Notes" xml:space="preserve">
-    <value>[XS] Notes &amp; Home Visits</value>
+    <value>Tinotsi na Ndzendzeleko wa Kaya</value>
   </data>
   <data name="Notes.Empty" xml:space="preserve">
-    <value>[XS] No notes recorded for this grower yet.</value>
+    <value>A ku na tinotsi leti tsariweke eka mulimi loyi.</value>
   </data>
   <data name="Note.TypeGeneral" xml:space="preserve">
-    <value>[XS] General</value>
+    <value>Ntolovelo</value>
   </data>
   <data name="Note.TypeHomeVisit" xml:space="preserve">
-    <value>[XS] Home Visit</value>
+    <value>Ndzendzeleko wa Kaya</value>
   </data>
   <data name="Section.Cohorts" xml:space="preserve">
     <value>Ma-Cohort</value>

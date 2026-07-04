@@ -12,21 +12,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <!-- Xitsonga translations needed - coordinate with Trygive/Quentan -->
   <data name="Filter.Status" xml:space="preserve">
-    <value>[XS] Filter by Status</value>
+    <value>Hlawula hi Xiyimo</value>
   </data>
   <data name="Filter.AllStatuses" xml:space="preserve">
-    <value>[XS] All Statuses</value>
+    <value>Swiyimo Hinkwaswo</value>
   </data>
   <data name="Status.Active" xml:space="preserve">
-    <value>[XS] Active</value>
+    <value>Yi tirhaka</value>
   </data>
   <data name="Status.Inactive" xml:space="preserve">
-    <value>[XS] Inactive</value>
+    <value>A yi tirhiki</value>
   </data>
   <data name="Status.Exited" xml:space="preserve">
-    <value>[XS] Exited</value>
+    <value>U Humile</value>
   </data>
   <data name="Filter.Village" xml:space="preserve">
     <value>Hlawula hi Rixaka</value>
@@ -88,5 +87,4 @@
   <data name="Dialog.DeleteGrower.Message" xml:space="preserve">
     <value>U cinisekile leswaku u lava ku susa {0}? Xiendlo lexi a xi nge hundzuleki.</value>
   </data>
-  <!-- Remaining [XS] entries above still need real Xitsonga review - coordinate with Trygive/Quentan -->
 </root>
