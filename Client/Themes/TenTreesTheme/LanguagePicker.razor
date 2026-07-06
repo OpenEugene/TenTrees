@@ -33,7 +33,7 @@
 
     protected override void OnParametersSet()
     {
-        MenuAlignment = DropdownAlignment.ToLower() == "right" ? "dropdown-menu-end" : string.Empty;
+        MenuAlignment = string.Equals(DropdownAlignment, "right", StringComparison.OrdinalIgnoreCase) ? "dropdown-menu-end" : string.Empty;
 
         // reflect the same preferred-language value that App.razor uses to resolve the request
         // culture, so the active dropdown entry matches what the user actually sees
