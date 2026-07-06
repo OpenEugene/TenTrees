@@ -10,7 +10,7 @@ namespace OpenEug.TenTrees.Theme.TenTreesTheme
         public Oqtane.Models.Theme Theme => new Oqtane.Models.Theme
         {
             Name = "TenTreesTheme",
-            Version = "1.0.0",
+            Version = "1.1.0",
             PackageName = "OpenEug.TenTrees.Theme.TenTreesTheme",
             ThemeSettingsType = "OpenEug.TenTrees.Theme.TenTreesTheme.ThemeSettings, OpenEug.TenTrees.Theme.TenTreesTheme.Client.Oqtane",
             ContainerSettingsType = "OpenEug.TenTrees.Theme.TenTreesTheme.ContainerSettings, OpenEug.TenTrees.Theme.TenTreesTheme.Client.Oqtane",
