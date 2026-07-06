@@ -1,0 +1,73 @@
+@namespace OpenEug.TenTrees.Theme.TenTreesTheme
+@inherits ThemeControlBase
+@using System.Globalization
+@inject IUserService UserService
+@inject ILocalizationCookieService LocalizationCookieService
+@inject NavigationManager NavigationManager
+
+@if (PageState.Site.Languages.Count() > 1)
+{
+    <div class="app-languages btn-group pe-1" role="group">
+        <button id="btnCultures" type="button" class="btn @ButtonClass dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="oi oi-globe" aria-hidden="true"></span>
+            <span class="visually-hidden">Change Language</span>
+        </button>
+        <div class="dropdown-menu @MenuAlignment" aria-labelledby="btnCultures">
+            @foreach (var language in PageState.Site.Languages)
+            {
+                <a class="dropdown-item @(_currentCulture == language.Code ? "active" : string.Empty)" href="#" @onclick="@(async e => await SetLanguageAsync(language.Code))" @onclick:preventDefault="true">@language.Name</a>
+            }
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public string DropdownAlignment { get; set; } = string.Empty; // Empty or Left or Right
+
+    [Parameter]
+    public string ButtonClass { get; set; } = "btn-outline-secondary";
+
+    private string MenuAlignment = string.Empty;
+    private string _currentCulture = string.Empty;
+
+    protected override void OnParametersSet()
+    {
+        MenuAlignment = DropdownAlignment.ToLower() == "right" ? "dropdown-menu-end" : string.Empty;
+
+        // reflect the same preferred-language value that App.razor uses to resolve the request
+        // culture, so the active dropdown entry matches what the user actually sees
+        _currentCulture = PageState.User?.CultureCode;
+        if (string.IsNullOrEmpty(_currentCulture))
+        {
+            _currentCulture = CultureInfo.CurrentUICulture.Name;
+        }
+    }
+
+    private async Task SetLanguageAsync(string culture)
+    {
+        if (culture == _currentCulture)
+        {
+            return;
+        }
+
+        if (PageState.User != null)
+        {
+            // Oqtane's App.razor re-derives the request culture from User.CultureCode on every
+            // full page load, overriding any culture cookie set independently, so persisting the
+            // preference here (the same call Admin/UserProfile makes) is the only change that
+            // survives navigation - see oqtane/oqtane.framework#6157
+            var user = PageState.User;
+            user.CultureCode = culture;
+            await UserService.UpdateUserAsync(user);
+        }
+        else
+        {
+            var localizationCookieValue = CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(PageState.Site.CultureCode, culture));
+            var interop = new Interop(JSRuntime);
+            await interop.SetCookie(CookieRequestCultureProvider.DefaultCookieName, localizationCookieValue, 360, true, "Lax");
+        }
+
+        NavigationManager.NavigateTo(NavigationManager.Uri, true);
+    }
+}
