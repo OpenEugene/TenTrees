@@ -224,7 +224,7 @@ _growers = await GrowerService.GetAllGrowersAsync(ModuleState.ModuleId)
 ## Client Services
 
 - Create one service class per module when client logic exceeds simple inline
-  `@code`. Place it in the module's `Services/` folder.
+  `@code`. Place it in `Client/Services/` (flat directory), not per-module subfolders.
 - Inherit from `ServiceBase` — read `.oqtane-ref\Oqtane.Client\Services\ServiceBase.cs`
   for `CreateApiUrl`, HTTP helper methods, and constructor signature before use.
 
