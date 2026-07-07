@@ -419,5 +419,6 @@ FodyWeavers.xsd
 *.msp
 /OpenEug.TenTrees/.playwright-mcp
 /OpenEug.TenTrees/Server/appsettings.Production.json
+Server/appsettings.Production.json
 
 .oqtane-ref
