@@ -3,30 +3,26 @@
 @namespace OpenEug.TenTrees.Module.Home
 @inherits ModuleBase
 
-@if (_tiles.Any())
+@if (_workflowTiles.Any() || _adminTiles.Any() || _otherTiles.Any())
 {
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3 py-2">
-        @foreach (var tile in _tiles)
-        {
-            <div class="col">
-                <a href="@NavigateUrl(tile.Path)" class="card h-100 text-decoration-none text-reset home-tile">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            @if (!string.IsNullOrEmpty(tile.Icon))
-                            {
-                                <span class="@tile.Icon me-2" aria-hidden="true"></span>
-                            }
-                            @tile.Name
-                        </h5>
-                        @if (!string.IsNullOrEmpty(tile.Description))
-                        {
-                            <p class="card-text text-muted mb-0">@tile.Description</p>
-                        }
-                    </div>
-                </a>
-            </div>
-        }
-    </div>
+    @if (_workflowTiles.Any())
+    {
+        <h5>Workflow</h5>
+        <hr class="mt-0 mb-3" />
+        @RenderTiles(_workflowTiles)
+    }
+    @if (_adminTiles.Any())
+    {
+        <h5 class="@(_workflowTiles.Any() ? "mt-4" : "")">Admin</h5>
+        <hr class="mt-0 mb-3" />
+        @RenderTiles(_adminTiles)
+    }
+    @if (_otherTiles.Any())
+    {
+        <h5 class="@((_workflowTiles.Any() || _adminTiles.Any()) ? "mt-4" : "")">Other</h5>
+        <hr class="mt-0 mb-3" />
+        @RenderTiles(_otherTiles)
+    }
 }
 else
 {
@@ -34,7 +30,9 @@ else
 }
 
 @code {
-    private List<Tile> _tiles = new();
+    private List<Tile> _workflowTiles = new();
+    private List<Tile> _adminTiles = new();
+    private List<Tile> _otherTiles = new();
 
     private class Tile
     {
@@ -58,18 +56,58 @@ else
         ["Enrollment"] = "Grower Enrollment Submission",
     };
 
+    // the order boxes should appear in - follows the flow of the work rather than PageState's own Page.Order
+    private static readonly string[] _workflowOrder = { "Enrollment", "Classes", "Training", "Grower", "Assessment" };
+    private static readonly string[] _adminOrder = { "Village", "Cohort", "Mentor", "TreeType" };
+
     protected override void OnParametersSet()
     {
-        _tiles = PageState.Pages
+        var pages = PageState.Pages
             .Where(p => p.IsNavigation && p.ParentId == null && p.PageId != PageState.Page.PageId)
-            .OrderBy(p => p.Order)
             .Select(p => new Tile
             {
                 Name = p.Name,
                 Path = p.Path,
                 Icon = p.Icon,
                 Description = _descriptions.TryGetValue(p.Name, out var description) ? description : string.Empty
-            })
+            });
+
+        _workflowTiles = OrderBySection(pages, _workflowOrder);
+        _adminTiles = OrderBySection(pages, _adminOrder);
+
+        var placed = _workflowTiles.Concat(_adminTiles).Select(t => t.Path).ToHashSet();
+        _otherTiles = pages.Where(t => !placed.Contains(t.Path)).OrderBy(t => t.Name).ToList();
+    }
+
+    private static List<Tile> OrderBySection(IEnumerable<Tile> tiles, string[] order)
+    {
+        return order
+            .Select(name => tiles.FirstOrDefault(t => string.Equals(t.Name, name, StringComparison.OrdinalIgnoreCase)))
+            .Where(t => t != null)
+            .DistinctBy(t => t.Path)
             .ToList();
     }
+
+    private RenderFragment RenderTiles(List<Tile> tiles) => @<div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3 py-2">
+        @foreach (var tile in tiles)
+        {
+            <div class="col">
+                <a href="@NavigateUrl(tile.Path)" class="card h-100 text-decoration-none text-reset home-tile">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            @if (!string.IsNullOrEmpty(tile.Icon))
+                            {
+                                <span class="@tile.Icon me-2" aria-hidden="true"></span>
+                            }
+                            @tile.Name
+                        </h5>
+                        @if (!string.IsNullOrEmpty(tile.Description))
+                        {
+                            <p class="card-text text-muted mb-0">@tile.Description</p>
+                        }
+                    </div>
+                </a>
+            </div>
+        }
+    </div>;
 }
