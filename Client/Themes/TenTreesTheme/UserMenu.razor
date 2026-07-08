@@ -1,0 +1,54 @@
+@namespace OpenEug.TenTrees.Theme.TenTreesTheme
+@inherits ThemeControlBase
+@using System.Net
+@inject ISettingService SettingService
+
+@if (PageState.User != null)
+{
+    <div class="app-usermenu btn-group pe-1" role="group">
+        <button id="btnUserMenu" type="button" class="@ButtonClass dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="@_displayName">
+            <span class="oi oi-person d-md-none" aria-hidden="true"></span>
+            <span class="d-none d-md-inline">@_displayName</span>
+        </button>
+        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="btnUserMenu">
+            <a class="dropdown-item" href="@_profileUrl">Profile</a>
+            <Login CssClass="dropdown-item" />
+        </div>
+    </div>
+}
+else
+{
+    <UserProfile ShowRegister="@ShowRegister" CssClass="@($"{ButtonClass} app-login")" />
+    <Login ShowLogin="@ShowLogin" CssClass="@($"{ButtonClass} app-login")" />
+}
+
+@code {
+    [Parameter]
+    public bool ShowLogin { get; set; } = true;
+
+    [Parameter]
+    public bool ShowRegister { get; set; }
+
+    [Parameter]
+    public string ButtonClass { get; set; } = "btn btn-primary";
+
+    private string _displayName = "";
+    private string _profileUrl = "";
+
+    protected override void OnParametersSet()
+    {
+        if (PageState.User != null)
+        {
+            var mode = SettingService.GetSetting(PageState.Site.Settings, "LoginOptions:ProfileDisplayName", "username");
+            _displayName = mode.ToLower() switch
+            {
+                "displayname" => PageState.User.DisplayName,
+                "email" => PageState.User.Email,
+                _ => PageState.User.Username,
+            };
+
+            var returnUrl = WebUtility.UrlEncode(PageState.Route.PathAndQuery);
+            _profileUrl = NavigateUrl("profile", "returnurl=" + returnUrl);
+        }
+    }
+}

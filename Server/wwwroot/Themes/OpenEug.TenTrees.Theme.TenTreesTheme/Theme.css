@@ -1,4 +1,99 @@
-/* Oqtane Styles */ 
+/* Oqtane Styles */
+
+/* Brand palette - matches zingelaulwazi.org.za / 10 Trees green & gray branding */
+:root {
+    --bs-primary: #468029;
+    --bs-primary-rgb: 70, 128, 41;
+    --bs-primary-text-emphasis: #2c4e19;
+    --bs-primary-bg-subtle: #e7f0dd;
+    --bs-primary-border-subtle: #b9d39c;
+
+    --bs-secondary: #6d6d6d;
+    --bs-secondary-rgb: 109, 109, 109;
+    --bs-secondary-text-emphasis: #3d3d3d;
+    --bs-secondary-bg-subtle: #e9e9e9;
+    --bs-secondary-border-subtle: #c9c9c9;
+
+    --bs-link-color: #468029;
+    --bs-link-color-rgb: 70, 128, 41;
+    --bs-link-hover-color: #2c4e19;
+    --bs-link-hover-color-rgb: 44, 78, 25;
+}
+
+/* Bootstrap 5.3 button/form components hardcode their colors, so they need explicit overrides */
+.btn-primary {
+    --bs-btn-color: #fff;
+    --bs-btn-bg: var(--bs-primary);
+    --bs-btn-border-color: var(--bs-primary);
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #386420;
+    --bs-btn-hover-border-color: #2c4e19;
+    --bs-btn-focus-shadow-rgb: var(--bs-primary-rgb);
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #2c4e19;
+    --bs-btn-active-border-color: #264313;
+    --bs-btn-disabled-bg: var(--bs-primary);
+    --bs-btn-disabled-border-color: var(--bs-primary);
+}
+
+.btn-outline-primary {
+    --bs-btn-color: var(--bs-primary);
+    --bs-btn-border-color: var(--bs-primary);
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: var(--bs-primary);
+    --bs-btn-hover-border-color: var(--bs-primary);
+    --bs-btn-focus-shadow-rgb: var(--bs-primary-rgb);
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #386420;
+    --bs-btn-active-border-color: #386420;
+    --bs-btn-disabled-color: var(--bs-primary);
+    --bs-btn-disabled-border-color: var(--bs-primary);
+}
+
+.btn-secondary {
+    --bs-btn-color: #fff;
+    --bs-btn-bg: var(--bs-secondary);
+    --bs-btn-border-color: var(--bs-secondary);
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #5c5c5c;
+    --bs-btn-hover-border-color: #565656;
+    --bs-btn-focus-shadow-rgb: var(--bs-secondary-rgb);
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #4a4a4a;
+    --bs-btn-active-border-color: #454545;
+    --bs-btn-disabled-bg: var(--bs-secondary);
+    --bs-btn-disabled-border-color: var(--bs-secondary);
+}
+
+.btn-outline-secondary {
+    --bs-btn-color: var(--bs-secondary);
+    --bs-btn-border-color: var(--bs-secondary);
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: var(--bs-secondary);
+    --bs-btn-hover-border-color: var(--bs-secondary);
+    --bs-btn-focus-shadow-rgb: var(--bs-secondary-rgb);
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #5c5c5c;
+    --bs-btn-active-border-color: #5c5c5c;
+    --bs-btn-disabled-color: var(--bs-secondary);
+    --bs-btn-disabled-border-color: var(--bs-secondary);
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #8fbf6c;
+    box-shadow: 0 0 0 .25rem rgba(var(--bs-primary-rgb), .25);
+}
+
+.form-check-input:checked {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+}
+
+.form-check-input:focus {
+    border-color: #8fbf6c;
+    box-shadow: 0 0 0 .25rem rgba(var(--bs-primary-rgb), .25);
+}
 
 body {
     padding-top: 7rem;
@@ -100,25 +195,23 @@ div.app-moduleactions a.dropdown-toggle, div.app-moduleactions div.dropdown-menu
     transform: translateY(-2px);
 }
 
+@media (max-width: 991.98px) {
+
+    /* Bootstrap's stepped .container max-width (540px/720px) leaves large empty
+       side margins on phones and tablets - stay fluid until the desktop (lg) breakpoint */
+    .container {
+        max-width: 100%;
+    }
+}
+
 @media (max-width: 767.98px) {
 
     .app-menu {
-        width: 100%;
+        width: auto;
     }
 
-    .navbar {
-        position: fixed;
-        top: 60px;
+    .app-menu:has(.navbar-collapse.show) {
         width: 100%;
-    }
-
-    .controls {
-        height: 60px;
-        top: 15px;
-        position: fixed;
-        top: 0px;
-        width: 100%;
-        background-color: rgb(0, 0, 0);
     }
 
     .controls-group {

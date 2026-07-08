@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Section.Workflow" xml:space="preserve">
+    <value>Workflow</value>
+  </data>
+  <data name="Section.Admin" xml:space="preserve">
+    <value>Admin</value>
+  </data>
+  <data name="Section.Other" xml:space="preserve">
+    <value>Other</value>
+  </data>
+  <data name="Message.Loading" xml:space="preserve">
+    <value>Loading...</value>
+  </data>
+  <data name="Description.Grower" xml:space="preserve">
+    <value>Grower management for 10 Trees program - track active status and program exits</value>
+  </data>
+  <data name="Description.Assessment" xml:space="preserve">
+    <value>Garden Assessment and Tree Monitoring</value>
+  </data>
+  <data name="Description.Cohort" xml:space="preserve">
+    <value>Cohort Management</value>
+  </data>
+  <data name="Description.Training" xml:space="preserve">
+    <value>Permaculture training class management and attendance tracking for tree eligibility</value>
+  </data>
+  <data name="Description.Classes" xml:space="preserve">
+    <value>Permaculture training class management and attendance tracking for tree eligibility</value>
+  </data>
+  <data name="Description.Village" xml:space="preserve">
+    <value>Village Management</value>
+  </data>
+  <data name="Description.TreeType" xml:space="preserve">
+    <value>Tree Type Management</value>
+  </data>
+  <data name="Description.Mentor" xml:space="preserve">
+    <value>Mentor user management - create, edit, activate/deactivate mentors and assign growers</value>
+  </data>
+  <data name="Description.Enrollment" xml:space="preserve">
+    <value>Grower Enrollment Submission</value>
+  </data>
+</root>

@@ -79,37 +79,39 @@
     }
     else
     {
-        <Pager Items="@_assessments" Format="Table" Class="table table-striped" PageSize="@_pageSize.ToString()">
-            <Header>
-                <th style="width: 1px;">&nbsp;</th>
-                <th style="width: 1px;">&nbsp;</th>
-                <th>@Localizer["Column.Date"]</th>
-                <th>@Localizer["Column.Grower"]</th>
-                <th>@Localizer["Column.Village"]</th>
-                <th>@Localizer["Column.SurvivalRate"]</th>
-                <th>@Localizer["Column.PermacultureScore"]</th>
-                <th>@Localizer["Column.NeedsHelp"]</th>
-            </Header>
-            <Row>
-                <td><ActionLink Action="Edit" Parameters="@($"id={context.AssessmentId}")" ResourceKey="Edit" /></td>
-                <td><ActionDialog Header="@Localizer["Dialog.DeleteAssessment.Header"]" Message="@Localizer["Dialog.DeleteAssessment.Message"]" Action="Delete" Security="SecurityAccessLevel.Edit" Class="btn btn-danger" OnClick="@(async () => await Delete(context))" ResourceKey="Delete" Id="@context.AssessmentId.ToString()" /></td>
-                <td>@context.AssessmentDate.ToShortDateString()</td>
-                <td>@context.GrowerName</td>
-                <td>@context.VillageName</td>
-                <td>@(context.TreesPlanted > 0 ? $"{context.TreesAlive * 100 / context.TreesPlanted}% ({context.TreesAlive}/{context.TreesPlanted})" : Localizer["Label.NotApplicable"])</td>
-                <td>@context.PermaculturePrinciplesCount / 9</td>
-                <td>
-                    @if (context.NeedsHelp)
-                    {
-                        <span class="badge bg-danger">@Localizer["Yes"]</span>
-                    }
-                    else
-                    {
-                        <span class="badge bg-success">@Localizer["No"]</span>
-                    }
-                </td>
-            </Row>
-        </Pager>
+        <div class="table-responsive">
+            <Pager Items="@_assessments" Format="Table" Class="table table-striped" PageSize="@_pageSize.ToString()">
+                <Header>
+                    <th style="width: 1px;">&nbsp;</th>
+                    <th style="width: 1px;">&nbsp;</th>
+                    <th>@Localizer["Column.Date"]</th>
+                    <th>@Localizer["Column.Grower"]</th>
+                    <th>@Localizer["Column.Village"]</th>
+                    <th>@Localizer["Column.SurvivalRate"]</th>
+                    <th>@Localizer["Column.PermacultureScore"]</th>
+                    <th>@Localizer["Column.NeedsHelp"]</th>
+                </Header>
+                <Row>
+                    <td><ActionLink Action="Edit" Parameters="@($"id={context.AssessmentId}")" ResourceKey="Edit" /></td>
+                    <td><ActionDialog Header="@Localizer["Dialog.DeleteAssessment.Header"]" Message="@Localizer["Dialog.DeleteAssessment.Message"]" Action="Delete" Security="SecurityAccessLevel.Edit" Class="btn btn-danger" OnClick="@(async () => await Delete(context))" ResourceKey="Delete" Id="@context.AssessmentId.ToString()" /></td>
+                    <td>@context.AssessmentDate.ToShortDateString()</td>
+                    <td>@context.GrowerName</td>
+                    <td class="text-nowrap">@context.VillageName</td>
+                    <td class="text-nowrap">@(context.TreesPlanted > 0 ? $"{context.TreesAlive * 100 / context.TreesPlanted}% ({context.TreesAlive}/{context.TreesPlanted})" : Localizer["Label.NotApplicable"])</td>
+                    <td>@context.PermaculturePrinciplesCount / 9</td>
+                    <td>
+                        @if (context.NeedsHelp)
+                        {
+                            <span class="badge bg-danger">@Localizer["Yes"]</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-success">@Localizer["No"]</span>
+                        }
+                    </td>
+                </Row>
+            </Pager>
+        </div>
     }
 </div>
 

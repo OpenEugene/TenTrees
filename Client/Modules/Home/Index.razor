@@ -2,31 +2,32 @@
 
 @namespace OpenEug.TenTrees.Module.Home
 @inherits ModuleBase
+@inject IStringLocalizer<Index> Localizer
 
 @if (_workflowTiles.Any() || _adminTiles.Any() || _otherTiles.Any())
 {
     @if (_workflowTiles.Any())
     {
-        <h5>Workflow</h5>
+        <h5>@Localizer["Section.Workflow"]</h5>
         <hr class="mt-0 mb-3" />
         @RenderTiles(_workflowTiles)
     }
     @if (_adminTiles.Any())
     {
-        <h5 class="@(_workflowTiles.Any() ? "mt-4" : "")">Admin</h5>
+        <h5 class="@(_workflowTiles.Any() ? "mt-4" : "")">@Localizer["Section.Admin"]</h5>
         <hr class="mt-0 mb-3" />
         @RenderTiles(_adminTiles)
     }
     @if (_otherTiles.Any())
     {
-        <h5 class="@((_workflowTiles.Any() || _adminTiles.Any()) ? "mt-4" : "")">Other</h5>
+        <h5 class="@((_workflowTiles.Any() || _adminTiles.Any()) ? "mt-4" : "")">@Localizer["Section.Other"]</h5>
         <hr class="mt-0 mb-3" />
         @RenderTiles(_otherTiles)
     }
 }
 else
 {
-    <p role="status"><em>Loading...</em></p>
+    <p role="status"><em>@Localizer["Message.Loading"]</em></p>
 }
 
 @code {
@@ -42,18 +43,18 @@ else
         public string Icon { get; set; }
     }
 
-    // brief descriptions sourced from each module's ModuleInfo.cs - Page has no description field of its own
-    private static readonly Dictionary<string, string> _descriptions = new(StringComparer.OrdinalIgnoreCase)
+    // brief descriptions keyed by page name and looked up via resx so they can be localized - Page has no description field of its own
+    private static readonly Dictionary<string, string> _descriptionKeys = new(StringComparer.OrdinalIgnoreCase)
     {
-        ["Grower"] = "Grower management for 10 Trees program - track active status and program exits",
-        ["Assessment"] = "Garden Assessment and Tree Monitoring",
-        ["Cohort"] = "Cohort Management",
-        ["Training"] = "Permaculture training class management and attendance tracking for tree eligibility",
-        ["Classes"] = "Permaculture training class management and attendance tracking for tree eligibility",
-        ["Village"] = "Village Management",
-        ["TreeType"] = "Tree Type Management",
-        ["Mentor"] = "Mentor user management - create, edit, activate/deactivate mentors and assign growers",
-        ["Enrollment"] = "Grower Enrollment Submission",
+        ["Grower"] = "Description.Grower",
+        ["Assessment"] = "Description.Assessment",
+        ["Cohort"] = "Description.Cohort",
+        ["Training"] = "Description.Training",
+        ["Classes"] = "Description.Classes",
+        ["Village"] = "Description.Village",
+        ["TreeType"] = "Description.TreeType",
+        ["Mentor"] = "Description.Mentor",
+        ["Enrollment"] = "Description.Enrollment",
     };
 
     // the order boxes should appear in - follows the flow of the work rather than PageState's own Page.Order
@@ -69,7 +70,7 @@ else
                 Name = p.Name,
                 Path = p.Path,
                 Icon = p.Icon,
-                Description = _descriptions.TryGetValue(p.Name, out var description) ? description : string.Empty
+                Description = _descriptionKeys.TryGetValue(p.Name, out var descriptionKey) ? Localizer[descriptionKey] : string.Empty
             });
 
         _workflowTiles = OrderBySection(pages, _workflowOrder);

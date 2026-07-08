@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Section.Workflow" xml:space="preserve">
+    <value>Ntirho</value>
+  </data>
+  <data name="Section.Admin" xml:space="preserve">
+    <value>Vulawuri</value>
+  </data>
+  <data name="Section.Other" xml:space="preserve">
+    <value>Swin'wana</value>
+  </data>
+  <data name="Message.Loading" xml:space="preserve">
+    <value>Yi laviseka...</value>
+  </data>
+  <data name="Description.Grower" xml:space="preserve">
+    <value>Vulawuri bya valimi eka nongonoko wa Mirhi ya 10 - languta xiyimo lexi tirhaka na loku huma enongonokweni</value>
+  </data>
+  <data name="Description.Assessment" xml:space="preserve">
+    <value>Ku Kambela Masimu na ku Languta Mirhi</value>
+  </data>
+  <data name="Description.Cohort" xml:space="preserve">
+    <value>Vulawuri bya Cohort</value>
+  </data>
+  <data name="Description.Training" xml:space="preserve">
+    <value>Vulawuri bya tiklasi to leha ta Permaculture na ku languta vukona kuma ku faneleka ka mirhi</value>
+  </data>
+  <data name="Description.Classes" xml:space="preserve">
+    <value>Vulawuri bya tiklasi to leha ta Permaculture na ku languta vukona kuma ku faneleka ka mirhi</value>
+  </data>
+  <data name="Description.Village" xml:space="preserve">
+    <value>Vulawuri bya Rixaka</value>
+  </data>
+  <data name="Description.TreeType" xml:space="preserve">
+    <value>Vulawuri bya Muxaka wa Murhi</value>
+  </data>
+  <data name="Description.Mentor" xml:space="preserve">
+    <value>Vulawuri bya vareleseri - tumbuluxa, lulamisa, pfula/pfala vareleseri na ku avela valimi</value>
+  </data>
+  <data name="Description.Enrollment" xml:space="preserve">
+    <value>Ku Rhumela Nkandziyiso wa Mulimi</value>
+  </data>
+</root>
