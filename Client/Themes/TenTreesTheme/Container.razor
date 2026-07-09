@@ -26,7 +26,7 @@
 @code {
     public override string Name => "OpenEug.TenTrees TenTreesTheme - Container";
 
-    private bool _title = true;
+    private bool _title = false;
     private string _classes = "container-fluid";
 
     protected override void OnParametersSet()
@@ -34,7 +34,7 @@
         try
         {
 
-            _title = bool.Parse(SettingService.GetSetting(ModuleState.Settings, GetType().Namespace + ":Title", "true"));
+            _title = bool.Parse(SettingService.GetSetting(ModuleState.Settings, GetType().Namespace + ":Title", "false"));
 
         }
         catch

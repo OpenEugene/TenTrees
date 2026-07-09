@@ -1,8 +1,9 @@
+@using Microsoft.Extensions.Logging
 @namespace OpenEug.TenTrees.Theme.TenTreesTheme
-@inherits ModuleBase
+@inherits ContainerBase
 @implements Oqtane.Interfaces.ISettingsControl
 @inject ISettingService SettingService
-@attribute [OqtaneIgnore]
+@inject ILogger<ContainerSettings> Logger
 
 <div class="container">
 	<div class="row mb-1 align-items-center">
@@ -28,7 +29,7 @@
 		}
 		catch (Exception ex)
 		{
-			AddModuleMessage(ex.Message, MessageType.Error);
+			Logger.LogError(ex, "Error Loading Container Settings {Error}", ex.Message);
 		}
 	}
 
@@ -42,7 +43,7 @@
 		}
 		catch (Exception ex)
 		{
-			AddModuleMessage(ex.Message, MessageType.Error);
+			Logger.LogError(ex, "Error Saving Container Settings {Error}", ex.Message);
 		}
 	}
 }

@@ -4,18 +4,27 @@
 @inherits ModuleBase
 @inject IStringLocalizer<Index> Localizer
 
+<div class="d-flex flex-nowrap">
+    <h2>Welcome to TenTrees Database</h2>
+</div>
+<hr class="app-rule" />
+
 @if (_workflowTiles.Any() || _adminTiles.Any() || _otherTiles.Any())
 {
     @if (_workflowTiles.Any())
     {
-        <h5>@Localizer["Section.Workflow"]</h5>
-        <hr class="mt-0 mb-3" />
+        <div class="d-flex flex-nowrap">
+            <h5>@Localizer["Section.Workflow"]</h5>
+		</div>
+        <hr class="app-rule" />
         @RenderTiles(_workflowTiles)
     }
     @if (_adminTiles.Any())
     {
-        <h5 class="@(_workflowTiles.Any() ? "mt-4" : "")">@Localizer["Section.Admin"]</h5>
-        <hr class="mt-0 mb-3" />
+        <div class="d-flex flex-nowrap">
+            <h5 class="@(_workflowTiles.Any() ? "mt-4" : "")">@Localizer["Section.Admin"]</h5>
+        </div>
+        <hr class="app-rule" />
         @RenderTiles(_adminTiles)
     }
   
