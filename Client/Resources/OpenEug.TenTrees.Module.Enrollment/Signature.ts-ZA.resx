@@ -8,7 +8,7 @@
   <data name="Step" xml:space="preserve"><value>Goza</value></data>
   <data name="Of" xml:space="preserve"><value>ya</value></data>
   <data name="Section.Signature" xml:space="preserve"><value>Kusayina</value></data>
-  <data name="Signature" xml:space="preserve"><value>Kusayina:</value></data>
+  <data name="Signature.Text" xml:space="preserve"><value>Kusayina:</value></data>
   <data name="Signature.Info" xml:space="preserve"><value>Kombela u langutisisa nhlamuselo ivi u nyika kusayina ku hetisa nkandziyiso</value></data>
   <data name="Signature.Placeholder" xml:space="preserve"><value>Sayina laha</value></data>
   <data name="Signature.Help" xml:space="preserve"><value>Dirowa kusayina ka wena hi xivomba xa wena kumbe mouse</value></data>

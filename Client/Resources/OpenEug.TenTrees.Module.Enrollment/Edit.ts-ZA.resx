@@ -27,31 +27,31 @@
   <data name="Section.Signature" xml:space="preserve">
     <value>Kusayina</value>
   </data>
-  <data name="TreeMentorName" xml:space="preserve">
+  <data name="MentorName.Text" xml:space="preserve">
     <value>Vito ra Muleriseri wa Mirhi:</value>
   </data>
-  <data name="GrowerName" xml:space="preserve">
+  <data name="GrowerName.Text" xml:space="preserve">
     <value>Vito ra Mulimi:</value>
   </data>
-  <data name="Village" xml:space="preserve">
+  <data name="Village.Text" xml:space="preserve">
     <value>Rixaka:</value>
   </data>
-  <data name="HouseNumber" xml:space="preserve">
+  <data name="HouseNumber.Text" xml:space="preserve">
     <value>Nomboro ya Yindlu:</value>
   </data>
-  <data name="IdNumber" xml:space="preserve">
+  <data name="IdNumber.Text" xml:space="preserve">
     <value>Nomboro ya ID:</value>
   </data>
-  <data name="BirthDate" xml:space="preserve">
+  <data name="BirthDate.Text" xml:space="preserve">
     <value>Siku ra Vutswalo:</value>
   </data>
-  <data name="OwnsHome" xml:space="preserve">
+  <data name="OwnsHome.Text" xml:space="preserve">
     <value>Va ni yindlu ya vona?</value>
   </data>
-  <data name="HouseholdSize" xml:space="preserve">
+  <data name="HouseholdSize.Text" xml:space="preserve">
     <value>Nhlayo ya Vanhu eKaya:</value>
   </data>
-  <data name="Date" xml:space="preserve">
+  <data name="Date.Text" xml:space="preserve">
     <value>Siku:</value>
   </data>
   <data name="Select" xml:space="preserve">
@@ -66,36 +66,102 @@
   <data name="No" xml:space="preserve">
     <value>E-e</value>
   </data>
-  <data name="Criteria.EnrolledInPE" xml:space="preserve">
+  <data name="Criteria.EnrolledInPE.Text" xml:space="preserve">
     <value>Va nghenile eka PE va ri ni xibakela lexi hlanteriweke?</value>
   </data>
-  <data name="Criteria.PEGraduate" xml:space="preserve">
+  <data name="Criteria.PEGraduate.Text" xml:space="preserve">
     <value>Va herile PE emasikweni lama nga hundza?</value>
   </data>
-  <data name="Criteria.GardenPlanted" xml:space="preserve">
+  <data name="Criteria.GardenPlanted.Text" xml:space="preserve">
     <value>Loko swi ri tano, xibakela xa vona xi hlanteriwile naswona xi hlayisiwa?</value>
   </data>
-  <data name="Criteria.ChildHeaded" xml:space="preserve">
+  <data name="Criteria.ChildHeaded.Text" xml:space="preserve">
     <value>Kaya leri rhomelerwaka hi n'wana?</value>
   </data>
-  <data name="Criteria.WomanHeaded" xml:space="preserve">
+  <data name="Criteria.WomanHeaded.Text" xml:space="preserve">
     <value>Kaya leri rhomelerwaka hi wansati?</value>
   </data>
-  <data name="Criteria.EmptyYard" xml:space="preserve">
+  <data name="Criteria.EmptyYard.Text" xml:space="preserve">
     <value>Jarata leri nga riki na nchumu kumbe leyitsongo?</value>
   </data>
-  <data name="Commit.NoChemicals" xml:space="preserve">
+  <data name="Commit.NoChemicals.Text" xml:space="preserve">
     <value>U tiyimisela ku nga tirhisi tikhemikhali kumbe timbheteri</value>
   </data>
-  <data name="Commit.AttendClasses" xml:space="preserve">
+  <data name="Commit.AttendClasses.Text" xml:space="preserve">
     <value>U tiyimisela ku kota tlilasi ta ntlhanu ta ku leha permaculture</value>
   </data>
-  <data name="Commit.NoCutting" xml:space="preserve">
+  <data name="Commit.NoCutting.Text" xml:space="preserve">
     <value>U tiyimisela ku nga tsemi mirhi</value>
   </data>
-  <data name="Commit.WomenChildren" xml:space="preserve">
+  <data name="Commit.WomenChildren.Text" xml:space="preserve">
     <value>U tiyimisela ku yimela vasati na vana handle ka ku hlundzukiwa</value>
+  </data>
+  <data name="Commit.CareWhileAway.Text" xml:space="preserve">
+    <value>U pfumela ku khathalela mirhi loko u ri ekule ekaya</value>
+  </data>
+  <data name="Commit.YardAccess.Text" xml:space="preserve">
+    <value>Nyika mpfumelelo eka muleriseri wo nghena ejarateni</value>
+  </data>
+  <data name="Signature" xml:space="preserve">
+    <value>Kusayina:</value>
   </data>
   <data name="Signature.Collected" xml:space="preserve"><value>Kusayina ku koxiwile</value></data>
   <data name="Signature.NotCollected" xml:space="preserve"><value>A ku na kusayina loku koxiweke eka nkandziyiso lowu</value></data>
+  <data name="Save" xml:space="preserve">
+    <value>Hlayisa</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Rhimisa</value>
+  </data>
+  <data name="Message.LoadError" xml:space="preserve">
+    <value>Xiphiqo xi Humelele eka ku Loda Nkandziyiso</value>
+  </data>
+  <data name="Message.SaveValidation" xml:space="preserve">
+    <value>Kombela u nyika mahungu hinkwawo lama lavekaka</value>
+  </data>
+  <data name="Message.SaveError" xml:space="preserve">
+    <value>Xiphiqo xi Humelele eka ku Hlayisa Nkandziyiso</value>
+  </data>
+  <data name="Message.SaveSuccess" xml:space="preserve">
+    <value>Nkandziyiso wu hlayisiwile hi ndlela leyi humeleleke</value>
+  </data>
+  <data name="Message.UpdateSuccess" xml:space="preserve">
+    <value>Nkandziyiso wu hundzuriwile hi ndlela leyi humeleleke</value>
+  </data>
+  <data name="Section.EnrollmentStatus" xml:space="preserve">
+    <value>Xiyimo xa Nkandziyiso (Vulawuri Ntsena)</value>
+  </data>
+  <data name="Label.CurrentStatus" xml:space="preserve">
+    <value>Xiyimo xa Sweswi</value>
+  </data>
+  <data name="Action.Approve" xml:space="preserve">
+    <value>Amukela Nkandziyiso</value>
+  </data>
+  <data name="Action.Reject" xml:space="preserve">
+    <value>Hanisa Nkandziyiso</value>
+  </data>
+  <data name="Action.SetPending" xml:space="preserve">
+    <value>Veka eka Ku Rindza</value>
+  </data>
+  <data name="Message.Approved" xml:space="preserve">
+    <value>Nkandziyiso wu amukeriwile hi ndlela leyi humeleleke</value>
+  </data>
+  <data name="Message.Rejected" xml:space="preserve">
+    <value>Nkandziyiso wu haniwile</value>
+  </data>
+  <data name="Message.SetPending" xml:space="preserve">
+    <value>Nkandziyiso wu vekiwile eka xiyimo xo rindza</value>
+  </data>
+  <data name="Message.StatusChangeError" xml:space="preserve">
+    <value>Xihoxo xo hundzula xiyimo xa nkandziyiso</value>
+  </data>
+  <data name="EnrollmentStatus.Pending" xml:space="preserve">
+    <value>Rindza</value>
+  </data>
+  <data name="EnrollmentStatus.Approved" xml:space="preserve">
+    <value>Amukeriwe</value>
+  </data>
+  <data name="EnrollmentStatus.Rejected" xml:space="preserve">
+    <value>Haniwile</value>
+  </data>
 </root>

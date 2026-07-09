@@ -27,6 +27,96 @@
   <data name="Message.GrowerNotFound" xml:space="preserve">
     <value>[XS] Grower not found or you do not have permission to view this grower.</value>
   </data>
+  <data name="Section.CurrentStatus" xml:space="preserve">
+    <value>Xiyimo xa Sweswi</value>
+  </data>
+  <data name="Section.AdminActions" xml:space="preserve">
+    <value>Swiendlo swa Vulawuri</value>
+  </data>
+  <data name="Label.CurrentStatus" xml:space="preserve">
+    <value>Xiyimo xa Sweswi</value>
+  </data>
+  <data name="Label.ExitDate" xml:space="preserve">
+    <value>Siku ro Huma</value>
+  </data>
+  <data name="Label.ExitReason" xml:space="preserve">
+    <value>Xivangelo xo Huma</value>
+  </data>
+  <data name="Label.ExitNotes" xml:space="preserve">
+    <value>Tinotsi Tin'wana</value>
+  </data>
+  <data name="Action.ConfirmExit" xml:space="preserve">
+    <value>Tiyisisa ku Huma</value>
+  </data>
+  <data name="Action.Cancel" xml:space="preserve">
+    <value>Khansela</value>
+  </data>
+  <data name="Action.BackToList" xml:space="preserve">
+    <value>Vuya eka Nxaxamelo</value>
+  </data>
+  <data name="Status.Active" xml:space="preserve">
+    <value>Yi tirhaka</value>
+  </data>
+  <data name="Status.Inactive" xml:space="preserve">
+    <value>A yi tirhiki</value>
+  </data>
+  <data name="Status.Exited" xml:space="preserve">
+    <value>U Humile</value>
+  </data>
+  <data name="ExitReason.MovedAway" xml:space="preserve">
+    <value>U Rhurhile</value>
+  </data>
+  <data name="ExitReason.Deceased" xml:space="preserve">
+    <value>U File</value>
+  </data>
+  <data name="ExitReason.Voluntary" xml:space="preserve">
+    <value>Ku Tihuma hi Ku Tirhandza</value>
+  </data>
+  <data name="ExitReason.NonCompliance" xml:space="preserve">
+    <value>Ku Nga Landzeleli Milawu</value>
+  </data>
+  <data name="ExitReason.Other" xml:space="preserve">
+    <value>Swin'wana</value>
+  </data>
+  <data name="Select" xml:space="preserve">
+    <value>-- Hlawula --</value>
+  </data>
+  <data name="Modal.ExitTitle" xml:space="preserve">
+    <value>Tsala ku Huma eka Nongonoko</value>
+  </data>
+  <data name="Modal.ExitConfirm" xml:space="preserve">
+    <value>[XS] This will permanently mark the grower as exited from the program. This action records formal program departure.</value>
+  </data>
+  <data name="Message.Loading" xml:space="preserve">
+    <value>Mahungu ya mulimi ya laviseka...</value>
+  </data>
+  <data name="Message.LoadError" xml:space="preserve">
+    <value>Xihoxo xo layisa mulimi</value>
+  </data>
+  <data name="Message.StatusUpdated" xml:space="preserve">
+    <value>Xiyimo xa mulimi xi hundzuriwile hi ndlela leyi humeleleke</value>
+  </data>
+  <data name="Message.StatusUpdateError" xml:space="preserve">
+    <value>Xihoxo xo hundzula xiyimo xa mulimi</value>
+  </data>
+  <data name="Message.ExitRecorded" xml:space="preserve">
+    <value>Ku huma eka nongonoko ku tsariwile hi ndlela leyi humeleleke</value>
+  </data>
+  <data name="Message.ExitRecordError" xml:space="preserve">
+    <value>Xihoxo xo tsala ku huma eka nongonoko</value>
+  </data>
+  <data name="Message.GrowerExited" xml:space="preserve">
+    <value>Mulimi loyi u humile eka nongonoko. A ku ha koteki ku hundzula xiyimo xa yena.</value>
+  </data>
+  <data name="Validation.ExitDateRequired" xml:space="preserve">
+    <value>Kombela u nghenisa siku ro huma</value>
+  </data>
+  <data name="Validation.ExitReasonRequired" xml:space="preserve">
+    <value>Kombela u hlawula xivangelo xo huma</value>
+  </data>
+  <data name="Validation.NotesRequiredForOther" xml:space="preserve">
+    <value>Kombela u nyika vuxokoxoko loko u hlawula "Swin'wana"</value>
+  </data>
   <data name="Section.Assessments" xml:space="preserve">
     <value>Swikambelo</value>
   </data>

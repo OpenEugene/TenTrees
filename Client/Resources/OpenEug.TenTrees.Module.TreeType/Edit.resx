@@ -58,16 +58,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Name" xml:space="preserve">
+  <data name="Name.Text" xml:space="preserve">
     <value>Name</value>
   </data>
-  <data name="Category" xml:space="preserve">
+  <data name="Category.Text" xml:space="preserve">
     <value>Category</value>
   </data>
-  <data name="SortOrder" xml:space="preserve">
+  <data name="SortOrder.Text" xml:space="preserve">
     <value>Sort Order</value>
   </data>
-  <data name="IsActive" xml:space="preserve">
+  <data name="IsActive.Text" xml:space="preserve">
     <value>Active</value>
   </data>
   <data name="Message.LoadError" xml:space="preserve">
@@ -96,5 +96,17 @@
   </data>
   <data name="Action.Cancel" xml:space="preserve">
     <value>Cancel</value>
+  </data>
+  <data name="Name.HelpText" xml:space="preserve">
+    <value>Enter the tree type name</value>
+  </data>
+  <data name="Category.HelpText" xml:space="preserve">
+    <value>Select the category for this tree type</value>
+  </data>
+  <data name="SortOrder.HelpText" xml:space="preserve">
+    <value>Display order within the category</value>
+  </data>
+  <data name="IsActive.HelpText" xml:space="preserve">
+    <value>Is this tree type currently available?</value>
   </data>
 </root>

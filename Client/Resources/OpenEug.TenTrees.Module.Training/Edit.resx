@@ -21,19 +21,19 @@
   <data name="Section.SessionDetails" xml:space="preserve">
     <value>Session Details</value>
   </data>
-  <data name="ClassName" xml:space="preserve">
+  <data name="ClassName.Text" xml:space="preserve">
     <value>Class Name:</value>
   </data>
-  <data name="ClassDate" xml:space="preserve">
+  <data name="ClassDate.Text" xml:space="preserve">
     <value>Date:</value>
   </data>
-  <data name="Village" xml:space="preserve">
+  <data name="Village.Text" xml:space="preserve">
     <value>Village:</value>
   </data>
-  <data name="ClassNumber" xml:space="preserve">
+  <data name="ClassNumber.Text" xml:space="preserve">
     <value>Class Number (1-5):</value>
   </data>
-  <data name="Notes" xml:space="preserve">
+  <data name="Notes.Text" xml:space="preserve">
     <value>Notes:</value>
   </data>
   <data name="SelectVillage" xml:space="preserve">

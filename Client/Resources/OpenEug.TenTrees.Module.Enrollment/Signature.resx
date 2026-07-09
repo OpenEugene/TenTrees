@@ -8,7 +8,7 @@
   <data name="Step" xml:space="preserve"><value>Step</value></data>
   <data name="Of" xml:space="preserve"><value>of</value></data>
   <data name="Section.Signature" xml:space="preserve"><value>Signature</value></data>
-  <data name="Signature" xml:space="preserve"><value>Signature:</value></data>
+  <data name="Signature.Text" xml:space="preserve"><value>Signature:</value></data>
   <data name="Signature.Info" xml:space="preserve"><value>Please review the summary and provide a signature to complete the enrollment</value></data>
   <data name="Signature.Placeholder" xml:space="preserve"><value>Sign here</value></data>
   <data name="Signature.Help" xml:space="preserve"><value>Draw your signature using your finger or mouse</value></data>

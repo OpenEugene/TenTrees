@@ -12,16 +12,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Name" xml:space="preserve">
+  <data name="Name.Text" xml:space="preserve">
     <value>Vito</value>
   </data>
-  <data name="Category" xml:space="preserve">
+  <data name="Category.Text" xml:space="preserve">
     <value>Xigaba</value>
   </data>
-  <data name="SortOrder" xml:space="preserve">
+  <data name="SortOrder.Text" xml:space="preserve">
     <value>Ndzendzevutano</value>
   </data>
-  <data name="IsActive" xml:space="preserve">
+  <data name="IsActive.Text" xml:space="preserve">
     <value>Yi tirhaka</value>
   </data>
   <data name="Message.LoadError" xml:space="preserve">
@@ -50,5 +50,17 @@
   </data>
   <data name="Action.Cancel" xml:space="preserve">
     <value>Khansela</value>
+  </data>
+  <data name="Name.HelpText" xml:space="preserve">
+    <value>[XS] Enter the tree type name</value>
+  </data>
+  <data name="Category.HelpText" xml:space="preserve">
+    <value>[XS] Select the category for this tree type</value>
+  </data>
+  <data name="SortOrder.HelpText" xml:space="preserve">
+    <value>[XS] Display order within the category</value>
+  </data>
+  <data name="IsActive.HelpText" xml:space="preserve">
+    <value>[XS] Is this tree type currently available?</value>
   </data>
 </root>

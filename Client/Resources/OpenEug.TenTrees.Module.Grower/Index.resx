@@ -87,4 +87,10 @@
   <data name="Dialog.DeleteGrower.Message" xml:space="preserve">
     <value>Are you sure you wish to delete {0}? This action cannot be undone.</value>
   </data>
+  <data name="DeleteGrower.Text" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Message.DeleteError" xml:space="preserve">
+    <value>Unable to delete grower.</value>
+  </data>
 </root>

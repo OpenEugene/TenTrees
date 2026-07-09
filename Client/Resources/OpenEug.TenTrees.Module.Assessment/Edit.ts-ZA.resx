@@ -18,26 +18,41 @@
   <data name="Section.GrowerInfo" xml:space="preserve">
     <value>Mahungu ya Mulimi</value>
   </data>
-  <data name="Grower" xml:space="preserve">
+  <data name="Grower.Text" xml:space="preserve">
     <value>Mulimi</value>
+  </data>
+  <data name="Name.Text" xml:space="preserve">
+    <value>Vito ra Xikambelo:</value>
   </data>
   <data name="SelectGrower" xml:space="preserve">
     <value>-- Hlawula Mulimi --</value>
   </data>
-  <data name="Date" xml:space="preserve">
+  <data name="Back" xml:space="preserve">
+    <value>Vuya</value>
+  </data>
+  <data name="Action.ViewGrower" xml:space="preserve">
+    <value>Vona Mulimi</value>
+  </data>
+  <data name="Date.Text" xml:space="preserve">
     <value>Siku ra Xikambelo</value>
   </data>
   <data name="Section.TreeSurvival" xml:space="preserve">
     <value>Vupona bya Mirhi</value>
   </data>
-  <data name="TreesPlanted" xml:space="preserve">
+  <data name="TreesPlanted.Text" xml:space="preserve">
     <value>Mirhi leyi Byariweke</value>
   </data>
-  <data name="TreesAlive" xml:space="preserve">
+  <data name="TreesAlive.Text" xml:space="preserve">
     <value>Mirhi leyi ha Hanyaka</value>
   </data>
-  <data name="DeceasedTrees" xml:space="preserve">
+  <data name="DeceasedTrees.Text" xml:space="preserve">
     <value>[XS] If any died, which ones?</value>
+  </data>
+  <data name="Field.SelectTreeType" xml:space="preserve">
+    <value>-- Hlawula Muxaka wa Murhi --</value>
+  </data>
+  <data name="Field.DeceasedTreeTypesOther" xml:space="preserve">
+    <value>Kumbe u tsala hi mavito ya wena (xik. Mango, Avocado)</value>
   </data>
   <data name="SurvivalRate" xml:space="preserve">
     <value>Nhlayo ya Vupona</value>
@@ -47,6 +62,9 @@
   </data>
   <data name="ProblemsPrompt" xml:space="preserve">
     <value>[XS] Which problems do you observe?</value>
+  </data>
+  <data name="Problems.NoTrees" xml:space="preserve">
+    <value>A ku si na mirhi leyi tsariweke eka mulimi loyi ha yona.</value>
   </data>
   <data name="Problem.YellowLeaves" xml:space="preserve">
     <value>[XS] The trees have yellow leaves</value>
@@ -69,31 +87,31 @@
   <data name="Section.Permaculture" xml:space="preserve">
     <value>Mikhuva ya Permaculture</value>
   </data>
-  <data name="Practice.Healthy" xml:space="preserve">
+  <data name="Practice.Healthy.Text" xml:space="preserve">
     <value>[XS] Do the trees look healthy?</value>
   </data>
-  <data name="Practice.Chemicals" xml:space="preserve">
+  <data name="Practice.Chemicals.Text" xml:space="preserve">
     <value>[XS] Any chemical fertilizers?</value>
   </data>
-  <data name="Practice.Pesticides" xml:space="preserve">
+  <data name="Practice.Pesticides.Text" xml:space="preserve">
     <value>[XS] Any pesticides used?</value>
   </data>
-  <data name="Practice.Mulched" xml:space="preserve">
+  <data name="Practice.Mulched.Text" xml:space="preserve">
     <value>[XS] Are the trees mulched?</value>
   </data>
-  <data name="Practice.Compost" xml:space="preserve">
+  <data name="Practice.Compost.Text" xml:space="preserve">
     <value>[XS] Are they making compost?</value>
   </data>
-  <data name="Practice.CollectingWater" xml:space="preserve">
+  <data name="Practice.CollectingWater.Text" xml:space="preserve">
     <value>[XS] Are they collecting water?</value>
   </data>
-  <data name="Practice.LeakyTaps" xml:space="preserve">
+  <data name="Practice.LeakyTaps.Text" xml:space="preserve">
     <value>[XS] Any leaky taps visible?</value>
   </data>
-  <data name="Practice.GardenDesign" xml:space="preserve">
+  <data name="Practice.GardenDesign.Text" xml:space="preserve">
     <value>[XS] Is the garden designed to capture water?</value>
   </data>
-  <data name="Practice.Greywater" xml:space="preserve">
+  <data name="Practice.Greywater.Text" xml:space="preserve">
     <value>[XS] Are they using greywater?</value>
   </data>
   <data name="Section.Notes" xml:space="preserve">
@@ -180,7 +198,7 @@
   <data name="Message.DraftLoaded" xml:space="preserve">
     <value>Dirafu yi layisiwile.</value>
   </data>
-  <data name="Delete" xml:space="preserve">
+  <data name="Delete.Text" xml:space="preserve">
     <value>Susa</value>
   </data>
   <data name="Dialog.Delete.Header" xml:space="preserve">

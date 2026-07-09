@@ -48,7 +48,7 @@
   <data name="Column.PhotoConsent" xml:space="preserve">
     <value>Nvumelano wa Swifaniso</value>
   </data>
-  <data name="PhotoConsent" xml:space="preserve">
+  <data name="PhotoConsent.Action" xml:space="preserve">
     <value>Nvumelano wa Swifaniso</value>
   </data>
   <data name="ConsentLevel.NotCaptured" xml:space="preserve">
@@ -140,5 +140,11 @@
   </data>
   <data name="Dialog.DeleteEnrollment.Message" xml:space="preserve">
     <value>U cinisekile leswaku u lava ku susa nkandziyiso lowu?</value>
+  </data>
+  <data name="Edit.Action" xml:space="preserve">
+    <value>[XS] Edit</value>
+  </data>
+  <data name="Delete.Text" xml:space="preserve">
+    <value>Sula</value>
   </data>
 </root>

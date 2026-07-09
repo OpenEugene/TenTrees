@@ -132,31 +132,31 @@
   <data name="Section.Signature" xml:space="preserve">
     <value>Signature</value>
   </data>
-  <data name="TreeMentorName" xml:space="preserve">
+  <data name="MentorName.Text" xml:space="preserve">
     <value>Tree Mentor Name:</value>
   </data>
-  <data name="GrowerName" xml:space="preserve">
+  <data name="GrowerName.Text" xml:space="preserve">
     <value>Grower Name:</value>
   </data>
-  <data name="Village" xml:space="preserve">
+  <data name="Village.Text" xml:space="preserve">
     <value>Village:</value>
   </data>
-  <data name="HouseNumber" xml:space="preserve">
+  <data name="HouseNumber.Text" xml:space="preserve">
     <value>House Number:</value>
   </data>
-  <data name="IdNumber" xml:space="preserve">
+  <data name="IdNumber.Text" xml:space="preserve">
     <value>ID Number:</value>
   </data>
-  <data name="BirthDate" xml:space="preserve">
+  <data name="BirthDate.Text" xml:space="preserve">
     <value>Birth Date:</value>
   </data>
-  <data name="OwnsHome" xml:space="preserve">
+  <data name="OwnsHome.Text" xml:space="preserve">
     <value>Do they own their home?</value>
   </data>
-  <data name="HouseholdSize" xml:space="preserve">
+  <data name="HouseholdSize.Text" xml:space="preserve">
     <value>Household Size:</value>
   </data>
-  <data name="Date" xml:space="preserve">
+  <data name="Date.Text" xml:space="preserve">
     <value>Date:</value>
   </data>
   <data name="Select" xml:space="preserve">
@@ -171,40 +171,40 @@
   <data name="No" xml:space="preserve">
     <value>No</value>
   </data>
-  <data name="Criteria.EnrolledInPE" xml:space="preserve">
+  <data name="Criteria.EnrolledInPE.Text" xml:space="preserve">
     <value>Are they currently enrolled in PE with a garden growing?</value>
   </data>
-  <data name="Criteria.PEGraduate" xml:space="preserve">
+  <data name="Criteria.PEGraduate.Text" xml:space="preserve">
     <value>Are they a graduate of PE in the past?</value>
   </data>
-  <data name="Criteria.GardenPlanted" xml:space="preserve">
+  <data name="Criteria.GardenPlanted.Text" xml:space="preserve">
     <value>If so, is their garden planted and tended?</value>
   </data>
-  <data name="Criteria.ChildHeaded" xml:space="preserve">
+  <data name="Criteria.ChildHeaded.Text" xml:space="preserve">
     <value>Child headed household?</value>
   </data>
-  <data name="Criteria.WomanHeaded" xml:space="preserve">
+  <data name="Criteria.WomanHeaded.Text" xml:space="preserve">
     <value>Woman headed household?</value>
   </data>
-  <data name="Criteria.EmptyYard" xml:space="preserve">
+  <data name="Criteria.EmptyYard.Text" xml:space="preserve">
     <value>Empty or nearly empty yard?</value>
   </data>
-  <data name="Commit.NoChemicals" xml:space="preserve">
+  <data name="Commit.NoChemicals.Text" xml:space="preserve">
     <value>Committed to not using chemicals or pesticides</value>
   </data>
-  <data name="Commit.AttendClasses" xml:space="preserve">
+  <data name="Commit.AttendClasses.Text" xml:space="preserve">
     <value>Committed to attend five permaculture training classes</value>
   </data>
-  <data name="Commit.NoCutting" xml:space="preserve">
+  <data name="Commit.NoCutting.Text" xml:space="preserve">
     <value>Committed not to cut trees</value>
   </data>
-  <data name="Commit.WomenChildren" xml:space="preserve">
+  <data name="Commit.WomenChildren.Text" xml:space="preserve">
     <value>Committed to standing for women and children with no abuse</value>
   </data>
-  <data name="Commit.CareWhileAway" xml:space="preserve">
+  <data name="Commit.CareWhileAway.Text" xml:space="preserve">
     <value>Agree to care for trees while away from home</value>
   </data>
-  <data name="Commit.YardAccess" xml:space="preserve">
+  <data name="Commit.YardAccess.Text" xml:space="preserve">
     <value>Give permission for mentor to enter yard</value>
   </data>
   <data name="Signature" xml:space="preserve">

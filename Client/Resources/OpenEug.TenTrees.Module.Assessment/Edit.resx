@@ -18,26 +18,38 @@
   <data name="Section.GrowerInfo" xml:space="preserve">
     <value>Grower Information</value>
   </data>
-  <data name="Grower" xml:space="preserve">
+  <data name="Grower.Text" xml:space="preserve">
     <value>Grower</value>
+  </data>
+  <data name="Name.Text" xml:space="preserve">
+    <value>Assessment Name:</value>
   </data>
   <data name="SelectGrower" xml:space="preserve">
     <value>-- Select Grower --</value>
   </data>
-  <data name="Date" xml:space="preserve">
+  <data name="Action.ViewGrower" xml:space="preserve">
+    <value>View Grower</value>
+  </data>
+  <data name="Date.Text" xml:space="preserve">
     <value>Assessment Date</value>
   </data>
   <data name="Section.TreeSurvival" xml:space="preserve">
     <value>Tree Survival</value>
   </data>
-  <data name="TreesPlanted" xml:space="preserve">
+  <data name="TreesPlanted.Text" xml:space="preserve">
     <value>Trees Planted</value>
   </data>
-  <data name="TreesAlive" xml:space="preserve">
+  <data name="TreesAlive.Text" xml:space="preserve">
     <value>Trees Still Alive</value>
   </data>
-  <data name="DeceasedTrees" xml:space="preserve">
+  <data name="DeceasedTrees.Text" xml:space="preserve">
     <value>If any died, which ones?</value>
+  </data>
+  <data name="Field.SelectTreeType" xml:space="preserve">
+    <value>-- Select Tree Type --</value>
+  </data>
+  <data name="Field.DeceasedTreeTypesOther" xml:space="preserve">
+    <value>Or enter free text (e.g., Mango, Avocado)</value>
   </data>
   <data name="SurvivalRate" xml:space="preserve">
     <value>Survival Rate</value>
@@ -47,6 +59,9 @@
   </data>
   <data name="ProblemsPrompt" xml:space="preserve">
     <value>Which problems do you observe?</value>
+  </data>
+  <data name="Problems.NoTrees" xml:space="preserve">
+    <value>No trees recorded for this grower yet.</value>
   </data>
   <data name="Problem.YellowLeaves" xml:space="preserve">
     <value>The trees have yellow leaves</value>
@@ -69,31 +84,31 @@
   <data name="Section.Permaculture" xml:space="preserve">
     <value>Permaculture Practices</value>
   </data>
-  <data name="Practice.Healthy" xml:space="preserve">
+  <data name="Practice.Healthy.Text" xml:space="preserve">
     <value>Do the trees look healthy?</value>
   </data>
-  <data name="Practice.Chemicals" xml:space="preserve">
+  <data name="Practice.Chemicals.Text" xml:space="preserve">
     <value>Any chemical fertilizers?</value>
   </data>
-  <data name="Practice.Pesticides" xml:space="preserve">
+  <data name="Practice.Pesticides.Text" xml:space="preserve">
     <value>Any pesticides used?</value>
   </data>
-  <data name="Practice.Mulched" xml:space="preserve">
+  <data name="Practice.Mulched.Text" xml:space="preserve">
     <value>Are the trees mulched?</value>
   </data>
-  <data name="Practice.Compost" xml:space="preserve">
+  <data name="Practice.Compost.Text" xml:space="preserve">
     <value>Are they making compost?</value>
   </data>
-  <data name="Practice.CollectingWater" xml:space="preserve">
+  <data name="Practice.CollectingWater.Text" xml:space="preserve">
     <value>Are they collecting water?</value>
   </data>
-  <data name="Practice.LeakyTaps" xml:space="preserve">
+  <data name="Practice.LeakyTaps.Text" xml:space="preserve">
     <value>Any leaky taps visible?</value>
   </data>
-  <data name="Practice.GardenDesign" xml:space="preserve">
+  <data name="Practice.GardenDesign.Text" xml:space="preserve">
     <value>Is the garden designed to capture water?</value>
   </data>
-  <data name="Practice.Greywater" xml:space="preserve">
+  <data name="Practice.Greywater.Text" xml:space="preserve">
     <value>Are they using greywater?</value>
   </data>
   <data name="Section.Notes" xml:space="preserve">
@@ -183,7 +198,7 @@
   <data name="Message.DraftLoaded" xml:space="preserve">
     <value>Draft loaded.</value>
   </data>
-  <data name="Delete" xml:space="preserve">
+  <data name="Delete.Text" xml:space="preserve">
     <value>Delete</value>
   </data>
   <data name="Dialog.Delete.Header" xml:space="preserve">

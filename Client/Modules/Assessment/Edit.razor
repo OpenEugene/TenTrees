@@ -34,7 +34,7 @@
                         {
                             var growerHref = NavigateUrl(_growerPagePath, _growerModuleId.Value, "Edit", $"id={_growerId}");
                             <a href="@growerHref" class="btn btn-sm btn-outline-secondary">
-                                <span class="oi oi-person me-1" aria-hidden="true"></span>View Grower
+                                <span class="oi oi-person me-1" aria-hidden="true"></span>@Localizer["Action.ViewGrower"]
                             </a>
                         }
                     </div>
@@ -94,7 +94,7 @@
                                 <Label Class="col-sm-4" For="deceasedtrees" ResourceKey="DeceasedTrees">If any died, which ones?</Label>
                                 <div class="col-sm-8">
                                     <select id="deceasedtrees" class="form-select mb-2" @bind="@_deceasedTreeTypes">
-                                        <option value="">-- Select Tree Type --</option>
+                                        <option value="">@Localizer["Field.SelectTreeType"]</option>
                                         @if (_availableTreeTypes != null)
                                         {
                                             @foreach (var category in _availableTreeTypes.GroupBy(t => t.Category))
@@ -108,7 +108,7 @@
                                             }
                                         }
                                     </select>
-                                    <input class="form-control" @bind="@_deceasedTreeTypesOther" placeholder="Or enter free text (e.g., Mango, Avocado)" />
+                                    <input class="form-control" @bind="@_deceasedTreeTypesOther" placeholder="@Localizer["Field.DeceasedTreeTypesOther"]" />
                                 </div>
                             </div>
                         }
@@ -148,7 +148,7 @@
                                             <input class="form-check-input" type="checkbox" id="@checkId"
                                                    checked="@isChecked"
                                                    @onchange="@(e => ToggleProblem(treeId, pType, (bool)e.Value))" />
-                                            <label class="form-check-label" for="@checkId">@AssessmentProblemTypes.DisplayName(pType)</label>
+                                            <label class="form-check-label" for="@checkId">@Localizer[$"Problem.{pType}"]</label>
                                         </div>
                                     }
                                     @if (_problems.Any(p => p.TreeId == tree.TreeId))

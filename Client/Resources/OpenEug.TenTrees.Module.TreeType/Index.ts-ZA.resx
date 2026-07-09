@@ -15,10 +15,10 @@
   <data name="Add" xml:space="preserve">
     <value>Engetela Muxaka wa Murhi</value>
   </data>
-  <data name="Edit" xml:space="preserve">
+  <data name="Edit.Action" xml:space="preserve">
     <value>Lulamisa</value>
   </data>
-  <data name="Delete" xml:space="preserve">
+  <data name="Delete.Text" xml:space="preserve">
     <value>Susa</value>
   </data>
   <data name="Message.Loading" xml:space="preserve">

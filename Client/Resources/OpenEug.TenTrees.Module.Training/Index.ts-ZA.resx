@@ -84,6 +84,18 @@
   <data name="Column.Actions" xml:space="preserve">
     <value>Swiendlo</value>
   </data>
+  <data name="Edit.Action" xml:space="preserve">
+    <value>Lulamisa</value>
+  </data>
+  <data name="Delete.Text" xml:space="preserve">
+    <value>Susa</value>
+  </data>
+  <data name="Action.Edit" xml:space="preserve">
+    <value>Lulamisa</value>
+  </data>
+  <data name="Action.Delete" xml:space="preserve">
+    <value>Susa</value>
+  </data>
   <data name="Column.GrowerName" xml:space="preserve">
     <value>Vito ra Mulimi</value>
   </data>

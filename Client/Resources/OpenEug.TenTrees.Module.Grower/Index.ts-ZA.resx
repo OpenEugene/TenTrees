@@ -87,4 +87,10 @@
   <data name="Dialog.DeleteGrower.Message" xml:space="preserve">
     <value>U cinisekile leswaku u lava ku susa {0}? Xiendlo lexi a xi nge hundzuleki.</value>
   </data>
+  <data name="DeleteGrower.Text" xml:space="preserve">
+    <value>Susa</value>
+  </data>
+  <data name="Message.DeleteError" xml:space="preserve">
+    <value>A ndzi swi koti ku susa mulimi.</value>
+  </data>
 </root>

@@ -204,7 +204,7 @@
   <data name="Column.PhotoConsent" xml:space="preserve">
     <value>Photo Consent</value>
   </data>
-  <data name="PhotoConsent" xml:space="preserve">
+  <data name="PhotoConsent.Action" xml:space="preserve">
     <value>Photo Consent</value>
   </data>
   <data name="ConsentLevel.NotCaptured" xml:space="preserve">
@@ -245,5 +245,11 @@
   </data>
   <data name="Message.StatusChangeError" xml:space="preserve">
     <value>Error Changing Enrollment Status</value>
+  </data>
+  <data name="Edit.Action" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="Delete.Text" xml:space="preserve">
+    <value>Delete</value>
   </data>
 </root>
