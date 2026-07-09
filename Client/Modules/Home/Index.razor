@@ -18,12 +18,7 @@
         <hr class="mt-0 mb-3" />
         @RenderTiles(_adminTiles)
     }
-    @if (_otherTiles.Any())
-    {
-        <h5 class="@((_workflowTiles.Any() || _adminTiles.Any()) ? "mt-4" : "")">@Localizer["Section.Other"]</h5>
-        <hr class="mt-0 mb-3" />
-        @RenderTiles(_otherTiles)
-    }
+  
 }
 else
 {
@@ -63,8 +58,8 @@ else
 
     protected override void OnParametersSet()
     {
-        var pages = PageState.Pages
-            .Where(p => p.IsNavigation && p.ParentId == null && p.PageId != PageState.Page.PageId)
+        var eligiblePages = PageState.Pages
+            .Where(p => p.IsNavigation && p.PageId != PageState.Page.PageId)
             .Select(p => new Tile
             {
                 Name = p.Name,
@@ -73,11 +68,16 @@ else
                 Description = _descriptionKeys.TryGetValue(p.Name, out var descriptionKey) ? Localizer[descriptionKey] : string.Empty
             });
 
-        _workflowTiles = OrderBySection(pages, _workflowOrder);
-        _adminTiles = OrderBySection(pages, _adminOrder);
+        var topLevelPages = eligiblePages.Where(p =>
+            PageState.Pages.FirstOrDefault(page => page.Path == p.Path)?.ParentId == null);
+
+        _workflowTiles = OrderBySection(topLevelPages, _workflowOrder);
+
+        var adminPages = eligiblePages.Where(p => p.Path.StartsWith("/adm/", StringComparison.OrdinalIgnoreCase));
+        _adminTiles = OrderBySection(adminPages, _adminOrder);
 
         var placed = _workflowTiles.Concat(_adminTiles).Select(t => t.Path).ToHashSet();
-        _otherTiles = pages.Where(t => !placed.Contains(t.Path)).OrderBy(t => t.Name).ToList();
+        _otherTiles = eligiblePages.Where(t => !placed.Contains(t.Path)).OrderBy(t => t.Name).ToList();
     }
 
     private static List<Tile> OrderBySection(IEnumerable<Tile> tiles, string[] order)
