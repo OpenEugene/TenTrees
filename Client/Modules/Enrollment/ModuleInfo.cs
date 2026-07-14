@@ -11,9 +11,9 @@ namespace OpenEug.TenTrees.Module.Enrollment
         {
             Name = "Enrollment",
             Description = "Grower Enrollment Submission",
-            Version = "2.5.0",
+            Version = "2.6.0",
             ServerManagerType = "",
-            ReleaseVersions = "1.0.0,1.1.0,1.1.1,1.2.0,1.2.1,1.3.0,2.0.0,2.0.1,2.0.2,2.0.3,2.0.4,2.0.5,2.0.6,2.1.0,2.2.0,2.3.0,2.4.0,2.5.0",
+            ReleaseVersions = "1.0.0,1.1.0,1.1.1,1.2.0,1.2.1,1.3.0,2.0.0,2.0.1,2.0.2,2.0.3,2.0.4,2.0.5,2.0.6,2.1.0,2.2.0,2.3.0,2.4.0,2.5.0,2.6.0",
             Dependencies = "",
             Resources = new List<Resource>
             {
