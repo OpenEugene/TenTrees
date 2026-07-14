@@ -5,7 +5,7 @@
 @inject IStringLocalizer<Index> Localizer
 
 <div class="d-flex flex-nowrap">
-    <h2>Welcome to TenTrees Database</h2>
+    <h2>@Localizer["Heading.Welcome"]</h2>
 </div>
 <hr class="app-rule" />
 
@@ -46,6 +46,20 @@ else
         public string Path { get; set; }
         public string Icon { get; set; }
     }
+
+    // tile names keyed by Oqtane page name so display labels can be localized without changing page metadata
+    private static readonly Dictionary<string, string> _tileNameKeys = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ["Enrollment"] = "TileName.Enrollment",
+        ["Classes"] = "TileName.Classes",
+        ["Training"] = "TileName.Training",
+        ["Grower"] = "TileName.Grower",
+        ["Assessment"] = "TileName.Assessment",
+        ["Village"] = "TileName.Village",
+        ["Cohort"] = "TileName.Cohort",
+        ["Mentor"] = "TileName.Mentor",
+        ["TreeType"] = "TileName.TreeType",
+    };
 
     // brief descriptions keyed by page name and looked up via resx so they can be localized - Page has no description field of its own
     private static readonly Dictionary<string, string> _descriptionKeys = new(StringComparer.OrdinalIgnoreCase)
@@ -98,6 +112,17 @@ else
             .ToList();
     }
 
+    private string GetTileName(string pageName)
+    {
+        if (!_tileNameKeys.TryGetValue(pageName, out var resourceKey))
+        {
+            return pageName;
+        }
+
+        var localizedName = Localizer[resourceKey];
+        return localizedName.ResourceNotFound ? pageName : localizedName.Value;
+    }
+
     private RenderFragment RenderTiles(List<Tile> tiles) => @<div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3 py-2">
         @foreach (var tile in tiles)
         {
@@ -109,7 +134,7 @@ else
                             {
                                 <span class="@tile.Icon me-2" aria-hidden="true"></span>
                             }
-                            @tile.Name
+                            @GetTileName(tile.Name)
                         </h5>
                         @if (!string.IsNullOrEmpty(tile.Description))
                         {

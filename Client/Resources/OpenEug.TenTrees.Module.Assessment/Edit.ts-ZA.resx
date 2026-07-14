@@ -46,7 +46,7 @@
     <value>Mirhi leyi ha Hanyaka</value>
   </data>
   <data name="DeceasedTrees.Text" xml:space="preserve">
-    <value>[XS] If any died, which ones?</value>
+    <value>Loko yin’wani Yi file hi yini?</value>
   </data>
   <data name="Field.SelectTreeType" xml:space="preserve">
     <value>-- Hlawula Muxaka wa Murhi --</value>
@@ -61,64 +61,64 @@
     <value>Swiphiqo</value>
   </data>
   <data name="ProblemsPrompt" xml:space="preserve">
-    <value>[XS] Which problems do you observe?</value>
+    <value>Hi swihi swiphiqo leswi u swi vona ka?</value>
   </data>
   <data name="Problems.NoTrees" xml:space="preserve">
     <value>A ku si na mirhi leyi tsariweke eka mulimi loyi ha yona.</value>
   </data>
   <data name="Problem.YellowLeaves" xml:space="preserve">
-    <value>[XS] The trees have yellow leaves</value>
+    <value>Mirhi yina matluka ya xitshopana.</value>
   </data>
   <data name="Problem.BrokenBranches" xml:space="preserve">
-    <value>[XS] The trees have broken branches</value>
+    <value>Mirhi yina marhavi lama tshovekeke.</value>
   </data>
   <data name="Problem.LosingLeaves" xml:space="preserve">
-    <value>[XS] The trees are losing their leaves</value>
+    <value>Mirhi yi hlanhlekela matluka.</value>
   </data>
   <data name="Problem.LookDry" xml:space="preserve">
-    <value>[XS] The trees look dry</value>
+    <value>Mirhi yi vona ka yi omile.</value>
   </data>
   <data name="Problem.Pests" xml:space="preserve">
-    <value>[XS] Pests eating the plant</value>
+    <value>Swi tsotswana swidya murhi.</value>
   </data>
   <data name="NeedsHelp" xml:space="preserve">
-    <value>[XS] Do you need someone to help with this problem?</value>
+    <value>Xana ulava munhu wo ku pfuna eka xiphiqo lexi?</value>
   </data>
   <data name="Section.Permaculture" xml:space="preserve">
     <value>Mikhuva ya Permaculture</value>
   </data>
   <data name="Practice.Healthy.Text" xml:space="preserve">
-    <value>[XS] Do the trees look healthy?</value>
+    <value>Xana mirhi yi vonaka yi hanye kahle?</value>
   </data>
   <data name="Practice.Chemicals.Text" xml:space="preserve">
-    <value>[XS] Any chemical fertilizers?</value>
+    <value>Xana kuni manyoro ya tikhemikhali?</value>
   </data>
   <data name="Practice.Pesticides.Text" xml:space="preserve">
-    <value>[XS] Any pesticides used?</value>
+    <value>Xana kuni swi sivela switsotswana?</value>
   </data>
   <data name="Practice.Mulched.Text" xml:space="preserve">
-    <value>[XS] Are the trees mulched?</value>
+    <value>Xana mirhi leyi yi funengetiwile hansi?</value>
   </data>
   <data name="Practice.Compost.Text" xml:space="preserve">
-    <value>[XS] Are they making compost?</value>
+    <value>Xana VA endla manyoro ya swilo swa ntumbuluko?</value>
   </data>
   <data name="Practice.CollectingWater.Text" xml:space="preserve">
-    <value>[XS] Are they collecting water?</value>
+    <value>Xana VA hlengeleta mati?</value>
   </data>
   <data name="Practice.LeakyTaps.Text" xml:space="preserve">
-    <value>[XS] Any leaky taps visible?</value>
+    <value>Xana Kuna lani ku pfutaka mati?</value>
   </data>
   <data name="Practice.GardenDesign.Text" xml:space="preserve">
-    <value>[XS] Is the garden designed to capture water?</value>
+    <value>Xana nsimu yi endliwile hi ndlela yo hlengeleta mati?</value>
   </data>
   <data name="Practice.Greywater.Text" xml:space="preserve">
-    <value>[XS] Are they using greywater?</value>
+    <value>Xana va tirhisa mati lama tirhisiweke?</value>
   </data>
   <data name="Section.Notes" xml:space="preserve">
     <value>Tinotsi</value>
   </data>
   <data name="Notes.Empty" xml:space="preserve">
-    <value>[XS] No notes yet. Add the first observation below.</value>
+    <value>A kuna tinotsi to engetela. Ndzavisiso la hansi.</value>
   </data>
   <data name="Note.TypeGeneral" xml:space="preserve">
     <value>Ntolovelo</value>
@@ -127,13 +127,13 @@
     <value>Ndzendzeleko wa Kaya</value>
   </data>
   <data name="Note.PendingLabel" xml:space="preserve">
-    <value>[XS] Pending — saved when you click Save</value>
+    <value>Yi yimile yita hlayisiwa.</value>
   </data>
   <data name="Note.RemoveAriaLabel" xml:space="preserve">
     <value>Susa xitsalwana lexi yimeleke</value>
   </data>
   <data name="Note.NeedsHelpAlert" xml:space="preserve">
-    <value>[XS] This assessment is flagged as needing help. Please describe the issue below as a Home Visit note.</value>
+    <value>Xikambelo lexi xi kombisiwile tani hi lexi xi lavaka mpfuno. Hi kombela u hlamusela xiphiqo lahansi tani hi tsalwa ro endzela Kaya.</value>
   </data>
   <data name="Note.AddLabel" xml:space="preserve">
     <value>Engetela ntsalwa</value>
@@ -148,7 +148,7 @@
     <value>Engetela Ntsalwa</value>
   </data>
   <data name="Note.ImmutableHint" xml:space="preserve">
-    <value>[XS] Notes are appended to the running log and cannot be edited once saved.</value>
+    <value>Tinotsi ti engeteriwa eka nxaxamelo lowu yaka emahlweni na swona a tinge hundzuriwi loko ti hlayisiwile.</value>
   </data>
   <data name="NotesPlaceholder" xml:space="preserve">
     <value>Nghenisa tinotsi tin'wana laha...</value>
@@ -169,7 +169,7 @@
     <value>Kombela u hlawula mulimi.</value>
   </data>
   <data name="Message.FrequencyError" xml:space="preserve">
-    <value>[XS] An assessment was submitted too recently for this grower.</value>
+    <value>Xikambelwana xi rumeriwile kungari ikhale eka murimi loyi.</value>
   </data>
   <data name="Message.SaveSuccess" xml:space="preserve">
     <value>Xikambelo xa wena xi hlayisiwile.</value>
@@ -211,6 +211,6 @@
     <value>Xihoxo xo susa xikambelo.</value>
   </data>
   <data name="Message.NoteSaveError" xml:space="preserve">
-    <value>[XS] One or more notes could not be saved. Please retry.</value>
+    <value>Tsalwa rinwe kumbe  yo tala a swi koteki ku hlayisiwa. Hi kombela u ringeta na kambe.</value>
   </data>
 </root>
