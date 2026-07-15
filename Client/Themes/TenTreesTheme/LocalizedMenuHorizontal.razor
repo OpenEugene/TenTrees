@@ -1,0 +1,16 @@
+@namespace OpenEug.TenTrees.Theme.TenTreesTheme
+@inherits MenuBase
+
+@if (MenuPages.Any())
+{
+    <span class="app-menu-toggler navbar-expand-md">
+        <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#Menu" aria-controls="Menu" aria-expanded="false" aria-label="Toggle Navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </span>
+    <div class="app-menu navbar-expand-md">
+        <div class="collapse navbar-collapse navbar-nav-scroll" id="Menu">
+            <LocalizedMenuItemsHorizontal ParentPage="null" Pages="MenuPages" />
+        </div>
+    </div>
+}
