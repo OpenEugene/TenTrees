@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Home" xml:space="preserve">
+    <value>Kaya</value>
+  </data>
+  <data name="Enrollment" xml:space="preserve">
+    <value>Nkandziyiso</value>
+  </data>
+  <data name="Classes" xml:space="preserve">
+    <value>Tiklasi</value>
+  </data>
+  <data name="Training" xml:space="preserve">
+    <value>Ku Leha</value>
+  </data>
+  <data name="Grower" xml:space="preserve">
+    <value>Mulimi</value>
+  </data>
+  <data name="Assessment" xml:space="preserve">
+    <value>Xikambelo</value>
+  </data>
+  <data name="Admin" xml:space="preserve">
+    <value>Vulawuri</value>
+  </data>
+  <data name="Village" xml:space="preserve">
+    <value>Rixaka</value>
+  </data>
+  <data name="Cohort" xml:space="preserve">
+    <value>Cohort</value>
+  </data>
+  <data name="Mentor" xml:space="preserve">
+    <value>Muleriseri</value>
+  </data>
+  <data name="TreeType" xml:space="preserve">
+    <value>Muxaka wa Murhi</value>
+  </data>
+</root>

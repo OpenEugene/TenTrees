@@ -1,0 +1,15 @@
+@namespace OpenEug.TenTrees.Theme.TenTreesTheme
+
+@if (Orientation == "Vertical")
+{
+    <LocalizedMenuVertical />
+}
+else
+{
+    <LocalizedMenuHorizontal />
+}
+
+@code {
+    [Parameter]
+    public string Orientation { get; set; } = "Horizontal";
+}
