@@ -168,8 +168,14 @@
   <data name="Message.SelectGrower" xml:space="preserve">
     <value>Please select a grower.</value>
   </data>
-  <data name="Message.FrequencyError" xml:space="preserve">
-    <value>An assessment was submitted too recently for this grower.</value>
+  <data name="Message.GrowerNotEligibleError" xml:space="preserve">
+    <value>This grower is not currently active in the program, so a new assessment cannot be submitted.</value>
+  </data>
+  <data name="Message.AssessmentDateProximityWarning" xml:space="preserve">
+    <value>Note: this date is close to another assessment for this grower dated {0} ({1} day(s) apart). You can still save if this is correct.</value>
+  </data>
+  <data name="Message.AssessmentDateDuplicateWarning" xml:space="preserve">
+    <value>An assessment for this grower is already recorded on {0}. Please confirm this is not a duplicate entry before saving.</value>
   </data>
   <data name="Message.SaveSuccess" xml:space="preserve">
     <value>Your assessment has been saved.</value>

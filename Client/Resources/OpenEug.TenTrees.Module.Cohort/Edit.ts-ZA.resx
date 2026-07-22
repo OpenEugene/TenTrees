@@ -27,6 +27,9 @@
   <data name="Field.Name" xml:space="preserve">
     <value>Vito</value>
   </data>
+  <data name="Field.AssessmentFrequencyDays" xml:space="preserve">
+    <value>Nkarhi wa xikambelo (masiku)</value>
+  </data>
   <data name="Field.Status" xml:space="preserve">
     <value>Xiyimo</value>
   </data>

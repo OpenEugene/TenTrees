@@ -27,6 +27,9 @@
   <data name="Field.Name" xml:space="preserve">
     <value>Name</value>
   </data>
+  <data name="Field.AssessmentFrequencyDays" xml:space="preserve">
+    <value>Assessment Frequency (days)</value>
+  </data>
   <data name="Field.Status" xml:space="preserve">
     <value>Status</value>
   </data>

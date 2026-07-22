@@ -1,5 +1,6 @@
 @using Oqtane.Modules.Controls
 @using OpenEug.TenTrees.Module.Assessment.Services
+@using OpenEug.TenTrees.Module.Cohort.Services
 @using OpenEug.TenTrees.Module.Grower.Services
 @using OpenEug.TenTrees.Module.TreeType.Services
 @using OpenEug.TenTrees.Models
@@ -7,6 +8,7 @@
 @namespace OpenEug.TenTrees.Module.Assessment
 @inherits ModuleBase
 @inject IAssessmentService AssessmentService
+@inject ICohortService CohortService
 @inject IGrowerService GrowerService
 @inject ITreeTypeService TreeTypeService
 @inject IOrchardService OrchardService
@@ -63,7 +65,25 @@
                         <div class="row mb-2">
                             <Label Class="col-sm-4" For="assessmentdate" ResourceKey="Date">Assessment Date:</Label>
                             <div class="col-sm-8">
-                                <input id="assessmentdate" type="date" class="form-control" @bind="@_assessmentDate" required />
+                                <input id="assessmentdate" type="date" class="form-control" @bind="@_assessmentDate"
+                                       @bind:after="OnAssessmentDateChanged" required />
+                                @if (ShowAssessmentDateProximityWarning)
+                                {
+                                    <div class="alert alert-warning py-2 small mt-2 mb-0" role="status">
+                                        <span class="oi oi-warning me-1" aria-hidden="true"></span>
+                                        @if (_assessmentDateProximityIsDuplicate)
+                                        {
+                                            @string.Format(Localizer["Message.AssessmentDateDuplicateWarning"],
+                                                           _assessmentDateProximityNearestDate?.ToString("yyyy-MM-dd"))
+                                        }
+                                        else
+                                        {
+                                            @string.Format(Localizer["Message.AssessmentDateProximityWarning"],
+                                                           _assessmentDateProximityNearestDate?.ToString("yyyy-MM-dd"),
+                                                           _assessmentDateProximityDayDiff)
+                                        }
+                                    </div>
+                                }
                             </div>
                         </div>
                     </div>
@@ -429,6 +449,17 @@
     private string _name;
     private DateTime _assessmentDate = DateTime.Today;
 
+    // Assessment Date proximity warning (non-blocking; see Issue #180)
+    private List<Models.Assessment> _growerAssessmentHistory = new();
+    private int _assessmentFrequencyDays = 30; // resolved from grower's most-recently-activated cohort
+    private int? _assessmentDateProximityDayDiff;
+    private DateTime? _assessmentDateProximityNearestDate;
+    private bool _assessmentDateProximityIsDuplicate;
+
+    private bool ShowAssessmentDateProximityWarning =>
+        _assessmentDateProximityDayDiff.HasValue &&
+        _assessmentDateProximityDayDiff.Value <= _assessmentFrequencyDays;
+
     // Tree Survival
     private int _treesPlanted;
     private int _treesAlive;
@@ -695,6 +726,8 @@
                     return;
                 }
 
+                RecalculateAssessmentDateProximityWarning();
+
                 if (!string.IsNullOrWhiteSpace(_newNoteText))
                 {
                     AddPendingNote();
@@ -702,11 +735,11 @@
 
                 if (PageState.Action == "Add")
                 {
-                    // Check frequency rules
-                    bool canSubmit = await AssessmentService.CanSubmitAssessmentAsync(_growerId);
-                    if (!canSubmit)
+                    // Exited/inactive-grower hard block only — frequency is a non-blocking warning now.
+                    bool growerEligible = await AssessmentService.CanSubmitAssessmentAsync(_growerId);
+                    if (!growerEligible)
                     {
-                        AddModuleMessage(Localizer["Message.FrequencyError"], MessageType.Warning);
+                        AddModuleMessage(Localizer["Message.GrowerNotEligibleError"], MessageType.Warning);
                         return;
                     }
 
@@ -835,12 +868,47 @@
         {
             _trees = new();
             _treesLoadedForGrowerId = _growerId;
+            _growerAssessmentHistory = new();
+            _assessmentFrequencyDays = 30;
+            RecalculateAssessmentDateProximityWarning();
             return;
         }
 
         var orchards = await OrchardService.GetOrchardsForGrowerAsync(_growerId);
         _trees = orchards.SelectMany(o => o.Trees).ToList();
         _treesLoadedForGrowerId = _growerId;
+
+        _growerAssessmentHistory = await AssessmentService.GetAssessmentsByGrowerAsync(_growerId) ?? new();
+
+        var cohorts = await CohortService.GetCohortsByGrowerAsync(_growerId) ?? new();
+        var mostRecentActivation = cohorts
+            .Where(c => c.ActivatedOn.HasValue)
+            .OrderByDescending(c => c.ActivatedOn)
+            .FirstOrDefault();
+        _assessmentFrequencyDays = mostRecentActivation?.AssessmentFrequencyDays ?? 30;
+
+        RecalculateAssessmentDateProximityWarning();
+    }
+
+    private void OnAssessmentDateChanged() => RecalculateAssessmentDateProximityWarning();
+
+    private void RecalculateAssessmentDateProximityWarning()
+    {
+        var selectedDate = _assessmentDate.Date;
+        var candidates = _growerAssessmentHistory.Where(a => a.AssessmentId != _id).ToList();
+
+        if (candidates.Count == 0)
+        {
+            _assessmentDateProximityDayDiff = null;
+            _assessmentDateProximityNearestDate = null;
+            _assessmentDateProximityIsDuplicate = false;
+            return;
+        }
+
+        var nearest = candidates.OrderBy(a => Math.Abs((a.AssessmentDate.Date - selectedDate).Days)).First();
+        _assessmentDateProximityDayDiff = Math.Abs((nearest.AssessmentDate.Date - selectedDate).Days);
+        _assessmentDateProximityNearestDate = nearest.AssessmentDate.Date;
+        _assessmentDateProximityIsDuplicate = _assessmentDateProximityDayDiff == 0;
     }
 
     private async Task LoadGrowerModuleAsync()

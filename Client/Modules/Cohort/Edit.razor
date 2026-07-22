@@ -67,6 +67,17 @@
                 </div>
 
                 <div class="row mb-3 align-items-center">
+                    <label class="col-sm-3 col-form-label" for="assessmentFrequencyDays">@Localizer["Field.AssessmentFrequencyDays"]</label>
+                    <div class="col-sm-9">
+                        <input id="assessmentFrequencyDays" type="number" min="1"
+                               class="form-control @(_invalidFields.Contains("AssessmentFrequencyDays") ? "is-invalid" : "")"
+                               @bind="_cohort.AssessmentFrequencyDays"
+                               aria-required="true"
+                               aria-invalid="@(_invalidFields.Contains("AssessmentFrequencyDays") ? "true" : null)" />
+                    </div>
+                </div>
+
+                <div class="row mb-3 align-items-center">
                     <label class="col-sm-3 col-form-label" for="status">@Localizer["Field.Status"]</label>
                     <div class="col-sm-9">
                         <select id="status" class="form-select" @bind="_cohort.Status">
@@ -389,6 +400,7 @@
         var missing = new List<string>();
         if (_cohort.VillageId == 0) { _invalidFields.Add("VillageId"); missing.Add(Localizer["Field.Village"]); }
         if (string.IsNullOrWhiteSpace(_cohort.Name)) { _invalidFields.Add("Name"); missing.Add(Localizer["Field.Name"]); }
+        if (_cohort.AssessmentFrequencyDays < 1) { _invalidFields.Add("AssessmentFrequencyDays"); missing.Add(Localizer["Field.AssessmentFrequencyDays"]); }
 
         if (missing.Count > 0)
         {

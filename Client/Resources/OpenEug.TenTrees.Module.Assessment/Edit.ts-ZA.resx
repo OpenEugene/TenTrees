@@ -168,8 +168,14 @@
   <data name="Message.SelectGrower" xml:space="preserve">
     <value>Kombela u hlawula mulimi.</value>
   </data>
-  <data name="Message.FrequencyError" xml:space="preserve">
-    <value>Xikambelwana xi rumeriwile kungari ikhale eka murimi loyi.</value>
+  <data name="Message.GrowerNotEligibleError" xml:space="preserve">
+    <value>Murimi loyi a nga si tirhi entirhweni sweswi, kutani xikambelo lexintshwa a xi nge rhumeriwi.</value>
+  </data>
+  <data name="Message.AssessmentDateProximityWarning" xml:space="preserve">
+    <value>Xitsundzuxo: siku leri ri tshinele eka xikambelo xin'wana xa murimi loyi hi {0} (masiku {1} exikarhi). U nga ha yi emahlweni u ponisa loko ku ri swinene.</value>
+  </data>
+  <data name="Message.AssessmentDateDuplicateWarning" xml:space="preserve">
+    <value>Xikambelo xa murimi loyi xi tsariwile kale hi {0}. Kombela u tiyiseka leswaku a hi ku phindha-phindha ku tsala mahlo yo fana loko u ponisa.</value>
   </data>
   <data name="Message.SaveSuccess" xml:space="preserve">
     <value>Xikambelo xa wena xi hlayisiwile.</value>
