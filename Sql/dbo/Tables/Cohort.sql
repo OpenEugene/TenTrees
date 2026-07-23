@@ -4,6 +4,7 @@ CREATE TABLE [dbo].[Cohort] (
     [Name]        NVARCHAR (200) NOT NULL,
     [Status]      INT            NOT NULL DEFAULT 0,
     [ActivatedOn] DATETIME2 (7)  NULL,
+    [AssessmentFrequencyDays] INT NOT NULL DEFAULT 30,
     [CreatedBy]   NVARCHAR (256) NOT NULL,
     [CreatedOn]   DATETIME2 (7)  NOT NULL,
     [ModifiedBy]  NVARCHAR (256) NOT NULL,

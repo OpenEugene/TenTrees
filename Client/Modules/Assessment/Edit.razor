@@ -1,15 +1,19 @@
 @using Oqtane.Modules.Controls
 @using OpenEug.TenTrees.Module.Assessment.Services
+@using OpenEug.TenTrees.Module.Cohort.Services
 @using OpenEug.TenTrees.Module.Grower.Services
 @using OpenEug.TenTrees.Module.TreeType.Services
+@using OpenEug.TenTrees.Module.Village.Services
 @using OpenEug.TenTrees.Models
 
 @namespace OpenEug.TenTrees.Module.Assessment
 @inherits ModuleBase
 @inject IAssessmentService AssessmentService
+@inject ICohortService CohortService
 @inject IGrowerService GrowerService
 @inject ITreeTypeService TreeTypeService
 @inject IOrchardService OrchardService
+@inject IVillageService VillageService
 @inject Oqtane.Services.IModuleService ModuleService
 @inject NavigationManager NavigationManager
 @inject IStringLocalizer<Edit> Localizer
@@ -39,14 +43,43 @@
                         }
                     </div>
                     <div class="card-body">
+                        @if (PageState.Action == "Add")
+                        {
+                            <div class="row mb-2">
+                                <Label Class="col-sm-4" For="villageid" ResourceKey="Village">Village:</Label>
+                                <div class="col-sm-8">
+                                    <select id="villageid" class="form-select" @bind="@_selectedVillageId" @bind:after="OnVillageChanged"
+                                            disabled="@IsMentorUser">
+                                        <option value="">@Localizer["SelectVillage"]</option>
+                                        @foreach (var v in _villages)
+                                        {
+                                            <option value="@v.VillageId">@v.VillageName</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <Label Class="col-sm-4" For="cohortid" ResourceKey="Cohort">Cohort:</Label>
+                                <div class="col-sm-8">
+                                    <select id="cohortid" class="form-select" @bind="@_selectedCohortId" @bind:after="OnCohortChanged"
+                                            disabled="@IsMentorUser">
+                                        <option value="">@Localizer["SelectCohort"]</option>
+                                        @foreach (var c in _cohortOptions)
+                                        {
+                                            <option value="@c.CohortId">@c.Name</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        }
                         <div class="row mb-2">
                             <Label Class="col-sm-4" For="growerid" ResourceKey="Grower">Grower:</Label>
                             <div class="col-sm-8">
                                 <select id="growerid" class="form-select" @bind="@_growerId" @bind:after="LoadTreesAsync" required disabled="@(_id > 0)">
                                     <option value="0">@Localizer["SelectGrower"]</option>
-                                    @if (_growers != null)
+                                    @if (_growerOptions != null)
                                     {
-                                        @foreach (var grower in _growers)
+                                        @foreach (var grower in _growerOptions)
                                         {
                                             <option value="@grower.GrowerId">@grower.GrowerName</option>
                                         }
@@ -63,7 +96,25 @@
                         <div class="row mb-2">
                             <Label Class="col-sm-4" For="assessmentdate" ResourceKey="Date">Assessment Date:</Label>
                             <div class="col-sm-8">
-                                <input id="assessmentdate" type="date" class="form-control" @bind="@_assessmentDate" required />
+                                <input id="assessmentdate" type="date" class="form-control" @bind="@_assessmentDate"
+                                       @bind:after="OnAssessmentDateChanged" required />
+                                @if (ShowAssessmentDateProximityWarning)
+                                {
+                                    <div class="alert alert-warning py-2 small mt-2 mb-0" role="status">
+                                        <span class="oi oi-warning me-1" aria-hidden="true"></span>
+                                        @if (_assessmentDateProximityIsDuplicate)
+                                        {
+                                            @string.Format(Localizer["Message.AssessmentDateDuplicateWarning"],
+                                                           _assessmentDateProximityNearestDate?.ToString("yyyy-MM-dd"))
+                                        }
+                                        else
+                                        {
+                                            @string.Format(Localizer["Message.AssessmentDateProximityWarning"],
+                                                           _assessmentDateProximityNearestDate?.ToString("yyyy-MM-dd"),
+                                                           _assessmentDateProximityDayDiff)
+                                        }
+                                    </div>
+                                }
                             </div>
                         </div>
                     </div>
@@ -413,11 +464,19 @@
     public override string Title => "Manage Assessment";
     public override bool UseAdminContainer => false;
 
+    private bool IsMentorUser => UserSecurity.IsAuthorized(PageState.User, AppRoleNames.Mentor);
+
     private ElementReference form;
     private bool validated = false;
 
     private int _id;
     private List<Models.Grower> _growers;
+    private List<Models.Grower> _growerOptions = new();
+    private List<Models.Village> _villages = new();
+    private List<Models.Cohort> _cohortOptions = new();
+    private HashSet<int> _cohortGrowerIds;
+    private string _selectedVillageId = "";
+    private string _selectedCohortId = "";
     private List<Models.TreeType> _availableTreeTypes;
     private List<TreeDetailDto> _trees = new();
     private List<Models.AssessmentProblem> _problems = new();
@@ -428,6 +487,17 @@
     private int _growerId;
     private string _name;
     private DateTime _assessmentDate = DateTime.Today;
+
+    // Assessment Date proximity warning (non-blocking; see Issue #180)
+    private List<Models.Assessment> _growerAssessmentHistory = new();
+    private int _assessmentFrequencyDays = 30; // resolved from grower's most-recently-activated cohort
+    private int? _assessmentDateProximityDayDiff;
+    private DateTime? _assessmentDateProximityNearestDate;
+    private bool _assessmentDateProximityIsDuplicate;
+
+    private bool ShowAssessmentDateProximityWarning =>
+        _assessmentDateProximityDayDiff.HasValue &&
+        _assessmentDateProximityDayDiff.Value <= _assessmentFrequencyDays;
 
     // Tree Survival
     private int _treesPlanted;
@@ -493,12 +563,45 @@
             _availableTreeTypes = await TreeTypeService.GetActiveTreeTypesAsync();
 
             _growers = allGrowers;
+            _growerOptions = _growers;
 
-            if (PageState.Action == "Add" && PageState.QueryString.ContainsKey("growerId") &&
-                int.TryParse(PageState.QueryString["growerId"], out var preGrowerId) && preGrowerId > 0)
+            if (PageState.Action == "Add")
             {
-                _growerId = preGrowerId;
-                await LoadTreesAsync();
+                if (IsMentorUser)
+                {
+                    await LoadMentorActiveCohortAsync();
+                }
+                else
+                {
+                    _villages = await VillageService.GetActiveVillagesAsync() ?? new();
+
+                    if (PageState.QueryString.ContainsKey("villageId") &&
+                        int.TryParse(PageState.QueryString["villageId"], out var preVillageId) && preVillageId > 0 &&
+                        _villages.Any(v => v.VillageId == preVillageId))
+                    {
+                        _selectedVillageId = preVillageId.ToString();
+                    }
+
+                    await LoadCohortOptionsAsync();
+
+                    if (PageState.QueryString.ContainsKey("cohortId") &&
+                        int.TryParse(PageState.QueryString["cohortId"], out var preCohortId) && preCohortId > 0 &&
+                        _cohortOptions.Any(c => c.CohortId == preCohortId))
+                    {
+                        _selectedCohortId = preCohortId.ToString();
+                        await LoadCohortMembersAsync();
+                    }
+                }
+
+                RebuildGrowerOptions();
+
+                if (PageState.QueryString.ContainsKey("growerId") &&
+                    int.TryParse(PageState.QueryString["growerId"], out var preGrowerId) && preGrowerId > 0 &&
+                    _growerOptions.Any(g => g.GrowerId == preGrowerId))
+                {
+                    _growerId = preGrowerId;
+                    await LoadTreesAsync();
+                }
             }
 
             if (PageState.Action == "Edit")
@@ -695,6 +798,8 @@
                     return;
                 }
 
+                RecalculateAssessmentDateProximityWarning();
+
                 if (!string.IsNullOrWhiteSpace(_newNoteText))
                 {
                     AddPendingNote();
@@ -702,11 +807,11 @@
 
                 if (PageState.Action == "Add")
                 {
-                    // Check frequency rules
-                    bool canSubmit = await AssessmentService.CanSubmitAssessmentAsync(_growerId);
-                    if (!canSubmit)
+                    // Exited/inactive-grower hard block only — frequency is a non-blocking warning now.
+                    bool growerEligible = await AssessmentService.CanSubmitAssessmentAsync(_growerId);
+                    if (!growerEligible)
                     {
-                        AddModuleMessage(Localizer["Message.FrequencyError"], MessageType.Warning);
+                        AddModuleMessage(Localizer["Message.GrowerNotEligibleError"], MessageType.Warning);
                         return;
                     }
 
@@ -824,6 +929,101 @@
         _problems = new();
     }
 
+    private async Task LoadMentorActiveCohortAsync()
+    {
+        var cohorts = await CohortService.GetCohortsByMentorAsync(PageState.User?.Username) ?? new();
+        var activeCohort = cohorts
+            .Where(c => c.Status == CohortStatus.Active)
+            .OrderByDescending(c => c.ActivatedOn)
+            .FirstOrDefault();
+
+        if (activeCohort == null)
+        {
+            return;
+        }
+
+        _cohortOptions = new List<Models.Cohort> { activeCohort };
+        _selectedCohortId = activeCohort.CohortId.ToString();
+        _selectedVillageId = activeCohort.VillageId.ToString();
+        _villages = await VillageService.GetActiveVillagesAsync() ?? new();
+
+        await LoadCohortMembersAsync();
+    }
+
+    private async Task LoadCohortOptionsAsync()
+    {
+        var villageId = ParseNullableInt(_selectedVillageId);
+        _cohortOptions = villageId.HasValue
+            ? await CohortService.GetCohortsByVillageAsync(villageId.Value) ?? new()
+            : await CohortService.GetCohortsAsync() ?? new();
+
+        if (!_cohortOptions.Any(c => c.CohortId.ToString() == _selectedCohortId))
+        {
+            _selectedCohortId = "";
+            _cohortGrowerIds = null;
+        }
+    }
+
+    private async Task LoadCohortMembersAsync()
+    {
+        var cohortId = ParseNullableInt(_selectedCohortId);
+        if (cohortId.HasValue)
+        {
+            var growerCohorts = await CohortService.GetGrowerCohortsAsync(cohortId.Value) ?? new();
+            _cohortGrowerIds = new HashSet<int>(growerCohorts.Select(gc => gc.GrowerId));
+        }
+        else
+        {
+            _cohortGrowerIds = null;
+        }
+    }
+
+    private void RebuildGrowerOptions()
+    {
+        IEnumerable<Models.Grower> filtered = _growers ?? new List<Models.Grower>();
+
+        var villageId = ParseNullableInt(_selectedVillageId);
+        if (villageId.HasValue)
+        {
+            filtered = filtered.Where(g => g.VillageId == villageId.Value);
+        }
+
+        if (_cohortGrowerIds != null)
+        {
+            filtered = filtered.Where(g => _cohortGrowerIds.Contains(g.GrowerId));
+        }
+
+        _growerOptions = filtered.OrderBy(g => g.GrowerName).ToList();
+
+        if (_growerId != 0 && !_growerOptions.Any(g => g.GrowerId == _growerId))
+        {
+            _growerId = 0;
+        }
+    }
+
+    private async Task OnVillageChanged()
+    {
+        _selectedCohortId = "";
+        _cohortGrowerIds = null;
+        _growerId = 0;
+        await LoadCohortOptionsAsync();
+        RebuildGrowerOptions();
+        await LoadTreesAsync();
+    }
+
+    private async Task OnCohortChanged()
+    {
+        _growerId = 0;
+        await LoadCohortMembersAsync();
+        RebuildGrowerOptions();
+        await LoadTreesAsync();
+    }
+
+    private static int? ParseNullableInt(string value)
+    {
+        return int.TryParse(value, out int result) ? result : null;
+    }
+
     private async Task LoadTreesAsync()
     {
         if (_treesLoadedForGrowerId.HasValue && _treesLoadedForGrowerId.Value != _growerId)
@@ -835,12 +1035,47 @@
         {
             _trees = new();
             _treesLoadedForGrowerId = _growerId;
+            _growerAssessmentHistory = new();
+            _assessmentFrequencyDays = 30;
+            RecalculateAssessmentDateProximityWarning();
             return;
         }
 
         var orchards = await OrchardService.GetOrchardsForGrowerAsync(_growerId);
         _trees = orchards.SelectMany(o => o.Trees).ToList();
         _treesLoadedForGrowerId = _growerId;
+
+        _growerAssessmentHistory = await AssessmentService.GetAssessmentsByGrowerAsync(_growerId) ?? new();
+
+        var cohorts = await CohortService.GetCohortsByGrowerAsync(_growerId) ?? new();
+        var mostRecentActivation = cohorts
+            .Where(c => c.ActivatedOn.HasValue)
+            .OrderByDescending(c => c.ActivatedOn)
+            .FirstOrDefault();
+        _assessmentFrequencyDays = mostRecentActivation?.AssessmentFrequencyDays ?? 30;
+
+        RecalculateAssessmentDateProximityWarning();
+    }
+
+    private void OnAssessmentDateChanged() => RecalculateAssessmentDateProximityWarning();
+
+    private void RecalculateAssessmentDateProximityWarning()
+    {
+        var selectedDate = _assessmentDate.Date;
+        var candidates = _growerAssessmentHistory.Where(a => a.AssessmentId != _id).ToList();
+
+        if (candidates.Count == 0)
+        {
+            _assessmentDateProximityDayDiff = null;
+            _assessmentDateProximityNearestDate = null;
+            _assessmentDateProximityIsDuplicate = false;
+            return;
+        }
+
+        var nearest = candidates.OrderBy(a => Math.Abs((a.AssessmentDate.Date - selectedDate).Days)).First();
+        _assessmentDateProximityDayDiff = Math.Abs((nearest.AssessmentDate.Date - selectedDate).Days);
+        _assessmentDateProximityNearestDate = nearest.AssessmentDate.Date;
+        _assessmentDateProximityIsDuplicate = _assessmentDateProximityDayDiff == 0;
     }
 
     private async Task LoadGrowerModuleAsync()

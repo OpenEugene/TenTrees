@@ -88,7 +88,7 @@ namespace OpenEug.TenTrees.Module.Cohort.Controllers
         {
             try
             {
-                var suggestion = await _cohortService.SuggestCohortNameAsync(villageId, year);
+                var suggestion = await _cohortService.GetSuggestedNameAsync(villageId, year);
                 return Ok(new CohortNameSuggestion { Name = suggestion });
             }
             catch (Exception ex)
@@ -224,7 +224,7 @@ namespace OpenEug.TenTrees.Module.Cohort.Controllers
         {
             try
             {
-                var created = await _cohortService.AddGrowerCohortAsync(growerId, id);
+                var created = await _cohortService.AddGrowerToCohortAsync(id, growerId);
                 return Ok(created);
             }
             catch (Exception ex)
@@ -241,7 +241,7 @@ namespace OpenEug.TenTrees.Module.Cohort.Controllers
         {
             try
             {
-                await _cohortService.DeleteGrowerCohortAsync(growerId, id);
+                await _cohortService.RemoveGrowerFromCohortAsync(id, growerId);
                 return NoContent();
             }
             catch (Exception ex)
@@ -294,7 +294,7 @@ namespace OpenEug.TenTrees.Module.Cohort.Controllers
         {
             try
             {
-                var created = await _cohortService.AddMentorCohortAsync(mentorId, id);
+                var created = await _cohortService.AssignMentorToCohortAsync(id, mentorId);
                 return Ok(created);
             }
             catch (Exception ex)
@@ -311,7 +311,7 @@ namespace OpenEug.TenTrees.Module.Cohort.Controllers
         {
             try
             {
-                await _cohortService.DeleteMentorCohortAsync(mentorId, id);
+                await _cohortService.RemoveMentorFromCohortAsync(id, mentorId);
                 return NoContent();
             }
             catch (Exception ex)
@@ -381,7 +381,7 @@ namespace OpenEug.TenTrees.Module.Cohort.Controllers
         {
             try
             {
-                await _cohortService.DeleteCohortClassAsync(id, classId);
+                await _cohortService.RemoveCohortClassAsync(id, classId);
                 return NoContent();
             }
             catch (Exception ex)

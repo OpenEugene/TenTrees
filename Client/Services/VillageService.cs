@@ -8,21 +8,6 @@ using Models = OpenEug.TenTrees.Models;
 
 namespace OpenEug.TenTrees.Module.Village.Services
 {
-    public interface IVillageService 
-    {
-        Task<List<Models.Village>> GetVillagesAsync();
-
-        Task<Models.Village> GetVillageAsync(int villageId);
-
-        Task<Models.Village> AddVillageAsync(Models.Village village);
-
-        Task<Models.Village> UpdateVillageAsync(Models.Village village);
-
-        Task DeleteVillageAsync(int villageId);
-        
-        Task<List<Models.Village>> GetActiveVillagesAsync();
-    }
-
     public class VillageService : ServiceBase, IVillageService
     {
         public VillageService(HttpClient http, SiteState siteState) : base(http, siteState) { }
@@ -58,6 +43,11 @@ namespace OpenEug.TenTrees.Module.Village.Services
         public async Task<List<Models.Village>> GetActiveVillagesAsync()
         {
             return await GetJsonAsync<List<Models.Village>>($"{Apiurl}/active", Enumerable.Empty<Models.Village>().ToList());
+        }
+
+        public async Task<bool> HasAssociatedDataAsync(int villageId)
+        {
+            return await GetJsonAsync<bool>($"{Apiurl}/{villageId}/hasassociateddata");
         }
     }
 }
