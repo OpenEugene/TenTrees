@@ -10,16 +10,17 @@ namespace OpenEug.TenTrees.Module.Enrollment.Startup
     {
         public void ConfigureServices(IServiceCollection services)
         {
+            // Guard against double-registration when running on Blazor Server, where Oqtane.Server
+            // also invokes IClientStartup and IServerStartup already registered these services first.
+            // See https://github.com/oqtane/oqtane.framework/discussions/5541
             if (!services.Any(s => s.ServiceType == typeof(IEnrollmentService)))
             {
                 services.AddScoped<IEnrollmentService, EnrollmentService>();
             }
-
             if (!services.Any(s => s.ServiceType == typeof(IEnrollmentStateService)))
             {
                 services.AddScoped<IEnrollmentStateService, EnrollmentStateService>();
             }
-
             if (!services.Any(s => s.ServiceType == typeof(IGrowerService)))
             {
                 services.AddScoped<IGrowerService, GrowerService>();

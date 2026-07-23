@@ -27,8 +27,17 @@
   <data name="Field.Name" xml:space="preserve">
     <value>Name</value>
   </data>
+  <data name="Field.AssessmentFrequencyDays" xml:space="preserve">
+    <value>Assessment Frequency (days)</value>
+  </data>
   <data name="Field.Status" xml:space="preserve">
     <value>Status</value>
+  </data>
+  <data name="Field.ActivatedOn" xml:space="preserve">
+    <value>Activated On</value>
+  </data>
+  <data name="Hint.ActivatedOn" xml:space="preserve">
+    <value>Determines which cohort governs a grower's assessment frequency when they belong to more than one — the most recently activated cohort wins. Normally set automatically the first time Status changes to Active, but can be edited directly here.</value>
   </data>
   <data name="Field.SelectGeneric" xml:space="preserve">
     <value>— select —</value>

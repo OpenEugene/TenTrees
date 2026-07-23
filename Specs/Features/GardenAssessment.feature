@@ -127,43 +127,54 @@ Feature: Tree Monitoring and Garden Health Assessment
     When I submit the assessment
     Then I should see a confirmation message "Your assessment has been saved"
 
-  # ─── ASSESSMENT FREQUENCY ───────────────────────────────────────────────────
-  # Assessment frequency is determined by how long ago the grower's most recently
-  # activated cohort was activated (ActivatedOn date), not the grower's own
-  # enrollment or creation date.
-  #   Year 1 (cohort activated ≤365 days ago): minimum 14 days between assessments
-  #   Year 2+  (cohort activated >365 days ago): minimum 30 days between assessments
+  # ─── ASSESSMENT DATE PROXIMITY WARNING ──────────────────────────────────────
+  # Submission is never blocked by the entered Assessment Date. Each cohort has
+  # its own AssessmentFrequencyDays setting; when the entered Assessment Date is
+  # within that many days of another existing assessment for the same grower, a
+  # non-blocking warning is shown so mentors can confirm they aren't duplicating
+  # a recent visit. Comparison is always against the entered Assessment Date, not
+  # "today", and uses the grower's most-recently-activated cohort's frequency.
 
-  Scenario: Accept assessment for grower whose cohort was activated within the past year
-    Given cohort "Roebuck 1 2026" was activated 180 days ago
+  Scenario: Accept assessment with no proximity warning when dates are far apart
+    Given cohort "Roebuck 1 2026" has an assessment frequency of 14 days
     And "Mary Nkuna" is a member of cohort "Roebuck 1 2026"
-    And her last assessment was 14 days ago
+    And she has an existing assessment dated 60 days before the entered Assessment Date
     When I submit a new assessment
     Then the assessment should be accepted
-    And the system should apply the twice-monthly (14-day) minimum frequency
+    And no assessment date warning should be shown
 
-  Scenario: Reject assessment submitted too soon for a Year 1 grower
-    Given cohort "Roebuck 1 2026" was activated 180 days ago
+  Scenario: Accept assessment with a proximity warning when the entered date is within the cohort's frequency window
+    Given cohort "Roebuck 1 2026" has an assessment frequency of 14 days
     And "Mary Nkuna" is a member of cohort "Roebuck 1 2026"
-    And her last assessment was 10 days ago
+    And she has an existing assessment dated 10 days before the entered Assessment Date
     When I submit a new assessment
-    Then the assessment should be rejected
-    And I should see a message indicating it is too soon to submit
+    Then the assessment should be accepted
+    And I should see a warning that the entered Assessment Date is close to an existing assessment
 
-  Scenario: Accept assessment for grower whose cohort was activated more than a year ago
-    Given cohort "Orpen Gate Village 2023" was activated 400 days ago
+  Scenario: A cohort with a longer configured frequency warns over a wider window
+    Given cohort "Orpen Gate Village 2023" has an assessment frequency of 30 days
     And "Grace Sithole" is a member of cohort "Orpen Gate Village 2023"
-    And her last assessment was 30 days ago
+    And she has an existing assessment dated 20 days before the entered Assessment Date
     When I submit a new assessment
     Then the assessment should be accepted
-    And the system should apply the monthly (30-day) minimum frequency
+    And I should see a warning that the entered Assessment Date is close to an existing assessment
 
-  Scenario: Grower with no cohort defaults to monthly assessment frequency
-    Given "Peter Mthembu" is not a member of any cohort
-    And his last assessment was 30 days ago
+  Scenario: Grower with no assessment history has no proximity warning
+    Given "Peter Mthembu" has no existing assessments
     When I submit a new assessment
     Then the assessment should be accepted
-    And the system should apply the monthly (30-day) minimum frequency
+    And no assessment date warning should be shown
+
+  Scenario: Duplicate-date entry shows stronger wording but still allows save
+    Given "Mary Nkuna" has an existing assessment dated exactly on the entered Assessment Date
+    When I submit a new assessment
+    Then the assessment should be accepted
+    And I should see a duplicate-date warning for this Assessment Date
+
+  Scenario: Editing an assessment excludes its own date from the proximity check
+    Given I am editing an existing assessment for "Mary Nkuna"
+    When I keep its Assessment Date unchanged and save
+    Then no assessment date warning should be shown for the assessment's own original date
 
   # ─── ACCESS CONTROL ─────────────────────────────────────────────────────────
 

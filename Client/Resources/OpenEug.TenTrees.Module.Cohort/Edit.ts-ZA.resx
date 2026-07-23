@@ -27,8 +27,17 @@
   <data name="Field.Name" xml:space="preserve">
     <value>Vito</value>
   </data>
+  <data name="Field.AssessmentFrequencyDays" xml:space="preserve">
+    <value>Nkarhi wa xikambelo (masiku)</value>
+  </data>
   <data name="Field.Status" xml:space="preserve">
     <value>Xiyimo</value>
+  </data>
+  <data name="Field.ActivatedOn" xml:space="preserve">
+    <value>Yi Sunguriwile Hi</value>
+  </data>
+  <data name="Hint.ActivatedOn" xml:space="preserve">
+    <value>Yi kombisa leswaku i rixaka rihi leri fambisaka nkarhi wa xikambelo xa murimi loko a ri xirho xa marixaka layo tala — rixaka leri sunguriweke wo hetelela hi rona ri tirhisiwaka. Normal yi vekiwa hi ku tihlamulela loko Xiyimo xi cinca xi ya eka Yi tirhaka, kambe u nga yi cinca laha hi xitatimende.</value>
   </data>
   <data name="Field.SelectGeneric" xml:space="preserve">
     <value>— hlawula —</value>

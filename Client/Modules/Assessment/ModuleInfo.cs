@@ -11,9 +11,15 @@ namespace OpenEug.TenTrees.Module.Assessment
         {
             Name = "Assessment",
             Description = "Garden Assessment and Tree Monitoring",
+<<<<<<< HEAD
             Version = "2.6.1",
             ServerManagerType = "",
             ReleaseVersions = "1.0.0,1.0.1,1.0.2,1.0.3,1.0.4,1.0.5,2.1.0,2.2.0,2.3.0,2.4.0,2.5.0,2.6.0,2.6.1",
+=======
+            Version = "2.8.0",
+            ServerManagerType = "",
+            ReleaseVersions = "1.0.0,1.0.1,1.0.2,1.0.3,1.0.4,1.0.5,2.1.0,2.2.0,2.3.0,2.4.0,2.5.0,2.6.0,2.7.0,2.8.0",
+>>>>>>> origin/main
             Dependencies = "OpenEug.TenTrees.Module.Grower.1.0.0",
             PackageName = "OpenEug.TenTrees.Module.Assessment"
         };

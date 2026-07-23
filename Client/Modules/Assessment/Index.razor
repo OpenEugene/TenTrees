@@ -16,7 +16,8 @@
 
 <div class="container">
     <div class="d-flex gap-2 mb-3">
-        <ActionLink Action="Add" Security="SecurityAccessLevel.Edit" Text="@Localizer["Add"]" ResourceKey="Add" Class="btn btn-primary" />
+        <ActionLink Action="Add" Security="SecurityAccessLevel.Edit" Text="@Localizer["Add"]" ResourceKey="Add" Class="btn btn-primary"
+                    Parameters="@BuildAddParameters()" />
     </div>
 
     <!-- Cascading Filters: Village → Cohort → Mentor → Grower -->
@@ -137,12 +138,37 @@
             _villages = await VillageService.GetActiveVillagesAsync()
                         ?? new List<Models.Village>();
 
-            if (_villages.Count > 0)
+            if (PageState.QueryString.ContainsKey("villageId") &&
+                int.TryParse(PageState.QueryString["villageId"], out var qsVillageId) &&
+                _villages.Any(v => v.VillageId == qsVillageId))
+            {
+                _selectedVillageId = qsVillageId.ToString();
+            }
+            else if (_villages.Count > 0)
             {
                 _selectedVillageId = _villages[0].VillageId.ToString();
             }
 
-            await LoadCohortOptions();
+            var hasCohortParam = false;
+            if (PageState.QueryString.ContainsKey("cohortId") &&
+                int.TryParse(PageState.QueryString["cohortId"], out var qsCohortId) && qsCohortId > 0)
+            {
+                _selectedCohortId = qsCohortId.ToString();
+                hasCohortParam = true;
+            }
+
+            await LoadCohortOptions(preserveSelection: hasCohortParam);
+
+            if (PageState.QueryString.ContainsKey("mentorId"))
+            {
+                _selectedMentor = Uri.UnescapeDataString(PageState.QueryString["mentorId"]);
+            }
+
+            if (PageState.QueryString.ContainsKey("growerId"))
+            {
+                _selectedGrowerId = PageState.QueryString["growerId"];
+            }
+
             await LoadGrowersForFilters();
             await LoadAssessments();
         }
@@ -153,7 +179,7 @@
         }
     }
 
-    private async Task LoadCohortOptions()
+    private async Task LoadCohortOptions(bool preserveSelection = false)
     {
         int? villageId = ParseNullableInt(_selectedVillageId);
         if (villageId.HasValue)
@@ -165,15 +191,16 @@
             _cohortOptions = await CohortService.GetCohortsAsync();
         }
 
-        // Auto-select the current active cohort, or clear if not available
-        var activeCohort = _cohortOptions.FirstOrDefault(c => c.Status == CohortStatus.Active);
-        if (activeCohort != null)
+        // Preserve an explicitly-requested cohort (e.g. from a returnurl) if it's still valid;
+        // otherwise auto-select the current active cohort, or clear if not available.
+        if (preserveSelection && _cohortOptions.Any(c => c.CohortId.ToString() == _selectedCohortId))
         {
-            _selectedCohortId = activeCohort.CohortId.ToString();
+            // keep _selectedCohortId as-is
         }
         else
         {
-            _selectedCohortId = "";
+            var activeCohort = _cohortOptions.FirstOrDefault(c => c.Status == CohortStatus.Active);
+            _selectedCohortId = activeCohort?.CohortId.ToString() ?? "";
         }
 
         await LoadCohortMembers();
@@ -336,5 +363,26 @@
     private static int? ParseNullableInt(string value)
     {
         return int.TryParse(value, out int result) ? result : null;
+    }
+
+    private string BuildFilterQueryString()
+    {
+        var parts = new List<string>();
+        if (!string.IsNullOrEmpty(_selectedVillageId)) parts.Add($"villageId={_selectedVillageId}");
+        if (!string.IsNullOrEmpty(_selectedCohortId)) parts.Add($"cohortId={_selectedCohortId}");
+        if (!string.IsNullOrEmpty(_selectedMentor)) parts.Add($"mentorId={Uri.EscapeDataString(_selectedMentor)}");
+        if (!string.IsNullOrEmpty(_selectedGrowerId)) parts.Add($"growerId={_selectedGrowerId}");
+        return string.Join("&", parts);
+    }
+
+    private string BuildAddParameters()
+    {
+        var filterQs = BuildFilterQueryString();
+        var returnUrl = string.IsNullOrEmpty(filterQs) ? NavigateUrl() : NavigateUrl(PageState.Page.Path, filterQs);
+
+        var parts = new List<string>();
+        if (!string.IsNullOrEmpty(filterQs)) parts.Add(filterQs);
+        parts.Add($"returnurl={Uri.EscapeDataString(returnUrl)}");
+        return string.Join("&", parts);
     }
 }

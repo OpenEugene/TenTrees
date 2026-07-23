@@ -8,7 +8,6 @@ using Oqtane.Shared;
 using OpenEug.TenTrees.Module.Assessment.Repository;
 using OpenEug.TenTrees.Models;
 using OpenEug.TenTrees.Module.Grower.Repository;
-using OpenEug.TenTrees.Module.Cohort.Repository;
 using OpenEug.TenTrees.Shared;
 
 namespace OpenEug.TenTrees.Module.Assessment.Services
@@ -18,20 +17,17 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
         private readonly IAssessmentRepository _assessmentRepository;
         private readonly IAssessmentNoteRepository _assessmentNoteRepository;
         private readonly IGrowerRepository _growerRepository;
-        private readonly ICohortRepository _cohortRepository;
         private readonly ILogManager _logger;
 
         public ServerAssessmentService(
             IAssessmentRepository assessmentRepository,
             IAssessmentNoteRepository assessmentNoteRepository,
             IGrowerRepository growerRepository,
-            ICohortRepository cohortRepository,
             ILogManager logger)
         {
             _assessmentRepository = assessmentRepository;
             _assessmentNoteRepository = assessmentNoteRepository;
             _growerRepository = growerRepository;
-            _cohortRepository = cohortRepository;
             _logger = logger;
         }
 
@@ -132,38 +128,11 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
 
         public Task<bool> CanSubmitAssessmentAsync(int growerId)
         {
+            // Frequency/proximity checking moved to a non-blocking client-side warning
+            // (Client/Modules/Assessment/Edit.razor, RecalculateAssessmentDateProximityWarning).
+            // This method now guards only the exited/inactive-grower hard block.
             var grower = _growerRepository.GetGrower(growerId);
-            if (grower == null || grower.Status != GrowerStatus.Active)
-            {
-                return Task.FromResult(false);
-            }
-
-            var assessments = _assessmentRepository.GetAssessmentsByGrower(growerId).OrderByDescending(a => a.AssessmentDate).ToList();
-            if (!assessments.Any())
-            {
-                return Task.FromResult(true);
-            }
-
-            var lastAssessment = assessments.First();
-            var daysSinceLast = (DateTime.UtcNow - lastAssessment.AssessmentDate).TotalDays;
-
-            // Determine frequency from cohort: use the most recently activated cohort for this grower.
-            // Year 1 (activated this year) → twice monthly (14 days).
-            // Year 2+ → monthly (30 days).
-            var cohorts = _cohortRepository.GetCohortsByGrower(growerId).ToList();
-            var mostRecentActivation = cohorts
-                .Where(c => c.ActivatedOn.HasValue)
-                .OrderByDescending(c => c.ActivatedOn)
-                .Select(c => c.ActivatedOn.Value)
-                .FirstOrDefault();
-
-            int minDays;
-            if (mostRecentActivation != default && (DateTime.UtcNow - mostRecentActivation).TotalDays <= 365)
-                minDays = 14; // Year 1 cohort — twice monthly
-            else
-                minDays = 30; // Year 2+ or no cohort assigned — monthly
-
-            return Task.FromResult(daysSinceLast >= minDays);
+            return Task.FromResult(grower != null && grower.Status == GrowerStatus.Active);
         }
 
         public Task<List<AssessmentListDto>> GetAssessmentListAsync(int? villageId = null, int? cohortId = null, string mentorUsername = null, int? growerId = null)

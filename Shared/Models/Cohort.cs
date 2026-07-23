@@ -20,6 +20,8 @@ namespace OpenEug.TenTrees.Models
         public CohortStatus Status { get; set; }
 
         public DateTime? ActivatedOn { get; set; }
+
+        public int AssessmentFrequencyDays { get; set; } = 30;
     }
 
     public enum CohortStatus
