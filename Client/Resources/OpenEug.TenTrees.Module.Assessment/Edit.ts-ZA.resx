@@ -18,6 +18,18 @@
   <data name="Section.GrowerInfo" xml:space="preserve">
     <value>Mahungu ya Mulimi</value>
   </data>
+  <data name="Village.Text" xml:space="preserve">
+    <value>Motse</value>
+  </data>
+  <data name="SelectVillage" xml:space="preserve">
+    <value>-- Hlawula Motse --</value>
+  </data>
+  <data name="Cohort.Text" xml:space="preserve">
+    <value>Rixaka</value>
+  </data>
+  <data name="SelectCohort" xml:space="preserve">
+    <value>-- Hlawula Rixaka --</value>
+  </data>
   <data name="Grower.Text" xml:space="preserve">
     <value>Mulimi</value>
   </data>

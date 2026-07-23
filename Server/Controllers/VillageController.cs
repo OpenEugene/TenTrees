@@ -80,6 +80,22 @@ namespace OpenEug.TenTrees.Module.Village.Controllers
             }
         }
 
+        // GET api/<controller>/5/hasassociateddata
+        [HttpGet("{id}/hasassociateddata")]
+        [Authorize]
+        public async Task<ActionResult<bool>> GetHasAssociatedData(int id)
+        {
+            try
+            {
+                return Ok(await _villageService.HasAssociatedDataAsync(id));
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Read, "Village HasAssociatedData Failed {VillageId} {Error}", id, ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
         // POST api/<controller>
         [HttpPost]
         [Authorize]

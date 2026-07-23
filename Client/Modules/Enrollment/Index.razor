@@ -116,8 +116,19 @@
             </Header>
             <Row>
                 @{
-                    var rowClass = context.EnrollmentStatus == EnrollmentStatus.Pending ? "table-warning" :
-                                   context.EnrollmentStatus == EnrollmentStatus.Rejected ? "table-danger" : "";
+                    string rowClass;
+                    if (context.EnrollmentStatus == EnrollmentStatus.Pending)
+                    {
+                        rowClass = "table-warning";
+                    }
+                    else if (context.EnrollmentStatus == EnrollmentStatus.Rejected)
+                    {
+                        rowClass = "table-danger";
+                    }
+                    else
+                    {
+                        rowClass = string.Empty;
+                    }
                 }
 
                 <td class="@rowClass"><ActionLink Action="Edit" Parameters="@($"id={context.EnrollmentId}&returnurl={Uri.EscapeDataString(GetReturnUrl())}")" ResourceKey="Edit" /></td>
@@ -194,7 +205,7 @@
 
         try
         {
-            var status = PageState.QueryString.GetValueOrDefault("status", "");
+             var status = PageState.QueryString.GetValueOrDefault("status", "");
             _statusFilter = Enum.TryParse<EnrollmentStatus>(status, out _) ? status : "";
             _villageFilter = PageState.QueryString.GetValueOrDefault("villageId", "");
             _currentPage = ParsePage(PageState.QueryString.GetValueOrDefault("page"));
@@ -217,11 +228,17 @@
 
     private async Task LoadVillagesAsync()
     {
-        _villages = UserSecurity.IsAuthorized(PageState.User, AppRoleNames.TenTreesAdmin)
-            ? await VillageService.GetVillagesAsync()
-            : (await VillageService.GetActiveVillagesAsync())
+        if (UserSecurity.IsAuthorized(PageState.User, AppRoleNames.TenTreesAdmin))
+        {
+            _villages = await VillageService.GetVillagesAsync();
+        }
+        else
+        {
+            var activeVillages = await VillageService.GetActiveVillagesAsync();
+            _villages = activeVillages
                 .OrderBy(v => v.VillageName)
                 .ToList();
+        }
     }
 
     private async Task LoadEnrollmentsAsync()

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -60,50 +60,13 @@
     <Folder Include="dbo\Tables\" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="dbo\Tables\Visitor.sql" />
-    <Build Include="dbo\Tables\UserRole.sql" />
-    <Build Include="dbo\Tables\User.sql" />
-    <Build Include="dbo\Tables\UrlMapping.sql" />
-    <Build Include="dbo\Tables\Theme.sql" />
-    <Build Include="dbo\Tables\Tenant.sql" />
-    <Build Include="dbo\Tables\Site.sql" />
-    <Build Include="dbo\Tables\Setting.sql" />
-    <Build Include="dbo\Tables\SearchWord.sql" />
-    <Build Include="dbo\Tables\SearchContentWord.sql" />
-    <Build Include="dbo\Tables\SearchContentProperty.sql" />
-    <Build Include="dbo\Tables\SearchContent.sql" />
-    <Build Include="dbo\Tables\Role.sql" />
-    <Build Include="dbo\Tables\Profile.sql" />
-    <Build Include="dbo\Tables\Permission.sql" />
-    <Build Include="dbo\Tables\PageModule.sql" />
-    <Build Include="dbo\Tables\Page.sql" />
     <Build Include="dbo\Tables\Village.sql" />
     <Build Include="dbo\Tables\Enrollment.sql" />
-    <Build Include="dbo\Tables\Notification.sql" />
-    <Build Include="dbo\Tables\ModuleDefinition.sql" />
-    <Build Include="dbo\Tables\Module.sql" />
-    <Build Include="dbo\Tables\Log.sql" />
-    <Build Include="dbo\Tables\Language.sql" />
-    <Build Include="dbo\Tables\JobLog.sql" />
-    <Build Include="dbo\Tables\Job.sql" />
-    <Build Include="dbo\Tables\HtmlText.sql" />
-    <Build Include="dbo\Tables\Folder.sql" />
-    <Build Include="dbo\Tables\File.sql" />
-    <Build Include="dbo\Tables\AspNetUserTokens.sql" />
-    <Build Include="dbo\Tables\AspNetUsers.sql" />
-    <Build Include="dbo\Tables\AspNetUserPasskeys.sql" />
-    <Build Include="dbo\Tables\AspNetUserLogins.sql" />
-    <Build Include="dbo\Tables\AspNetUserClaims.sql" />
-    <Build Include="dbo\Tables\Alias.sql" />
-    <Build Include="dbo\Tables\__EFMigrationsHistory.sql" />
     <Build Include="dbo\Tables\Grower.sql" />
     <Build Include="dbo\Tables\TrainingClass.sql" />
     <Build Include="dbo\Tables\ClassAttendance.sql" />
     <Build Include="dbo\Tables\Assessment.sql" />
     <Build Include="dbo\Tables\AssessmentNote.sql" />
-    <Build Include="dbo\Tables\SiteTask.sql" />
-    <Build Include="dbo\Tables\SiteGroupMember.sql" />
-    <Build Include="dbo\Tables\SiteGroup.sql" />
     <Build Include="dbo\Tables\Cohort.sql" />
     <Build Include="dbo\Tables\GrowerCohort.sql" />
     <Build Include="dbo\Tables\MentorCohort.sql" />

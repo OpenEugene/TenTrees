@@ -18,6 +18,18 @@
   <data name="Section.GrowerInfo" xml:space="preserve">
     <value>Grower Information</value>
   </data>
+  <data name="Village.Text" xml:space="preserve">
+    <value>Village</value>
+  </data>
+  <data name="SelectVillage" xml:space="preserve">
+    <value>-- Select Village --</value>
+  </data>
+  <data name="Cohort.Text" xml:space="preserve">
+    <value>Cohort</value>
+  </data>
+  <data name="SelectCohort" xml:space="preserve">
+    <value>-- Select Cohort --</value>
+  </data>
   <data name="Grower.Text" xml:space="preserve">
     <value>Grower</value>
   </data>
