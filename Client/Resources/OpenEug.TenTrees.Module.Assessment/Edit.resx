@@ -147,4 +147,7 @@
   <data name="Message.DeleteError" xml:space="preserve">
     <value>Error deleting assessment.</value>
   </data>
+  <data name="ViewGrowerProfile" xml:space="preserve">
+    <value>View Grower Profile</value>
+  </data>
 </root>

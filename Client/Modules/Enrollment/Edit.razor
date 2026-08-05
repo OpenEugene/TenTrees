@@ -76,7 +76,7 @@
                 <div class="row mb-2">
                     <Label Class="col-sm-4" For="ownshome" ResourceKey="OwnsHome">Do they own their home?</Label>
                     <div class="col-sm-8">
-                        <select id="ownshome" class="form-select" @bind="@_ownsHome">
+                        <select id="ownshome" class="form-select" @bind="@_ownsHomeStr">
                             <option value="">@Localizer["Select"]</option>
                             <option value="true">@Localizer["Yes"]</option>
                             <option value="false">@Localizer["No"]</option>
@@ -309,6 +309,7 @@
     private bool validated = false;
 
     private int _id;
+    private bool _loaded = false;
 
     // Villages for dropdown
     private List<Models.Village> _villages;
@@ -321,7 +322,7 @@
     private string _houseNumber;
     private string _idNumber;
     private DateTime? _birthDate;
-    private bool _ownsHome;
+    private string _ownsHomeStr;
     private int _householdSize = 1;
     private DateTime _enrollmentDate = DateTime.Today;
     
@@ -355,6 +356,9 @@
 
     protected override async Task OnParametersSetAsync()
     {
+        if (_loaded) return;
+        _loaded = true;
+
         try
         {
             // Load villages for dropdown
@@ -385,7 +389,7 @@
                     _idNumber = Enrollment.IdNumber;
                     _birthDate = Enrollment.BirthDate;
                     _householdSize = Enrollment.HouseholdSize;
-                    _ownsHome = Enrollment.OwnsHome;
+                    _ownsHomeStr = Enrollment.OwnsHome ? "true" : "false";
                     _enrollmentDate = Enrollment.EnrollmentDate.Date;
                     _mentorUsername = Enrollment.MentorUsername ?? PageState.User.Username;
 
@@ -445,7 +449,7 @@
                     Enrollment.IdNumber = _idNumber;
                     Enrollment.BirthDate = _birthDate;
                     Enrollment.HouseholdSize = _householdSize;
-                    Enrollment.OwnsHome = _ownsHome;
+                    Enrollment.OwnsHome = _ownsHomeStr == "true";
                     Enrollment.EnrollmentDate = DateTime.UtcNow;
                     Enrollment.MentorUsername = _mentorUsername;
                     Enrollment.MentorName = _users?.FirstOrDefault(u => u.Username == _mentorUsername)?.DisplayName ?? _mentorUsername;
@@ -491,7 +495,7 @@
                     Enrollment.IdNumber = _idNumber;
                     Enrollment.BirthDate = _birthDate;
                     Enrollment.HouseholdSize = _householdSize;
-                    Enrollment.OwnsHome = _ownsHome;
+                    Enrollment.OwnsHome = _ownsHomeStr == "true";
                     Enrollment.MentorUsername = _mentorUsername;
                     Enrollment.MentorName = _users?.FirstOrDefault(u => u.Username == _mentorUsername)?.DisplayName ?? _mentorUsername;
                     
