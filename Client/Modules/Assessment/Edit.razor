@@ -38,6 +38,12 @@
                                         }
                                     }
                                 </select>
+                                @if (_id > 0 && _growerId > 0)
+                                {
+                                    <a href="@NavigateUrl("grower")" class="btn btn-sm btn-outline-secondary mt-1">
+                                        <span class="oi oi-person" aria-hidden="true"></span> @Localizer["ViewGrowerProfile"]
+                                    </a>
+                                }
                             </div>
                         </div>
                         <div class="row mb-2">
@@ -296,7 +302,7 @@
         <button type="button" class="btn btn-outline-info" @onclick="LoadDraft">@Localizer["LoadDraft"]</button>
     }
     <NavLink class="btn btn-secondary" href="@NavigateUrl()">@Localizer["Cancel"]</NavLink>
-    @if (PageState.Action == "Edit")
+    @if (_id > 0)
     {
         <ActionDialog Header="@Localizer["Dialog.Delete.Header"]"
                       Message="@Localizer["Dialog.Delete.Message"]"
@@ -307,14 +313,14 @@
                       ResourceKey="Delete" />
     }
     <br /><br />
-    @if (PageState.Action == "Edit")
+    @if (_id > 0)
     {
         <AuditInfo CreatedBy="@_createdby" CreatedOn="@_createdon" ModifiedBy="@_modifiedby" ModifiedOn="@_modifiedon"></AuditInfo>
     }
 </form>
 
 @code {
-    public override string Actions => "Add,Edit";
+    public override string Actions => "Edit";
     public override string Title => "Manage Assessment";
     public override bool UseAdminContainer => false;
 
@@ -389,57 +395,54 @@
                 _growers = allGrowers.Where(g => g.MentorUsername == PageState.User.Username).ToList();
             }
 
-            if (PageState.Action == "Edit")
+            if (PageState.QueryString.ContainsKey("id"))
             {
-                if (PageState.QueryString.ContainsKey("id"))
+                _id = Int32.Parse(PageState.QueryString["id"]);
+                Models.Assessment assessment = await AssessmentService.GetAssessmentAsync(_id);
+                if (assessment != null)
                 {
-                    _id = Int32.Parse(PageState.QueryString["id"]);
-                    Models.Assessment assessment = await AssessmentService.GetAssessmentAsync(_id);
-                    if (assessment != null)
+                    _growerId = assessment.GrowerId;
+                    _name = assessment.Name;
+                    _assessmentDate = assessment.AssessmentDate;
+
+                    _treesPlanted = assessment.TreesPlanted;
+                    _treesAlive = assessment.TreesAlive;
+
+                    if (!string.IsNullOrEmpty(assessment.DeceasedTreeTypes))
                     {
-                        _growerId = assessment.GrowerId;
-                        _name = assessment.Name;
-                        _assessmentDate = assessment.AssessmentDate;
-
-                        _treesPlanted = assessment.TreesPlanted;
-                        _treesAlive = assessment.TreesAlive;
-
-                        if (!string.IsNullOrEmpty(assessment.DeceasedTreeTypes))
+                        if (_availableTreeTypes?.Any(t => t.Name == assessment.DeceasedTreeTypes) == true)
                         {
-                            if (_availableTreeTypes?.Any(t => t.Name == assessment.DeceasedTreeTypes) == true)
-                            {
-                                _deceasedTreeTypes = assessment.DeceasedTreeTypes;
-                            }
-                            else
-                            {
-                                _deceasedTreeTypesOther = assessment.DeceasedTreeTypes;
-                            }
+                            _deceasedTreeTypes = assessment.DeceasedTreeTypes;
                         }
-
-                        _hasBrokenBranches = assessment.HasBrokenBranches;
-                        _hasYellowLeaves = assessment.HasYellowLeaves;
-                        _hasLosingLeaves = assessment.HasLosingLeaves;
-                        _hasLookDry = assessment.HasLookDry;
-                        _hasPests = assessment.HasPests;
-                        _needsHelp = assessment.NeedsHelp;
-
-                        _treesLookHealthy = assessment.TreesLookHealthy;
-                        _hasChemicalFertilizers = assessment.HasChemicalFertilizers;
-                        _hasPesticides = assessment.HasPesticides;
-                        _isMulched = assessment.IsMulched;
-                        _isMakingCompost = assessment.IsMakingCompost;
-                        _isCollectingWater = assessment.IsCollectingWater;
-                        _hasLeakyTaps = assessment.HasLeakyTaps;
-                        _isGardenDesignedToCaptureWater = assessment.IsGardenDesignedToCaptureWater;
-                        _isUsingGreywater = assessment.IsUsingGreywater;
-
-                        _notes = assessment.Notes;
-
-                        _createdby = assessment.CreatedBy;
-                        _createdon = assessment.CreatedOn;
-                        _modifiedby = assessment.ModifiedBy;
-                        _modifiedon = assessment.ModifiedOn;
+                        else
+                        {
+                            _deceasedTreeTypesOther = assessment.DeceasedTreeTypes;
+                        }
                     }
+
+                    _hasBrokenBranches = assessment.HasBrokenBranches;
+                    _hasYellowLeaves = assessment.HasYellowLeaves;
+                    _hasLosingLeaves = assessment.HasLosingLeaves;
+                    _hasLookDry = assessment.HasLookDry;
+                    _hasPests = assessment.HasPests;
+                    _needsHelp = assessment.NeedsHelp;
+
+                    _treesLookHealthy = assessment.TreesLookHealthy;
+                    _hasChemicalFertilizers = assessment.HasChemicalFertilizers;
+                    _hasPesticides = assessment.HasPesticides;
+                    _isMulched = assessment.IsMulched;
+                    _isMakingCompost = assessment.IsMakingCompost;
+                    _isCollectingWater = assessment.IsCollectingWater;
+                    _hasLeakyTaps = assessment.HasLeakyTaps;
+                    _isGardenDesignedToCaptureWater = assessment.IsGardenDesignedToCaptureWater;
+                    _isUsingGreywater = assessment.IsUsingGreywater;
+
+                    _notes = assessment.Notes;
+
+                    _createdby = assessment.CreatedBy;
+                    _createdon = assessment.CreatedOn;
+                    _modifiedby = assessment.ModifiedBy;
+                    _modifiedon = assessment.ModifiedOn;
                 }
             }
         }
@@ -581,7 +584,7 @@
                     return;
                 }
 
-                if (PageState.Action == "Add")
+                if (_id == 0)
                 {
                     // Check frequency rules
                     bool canSubmit = await AssessmentService.CanSubmitAssessmentAsync(_growerId);
