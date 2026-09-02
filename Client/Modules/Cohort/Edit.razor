@@ -438,7 +438,7 @@
                 await CohortService.AddCohortAsync(_cohort);
                 await logger.LogInformation("Cohort Added {Cohort}", _cohort.Name);
             }
-            NavigationManager.NavigateTo(NavigateUrl());
+            NavigationManager.NavigateTo(NavigateUrl(), forceLoad: true);
         }
         catch (Exception ex)
         {

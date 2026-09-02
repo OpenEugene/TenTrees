@@ -285,7 +285,7 @@ else
                     await ScrollToPageTop();
                     return;
                 }
-                NavigationManager.NavigateTo(NavigateUrl());
+                NavigationManager.NavigateTo(NavigateUrl(), forceLoad: true);
             }
             else
             {

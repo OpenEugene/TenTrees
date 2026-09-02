@@ -919,7 +919,7 @@
                     {
                         await JSRuntime.InvokeVoidAsync("localStorage.removeItem", DraftKey);
                         AddModuleMessage(Localizer["Message.SaveSuccess"], MessageType.Success);
-                        NavigationManager.NavigateTo(EditUrl("Edit", $"id={assessment.AssessmentId}&returnurl={Uri.EscapeDataString(_backUrl)}"));
+                        NavigationManager.NavigateTo(EditUrl("Edit", $"id={assessment.AssessmentId}&returnurl={Uri.EscapeDataString(_backUrl)}"), forceLoad: true);
                     }
                 }
                 else
@@ -952,7 +952,7 @@
                     {
                         await JSRuntime.InvokeVoidAsync("localStorage.removeItem", DraftKey);
                         AddModuleMessage(Localizer["Message.UpdateSuccess"], MessageType.Success);
-                        NavigationManager.NavigateTo(_backUrl);
+                        NavigationManager.NavigateTo(_backUrl, forceLoad: true);
                     }
                 }
             }
