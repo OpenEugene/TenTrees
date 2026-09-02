@@ -373,23 +373,23 @@ namespace OpenEug.TenTrees.Module.Assessment.Controllers
             }
         }
 
-        [HttpDelete("photos/{photoId}")]
+        [HttpDelete("photos/{assessmentPhotoId}")]
         [Authorize]
-        public async Task<IActionResult> DeletePhoto(int photoId)
+        public async Task<IActionResult> DeletePhoto(int assessmentPhotoId)
         {
             try
             {
-                if (!await _assessmentService.DeletePhotoAsync(photoId, MentorUsername()))
+                if (!await _assessmentService.DeletePhotoAsync(assessmentPhotoId, MentorUsername()))
                 {
                     return NotFound();
                 }
 
-                _logger.Log(LogLevel.Information, this, LogFunction.Delete, "AssessmentPhoto Deleted {AssessmentPhotoId}", photoId);
+                _logger.Log(LogLevel.Information, this, LogFunction.Delete, "AssessmentPhoto Deleted {AssessmentPhotoId}", assessmentPhotoId);
                 return NoContent();
             }
             catch (Exception ex)
             {
-                _logger.Log(LogLevel.Error, this, LogFunction.Delete, "AssessmentPhoto Delete Failed {AssessmentPhotoId} {Error}", photoId, ex.ToString());
+                _logger.Log(LogLevel.Error, this, LogFunction.Delete, "AssessmentPhoto Delete Failed {AssessmentPhotoId} {Error}", assessmentPhotoId, ex.ToString());
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
