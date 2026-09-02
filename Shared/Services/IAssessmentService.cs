@@ -21,5 +21,10 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
 
         Task<List<Models.AssessmentProblem>> GetProblemsByAssessmentAsync(int assessmentId);
         Task ReplaceProblemsAsync(int assessmentId, List<Models.AssessmentProblem> problems);
+
+        Task<int?> GetPhotoFolderIdAsync(int assessmentId, string mentorUsername = null);
+        Task<List<AssessmentPhotoDto>> GetPhotosByAssessmentAsync(int assessmentId, string mentorUsername = null);
+        Task<AssessmentPhotoDto> AddPhotoAsync(Models.AssessmentPhoto photo, string mentorUsername = null);
+        Task<bool> DeletePhotoAsync(int assessmentPhotoId, string mentorUsername = null);
     }
 }

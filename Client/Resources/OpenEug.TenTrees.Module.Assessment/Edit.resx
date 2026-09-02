@@ -93,6 +93,48 @@
   <data name="NeedsHelp" xml:space="preserve">
     <value>Do you need someone to help with this problem?</value>
   </data>
+  <data name="Photo.Heading" xml:space="preserve">
+    <value>Problem Photos</value>
+  </data>
+  <data name="Photo.Help" xml:space="preserve">
+    <value>After saving the assessment, upload up to {0} JPG, PNG, or WebP photos. Each photo must be {1} MB or smaller and is stored securely with the assessment.</value>
+  </data>
+  <data name="Photo.SaveFirst" xml:space="preserve">
+    <value>Save this assessment first, then reopen it to upload problem photos.</value>
+  </data>
+  <data name="Photo.Take" xml:space="preserve">
+    <value>Take Photo</value>
+  </data>
+  <data name="Photo.Choose" xml:space="preserve">
+    <value>Upload Photos</value>
+  </data>
+  <data name="Photo.Count" xml:space="preserve">
+    <value>{0} of {1} photos selected</value>
+  </data>
+  <data name="Photo.Processing" xml:space="preserve">
+    <value>Processing photos…</value>
+  </data>
+  <data name="Photo.ExistingAlt" xml:space="preserve">
+    <value>Saved photo of an assessment problem</value>
+  </data>
+  <data name="Photo.PendingAlt" xml:space="preserve">
+    <value>Selected photo of an assessment problem waiting to be saved</value>
+  </data>
+  <data name="Photo.Loading" xml:space="preserve">
+    <value>Loading photo</value>
+  </data>
+  <data name="Photo.LoadError" xml:space="preserve">
+    <value>Photo unavailable</value>
+  </data>
+  <data name="Photo.Pending" xml:space="preserve">
+    <value>Not saved yet</value>
+  </data>
+  <data name="Photo.Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="Photo.DeleteConfirm" xml:space="preserve">
+    <value>Remove this saved photo from the assessment?</value>
+  </data>
   <data name="Section.Permaculture" xml:space="preserve">
     <value>Permaculture Practices</value>
   </data>
@@ -230,5 +272,29 @@
   </data>
   <data name="Message.NoteSaveError" xml:space="preserve">
     <value>One or more notes could not be saved. Please retry.</value>
+  </data>
+  <data name="Message.PhotoLimit" xml:space="preserve">
+    <value>You can add up to {0} photos to an assessment.</value>
+  </data>
+  <data name="Message.PhotoInvalidType" xml:space="preserve">
+    <value>{0} is not a supported photo. Choose a JPG, PNG, or WebP image.</value>
+  </data>
+  <data name="Message.PhotoTooLarge" xml:space="preserve">
+    <value>{0} is too large after resizing. Each photo must be {1} MB or smaller.</value>
+  </data>
+  <data name="Message.PhotoProcessError" xml:space="preserve">
+    <value>{0} could not be prepared. Please choose a different photo.</value>
+  </data>
+  <data name="Message.PhotoSaveError" xml:space="preserve">
+    <value>The assessment photo could not be linked. Please try uploading it again.</value>
+  </data>
+  <data name="Message.PhotoSaveSuccess" xml:space="preserve">
+    <value>Photo uploaded and linked to this assessment.</value>
+  </data>
+  <data name="Message.PhotoDeleteSuccess" xml:space="preserve">
+    <value>Photo removed.</value>
+  </data>
+  <data name="Message.PhotoDeleteError" xml:space="preserve">
+    <value>The photo could not be removed. Please try again.</value>
   </data>
 </root>

@@ -542,7 +542,7 @@
                     await logger.LogInformation("Enrollment Updated {Enrollment}", Enrollment);
                     AddModuleMessage(Localizer["Message.UpdateSuccess"], MessageType.Success);
                 }
-                NavigationManager.NavigateTo(_backUrl);
+                NavigationManager.NavigateTo(_backUrl, forceLoad: true);
             }
             else
             {

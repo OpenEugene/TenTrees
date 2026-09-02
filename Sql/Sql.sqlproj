@@ -67,6 +67,7 @@
     <Build Include="dbo\Tables\ClassAttendance.sql" />
     <Build Include="dbo\Tables\Assessment.sql" />
     <Build Include="dbo\Tables\AssessmentNote.sql" />
+    <Build Include="dbo\Tables\AssessmentPhoto.sql" />
     <Build Include="dbo\Tables\Cohort.sql" />
     <Build Include="dbo\Tables\GrowerCohort.sql" />
     <Build Include="dbo\Tables\MentorCohort.sql" />
@@ -75,6 +76,7 @@
     <Build Include="Seed_SampleGrowers.sql" />
     <None Include="Seed_TreeTypes.sql" />
     <None Include="Migration_AddAssessmentNoteTable.sql" />
+    <None Include="Migration_AddAssessmentPhotoTable.sql" />
     <Build Include="dbo\Tables\Orchard.sql" />
     <Build Include="dbo\Tables\Tree.sql" />
     <Build Include="dbo\Tables\AssessmentProblem.sql" />

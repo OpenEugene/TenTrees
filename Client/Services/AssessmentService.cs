@@ -4,6 +4,7 @@ using Oqtane.Services;
 using Oqtane.Shared;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 
 namespace OpenEug.TenTrees.Module.Assessment.Services
@@ -97,6 +98,38 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
         public async Task ReplaceProblemsAsync(int assessmentId, List<Models.AssessmentProblem> problems)
         {
             await PutJsonAsync<List<Models.AssessmentProblem>>($"{ApiUrl}/{assessmentId}/problems", problems);
+        }
+
+        public async Task<int?> GetPhotoFolderIdAsync(int assessmentId, string mentorUsername = null)
+        {
+            return await GetJsonAsync<int?>($"{ApiUrl}/{assessmentId}/photo-folder");
+        }
+
+        public async Task<List<AssessmentPhotoDto>> GetPhotosByAssessmentAsync(int assessmentId, string mentorUsername = null)
+        {
+            return await GetJsonAsync<List<AssessmentPhotoDto>>($"{ApiUrl}/{assessmentId}/photos", new List<AssessmentPhotoDto>());
+        }
+
+        public async Task<AssessmentPhotoDto> AddPhotoAsync(Models.AssessmentPhoto photo, string mentorUsername = null)
+        {
+            return await PostJsonAsync<Models.AssessmentPhoto, AssessmentPhotoDto>($"{ApiUrl}/{photo.AssessmentId}/photos", photo);
+        }
+
+        public async Task<bool> DeletePhotoAsync(int assessmentPhotoId, string mentorUsername = null)
+        {
+            var response = await GetHttpClient().DeleteAsync($"{ApiUrl}/photos/{assessmentPhotoId}");
+            if (response.IsSuccessStatusCode)
+            {
+                return true;
+            }
+
+            if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return false;
+            }
+
+            response.EnsureSuccessStatusCode();
+            return false;
         }
     }
 }

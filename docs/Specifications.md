@@ -1,3 +1,5 @@
+[Home](Home.md) / Specifications <!-- wikidown:breadcrumb -->
+
 # Specifications
 
 Plain-language documentation of the 10 Trees system behaviour. These pages were translated from the Gherkin feature files formerly in `Specs/Features/`; that folder has been retired and **this wiki is now the source of truth** for system behaviour. Each page pairs a plain-language description with the original Gherkin scenarios, preserved verbatim in a "Scenarios" section as the precise acceptance criteria.
@@ -8,6 +10,7 @@ Plain-language documentation of the 10 Trees system behaviour. These pages were 
 - [Photo Release Consent](/Specifications/Photo-Release-Consent) — capturing photo consent levels linked to an approved enrollment.
 - [Garden Location Mapping](/Specifications/Garden-Location-Mapping) — documenting garden sites with GPS, water availability, and existing trees.
 - [Garden Assessment](/Specifications/Garden-Assessment) — recurring garden health and tree survival assessments, including home visits.
+- [Assessment Photo Storage](/Specifications/Assessment-Photo-Storage) — developer implementation for native Oqtane problem-photo storage and access.
 - [Class Attendance](/Specifications/Class-Attendance) — tracking permaculture training attendance and tree eligibility.
 
 ## Program Management

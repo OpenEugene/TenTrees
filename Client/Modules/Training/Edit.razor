@@ -223,7 +223,7 @@
                     await logger.LogInformation("Training Class Added {ClassName}", _className);
                 }
 
-                NavigationManager.NavigateTo(GetBackUrl());
+                NavigationManager.NavigateTo(GetBackUrl(), forceLoad: true);
             }
             catch (Exception ex)
             {

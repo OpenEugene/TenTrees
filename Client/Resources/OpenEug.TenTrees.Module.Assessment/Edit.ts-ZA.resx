@@ -96,6 +96,48 @@
   <data name="NeedsHelp" xml:space="preserve">
     <value>Xana ulava munhu wo ku pfuna eka xiphiqo lexi?</value>
   </data>
+  <data name="Photo.Heading" xml:space="preserve">
+    <value>Swifaniso swa Swiphiqo</value>
+  </data>
+  <data name="Photo.Help" xml:space="preserve">
+    <value>Endzhaku ko hlayisa xikambelo, layicha swifaniso swo fika eka {0} swa JPG, PNG kumbe WebP. Xifaniso xin'wana na xin'wana xi fanele ku va {1} MB kumbe ehansi naswona xi hlayisiwa kahle na xikambelo.</value>
+  </data>
+  <data name="Photo.SaveFirst" xml:space="preserve">
+    <value>Rhumela xikambelo lexi ku sungula, kutani u tlhela u xi pfula leswaku u layicha swifaniso swa xiphiqo.</value>
+  </data>
+  <data name="Photo.Take" xml:space="preserve">
+    <value>Teka Xifaniso</value>
+  </data>
+  <data name="Photo.Choose" xml:space="preserve">
+    <value>Layicha Swifaniso</value>
+  </data>
+  <data name="Photo.Count" xml:space="preserve">
+    <value>Ku hlawuriwile swifaniso swa {0} eka {1}</value>
+  </data>
+  <data name="Photo.Processing" xml:space="preserve">
+    <value>Ku lulamisiwa swifaniso…</value>
+  </data>
+  <data name="Photo.ExistingAlt" xml:space="preserve">
+    <value>Xifaniso lexi hlayisiweke xa xiphiqo xa xikambelo</value>
+  </data>
+  <data name="Photo.PendingAlt" xml:space="preserve">
+    <value>Xifaniso lexi hlawuriweke xa xiphiqo lexi yimeleke ku hlayisiwa</value>
+  </data>
+  <data name="Photo.Loading" xml:space="preserve">
+    <value>Ku layisiwa xifaniso</value>
+  </data>
+  <data name="Photo.LoadError" xml:space="preserve">
+    <value>Xifaniso a xi kumeki</value>
+  </data>
+  <data name="Photo.Pending" xml:space="preserve">
+    <value>A xi si hlayisiwa</value>
+  </data>
+  <data name="Photo.Remove" xml:space="preserve">
+    <value>Susa</value>
+  </data>
+  <data name="Photo.DeleteConfirm" xml:space="preserve">
+    <value>Susa xifaniso lexi hlayisiweke eka xikambelo?</value>
+  </data>
   <data name="Section.Permaculture" xml:space="preserve">
     <value>Mikhuva ya Permaculture</value>
   </data>
@@ -230,5 +272,29 @@
   </data>
   <data name="Message.NoteSaveError" xml:space="preserve">
     <value>Tsalwa rinwe kumbe  yo tala a swi koteki ku hlayisiwa. Hi kombela u ringeta na kambe.</value>
+  </data>
+  <data name="Message.PhotoLimit" xml:space="preserve">
+    <value>U nga engetela swifaniso swo fika eka {0} eka xikambelo.</value>
+  </data>
+  <data name="Message.PhotoInvalidType" xml:space="preserve">
+    <value>{0} a hi xifaniso lexi seketeriwaka. Hlawula xifaniso xa JPG, PNG kumbe WebP.</value>
+  </data>
+  <data name="Message.PhotoTooLarge" xml:space="preserve">
+    <value>{0} xi kurile swinene endzhaku ko hungutiwa. Xifaniso xin'wana na xin'wana xi fanele ku va {1} MB kumbe ehansi.</value>
+  </data>
+  <data name="Message.PhotoProcessError" xml:space="preserve">
+    <value>{0} a xi kotekanga ku lulamisiwa. Hlawula xifaniso xin'wana.</value>
+  </data>
+  <data name="Message.PhotoSaveError" xml:space="preserve">
+    <value>Xifaniso xa xikambelo a xi kotekanga ku hlanganisiwa. Ringeta ku xi layicha nakambe.</value>
+  </data>
+  <data name="Message.PhotoSaveSuccess" xml:space="preserve">
+    <value>Xifaniso xi layichiwile naswona xi hlanganisiwe na xikambelo lexi.</value>
+  </data>
+  <data name="Message.PhotoDeleteSuccess" xml:space="preserve">
+    <value>Xifaniso xi susiwile.</value>
+  </data>
+  <data name="Message.PhotoDeleteError" xml:space="preserve">
+    <value>Xifaniso a xi kotekanga ku susiwa. Ringeta nakambe.</value>
   </data>
 </root>

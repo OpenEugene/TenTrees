@@ -451,7 +451,7 @@ else
             {
                 var result = await GrowerService.AddGrowerAsync(_grower, ModuleState.ModuleId);
                 if (result != null)
-                    NavigationManager.NavigateTo(EditUrl("Edit", BuildEditParameters(result.GrowerId)));
+                    NavigationManager.NavigateTo(EditUrl("Edit", BuildEditParameters(result.GrowerId)), forceLoad: true);
                 else
                     _saveError = Localizer["Message.AddError"];
             }

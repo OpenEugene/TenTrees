@@ -10,6 +10,7 @@ using OpenEug.TenTrees.Models;
 using OpenEug.TenTrees.Shared;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace OpenEug.TenTrees.Module.Assessment.Controllers
@@ -293,5 +294,105 @@ namespace OpenEug.TenTrees.Module.Assessment.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+
+        [HttpGet("{id}/photo-folder")]
+        [Authorize]
+        public async Task<ActionResult<int>> GetPhotoFolder(int id)
+        {
+            try
+            {
+                var folderId = await _assessmentService.GetPhotoFolderIdAsync(id, MentorUsername());
+                if (!folderId.HasValue)
+                {
+                    return NotFound();
+                }
+
+                return Ok(folderId.Value);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Read, "AssessmentPhoto Folder Get Failed {AssessmentId} {Error}", id, ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpGet("{id}/photos")]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<AssessmentPhotoDto>>> GetPhotos(int id)
+        {
+            try
+            {
+                var assessment = await _assessmentService.GetAssessmentAsync(id, MentorUsername());
+                if (assessment == null)
+                {
+                    return NotFound();
+                }
+
+                var photos = await _assessmentService.GetPhotosByAssessmentAsync(id, MentorUsername());
+                return Ok(photos);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Read, "AssessmentPhoto Get Failed {AssessmentId} {Error}", id, ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpPost("{id}/photos")]
+        [Authorize]
+        public async Task<ActionResult<AssessmentPhotoDto>> PostPhoto(int id, [FromBody] Models.AssessmentPhoto photo)
+        {
+            try
+            {
+                var assessment = await _assessmentService.GetAssessmentAsync(id, MentorUsername());
+                if (assessment == null)
+                {
+                    return NotFound();
+                }
+
+                if (photo == null || photo.FileId <= 0)
+                {
+                    return BadRequest();
+                }
+
+                photo.AssessmentId = id;
+                var created = await _assessmentService.AddPhotoAsync(photo, MentorUsername());
+
+                if (created == null)
+                {
+                    return Conflict();
+                }
+
+                _logger.Log(LogLevel.Information, this, LogFunction.Create, "AssessmentPhoto Added {AssessmentPhotoId} For Assessment {AssessmentId}", created.AssessmentPhotoId, id);
+                return Ok(created);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Create, "AssessmentPhoto Add Failed {AssessmentId} {Error}", id, ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpDelete("photos/{assessmentPhotoId}")]
+        [Authorize]
+        public async Task<IActionResult> DeletePhoto(int assessmentPhotoId)
+        {
+            try
+            {
+                if (!await _assessmentService.DeletePhotoAsync(assessmentPhotoId, MentorUsername()))
+                {
+                    return NotFound();
+                }
+
+                _logger.Log(LogLevel.Information, this, LogFunction.Delete, "AssessmentPhoto Deleted {AssessmentPhotoId}", assessmentPhotoId);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Delete, "AssessmentPhoto Delete Failed {AssessmentPhotoId} {Error}", assessmentPhotoId, ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
     }
 }
