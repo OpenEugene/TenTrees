@@ -19,8 +19,7 @@ BEGIN
         [CreatedOn]         DATETIME2 (7)   NOT NULL,
         [ModifiedBy]        NVARCHAR (256)  NOT NULL,
         [ModifiedOn]        DATETIME2 (7)   NOT NULL,
-        CONSTRAINT [PK_AssessmentPhoto] PRIMARY KEY CLUSTERED ([AssessmentPhotoId] ASC),
-        CONSTRAINT [UQ_AssessmentPhoto_AssessmentId_FileId] UNIQUE ([AssessmentId], [FileId])
+        CONSTRAINT [PK_AssessmentPhoto] PRIMARY KEY CLUSTERED ([AssessmentPhotoId] ASC)
     );
 
     CREATE NONCLUSTERED INDEX [IX_AssessmentPhoto_AssessmentId]
