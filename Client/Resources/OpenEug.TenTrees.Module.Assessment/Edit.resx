@@ -97,7 +97,10 @@
     <value>Problem Photos</value>
   </data>
   <data name="Photo.Help" xml:space="preserve">
-    <value>Take or upload up to {0} photos so staff can see the problem before visiting. JPG, PNG, or WebP uploads; {1} MB maximum per photo. Large photos are resized before upload.</value>
+    <value>After saving the assessment, upload up to {0} JPG, PNG, or WebP photos. Each photo must be {1} MB or smaller and is stored securely with the assessment.</value>
+  </data>
+  <data name="Photo.SaveFirst" xml:space="preserve">
+    <value>Save this assessment first, then reopen it to upload problem photos.</value>
   </data>
   <data name="Photo.Take" xml:space="preserve">
     <value>Take Photo</value>
@@ -283,7 +286,10 @@
     <value>{0} could not be prepared. Please choose a different photo.</value>
   </data>
   <data name="Message.PhotoSaveError" xml:space="preserve">
-    <value>The assessment photos could not be saved. Your selections are still available; check the connection and try again.</value>
+    <value>The assessment photo could not be linked. Please try uploading it again.</value>
+  </data>
+  <data name="Message.PhotoSaveSuccess" xml:space="preserve">
+    <value>Photo uploaded and linked to this assessment.</value>
   </data>
   <data name="Message.PhotoDeleteSuccess" xml:space="preserve">
     <value>Photo removed.</value>

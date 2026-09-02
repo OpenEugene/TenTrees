@@ -21,9 +21,10 @@ namespace OpenEug.TenTrees.Models
     {
         public int AssessmentPhotoId { get; set; }
         public int AssessmentId { get; set; }
+        public int PhotoId { get; set; }
         public string FileName { get; set; }
-        public string ContentType { get; set; }
         public long FileSize { get; set; }
+        public string Url { get; set; }
         public string CreatedBy { get; set; }
         public DateTime CreatedOn { get; set; }
     }

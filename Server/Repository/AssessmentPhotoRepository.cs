@@ -8,9 +8,10 @@ namespace OpenEug.TenTrees.Module.Assessment.Repository
 {
     public interface IAssessmentPhotoRepository
     {
-        IEnumerable<AssessmentPhotoDto> GetPhotosByAssessment(int assessmentId);
+        IEnumerable<AssessmentPhoto> GetPhotosByAssessment(int assessmentId);
         AssessmentPhoto GetPhoto(int assessmentPhotoId);
         AssessmentPhoto AddPhoto(AssessmentPhoto photo);
+        AssessmentPhoto UpdatePhoto(AssessmentPhoto photo);
         void DeletePhoto(int assessmentPhotoId);
         void DeletePhotosByAssessment(int assessmentId);
         int GetPhotoCount(int assessmentId);
@@ -25,23 +26,13 @@ namespace OpenEug.TenTrees.Module.Assessment.Repository
             _factory = factory;
         }
 
-        public IEnumerable<AssessmentPhotoDto> GetPhotosByAssessment(int assessmentId)
+        public IEnumerable<AssessmentPhoto> GetPhotosByAssessment(int assessmentId)
         {
             using var db = _factory.CreateDbContext();
             return db.AssessmentPhoto
                 .AsNoTracking()
                 .Where(photo => photo.AssessmentId == assessmentId)
                 .OrderBy(photo => photo.CreatedOn)
-                .Select(photo => new AssessmentPhotoDto
-                {
-                    AssessmentPhotoId = photo.AssessmentPhotoId,
-                    AssessmentId = photo.AssessmentId,
-                    FileName = photo.FileName,
-                    ContentType = photo.ContentType,
-                    FileSize = photo.FileSize,
-                    CreatedBy = photo.CreatedBy,
-                    CreatedOn = photo.CreatedOn
-                })
                 .ToList();
         }
 
@@ -57,6 +48,14 @@ namespace OpenEug.TenTrees.Module.Assessment.Repository
         {
             using var db = _factory.CreateDbContext();
             db.AssessmentPhoto.Add(photo);
+            db.SaveChanges();
+            return photo;
+        }
+
+        public AssessmentPhoto UpdatePhoto(AssessmentPhoto photo)
+        {
+            using var db = _factory.CreateDbContext();
+            db.Entry(photo).State = EntityState.Modified;
             db.SaveChanges();
             return photo;
         }

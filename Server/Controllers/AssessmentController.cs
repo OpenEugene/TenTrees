@@ -10,7 +10,6 @@ using OpenEug.TenTrees.Models;
 using OpenEug.TenTrees.Shared;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -296,6 +295,27 @@ namespace OpenEug.TenTrees.Module.Assessment.Controllers
             }
         }
 
+        [HttpGet("{id}/photo-folder")]
+        [Authorize]
+        public async Task<ActionResult<int>> GetPhotoFolder(int id)
+        {
+            try
+            {
+                var folderId = await _assessmentService.GetPhotoFolderIdAsync(id, MentorUsername());
+                if (!folderId.HasValue)
+                {
+                    return NotFound();
+                }
+
+                return Ok(folderId.Value);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Read, "AssessmentPhoto Folder Get Failed {AssessmentId} {Error}", id, ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
         [HttpGet("{id}/photos")]
         [Authorize]
         public async Task<ActionResult<IEnumerable<AssessmentPhotoDto>>> GetPhotos(int id)
@@ -318,35 +338,9 @@ namespace OpenEug.TenTrees.Module.Assessment.Controllers
             }
         }
 
-        [HttpGet("photos/{photoId}/content")]
-        [Authorize]
-        [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
-        public async Task<IActionResult> GetPhotoContent(int photoId)
-        {
-            try
-            {
-                var photo = await _assessmentService.GetPhotoAsync(photoId, MentorUsername());
-                if (photo == null)
-                {
-                    return NotFound();
-                }
-
-                Response.Headers.Append("X-Content-Type-Options", "nosniff");
-                return File(photo.PhotoData, photo.ContentType);
-            }
-            catch (Exception ex)
-            {
-                _logger.Log(LogLevel.Error, this, LogFunction.Read, "AssessmentPhoto Content Get Failed {AssessmentPhotoId} {Error}", photoId, ex.ToString());
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
-        }
-
         [HttpPost("{id}/photos")]
         [Authorize]
-        [Consumes("multipart/form-data")]
-        [RequestSizeLimit(AssessmentPhotoRules.MaxPhotoBytes + 1024 * 1024)]
-        [RequestFormLimits(MultipartBodyLengthLimit = AssessmentPhotoRules.MaxPhotoBytes + 1024 * 1024)]
-        public async Task<ActionResult<AssessmentPhotoDto>> PostPhoto(int id, [FromForm] IFormFile photo)
+        public async Task<ActionResult<AssessmentPhotoDto>> PostPhoto(int id, [FromBody] Models.AssessmentPhoto photo)
         {
             try
             {
@@ -356,39 +350,13 @@ namespace OpenEug.TenTrees.Module.Assessment.Controllers
                     return NotFound();
                 }
 
-                if (photo == null || photo.Length == 0)
+                if (photo == null || photo.PhotoId <= 0)
                 {
                     return BadRequest();
                 }
 
-                if (photo.Length > AssessmentPhotoRules.MaxPhotoBytes)
-                {
-                    return StatusCode(StatusCodes.Status413PayloadTooLarge);
-                }
-
-                var existing = await _assessmentService.GetPhotosByAssessmentAsync(id, MentorUsername());
-                if (existing.Count >= AssessmentPhotoRules.MaxPhotosPerAssessment)
-                {
-                    return Conflict();
-                }
-
-                await using var stream = new MemoryStream();
-                await photo.CopyToAsync(stream);
-                var data = stream.ToArray();
-                var detectedContentType = AssessmentPhotoRules.DetectContentType(data);
-                if (detectedContentType == null || !AssessmentPhotoRules.AllowedContentTypes.Contains(detectedContentType))
-                {
-                    return StatusCode(StatusCodes.Status415UnsupportedMediaType);
-                }
-
-                var created = await _assessmentService.AddPhotoAsync(new Models.AssessmentPhoto
-                {
-                    AssessmentId = id,
-                    FileName = $"assessment-photo-{Guid.NewGuid():N}{GetExtension(detectedContentType)}",
-                    ContentType = detectedContentType,
-                    FileSize = data.LongLength,
-                    PhotoData = data
-                }, MentorUsername());
+                photo.AssessmentId = id;
+                var created = await _assessmentService.AddPhotoAsync(photo, MentorUsername());
 
                 if (created == null)
                 {
@@ -426,12 +394,5 @@ namespace OpenEug.TenTrees.Module.Assessment.Controllers
             }
         }
 
-        private static string GetExtension(string contentType) => contentType switch
-        {
-            "image/jpeg" => ".jpg",
-            "image/png" => ".png",
-            "image/webp" => ".webp",
-            _ => string.Empty
-        };
     }
 }

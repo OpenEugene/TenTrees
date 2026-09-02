@@ -1,3 +1,5 @@
+[Home](Home.md) / How To Guides <!-- wikidown:breadcrumb -->
+
 # TenTrees.org How-To Guides
 
 Welcome to the official how-to guides for the TenTrees.org platform. This document provides step-by-step instructions for logging in and using the features available to each role.
@@ -39,10 +41,10 @@ Mentors are the field agents who work directly with Growers in their assigned vi
 4. Fill in the Assessment Name (e.g., "GA-1") and Date.
 5. Enter the number of "Trees Planted" and "Trees Still Alive" to calculate the survival rate.
 6. Check any observed problems (e.g., yellow leaves, broken branches, pests).
-7. Under **Problem Photos**, optionally tap **Take Photo** to use the device camera or **Upload Photos** to choose existing JPG, PNG, or WebP images. Add up to five photos, review the previews, and remove any incorrect photo before saving. Large photos are resized automatically, and each processed photo must be 5 MB or smaller.
-8. If working without a reliable connection, click **Save Draft**. The selected photo previews are stored locally with the draft and restored when you click **Load Draft**.
-9. Answer the Permaculture Practices questions (e.g., fertilizer use, mulching, water collection).
-10. Add any additional notes and click **Save**. Photos upload with the assessment when a connection is available.
+7. Add any additional notes and click **Save**. The assessment opens in Edit mode after it is saved.
+8. Under **Problem Photos**, use the Oqtane upload control to add one JPG, JPEG, PNG, or WebP image at a time. Add up to five photos, review the displayed photos, and remove an incorrect photo if necessary. Each photo must be 5 MB or smaller.
+9. If working without a reliable connection, click **Save Draft**. Assessment fields are stored locally, but photos must be uploaded after the assessment is saved and a connection is available.
+10. Answer the Permaculture Practices questions (e.g., fertilizer use, mulching, water collection), then click **Save** after any later changes.
 
 ---
 

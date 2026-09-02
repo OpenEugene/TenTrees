@@ -1,5 +1,4 @@
 @using Oqtane.Modules.Controls
-@using Microsoft.AspNetCore.Components.Forms
 @using OpenEug.TenTrees.Module.Assessment.Services
 @using OpenEug.TenTrees.Module.Cohort.Services
 @using OpenEug.TenTrees.Module.Grower.Services
@@ -16,6 +15,7 @@
 @inject IOrchardService OrchardService
 @inject IVillageService VillageService
 @inject Oqtane.Services.IModuleService ModuleService
+@inject Oqtane.Services.IFileService FileService
 @inject NavigationManager NavigationManager
 @inject IStringLocalizer<Edit> Localizer
 
@@ -233,103 +233,51 @@
                                 <span class="oi oi-camera-slr me-1" aria-hidden="true"></span>@Localizer["Photo.Heading"]
                             </h6>
                             <p class="text-muted small mb-2">
-                                @string.Format(Localizer["Photo.Help"], AssessmentPhotoRules.MaxPhotosPerAssessment, AssessmentPhotoRules.MaxPhotoBytes / 1024 / 1024)
+                                @string.Format(Localizer["Photo.Help"], AssessmentPhotoRules.MaxPhotosPerAssessment, AssessmentPhotoRules.MaxPhotoMegabytes)
                             </p>
-                            <div class="d-flex flex-column flex-sm-row gap-2">
-                                <InputFile @key="_cameraInputVersion"
-                                           id="assessmentCamera"
-                                           class="visually-hidden"
-                                           OnChange="@(args => OnPhotosSelectedAsync(args, true))"
-                                           accept="image/*"
-                                           capture="environment"
-                                           tabindex="-1"
-                                           disabled="@PhotoInputDisabled" />
-                                <button type="button"
-                                        class="btn btn-primary flex-fill"
-                                        @onclick="@(() => OpenPhotoPickerAsync("assessmentCamera"))"
-                                        disabled="@PhotoInputDisabled">
-                                    <span class="oi oi-camera-slr me-1" aria-hidden="true"></span>@Localizer["Photo.Take"]
-                                </button>
-
-                                <InputFile @key="_photoInputVersion"
-                                           id="assessmentPhotos"
-                                           class="visually-hidden"
-                                           OnChange="@(args => OnPhotosSelectedAsync(args, false))"
-                                           accept="image/jpeg,image/png,image/webp"
-                                           multiple
-                                           tabindex="-1"
-                                           disabled="@PhotoInputDisabled" />
-                                <button type="button"
-                                        class="btn btn-outline-primary flex-fill"
-                                        @onclick="@(() => OpenPhotoPickerAsync("assessmentPhotos"))"
-                                        disabled="@PhotoInputDisabled">
-                                    <span class="oi oi-cloud-upload me-1" aria-hidden="true"></span>@Localizer["Photo.Choose"]
-                                </button>
-                            </div>
+                            @if (_id > 0 && _photoFolderId > 0)
+                            {
+                                <FileManager Id="assessmentProblemPhotos"
+                                             FolderId="@_photoFolderId"
+                                             Filter="jpg,jpeg,png,webp"
+                                             ShowFolders="false"
+                                             ShowFiles="false"
+                                             ShowImage="false"
+                                             UploadMultiple="false"
+                                             MaxUploadFileSize="@AssessmentPhotoRules.MaxPhotoMegabytes"
+                                             ShowProgress="true"
+                                             ShowSuccess="true"
+                                             OnUpload="OnPhotoUploadedAsync" />
+                            }
+                            else if (_id == 0)
+                            {
+                                <div class="alert alert-info small mb-0" role="status">@Localizer["Photo.SaveFirst"]</div>
+                            }
 
                             <div class="d-flex justify-content-between align-items-center mt-2 small" role="status" aria-live="polite">
-                                <span>@string.Format(Localizer["Photo.Count"], PhotoCount, AssessmentPhotoRules.MaxPhotosPerAssessment)</span>
+                                <span>@string.Format(Localizer["Photo.Count"], _existingPhotos.Count, AssessmentPhotoRules.MaxPhotosPerAssessment)</span>
                                 @if (_isPhotoBusy)
                                 {
-                                    <span>
-                                        <span class="spinner-border spinner-border-sm me-1" aria-hidden="true"></span>@Localizer["Photo.Processing"]
-                                    </span>
+                                    <span><span class="spinner-border spinner-border-sm me-1" aria-hidden="true"></span>@Localizer["Photo.Processing"]</span>
                                 }
                             </div>
 
-                            @if (_existingPhotos.Count > 0 || _pendingPhotos.Count > 0)
+                            @if (_existingPhotos.Count > 0)
                             {
                                 <div class="row g-2 mt-1">
                                     @foreach (var photo in _existingPhotos)
                                     {
                                         <div class="col-6 col-sm-4">
                                             <div class="card h-100">
-                                                @if (!string.IsNullOrEmpty(photo.PreviewDataUrl))
-                                                {
-                                                    <img src="@photo.PreviewDataUrl"
-                                                         class="card-img-top"
-                                                         style="height: 140px; object-fit: cover;"
-                                                         alt="@Localizer["Photo.ExistingAlt"]" />
-                                                }
-                                                else if (photo.LoadFailed)
-                                                {
-                                                    <div class="d-flex align-items-center justify-content-center bg-light text-muted text-center small p-2" style="height: 140px;" role="status">
-                                                        @Localizer["Photo.LoadError"]
-                                                    </div>
-                                                }
-                                                else
-                                                {
-                                                    <div class="d-flex align-items-center justify-content-center bg-light" style="height: 140px;" role="status">
-                                                        <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-                                                        <span class="visually-hidden">@Localizer["Photo.Loading"]</span>
-                                                    </div>
-                                                }
-                                                <div class="card-body p-2">
-                                                    <div class="small text-muted text-truncate" title="@photo.Metadata.FileName">@photo.Metadata.FileName</div>
-                                                    <button type="button"
-                                                            class="btn btn-outline-danger w-100 mt-1"
-                                                            @onclick="@(() => DeleteExistingPhotoAsync(photo))"
-                                                            disabled="@_isPhotoBusy">
-                                                        <span class="oi oi-trash me-1" aria-hidden="true"></span>@Localizer["Photo.Remove"]
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    }
-                                    @foreach (var photo in _pendingPhotos)
-                                    {
-                                        <div class="col-6 col-sm-4">
-                                            <div class="card h-100 border-primary">
-                                                <img src="@photo.PreviewDataUrl"
+                                                <img src="@photo.Url"
                                                      class="card-img-top"
                                                      style="height: 140px; object-fit: cover;"
-                                                     alt="@Localizer["Photo.PendingAlt"]" />
+                                                     alt="@Localizer["Photo.ExistingAlt"]" />
                                                 <div class="card-body p-2">
-                                                    <span class="badge bg-primary mb-1">@Localizer["Photo.Pending"]</span>
                                                     <div class="small text-muted text-truncate" title="@photo.FileName">@photo.FileName</div>
                                                     <button type="button"
                                                             class="btn btn-outline-danger w-100 mt-1"
-                                                            @onclick="@(() => RemovePendingPhotoAsync(photo))"
+                                                            @onclick="@(() => DeleteExistingPhotoAsync(photo))"
                                                             disabled="@_isPhotoBusy">
                                                         <span class="oi oi-trash me-1" aria-hidden="true"></span>@Localizer["Photo.Remove"]
                                                     </button>
@@ -628,11 +576,9 @@
     private bool _needsHelp;
 
     // Problem photos
-    private List<ExistingAssessmentPhoto> _existingPhotos = new();
-    private List<PendingAssessmentPhoto> _pendingPhotos = new();
+    private List<AssessmentPhotoDto> _existingPhotos = new();
+    private int _photoFolderId;
     private bool _isPhotoBusy;
-    private int _photoInputVersion;
-    private int _cameraInputVersion;
 
     // Permaculture Practices
     private bool _treesLookHealthy;
@@ -663,7 +609,6 @@
         : NavigateUrl();
     private bool _hasDraft = false;
     private const string DraftKey = "TenTrees_Assessment_Draft_V2";
-    private const string PhotoDraftKey = "TenTrees_Assessment_Photo_Draft_V1";
 
     private class AssessmentDraft
     {
@@ -671,31 +616,7 @@
         public List<Models.AssessmentNote> PendingNotes { get; set; } = new();
     }
 
-    private class PendingAssessmentPhoto
-    {
-        public string FileName { get; set; }
-        public string ContentType { get; set; }
-        public byte[] Data { get; set; }
-        public string PreviewDataUrl { get; set; }
-    }
-
-    private class PhotoDraftRecord
-    {
-        public string FileName { get; set; }
-        public string ContentType { get; set; }
-        public string PreviewDataUrl { get; set; }
-    }
-
-    private class ExistingAssessmentPhoto
-    {
-        public AssessmentPhotoDto Metadata { get; set; }
-        public string PreviewDataUrl { get; set; }
-        public bool LoadFailed { get; set; }
-    }
-
     private int SurvivalRate => _treesPlanted > 0 ? (_treesAlive * 100 / _treesPlanted) : 0;
-    private int PhotoCount => _existingPhotos.Count + _pendingPhotos.Count;
-    private bool PhotoInputDisabled => _isPhotoBusy || PhotoCount >= AssessmentPhotoRules.MaxPhotosPerAssessment;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -797,6 +718,7 @@
                         _existingNotes = await AssessmentService.GetNotesByAssessmentAsync(_id) ?? new List<Models.AssessmentNote>();
                         await LoadTreesAsync();
                         _problems = await AssessmentService.GetProblemsByAssessmentAsync(_id) ?? new List<Models.AssessmentProblem>();
+                        _photoFolderId = await AssessmentService.GetPhotoFolderIdAsync(_id) ?? 0;
                         await LoadExistingPhotosAsync();
 
                         _createdby = assessment.CreatedBy;
@@ -827,17 +749,6 @@
             catch
             {
                 // Ignore JS interop errors during prerendering
-            }
-
-            try
-            {
-                var photoDrafts = await JSRuntime.InvokeAsync<List<PhotoDraftRecord>>(
-                    "OpenEug.TenTrees.Assessment.PhotoDrafts.load", PhotoDraftKey);
-                hasDraft = hasDraft || photoDrafts?.Count > 0;
-            }
-            catch
-            {
-                // Ignore JS interop errors during prerendering or before module resources load
             }
 
             if (hasDraft)
@@ -878,7 +789,6 @@
 
             var json = System.Text.Json.JsonSerializer.Serialize(draft);
             await JSRuntime.InvokeVoidAsync("localStorage.setItem", DraftKey, json);
-            await SavePhotoDraftsAsync();
             _hasDraft = true;
             AddModuleMessage(Localizer["Message.DraftSaved"], MessageType.Success);
         }
@@ -934,7 +844,6 @@
                     _isUsingGreywater = a.IsUsingGreywater;
 
                     _pendingNotes = draft.PendingNotes ?? new List<Models.AssessmentNote>();
-                    await LoadPhotoDraftsAsync();
 
                     AddModuleMessage(Localizer["Message.DraftLoaded"], MessageType.Success);
                 }
@@ -1006,18 +915,11 @@
                     await logger.LogInformation("Assessment Added {Assessment}", assessment);
                     await AssessmentService.ReplaceProblemsAsync(assessment.AssessmentId, _problems);
 
-                    if (!await PersistPendingPhotosAsync(assessment.AssessmentId))
-                    {
-                        await AssessmentService.DeleteAssessmentAsync(assessment.AssessmentId);
-                        return;
-                    }
-
                     if (await PersistPendingNotesAsync(assessment.AssessmentId))
                     {
                         await JSRuntime.InvokeVoidAsync("localStorage.removeItem", DraftKey);
-                        await ClearPhotoDraftsAsync();
                         AddModuleMessage(Localizer["Message.SaveSuccess"], MessageType.Success);
-                        NavigationManager.NavigateTo(_backUrl);
+                        NavigationManager.NavigateTo(EditUrl("Edit", $"id={assessment.AssessmentId}&returnurl={Uri.EscapeDataString(_backUrl)}"));
                     }
                 }
                 else
@@ -1046,15 +948,9 @@
                     await logger.LogInformation("Assessment Updated {Assessment}", assessment);
                     await AssessmentService.ReplaceProblemsAsync(assessment.AssessmentId, _problems);
 
-                    if (!await PersistPendingPhotosAsync(assessment.AssessmentId))
-                    {
-                        return;
-                    }
-
                     if (await PersistPendingNotesAsync(assessment.AssessmentId))
                     {
                         await JSRuntime.InvokeVoidAsync("localStorage.removeItem", DraftKey);
-                        await ClearPhotoDraftsAsync();
                         AddModuleMessage(Localizer["Message.UpdateSuccess"], MessageType.Success);
                         NavigationManager.NavigateTo(_backUrl);
                     }
@@ -1103,9 +999,6 @@
     private void ResetProblemsForGrowerChange()
     {
         _problems = new();
-        _pendingPhotos = new();
-        _photoInputVersion++;
-        _cameraInputVersion++;
     }
 
     private async Task LoadMentorActiveCohortAsync()
@@ -1313,116 +1206,66 @@
         assessment.NeedsHelp = _problems.Any(p => p.NeedsHelp);
     }
 
-    private async Task OpenPhotoPickerAsync(string elementId)
+    private async Task LoadExistingPhotosAsync()
     {
-        await JSRuntime.InvokeVoidAsync("OpenEug.TenTrees.Assessment.openPhotoPicker", elementId);
+        _existingPhotos = await AssessmentService.GetPhotosByAssessmentAsync(_id) ?? new List<AssessmentPhotoDto>();
     }
 
-    private async Task OnPhotosSelectedAsync(InputFileChangeEventArgs args, bool fromCamera)
+    private async Task OnPhotoUploadedAsync(int photoId)
     {
-        var remaining = AssessmentPhotoRules.MaxPhotosPerAssessment - PhotoCount;
-        if (remaining <= 0 || args.FileCount > remaining)
-        {
-            AddModuleMessage(string.Format(Localizer["Message.PhotoLimit"], AssessmentPhotoRules.MaxPhotosPerAssessment), MessageType.Warning);
-            _photoInputVersion++;
-            _cameraInputVersion++;
-            return;
-        }
-
         _isPhotoBusy = true;
         try
         {
-            foreach (var file in args.GetMultipleFiles(remaining))
+            if (_existingPhotos.Count >= AssessmentPhotoRules.MaxPhotosPerAssessment)
             {
-                var isSupportedGalleryType = AssessmentPhotoRules.AllowedContentTypes.Contains(file.ContentType, StringComparer.OrdinalIgnoreCase);
-                var isCameraImage = fromCamera && file.ContentType.StartsWith("image/", StringComparison.OrdinalIgnoreCase);
-                if (!isSupportedGalleryType && !isCameraImage)
-                {
-                    AddModuleMessage(string.Format(Localizer["Message.PhotoInvalidType"], file.Name), MessageType.Warning);
-                    continue;
-                }
-
-                try
-                {
-                    var resized = await file.RequestImageFileAsync(
-                        "image/jpeg",
-                        AssessmentPhotoRules.MaxImageDimension,
-                        AssessmentPhotoRules.MaxImageDimension);
-
-                    await using var stream = resized.OpenReadStream(AssessmentPhotoRules.MaxPhotoBytes);
-                    using var memory = new System.IO.MemoryStream();
-                    await stream.CopyToAsync(memory);
-                    var data = memory.ToArray();
-
-                    _pendingPhotos.Add(new PendingAssessmentPhoto
-                    {
-                        FileName = file.Name,
-                        ContentType = "image/jpeg",
-                        Data = data,
-                        PreviewDataUrl = ToDataUrl("image/jpeg", data)
-                    });
-                }
-                catch (System.IO.IOException)
-                {
-                    AddModuleMessage(string.Format(Localizer["Message.PhotoTooLarge"], file.Name, AssessmentPhotoRules.MaxPhotoBytes / 1024 / 1024), MessageType.Warning);
-                }
-                catch (Exception ex)
-                {
-                    await logger.LogError(ex, "Error Processing Assessment Photo {FileName} {Error}", file.Name, ex.Message);
-                    AddModuleMessage(string.Format(Localizer["Message.PhotoProcessError"], file.Name), MessageType.Error);
-                }
+                await FileService.DeleteFileAsync(photoId);
+                AddModuleMessage(string.Format(Localizer["Message.PhotoLimit"], AssessmentPhotoRules.MaxPhotosPerAssessment), MessageType.Warning);
+                return;
             }
 
-            if (_hasDraft)
+            var file = await FileService.GetFileAsync(photoId);
+            if (file == null || !AssessmentPhotoRules.IsAllowedExtension(file.Extension))
             {
-                await SavePhotoDraftsAsync();
+                await FileService.DeleteFileAsync(photoId);
+                AddModuleMessage(string.Format(Localizer["Message.PhotoInvalidType"], file?.Name ?? photoId.ToString()), MessageType.Warning);
+                return;
             }
+
+            var created = await AssessmentService.AddPhotoAsync(new Models.AssessmentPhoto
+            {
+                AssessmentId = _id,
+                PhotoId = photoId
+            });
+            if (created == null)
+            {
+                await FileService.DeleteFileAsync(photoId);
+                AddModuleMessage(Localizer["Message.PhotoSaveError"], MessageType.Error);
+                return;
+            }
+
+            await LoadExistingPhotosAsync();
+            AddModuleMessage(Localizer["Message.PhotoSaveSuccess"], MessageType.Success);
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Linking Oqtane Assessment Photo {PhotoId} {Error}", photoId, ex.Message);
+            try
+            {
+                await FileService.DeleteFileAsync(photoId);
+            }
+            catch (Exception cleanupEx)
+            {
+                await logger.LogError(cleanupEx, "Error Removing Unlinked Oqtane Assessment Photo {PhotoId} {Error}", photoId, cleanupEx.Message);
+            }
+            AddModuleMessage(Localizer["Message.PhotoSaveError"], MessageType.Error);
         }
         finally
         {
             _isPhotoBusy = false;
-            _photoInputVersion++;
-            _cameraInputVersion++;
         }
     }
 
-    private async Task LoadExistingPhotosAsync()
-    {
-        _existingPhotos.Clear();
-        var metadata = await AssessmentService.GetPhotosByAssessmentAsync(_id) ?? new List<AssessmentPhotoDto>();
-        _existingPhotos = metadata.Select(photo => new ExistingAssessmentPhoto { Metadata = photo }).ToList();
-
-        foreach (var photo in _existingPhotos)
-        {
-            try
-            {
-                var content = await AssessmentService.GetPhotoAsync(photo.Metadata.AssessmentPhotoId);
-                if (content?.PhotoData == null || content.PhotoData.Length == 0)
-                {
-                    photo.LoadFailed = true;
-                    continue;
-                }
-
-                photo.PreviewDataUrl = ToDataUrl(content.ContentType ?? photo.Metadata.ContentType, content.PhotoData);
-            }
-            catch (Exception ex)
-            {
-                photo.LoadFailed = true;
-                await logger.LogError(ex, "Error Loading Assessment Photo {AssessmentPhotoId} {Error}", photo.Metadata.AssessmentPhotoId, ex.Message);
-            }
-        }
-    }
-
-    private async Task RemovePendingPhotoAsync(PendingAssessmentPhoto photo)
-    {
-        _pendingPhotos.Remove(photo);
-        if (_hasDraft)
-        {
-            await SavePhotoDraftsAsync();
-        }
-    }
-
-    private async Task DeleteExistingPhotoAsync(ExistingAssessmentPhoto photo)
+    private async Task DeleteExistingPhotoAsync(AssessmentPhotoDto photo)
     {
         var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", Localizer["Photo.DeleteConfirm"].Value);
         if (!confirmed)
@@ -1433,7 +1276,7 @@
         _isPhotoBusy = true;
         try
         {
-            if (await AssessmentService.DeletePhotoAsync(photo.Metadata.AssessmentPhotoId))
+            if (await AssessmentService.DeletePhotoAsync(photo.AssessmentPhotoId))
             {
                 _existingPhotos.Remove(photo);
                 AddModuleMessage(Localizer["Message.PhotoDeleteSuccess"], MessageType.Success);
@@ -1445,150 +1288,12 @@
         }
         catch (Exception ex)
         {
-            await logger.LogError(ex, "Error Deleting Assessment Photo {AssessmentPhotoId} {Error}", photo.Metadata.AssessmentPhotoId, ex.Message);
+            await logger.LogError(ex, "Error Deleting Assessment Photo {AssessmentPhotoId} {Error}", photo.AssessmentPhotoId, ex.Message);
             AddModuleMessage(Localizer["Message.PhotoDeleteError"], MessageType.Error);
         }
         finally
         {
             _isPhotoBusy = false;
-        }
-    }
-
-    private async Task<bool> PersistPendingPhotosAsync(int assessmentId)
-    {
-        if (_pendingPhotos.Count == 0)
-        {
-            return true;
-        }
-
-        if (_existingPhotos.Count + _pendingPhotos.Count > AssessmentPhotoRules.MaxPhotosPerAssessment)
-        {
-            AddModuleMessage(string.Format(Localizer["Message.PhotoLimit"], AssessmentPhotoRules.MaxPhotosPerAssessment), MessageType.Warning);
-            return false;
-        }
-
-        _isPhotoBusy = true;
-        try
-        {
-            foreach (var pending in _pendingPhotos)
-            {
-                var created = await AssessmentService.AddPhotoAsync(new Models.AssessmentPhoto
-                {
-                    AssessmentId = assessmentId,
-                    FileName = pending.FileName,
-                    ContentType = pending.ContentType,
-                    FileSize = pending.Data.LongLength,
-                    PhotoData = pending.Data
-                });
-
-                if (created == null)
-                {
-                    throw new InvalidOperationException("The photo upload returned no metadata.");
-                }
-            }
-
-            _pendingPhotos.Clear();
-            if (_hasDraft)
-            {
-                await SavePhotoDraftsAsync();
-            }
-            if (_id > 0)
-            {
-                await LoadExistingPhotosAsync();
-            }
-
-            return true;
-        }
-        catch (Exception ex)
-        {
-            await logger.LogError(ex, "Error Saving Assessment Photos {AssessmentId} {Error}", assessmentId, ex.Message);
-            AddModuleMessage(Localizer["Message.PhotoSaveError"], MessageType.Error);
-            return false;
-        }
-        finally
-        {
-            _isPhotoBusy = false;
-        }
-    }
-
-    private async Task SavePhotoDraftsAsync()
-    {
-        var records = _pendingPhotos.Select(photo => new PhotoDraftRecord
-        {
-            FileName = photo.FileName,
-            ContentType = photo.ContentType,
-            PreviewDataUrl = photo.PreviewDataUrl
-        }).ToList();
-
-        await JSRuntime.InvokeVoidAsync("OpenEug.TenTrees.Assessment.PhotoDrafts.save", PhotoDraftKey, records);
-    }
-
-    private async Task LoadPhotoDraftsAsync()
-    {
-        var records = await JSRuntime.InvokeAsync<List<PhotoDraftRecord>>(
-            "OpenEug.TenTrees.Assessment.PhotoDrafts.load", PhotoDraftKey) ?? new List<PhotoDraftRecord>();
-
-        _pendingPhotos.Clear();
-        var remaining = Math.Max(0, AssessmentPhotoRules.MaxPhotosPerAssessment - _existingPhotos.Count);
-        foreach (var record in records.Take(remaining))
-        {
-            if (!TryReadDataUrl(record.PreviewDataUrl, out var contentType, out var data) ||
-                !AssessmentPhotoRules.AllowedContentTypes.Contains(contentType, StringComparer.OrdinalIgnoreCase) ||
-                data.LongLength > AssessmentPhotoRules.MaxPhotoBytes)
-            {
-                continue;
-            }
-
-            _pendingPhotos.Add(new PendingAssessmentPhoto
-            {
-                FileName = record.FileName,
-                ContentType = contentType,
-                Data = data,
-                PreviewDataUrl = record.PreviewDataUrl
-            });
-        }
-    }
-
-    private async Task ClearPhotoDraftsAsync()
-    {
-        try
-        {
-            await JSRuntime.InvokeVoidAsync("OpenEug.TenTrees.Assessment.PhotoDrafts.clear", PhotoDraftKey);
-        }
-        catch (Exception ex)
-        {
-            await logger.LogError(ex, "Error Clearing Assessment Photo Draft {Error}", ex.Message);
-        }
-    }
-
-    private static string ToDataUrl(string contentType, byte[] data) =>
-        $"data:{contentType};base64,{Convert.ToBase64String(data)}";
-
-    private static bool TryReadDataUrl(string dataUrl, out string contentType, out byte[] data)
-    {
-        contentType = null;
-        data = null;
-        if (string.IsNullOrWhiteSpace(dataUrl) || !dataUrl.StartsWith("data:image/", StringComparison.OrdinalIgnoreCase))
-        {
-            return false;
-        }
-
-        var separator = dataUrl.IndexOf(',');
-        var marker = ";base64";
-        if (separator < 0 || !dataUrl[..separator].EndsWith(marker, StringComparison.OrdinalIgnoreCase))
-        {
-            return false;
-        }
-
-        try
-        {
-            contentType = dataUrl[5..dataUrl.IndexOf(';')];
-            data = Convert.FromBase64String(dataUrl[(separator + 1)..]);
-            return true;
-        }
-        catch (FormatException)
-        {
-            return false;
         }
     }
 

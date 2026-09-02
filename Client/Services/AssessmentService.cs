@@ -4,7 +4,6 @@ using Oqtane.Services;
 using Oqtane.Shared;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 
@@ -101,33 +100,19 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
             await PutJsonAsync<List<Models.AssessmentProblem>>($"{ApiUrl}/{assessmentId}/problems", problems);
         }
 
+        public async Task<int?> GetPhotoFolderIdAsync(int assessmentId, string mentorUsername = null)
+        {
+            return await GetJsonAsync<int?>($"{ApiUrl}/{assessmentId}/photo-folder");
+        }
+
         public async Task<List<AssessmentPhotoDto>> GetPhotosByAssessmentAsync(int assessmentId, string mentorUsername = null)
         {
             return await GetJsonAsync<List<AssessmentPhotoDto>>($"{ApiUrl}/{assessmentId}/photos", new List<AssessmentPhotoDto>());
         }
 
-        public async Task<Models.AssessmentPhoto> GetPhotoAsync(int assessmentPhotoId, string mentorUsername = null)
-        {
-            var response = await GetHttpClient().GetAsync($"{ApiUrl}/photos/{assessmentPhotoId}/content");
-            response.EnsureSuccessStatusCode();
-            return new Models.AssessmentPhoto
-            {
-                AssessmentPhotoId = assessmentPhotoId,
-                ContentType = response.Content.Headers.ContentType?.MediaType,
-                PhotoData = await response.Content.ReadAsByteArrayAsync()
-            };
-        }
-
         public async Task<AssessmentPhotoDto> AddPhotoAsync(Models.AssessmentPhoto photo, string mentorUsername = null)
         {
-            using var form = new MultipartFormDataContent();
-            using var content = new ByteArrayContent(photo.PhotoData);
-            content.Headers.ContentType = new MediaTypeHeaderValue(photo.ContentType);
-            form.Add(content, "photo", photo.FileName);
-
-            var response = await GetHttpClient().PostAsync($"{ApiUrl}/{photo.AssessmentId}/photos", form);
-            response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<AssessmentPhotoDto>();
+            return await PostJsonAsync<Models.AssessmentPhoto, AssessmentPhotoDto>($"{ApiUrl}/{photo.AssessmentId}/photos", photo);
         }
 
         public async Task<bool> DeletePhotoAsync(int assessmentPhotoId, string mentorUsername = null)

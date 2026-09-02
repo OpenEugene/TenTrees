@@ -1,3 +1,5 @@
+[Home](../Home.md) / [Specifications](../Specifications.md) / Garden Assessment <!-- wikidown:breadcrumb -->
+
 # Garden Assessment
 
 Tree mentors regularly assess garden health and tree survival so the program can track outcomes and identify problems early. Translated from the retired feature file `Specs/Features/GardenAssessment.feature` (high priority, mobile, recurring).
@@ -32,6 +34,9 @@ Nine Yes/No practice questions are each saved individually, and the total count 
 ## Problems and help requests
 
 The mentor can select zero, one, or many problems (e.g. broken branches, yellow leaves, losing leaves, trees look dry, pests eating the plant). A separate question — "Do you need someone to help with this problem?" — sets a help request flag. An assessment with no problems and "No" to help saves with zero problems and the flag false.
+
+## Problem photos
+Optional problem photos are uploaded only after the assessment has been saved. The form uses the Oqtane file upload control and displays the resulting secure file URL. See [Assessment Photo Storage](/Specifications/Assessment-Photo-Storage) for the developer implementation, security model, and deployment requirements.
 
 ## Notes
 
@@ -178,23 +183,15 @@ Feature: Tree Monitoring and Garden Health Assessment
     Then the assessment should save with zero problems recorded
     And the help request flag should be set to false
 
-  Scenario: Add photos that show an assessment problem
+  Scenario: Upload photos that show an assessment problem
     Given test village "Orpen Gate Village" contains grower "Mary Nkuna"
-    And "Mary Nkuna" has trees recorded in her orchard
-    And I am completing an assessment for "Mary Nkuna"
-    When I select problem "The trees have yellow leaves"
-    And I choose 2 supported problem photos
-    Then I should see previews of both photos in the Problems section
-    When I save the assessment
-    Then both photos should be stored with the assessment
+    And "Mary Nkuna" has a saved assessment with trees recorded in her orchard
+    When I open the assessment for editing
+    And I use the Problem Photos upload control to select a supported image
+    Then Oqtane should store the image in the private AssessmentPhotos folder
+    And the image should be linked to the assessment and displayed in the Problems section
 
-  Scenario: Take a new problem photo with the device camera
-    Given I am completing an assessment on a camera-enabled mobile device
-    When I tap "Take Photo" in the Problems section
-    Then the rear-facing camera should be requested
-    When I take and accept a photo
-    Then I should see its preview with the assessment
-    And the photo should be resized and uploaded when I save
+  # A dedicated device-camera experience is a stretch goal. Native browser pickers may offer one where supported.
 
   Scenario: Centre staff review problem photos before visiting
     Given "Mary Nkuna" has a saved assessment with a problem photo
@@ -206,17 +203,15 @@ Feature: Tree Monitoring and Garden Health Assessment
   Scenario: Problem photos are optional and validated
     Given I am completing an assessment for "Mary Nkuna"
     Then I can save the assessment without a photo
-    And I can add at most 5 problem photos
-    And only JPG, PNG, or WebP image content should be accepted
-    And each processed photo must be 5 MB or smaller
+    And I can add at most 5 problem photos after saving the assessment
+    And only JPG, JPEG, PNG, or WebP files should be accepted
+    And each uploaded photo must be 5 MB or smaller
 
-  Scenario: Save selected problem photos in an offline draft
-    Given I have selected problem photos for a partially completed assessment
-    And I do not have an internet connection
+  Scenario: Assessment draft does not include photos
+    Given I am completing an assessment without a reliable connection
     When I tap "Save Draft"
-    Then the selected photos should be stored locally on my device
-    When I reopen and load the draft
-    Then the selected photo previews should be restored
+    Then the assessment fields should be stored locally on my device
+    And I should save and reopen the assessment before uploading problem photos
 
   # ─── NOTES ──────────────────────────────────────────────────────────────────
 
