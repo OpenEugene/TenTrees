@@ -16,4 +16,15 @@ namespace OpenEug.TenTrees.Models
         public int PermaculturePrinciplesCount { get; set; }
         public bool NeedsHelp { get; set; }
     }
+
+    public class AssessmentPhotoDto
+    {
+        public int AssessmentPhotoId { get; set; }
+        public int AssessmentId { get; set; }
+        public string FileName { get; set; }
+        public string ContentType { get; set; }
+        public long FileSize { get; set; }
+        public string CreatedBy { get; set; }
+        public DateTime CreatedOn { get; set; }
+    }
 }

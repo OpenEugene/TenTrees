@@ -9,6 +9,7 @@
   <Project Path="Client/OpenEug.TenTrees.Client.csproj" />
   <Project Path="Server/OpenEug.TenTrees.Server.csproj" />
   <Project Path="Shared/OpenEug.TenTrees.Shared.csproj" />
+  <Project Path="Specs/Specs.csproj" />
   <Project Path="Sql/Sql.sqlproj" Id="54aef72d-f821-4e0b-acca-cab49fbfaa54">
     <Build Solution="Release|*" />
     <Deploy />

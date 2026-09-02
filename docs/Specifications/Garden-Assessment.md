@@ -178,6 +178,46 @@ Feature: Tree Monitoring and Garden Health Assessment
     Then the assessment should save with zero problems recorded
     And the help request flag should be set to false
 
+  Scenario: Add photos that show an assessment problem
+    Given test village "Orpen Gate Village" contains grower "Mary Nkuna"
+    And "Mary Nkuna" has trees recorded in her orchard
+    And I am completing an assessment for "Mary Nkuna"
+    When I select problem "The trees have yellow leaves"
+    And I choose 2 supported problem photos
+    Then I should see previews of both photos in the Problems section
+    When I save the assessment
+    Then both photos should be stored with the assessment
+
+  Scenario: Take a new problem photo with the device camera
+    Given I am completing an assessment on a camera-enabled mobile device
+    When I tap "Take Photo" in the Problems section
+    Then the rear-facing camera should be requested
+    When I take and accept a photo
+    Then I should see its preview with the assessment
+    And the photo should be resized and uploaded when I save
+
+  Scenario: Centre staff review problem photos before visiting
+    Given "Mary Nkuna" has a saved assessment with a problem photo
+    And I am logged in as Centre staff
+    When I open the saved assessment
+    Then I should see the problem photo in the Problems section
+    And the photo should not be available outside authenticated assessment access
+
+  Scenario: Problem photos are optional and validated
+    Given I am completing an assessment for "Mary Nkuna"
+    Then I can save the assessment without a photo
+    And I can add at most 5 problem photos
+    And only JPG, PNG, or WebP image content should be accepted
+    And each processed photo must be 5 MB or smaller
+
+  Scenario: Save selected problem photos in an offline draft
+    Given I have selected problem photos for a partially completed assessment
+    And I do not have an internet connection
+    When I tap "Save Draft"
+    Then the selected photos should be stored locally on my device
+    When I reopen and load the draft
+    Then the selected photo previews should be restored
+
   # ─── NOTES ──────────────────────────────────────────────────────────────────
 
   Scenario: Add narrative notes to assessment

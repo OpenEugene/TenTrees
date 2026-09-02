@@ -39,8 +39,10 @@ Mentors are the field agents who work directly with Growers in their assigned vi
 4. Fill in the Assessment Name (e.g., "GA-1") and Date.
 5. Enter the number of "Trees Planted" and "Trees Still Alive" to calculate the survival rate.
 6. Check any observed problems (e.g., yellow leaves, broken branches, pests).
-7. Answer the Permaculture Practices questions (e.g., fertilizer use, mulching, water collection).
-8. Add any additional notes and click **Save**.
+7. Under **Problem Photos**, optionally tap **Take Photo** to use the device camera or **Upload Photos** to choose existing JPG, PNG, or WebP images. Add up to five photos, review the previews, and remove any incorrect photo before saving. Large photos are resized automatically, and each processed photo must be 5 MB or smaller.
+8. If working without a reliable connection, click **Save Draft**. The selected photo previews are stored locally with the draft and restored when you click **Load Draft**.
+9. Answer the Permaculture Practices questions (e.g., fertilizer use, mulching, water collection).
+10. Add any additional notes and click **Save**. Photos upload with the assessment when a connection is available.
 
 ---
 
@@ -62,7 +64,7 @@ Educators oversee the training programs and manage cohorts across multiple villa
 ### 3.3 Reviewing Assessments
 1. Navigate to the Assessment module: [https://tentrees.org/assessment](https://tentrees.org/assessment)
 2. Use the "Filter by Village", "Cohort", or "Mentor" dropdowns to review assessments submitted by Mentors.
-3. Click **Edit** on any assessment to review the details, survival rates, and permaculture practices recorded.
+3. Click **Edit** on any assessment to review the details, survival rates, permaculture practices, and problem photos before planning a garden visit.
 
 ---
 

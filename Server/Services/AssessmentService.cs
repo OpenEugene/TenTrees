@@ -16,17 +16,20 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
     {
         private readonly IAssessmentRepository _assessmentRepository;
         private readonly IAssessmentNoteRepository _assessmentNoteRepository;
+        private readonly IAssessmentPhotoRepository _assessmentPhotoRepository;
         private readonly IGrowerRepository _growerRepository;
         private readonly ILogManager _logger;
 
         public ServerAssessmentService(
             IAssessmentRepository assessmentRepository,
             IAssessmentNoteRepository assessmentNoteRepository,
+            IAssessmentPhotoRepository assessmentPhotoRepository,
             IGrowerRepository growerRepository,
             ILogManager logger)
         {
             _assessmentRepository = assessmentRepository;
             _assessmentNoteRepository = assessmentNoteRepository;
+            _assessmentPhotoRepository = assessmentPhotoRepository;
             _growerRepository = growerRepository;
             _logger = logger;
         }
@@ -121,6 +124,7 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
 
         public Task DeleteAssessmentAsync(int assessmentId)
         {
+            _assessmentPhotoRepository.DeletePhotosByAssessment(assessmentId);
             _assessmentRepository.DeleteAssessment(assessmentId);
             _logger.Log(LogLevel.Information, this, LogFunction.Delete, "Assessment Deleted {AssessmentId}", assessmentId);
             return Task.CompletedTask;
@@ -188,6 +192,81 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
                 p.AssessmentId = assessmentId;
             _assessmentRepository.ReplaceProblems(assessmentId, problems);
             return Task.CompletedTask;
+        }
+
+        public Task<List<AssessmentPhotoDto>> GetPhotosByAssessmentAsync(int assessmentId, string mentorUsername = null)
+        {
+            if (!CanAccessAssessment(assessmentId, mentorUsername))
+            {
+                return Task.FromResult(new List<AssessmentPhotoDto>());
+            }
+
+            return Task.FromResult(_assessmentPhotoRepository.GetPhotosByAssessment(assessmentId).ToList());
+        }
+
+        public Task<Models.AssessmentPhoto> GetPhotoAsync(int assessmentPhotoId, string mentorUsername = null)
+        {
+            var photo = _assessmentPhotoRepository.GetPhoto(assessmentPhotoId);
+            if (photo == null || !CanAccessAssessment(photo.AssessmentId, mentorUsername))
+            {
+                return Task.FromResult<Models.AssessmentPhoto>(null);
+            }
+
+            return Task.FromResult(photo);
+        }
+
+        public Task<AssessmentPhotoDto> AddPhotoAsync(Models.AssessmentPhoto photo, string mentorUsername = null)
+        {
+            if (photo == null || !CanAccessAssessment(photo.AssessmentId, mentorUsername))
+            {
+                return Task.FromResult<AssessmentPhotoDto>(null);
+            }
+
+            if (_assessmentPhotoRepository.GetPhotoCount(photo.AssessmentId) >= AssessmentPhotoRules.MaxPhotosPerAssessment)
+            {
+                return Task.FromResult<AssessmentPhotoDto>(null);
+            }
+
+            var created = _assessmentPhotoRepository.AddPhoto(photo);
+            return Task.FromResult(new AssessmentPhotoDto
+            {
+                AssessmentPhotoId = created.AssessmentPhotoId,
+                AssessmentId = created.AssessmentId,
+                FileName = created.FileName,
+                ContentType = created.ContentType,
+                FileSize = created.FileSize,
+                CreatedBy = created.CreatedBy,
+                CreatedOn = created.CreatedOn
+            });
+        }
+
+        public Task<bool> DeletePhotoAsync(int assessmentPhotoId, string mentorUsername = null)
+        {
+            var photo = _assessmentPhotoRepository.GetPhoto(assessmentPhotoId);
+            if (photo == null || !CanAccessAssessment(photo.AssessmentId, mentorUsername))
+            {
+                return Task.FromResult(false);
+            }
+
+            _assessmentPhotoRepository.DeletePhoto(assessmentPhotoId);
+            return Task.FromResult(true);
+        }
+
+        private bool CanAccessAssessment(int assessmentId, string mentorUsername)
+        {
+            var assessment = _assessmentRepository.GetAssessment(assessmentId, tracking: false);
+            if (assessment == null)
+            {
+                return false;
+            }
+
+            if (mentorUsername == null)
+            {
+                return true;
+            }
+
+            var grower = _growerRepository.GetGrower(assessment.GrowerId);
+            return grower != null && grower.MentorUsername == mentorUsername;
         }
     }
 }
