@@ -116,4 +116,4 @@ Mentors must also be assigned to a specific village:
 ## Related Files
 - `Shared/AppRoleNames.cs` - Role name constants and permission helpers
 - `Server/Migrations/Scripts/CreateCustomRoles.sql` - SQL script for role creation
-- `Specs/Features/UserAdministration.feature` - BDD scenarios for role behavior
+- `docs/Specifications/User-Administration.md` - role behavior documentation (wiki)

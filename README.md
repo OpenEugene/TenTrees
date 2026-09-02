@@ -95,9 +95,10 @@ Server/
   ?? Migrations/             # Database migrations
 Shared/
   ?? Models/                 # Data models shared between client and server
-Specs/
-  ?? Features/               # BDD scenarios (Gherkin)
-  ?? Docs/                   # Feature documentation
+docs/
+  ?? Specifications/         # System behaviour documentation (Wikidown wiki)
+  ?? Plans/                  # Implementation and test plans
+  ?? Project/                # Project plan, meetings, reference documents
 ```
 
 ### Security Model

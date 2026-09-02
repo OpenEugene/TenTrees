@@ -41,7 +41,7 @@ Two classes of issues appear repeatedly across PWApps Blazor modules:
 - Adding navigation cards, action buttons, or icon elements to any page
 - Reviewing existing forms or pages during accessibility improvements
 - Adding new required fields to an existing form
-- Spec: `Specs/System/Accessibility.feature` SC 1.1.1, SC 1.3.1, SC 2.1.1, SC 3.3.1, SC 3.3.2, SC 4.1.3
+- WCAG 2.1 success criteria in scope: SC 1.1.1, SC 1.3.1, SC 2.1.1, SC 3.3.1, SC 3.3.2, SC 4.1.3
 
 ## Solution
 
@@ -321,7 +321,7 @@ Build passes with `run_build` after all changes.
 
 ## References
 
-- `Specs/System/Accessibility.feature` — SC 1.1.1, SC 1.3.1, SC 2.1.1, SC 3.3.1, SC 3.3.2, SC 4.1.3
+- WCAG 2.1 success criteria covered: SC 1.1.1, SC 1.3.1, SC 2.1.1, SC 3.3.1, SC 3.3.2, SC 4.1.3
 - WCAG 2.1: https://www.w3.org/TR/WCAG21/
 - Bootstrap `is-invalid`: https://getbootstrap.com/docs/5.0/forms/validation/
 - Bootstrap `visually-hidden`: https://getbootstrap.com/docs/5.0/helpers/visually-hidden/

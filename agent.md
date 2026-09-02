@@ -5,7 +5,7 @@ This is the 10 Trees Digital Platform - a Blazor WebAssembly application built o
 
 ## Task & Issue Tracking
 
-All tasks and issues are tracked on the **local Kanban board** at `./kanban/`. When the user refers to "tasks", "issues", or "what to work on next", always look there — never assume GitHub Issues or any external tracker.
+All tasks and issues are tracked in **GitHub Issues** on this repository. When the user refers to "tasks", "issues", or "what to work on next", look there (e.g. via the `gh` CLI or GitHub MCP tools).
 
 ## Communication Guidelines
 - **DO NOT create summary documents** - Just do the work and report completion
@@ -192,11 +192,10 @@ CREATE TABLE [dbo].[ModelName] (
 - Touch-friendly buttons and form controls (minimum 44×44px touch targets)
 - Large, easy-to-read fonts (minimum 16px for body text)
 
-### BDD-Driven Development
-- All features defined in `Specs/Features/*.feature` files
-- Use Reqnroll (SpecFlow successor) with xUnit
-- Feature files use Gherkin syntax with tags: `@workflow-*`, `@priority-*`, `@mobile`
-- Implement features to match BDD scenarios exactly
+### Specification-Driven Development
+- All features are documented in the Wikidown wiki under `docs/Specifications/` (edit via the wiki tools/CLI, not direct file writes)
+- The wiki is the source of truth for system behaviour; the retired Gherkin feature files remain in git history
+- Implement features to match the specification pages exactly
 
 ### Offline Support
 - Forms must work offline (poor rural connectivity)
