@@ -46,7 +46,7 @@ namespace OpenEug.TenTrees.Models
         public int AssessmentId { get; set; }
 
         [Required]
-        public int PhotoId { get; set; }
+        public int FileId { get; set; }
 
         [Required]
         [MaxLength(2048)]

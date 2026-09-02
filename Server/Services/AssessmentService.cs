@@ -123,7 +123,7 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
         {
             foreach (var photo in _assessmentPhotoRepository.GetPhotosByAssessment(assessmentId))
             {
-                DeleteOqtaneFile(photo.PhotoId);
+                DeleteOqtaneFile(photo.FileId);
             }
             _assessmentPhotoRepository.DeletePhotosByAssessment(assessmentId);
             _assessmentRepository.DeleteAssessment(assessmentId);
@@ -217,14 +217,14 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
             }
 
             var folder = GetAssessmentPhotoFolder(photo.AssessmentId, mentorUsername);
-            var file = _fileRepository.GetFile(photo.PhotoId);
+            var file = _fileRepository.GetFile(photo.FileId);
             if (folder == null || file == null || file.FolderId != folder.FolderId ||
                 file.Size > AssessmentPhotoRules.MaxPhotoBytes || !AssessmentPhotoRules.IsAllowedExtension(file.Extension))
             {
                 return Task.FromResult<AssessmentPhotoDto>(null);
             }
 
-            if (_assessmentPhotoRepository.GetPhotosByAssessment(photo.AssessmentId).Any(existing => existing.PhotoId == photo.PhotoId))
+            if (_assessmentPhotoRepository.GetPhotosByAssessment(photo.AssessmentId).Any(existing => existing.FileId == photo.FileId))
             {
                 return Task.FromResult<AssessmentPhotoDto>(null);
             }
@@ -256,7 +256,7 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
                 return Task.FromResult(false);
             }
 
-            DeleteOqtaneFile(photo.PhotoId);
+            DeleteOqtaneFile(photo.FileId);
             _assessmentPhotoRepository.DeletePhoto(assessmentPhotoId);
             return Task.FromResult(true);
         }
@@ -326,7 +326,7 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
 
         private AssessmentPhotoDto ToDto(Models.AssessmentPhoto photo)
         {
-            var file = _fileRepository.GetFile(photo.PhotoId);
+            var file = _fileRepository.GetFile(photo.FileId);
             if (file == null)
             {
                 return null;
@@ -336,7 +336,7 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
             {
                 AssessmentPhotoId = photo.AssessmentPhotoId,
                 AssessmentId = photo.AssessmentId,
-                PhotoId = photo.PhotoId,
+                FileId = photo.FileId,
                 FileName = file.Name,
                 FileSize = file.Size,
                 Url = photo.Url,

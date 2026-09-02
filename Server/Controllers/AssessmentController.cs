@@ -350,7 +350,7 @@ namespace OpenEug.TenTrees.Module.Assessment.Controllers
                     return NotFound();
                 }
 
-                if (photo == null || photo.PhotoId <= 0)
+                if (photo == null || photo.FileId <= 0)
                 {
                     return BadRequest();
                 }

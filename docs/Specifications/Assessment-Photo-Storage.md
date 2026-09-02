@@ -18,7 +18,7 @@ The native browser picker may offer a device camera option on supported phones. 
 | Native upload | Applies Oqtane’s configured file validation, chunking, progress, and folder permissions. | `Oqtane.Modules.Controls.FileManager` |
 | Oqtane storage | Stores private physical files and Oqtane `File` metadata. | `/files/AssessmentPhotos/...` via Oqtane |
 | Association API | Resolves the private folder, validates the uploaded Oqtane file, records the association, and removes both association and file. | `AssessmentController` and `ServerAssessmentService` |
-| TenTrees SQL | Stores only assessment linkage, Oqtane photo ID, stable Oqtane URL, and audit data. | `dbo.AssessmentPhoto` |
+| TenTrees SQL | Stores only assessment linkage, Oqtane file ID, stable Oqtane URL, and audit data. | `dbo.AssessmentPhoto` |
 
 ## Private Oqtane folder
 
@@ -42,11 +42,11 @@ For example, assessment 42 with association 314 is stored as `assessment-42-314.
 | --- | --- | --- |
 | `AssessmentPhotoId` | `INT IDENTITY` | Primary key and unique filename suffix. |
 | `AssessmentId` | `INT` | Parent garden assessment. |
-| `PhotoId` | `INT` | Oqtane `File.FileId` for the uploaded physical file. |
+| `FileId` | `INT` | Oqtane `File.FileId` for the uploaded physical file. |
 | `Url` | `NVARCHAR(2048)` | Resolved Oqtane private-file URL used by the UI. |
 | `CreatedBy`, `CreatedOn`, `ModifiedBy`, `ModifiedOn` | Oqtane audit types | Standard record audit data. |
 
-The schema has a unique constraint on `(AssessmentId, PhotoId)` and an index on `AssessmentId`. It deliberately has no cross-database foreign key to Oqtane’s framework-owned file table.
+The schema has a unique constraint on `(AssessmentId, FileId)` and an index on `AssessmentId`. It deliberately has no cross-database foreign key to Oqtane’s framework-owned file table.
 
 ## API contract
 
@@ -55,8 +55,8 @@ The Assessment module API is authenticated. Standard Oqtane module routing suppl
 | Method | Route | Request | Result |
 | --- | --- | --- | --- |
 | `GET` | `/{assessmentId}/photo-folder` | None | The private Oqtane folder ID for the saved assessment. |
-| `GET` | `/{assessmentId}/photos` | None | `AssessmentPhotoDto[]` with `PhotoId`, `Url`, filename, size, and audit metadata. |
-| `POST` | `/{assessmentId}/photos` | `{ "photoId": 123 }` | Creates association, renames Oqtane file, stores URL, and returns metadata. |
+| `GET` | `/{assessmentId}/photos` | None | `AssessmentPhotoDto[]` with `FileId`, `Url`, filename, size, and audit metadata. |
+| `POST` | `/{assessmentId}/photos` | `{ "fileId": 123 }` | Creates association, renames Oqtane file, stores URL, and returns metadata. |
 | `DELETE` | `/photos/{assessmentPhotoId}` | None | Removes physical Oqtane file and association; returns `204 No Content`. |
 
 The Oqtane `FileManager` performs the actual multipart upload to Oqtane’s file API. The Assessment API never accepts image bytes or returns image bytes.
@@ -65,7 +65,7 @@ The Oqtane `FileManager` performs the actual multipart upload to Oqtane’s file
 
 The native `FileManager` is configured with `Filter="jpg,jpeg,png,webp"`, `UploadMultiple="false"`, `MaxUploadFileSize="5"`, progress display, and the private folder ID. Oqtane also enforces the site’s `UploadableFiles` setting and folder capacity. The Assessment service independently validates that the referenced Oqtane file is in `AssessmentPhotos/`, has an allowed extension, is no larger than 5 MB, and that the assessment has fewer than five photos.
 
-After a successful native upload, the form obtains the Oqtane `PhotoId`, posts the association, reloads metadata, and renders `<img src="@photo.Url">`. If linking fails, the client removes the just-uploaded Oqtane file so it does not remain orphaned. If an assessment or an individual photo is deleted, the service removes the physical Oqtane file—including generated thumbnail variants—before removing the association row.
+After a successful native upload, the form obtains the Oqtane `FileId`, posts the association, reloads metadata, and renders `<img src="@photo.Url">`. If linking fails, the client removes the just-uploaded Oqtane file so it does not remain orphaned. If an assessment or an individual photo is deleted, the service removes the physical Oqtane file—including generated thumbnail variants—before removing the association row.
 
 ## Access control
 

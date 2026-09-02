@@ -1211,34 +1211,34 @@
         _existingPhotos = await AssessmentService.GetPhotosByAssessmentAsync(_id) ?? new List<AssessmentPhotoDto>();
     }
 
-    private async Task OnPhotoUploadedAsync(int photoId)
+    private async Task OnPhotoUploadedAsync(int fileId)
     {
         _isPhotoBusy = true;
         try
         {
             if (_existingPhotos.Count >= AssessmentPhotoRules.MaxPhotosPerAssessment)
             {
-                await FileService.DeleteFileAsync(photoId);
+                await FileService.DeleteFileAsync(fileId);
                 AddModuleMessage(string.Format(Localizer["Message.PhotoLimit"], AssessmentPhotoRules.MaxPhotosPerAssessment), MessageType.Warning);
                 return;
             }
 
-            var file = await FileService.GetFileAsync(photoId);
+            var file = await FileService.GetFileAsync(fileId);
             if (file == null || !AssessmentPhotoRules.IsAllowedExtension(file.Extension))
             {
-                await FileService.DeleteFileAsync(photoId);
-                AddModuleMessage(string.Format(Localizer["Message.PhotoInvalidType"], file?.Name ?? photoId.ToString()), MessageType.Warning);
+                await FileService.DeleteFileAsync(fileId);
+                AddModuleMessage(string.Format(Localizer["Message.PhotoInvalidType"], file?.Name ?? fileId.ToString()), MessageType.Warning);
                 return;
             }
 
             var created = await AssessmentService.AddPhotoAsync(new Models.AssessmentPhoto
             {
                 AssessmentId = _id,
-                PhotoId = photoId
+                FileId = fileId
             });
             if (created == null)
             {
-                await FileService.DeleteFileAsync(photoId);
+                await FileService.DeleteFileAsync(fileId);
                 AddModuleMessage(Localizer["Message.PhotoSaveError"], MessageType.Error);
                 return;
             }
@@ -1248,14 +1248,14 @@
         }
         catch (Exception ex)
         {
-            await logger.LogError(ex, "Error Linking Oqtane Assessment Photo {PhotoId} {Error}", photoId, ex.Message);
+            await logger.LogError(ex, "Error Linking Oqtane Assessment File {FileId} {Error}", fileId, ex.Message);
             try
             {
-                await FileService.DeleteFileAsync(photoId);
+                await FileService.DeleteFileAsync(fileId);
             }
             catch (Exception cleanupEx)
             {
-                await logger.LogError(cleanupEx, "Error Removing Unlinked Oqtane Assessment Photo {PhotoId} {Error}", photoId, cleanupEx.Message);
+                await logger.LogError(cleanupEx, "Error Removing Unlinked Oqtane Assessment File {FileId} {Error}", fileId, cleanupEx.Message);
             }
             AddModuleMessage(Localizer["Message.PhotoSaveError"], MessageType.Error);
         }
