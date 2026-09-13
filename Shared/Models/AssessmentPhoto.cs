@@ -11,6 +11,22 @@ namespace OpenEug.TenTrees.Models
     public static class AssessmentPhotoRules
     {
         public const int MaxPhotosPerAssessment = 5;
+
+        /// <summary>
+        /// Largest file the upload control accepts. Phone cameras produce 3–12 MB originals and
+        /// field users have no way to shrink them, so this is set well above that; the server
+        /// resizes every photo after upload (see <see cref="MaxLongEdgePixels"/>).
+        /// </summary>
+        public const int MaxUploadMegabytes = 25;
+        public const long MaxUploadBytes = MaxUploadMegabytes * 1024L * 1024L;
+
+        /// <summary>Longest side a stored photo is reduced to. Plenty for judging a garden problem on a screen.</summary>
+        public const int MaxLongEdgePixels = 1600;
+
+        /// <summary>Encoder quality for lossy formats (JPEG, WebP) after resizing.</summary>
+        public const int ResizedQuality = 80;
+
+        /// <summary>Sanity cap on what is kept after resizing. A 1600 px photo is normally well under 1 MB.</summary>
         public const int MaxPhotoMegabytes = 5;
         public const long MaxPhotoBytes = MaxPhotoMegabytes * 1024L * 1024L;
         /// <summary>Site-level root folder. Each grower gets a child folder named by GrowerId.</summary>

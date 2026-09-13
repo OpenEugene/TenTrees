@@ -90,10 +90,17 @@ public class AssessmentPhotoRulesTests
     }
 
     [Fact]
-    public void PhotoLimits_AreSuitableForOqtaneAssessmentUploads()
+    public void PhotoLimits_AcceptCameraOriginalsAndCapStoredSize()
     {
         Assert.Equal(5, AssessmentPhotoRules.MaxPhotosPerAssessment);
-        Assert.Equal(5, AssessmentPhotoRules.MaxPhotoMegabytes);
+
+        // Upload limit must clear a phone camera original; stored cap is the post-resize sanity check.
+        Assert.True(AssessmentPhotoRules.MaxUploadMegabytes >= 20);
+        Assert.Equal(AssessmentPhotoRules.MaxUploadMegabytes * 1024L * 1024L, AssessmentPhotoRules.MaxUploadBytes);
+        Assert.True(AssessmentPhotoRules.MaxPhotoBytes < AssessmentPhotoRules.MaxUploadBytes);
         Assert.Equal(5 * 1024 * 1024, AssessmentPhotoRules.MaxPhotoBytes);
+
+        Assert.Equal(1600, AssessmentPhotoRules.MaxLongEdgePixels);
+        Assert.InRange(AssessmentPhotoRules.ResizedQuality, 60, 95);
     }
 }

@@ -41,7 +41,7 @@ A mentor can attach photos of a problem so centre staff can judge the issue befo
 
 On a new assessment the photo uploader appears as soon as a grower is selected, so photos can be added before or after saving. Photos added before Save are shown as "not saved yet" and are attached when the assessment is saved; cancelling, or changing the grower, discards them. On a saved assessment, photos can be added and removed at any time.
 
-Up to five photos per assessment, JPG, JPEG, PNG or WebP, each at most 5 MB. The phone's normal file chooser is used, which usually offers the camera as one option. Photos are not part of the offline draft; a connection is needed to upload them, while the rest of the draft still works offline.
+Up to five photos per assessment, JPG, JPEG, PNG or WebP, taken straight from the phone camera; the application shrinks each photo after upload so mentors never need to resize anything. The phone's normal file chooser is used, which usually offers the camera as one option. Photos are not part of the offline draft; a connection is needed to upload them, while the rest of the draft still works offline.
 
 Photos are only visible through the application to people who may see the assessment: the assigned mentor and centre staff. See [Assessment Photo Storage](/Specifications/Assessment-Photo-Storage) for where photos are kept, who can see them, and what a deployer needs to prepare.
 

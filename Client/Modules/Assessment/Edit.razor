@@ -233,7 +233,7 @@
                                 <span class="oi oi-camera-slr me-1" aria-hidden="true"></span>@Localizer["Photo.Heading"]
                             </h6>
                             <p class="text-muted small mb-2">
-                                @string.Format(Localizer["Photo.Help"], AssessmentPhotoRules.MaxPhotosPerAssessment, AssessmentPhotoRules.MaxPhotoMegabytes)
+                                @string.Format(Localizer["Photo.Help"], AssessmentPhotoRules.MaxPhotosPerAssessment, AssessmentPhotoRules.MaxUploadMegabytes)
                             </p>
                             @if (_photoFolderId > 0)
                             {
@@ -244,7 +244,7 @@
                                              ShowFiles="false"
                                              ShowImage="false"
                                              UploadMultiple="false"
-                                             MaxUploadFileSize="@AssessmentPhotoRules.MaxPhotoMegabytes"
+                                             MaxUploadFileSize="@AssessmentPhotoRules.MaxUploadMegabytes"
                                              ShowProgress="true"
                                              ShowSuccess="true"
                                              OnUpload="OnPhotoUploadedAsync" />

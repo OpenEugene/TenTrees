@@ -8,6 +8,12 @@ using Oqtane.Infrastructure;
 using Oqtane.Models;
 using Oqtane.Repository;
 using Oqtane.Shared;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats;
+using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Formats.Png;
+using SixLabors.ImageSharp.Formats.Webp;
+using SixLabors.ImageSharp.Processing;
 using OpenEug.TenTrees.Module.Assessment.Repository;
 using OpenEug.TenTrees.Models;
 using OpenEug.TenTrees.Module.Grower.Repository;
@@ -234,7 +240,7 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
             var folder = GetAssessmentPhotoFolder(photo.AssessmentId, mentorUsername);
             var file = _fileRepository.GetFile(photo.FileId);
             if (folder == null || file == null || file.FolderId != folder.FolderId ||
-                file.Size > AssessmentPhotoRules.MaxPhotoBytes || !AssessmentPhotoRules.IsAllowedExtension(file.Extension))
+                file.Size > AssessmentPhotoRules.MaxUploadBytes || !AssessmentPhotoRules.IsAllowedExtension(file.Extension))
             {
                 return Task.FromResult<AssessmentPhotoDto>(null);
             }
@@ -256,6 +262,30 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
                 return Task.FromResult<AssessmentPhotoDto>(null);
             }
 
+            // Field users cannot shrink photos themselves, so accept the camera original and reduce
+            // it here: fix EXIF rotation, cap the long edge, re-encode. Done before the rename so a
+            // failure leaves nothing half-linked.
+            try
+            {
+                var (width, height) = NormalizePhoto(sourcePath, file.Extension);
+                file.ImageWidth = width;
+                file.ImageHeight = height;
+                file.Size = (int)new FileInfo(sourcePath).Length;
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Create, "Uploaded assessment photo could not be processed as an image {FileId} {Name} {Error}", file.FileId, file.Name, ex.ToString());
+                DeleteOqtaneFile(file.FileId);
+                return Task.FromResult<AssessmentPhotoDto>(null);
+            }
+
+            if (file.Size > AssessmentPhotoRules.MaxPhotoBytes)
+            {
+                _logger.Log(LogLevel.Warning, this, LogFunction.Create, "Assessment photo still exceeds the stored size cap after resizing {FileId} {Size}", file.FileId, file.Size);
+                DeleteOqtaneFile(file.FileId);
+                return Task.FromResult<AssessmentPhotoDto>(null);
+            }
+
             var assessment = _assessmentRepository.GetAssessment(photo.AssessmentId, tracking: false);
             var photoDate = assessment?.AssessmentDate ?? DateTime.UtcNow;
             var storageName = AssessmentPhotoRules.NextStorageFileName(photoDate, file.Extension, candidate =>
@@ -268,8 +298,9 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
                 Directory.CreateDirectory(folderPath);
                 System.IO.File.Move(sourcePath, targetPath);
                 file.Name = storageName;
-                file = _fileRepository.UpdateFile(file);
             }
+
+            file = _fileRepository.UpdateFile(file);
 
             photo.AssessmentPhotoId = 0;
             // The app addresses photos by Oqtane FileId, never by name, so a later rename or move
@@ -376,6 +407,36 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
                 CreatedBy = photo.CreatedBy,
                 CreatedOn = photo.CreatedOn
             };
+        }
+
+        /// <summary>
+        /// Rewrites the image at <paramref name="path"/> in place: applies EXIF orientation, shrinks it so
+        /// neither side exceeds <see cref="AssessmentPhotoRules.MaxLongEdgePixels"/>, and re-encodes in the
+        /// same format. Mirrors what Oqtane's own ImageService does for thumbnails. Returns final dimensions.
+        /// </summary>
+        private static (int Width, int Height) NormalizePhoto(string path, string extension)
+        {
+            using var image = Image.Load(path);
+
+            var max = AssessmentPhotoRules.MaxLongEdgePixels;
+            image.Mutate(context =>
+            {
+                context.AutoOrient();
+                if (image.Width > max || image.Height > max)
+                {
+                    context.Resize(new ResizeOptions { Mode = ResizeMode.Max, Size = new Size(max, max) });
+                }
+            });
+
+            IImageEncoder encoder = (extension ?? string.Empty).TrimStart('.').ToLowerInvariant() switch
+            {
+                "png" => new PngEncoder(),
+                "webp" => new WebpEncoder { Quality = AssessmentPhotoRules.ResizedQuality },
+                _ => new JpegEncoder { Quality = AssessmentPhotoRules.ResizedQuality }
+            };
+
+            image.Save(path, encoder);
+            return (image.Width, image.Height);
         }
 
         private void DeleteOqtaneFile(int fileId)

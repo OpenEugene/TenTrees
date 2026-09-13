@@ -97,7 +97,7 @@
     <value>Problem Photos</value>
   </data>
   <data name="Photo.Help" xml:space="preserve">
-    <value>Upload up to {0} JPG, PNG, or WebP photos. Each photo must be {1} MB or smaller and is stored securely with the assessment.</value>
+    <value>Upload up to {0} JPG, PNG, or WebP photos straight from your phone. Photos are resized automatically after upload; files up to {1} MB are accepted and stored securely with the assessment.</value>
   </data>
   <data name="Photo.SelectGrowerFirst" xml:space="preserve">
     <value>Select a grower to start adding problem photos.</value>

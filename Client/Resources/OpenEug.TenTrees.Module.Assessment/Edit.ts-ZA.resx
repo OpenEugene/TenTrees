@@ -100,7 +100,7 @@
     <value>Swifaniso swa Swiphiqo</value>
   </data>
   <data name="Photo.Help" xml:space="preserve">
-    <value>Layicha swifaniso swo fika eka {0} swa JPG, PNG kumbe WebP. Xifaniso xin'wana na xin'wana xi fanele ku va {1} MB kumbe ehansi naswona xi hlayisiwa kahle na xikambelo.</value>
+    <value>Layicha swifaniso swo fika eka {0} swa JPG, PNG kumbe WebP ku suka eka riqingho ra wena. Swifaniso swi hunguteriwa hi xiave endzhaku ko layicha; tifayili to fika eka {1} MB ta amukeriwa naswona ti hlayisiwa kahle na xikambelo.</value>
   </data>
   <data name="Photo.SelectGrowerFirst" xml:space="preserve">
     <value>Hlawula murimi ku sungula ku engetela swifaniso swa xiphiqo.</value>

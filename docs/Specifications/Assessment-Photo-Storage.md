@@ -14,7 +14,7 @@ Limits:
 
 - Up to five photos per assessment.
 - JPG, JPEG, PNG and WebP only.
-- Each photo at most 5 MB.
+- A photo can be uploaded straight from the phone camera; files up to 25 MB are accepted. Mentors in the field have no way to shrink a photo themselves, so the application reduces each one after upload to at most 1600 pixels on its longest side, corrects the rotation the camera recorded, and keeps the result small. Anything that is not actually an image is rejected.
 
 The phone's normal file chooser is used, which on most phones offers the camera as one option. A dedicated in-app camera is not a feature.
 
