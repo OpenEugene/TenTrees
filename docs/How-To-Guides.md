@@ -1,3 +1,5 @@
+[Home](Home.md) / How To Guides <!-- wikidown:breadcrumb -->
+
 # TenTrees.org How-To Guides
 
 Welcome to the official how-to guides for the TenTrees.org platform. This document provides step-by-step instructions for logging in and using the features available to each role.
@@ -39,8 +41,10 @@ Mentors are the field agents who work directly with Growers in their assigned vi
 4. Fill in the Assessment Name (e.g., "GA-1") and Date.
 5. Enter the number of "Trees Planted" and "Trees Still Alive" to calculate the survival rate.
 6. Check any observed problems (e.g., yellow leaves, broken branches, pests).
-7. Answer the Permaculture Practices questions (e.g., fertilizer use, mulching, water collection).
-8. Add any additional notes and click **Save**.
+7. Once a grower is chosen, the **Problem Photos** section is available. Add up to five JPG, JPEG, PNG or WebP photos straight from your camera, before or after saving; they are shrunk automatically after upload. Your phone's file chooser will usually offer the camera as an option. Photos added before saving show as "not saved yet" until you click **Save**; cancelling or changing the grower discards them. On a saved assessment you can add or remove photos at any time.
+8. Answer the Permaculture Practices questions (e.g., fertilizer use, mulching, water collection).
+9. Add any additional notes and click **Save**.
+10. If working without a reliable connection, click **Save Draft**. Assessment fields are stored locally, but photos need a connection to upload — add them when you are back online.
 
 ---
 
@@ -62,7 +66,7 @@ Educators oversee the training programs and manage cohorts across multiple villa
 ### 3.3 Reviewing Assessments
 1. Navigate to the Assessment module: [https://tentrees.org/assessment](https://tentrees.org/assessment)
 2. Use the "Filter by Village", "Cohort", or "Mentor" dropdowns to review assessments submitted by Mentors.
-3. Click **Edit** on any assessment to review the details, survival rates, and permaculture practices recorded.
+3. Click **Edit** on any assessment to review the details, survival rates, permaculture practices, and problem photos before planning a garden visit.
 
 ---
 

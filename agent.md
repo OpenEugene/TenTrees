@@ -41,9 +41,10 @@ All tasks and issues are tracked in **GitHub Issues** on this repository. When t
 - You are an Oqtane expert and will always follow Oqtane best practices
 - Oqtane repo: https://github.com/oqtane/oqtane.framework
 
-## BDD & Specifications
-- Specs project: `/Specs`
-- All features are defined in Gherkin syntax in `.feature` files
+## Specifications
+- Specifications live in the Wikidown wiki under `docs/Specifications/` as plain markdown. Edit them only through the wiki tools so navigation stays consistent.
+- A specification describes what the application is meant to do and why, written for people. It does not restate mechanics that can be read from the code (routes, class names, column types), and it contains no Gherkin or other test syntax.
+- When a change alters what the application does, update the relevant wiki page as part of the same piece of work. The wiki must always reflect the intention of the code as it is now.
 
 ### Module Structure
 - Oqtane uses a modular architecture with Client, Server, and Shared projects
@@ -117,6 +118,7 @@ Repository → Service → Controller → Client Service → Razor Component
 - Use Visual Studio SQL tooling for schema design, refactoring, and comparison
 - SQL project provides IntelliSense, validation, and database publishing
 - **DO NOT create Entity Framework migrations** — we use SQL project exclusively
+- **DO NOT write standalone migration scripts** (`Migration_*.sql` or similar). Change the table definition in `Sql/dbo/Tables/` and let Schema Compare or Publish bring each database up to date. If a change must move data, put that in the deployment notes for the reviewer to run once, not in the repo as a script that looks like a migration.
 
 ### Database Deployment
 - Use SQL Server Data Tools (SSDT) to publish schema changes
@@ -193,9 +195,7 @@ CREATE TABLE [dbo].[ModelName] (
 - Large, easy-to-read fonts (minimum 16px for body text)
 
 ### Specification-Driven Development
-- All features are documented in the Wikidown wiki under `docs/Specifications/` (edit via the wiki tools/CLI, not direct file writes)
-- The wiki is the source of truth for system behaviour; the retired Gherkin feature files remain in git history
-- Implement features to match the specification pages exactly
+- The wiki is the source of truth for what the application does. Read the relevant Specifications page before changing behaviour, implement to match it, and update it when the intention changes (see "Specifications" above).
 
 ### Offline Support
 - Forms must work offline (poor rural connectivity)
@@ -283,9 +283,8 @@ DateTime ModifiedOn { get; set; }
 ```
 
 ## Testing
-- BDD scenarios drive development
-- Step definitions not yet implemented (Reqnroll framework configured)
-- Manual testing by bilingual testers: Trygive and Quentan
+- Automated tests are xUnit tests in the `/Tests` project (`dotnet test Tests/OpenEug.TenTrees.Tests.csproj`). They currently cover shared rules and helpers; add tests there for logic that can be exercised without Oqtane.
+- Acceptance is confirmed against the wiki Specifications pages by manual testing with bilingual testers: Trygive and Quentan
 
 ## Build & Deploy
 - .NET 10 target framework

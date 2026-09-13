@@ -8,6 +8,7 @@ using Oqtane.Infrastructure;
 using Oqtane.Models;
 using Oqtane.Security;
 using Oqtane.Shared;
+using OpenEug.TenTrees.Module.Assessment.Services;
 using OpenEug.TenTrees.Module.Grower.Repository;
 using OpenEug.TenTrees.Models;
 using OpenEug.TenTrees.Shared;
@@ -20,22 +21,25 @@ namespace OpenEug.TenTrees.Module.Grower.Services
         private readonly IUserPermissions _userPermissions;
         private readonly ILogManager _logger;
         private readonly IHttpContextAccessor _accessor;
+        private readonly IAssessmentPhotoFolderService _photoFolders;
         private readonly Alias _alias;
         private bool _userResolved;
         private bool _isMentor;
         private string _currentUsername;
 
         public ServerGrowerService(
-            IGrowerRepository growerRepository, 
-            IUserPermissions userPermissions, 
-            ITenantManager tenantManager, 
-            ILogManager logger, 
-            IHttpContextAccessor accessor)
+            IGrowerRepository growerRepository,
+            IUserPermissions userPermissions,
+            ITenantManager tenantManager,
+            ILogManager logger,
+            IHttpContextAccessor accessor,
+            IAssessmentPhotoFolderService photoFolders)
         {
             _growerRepository = growerRepository;
             _userPermissions = userPermissions;
             _logger = logger;
             _accessor = accessor;
+            _photoFolders = photoFolders;
             _alias = tenantManager.GetAlias();
         }
 
@@ -182,6 +186,17 @@ namespace OpenEug.TenTrees.Module.Grower.Services
             {
                 grower = _growerRepository.UpdateGrower(grower);
                 _logger.Log(LogLevel.Information, this, LogFunction.Update, "Grower Updated {Grower}", grower);
+
+                // Mentor reassignment must follow through to the grower's assessment photo folder,
+                // otherwise the previous mentor keeps Oqtane file access and the new one has none.
+                try
+                {
+                    _photoFolders.SyncGrowerFolderPermissions(grower);
+                }
+                catch (Exception ex)
+                {
+                    _logger.Log(LogLevel.Error, this, LogFunction.Update, "Assessment photo folder permission sync failed for grower {GrowerId} {Error}", grower.GrowerId, ex.ToString());
+                }
             }
             else
             {

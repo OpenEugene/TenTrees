@@ -119,7 +119,7 @@ public override bool UseAdminContainer => false;
                 }
                 
                 AddModuleMessage(Localizer["Message.SaveSuccess"], MessageType.Success);
-                NavigationManager.NavigateTo(NavigateUrl());
+                NavigationManager.NavigateTo(NavigateUrl(), forceLoad: true);
             }
             else
             {

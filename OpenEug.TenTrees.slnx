@@ -9,8 +9,14 @@
   <Project Path="Client/OpenEug.TenTrees.Client.csproj" />
   <Project Path="Server/OpenEug.TenTrees.Server.csproj" />
   <Project Path="Shared/OpenEug.TenTrees.Shared.csproj" />
+  <Project Path="Tests/OpenEug.TenTrees.Tests.csproj" />
   <Project Path="Sql/Sql.sqlproj" Id="54aef72d-f821-4e0b-acca-cab49fbfaa54">
     <Build Solution="Release|*" />
     <Deploy />
+  </Project>
+  <Project Path="Wiki/Wiki.wikidownproj" Type="6a9c3f4b-d5e8-4f0a-b1c2-345678901bcd" Id="5b073289-7378-0806-24a1-0451de017e08">
+    <BuildType Project="?" />
+    <Platform Project="?" />
+    <Build Project="false" />
   </Project>
 </Solution>
