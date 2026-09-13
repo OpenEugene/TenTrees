@@ -105,6 +105,11 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
             return await GetJsonAsync<int?>($"{ApiUrl}/{assessmentId}/photo-folder");
         }
 
+        public async Task<int?> GetPhotoFolderIdByGrowerAsync(int growerId, string mentorUsername = null)
+        {
+            return await GetJsonAsync<int?>($"{ApiUrl}/grower/{growerId}/photo-folder");
+        }
+
         public async Task<List<AssessmentPhotoDto>> GetPhotosByAssessmentAsync(int assessmentId, string mentorUsername = null)
         {
             return await GetJsonAsync<List<AssessmentPhotoDto>>($"{ApiUrl}/{assessmentId}/photos", new List<AssessmentPhotoDto>());

@@ -97,10 +97,13 @@
     <value>Problem Photos</value>
   </data>
   <data name="Photo.Help" xml:space="preserve">
-    <value>After saving the assessment, upload up to {0} JPG, PNG, or WebP photos. Each photo must be {1} MB or smaller and is stored securely with the assessment.</value>
+    <value>Upload up to {0} JPG, PNG, or WebP photos. Each photo must be {1} MB or smaller and is stored securely with the assessment.</value>
   </data>
-  <data name="Photo.SaveFirst" xml:space="preserve">
-    <value>Save this assessment first, then reopen it to upload problem photos.</value>
+  <data name="Photo.SelectGrowerFirst" xml:space="preserve">
+    <value>Select a grower to start adding problem photos.</value>
+  </data>
+  <data name="Message.PhotoPendingAdded" xml:space="preserve">
+    <value>Photo added. It will be saved with this assessment.</value>
   </data>
   <data name="Photo.Take" xml:space="preserve">
     <value>Take Photo</value>

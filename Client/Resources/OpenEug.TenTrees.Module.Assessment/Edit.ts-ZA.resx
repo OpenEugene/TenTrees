@@ -100,10 +100,13 @@
     <value>Swifaniso swa Swiphiqo</value>
   </data>
   <data name="Photo.Help" xml:space="preserve">
-    <value>Endzhaku ko hlayisa xikambelo, layicha swifaniso swo fika eka {0} swa JPG, PNG kumbe WebP. Xifaniso xin'wana na xin'wana xi fanele ku va {1} MB kumbe ehansi naswona xi hlayisiwa kahle na xikambelo.</value>
+    <value>Layicha swifaniso swo fika eka {0} swa JPG, PNG kumbe WebP. Xifaniso xin'wana na xin'wana xi fanele ku va {1} MB kumbe ehansi naswona xi hlayisiwa kahle na xikambelo.</value>
   </data>
-  <data name="Photo.SaveFirst" xml:space="preserve">
-    <value>Rhumela xikambelo lexi ku sungula, kutani u tlhela u xi pfula leswaku u layicha swifaniso swa xiphiqo.</value>
+  <data name="Photo.SelectGrowerFirst" xml:space="preserve">
+    <value>Hlawula murimi ku sungula ku engetela swifaniso swa xiphiqo.</value>
+  </data>
+  <data name="Message.PhotoPendingAdded" xml:space="preserve">
+    <value>Xifaniso xi engeteriwile. Xi ta hlayisiwa na xikambelo lexi.</value>
   </data>
   <data name="Photo.Take" xml:space="preserve">
     <value>Teka Xifaniso</value>

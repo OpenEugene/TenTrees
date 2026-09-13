@@ -15,6 +15,7 @@ namespace OpenEug.TenTrees.Module.Assessment.Repository
         void DeletePhoto(int assessmentPhotoId);
         void DeletePhotosByAssessment(int assessmentId);
         int GetPhotoCount(int assessmentId);
+        HashSet<int> GetFileIdsInUse(IEnumerable<int> fileIds);
     }
 
     public class AssessmentPhotoRepository : IAssessmentPhotoRepository, ITransientService
@@ -86,6 +87,22 @@ namespace OpenEug.TenTrees.Module.Assessment.Repository
         {
             using var db = _factory.CreateDbContext();
             return db.AssessmentPhoto.Count(photo => photo.AssessmentId == assessmentId);
+        }
+
+        public HashSet<int> GetFileIdsInUse(IEnumerable<int> fileIds)
+        {
+            var ids = fileIds?.Distinct().ToList() ?? new List<int>();
+            if (ids.Count == 0)
+            {
+                return new HashSet<int>();
+            }
+
+            using var db = _factory.CreateDbContext();
+            return db.AssessmentPhoto
+                .AsNoTracking()
+                .Where(photo => ids.Contains(photo.FileId))
+                .Select(photo => photo.FileId)
+                .ToHashSet();
         }
     }
 }

@@ -23,7 +23,8 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
         private readonly IGrowerRepository _growerRepository;
         private readonly IFolderRepository _folderRepository;
         private readonly IFileRepository _fileRepository;
-        private readonly IUserRepository _userRepository;
+        private readonly IAssessmentPhotoFolderService _photoFolders;
+        private readonly ITenantManager _tenantManager;
         private readonly ILogManager _logger;
 
         public ServerAssessmentService(
@@ -33,7 +34,8 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
             IGrowerRepository growerRepository,
             IFolderRepository folderRepository,
             IFileRepository fileRepository,
-            IUserRepository userRepository,
+            IAssessmentPhotoFolderService photoFolders,
+            ITenantManager tenantManager,
             ILogManager logger)
         {
             _assessmentRepository = assessmentRepository;
@@ -42,7 +44,8 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
             _growerRepository = growerRepository;
             _folderRepository = folderRepository;
             _fileRepository = fileRepository;
-            _userRepository = userRepository;
+            _photoFolders = photoFolders;
+            _tenantManager = tenantManager;
             _logger = logger;
         }
 
@@ -195,6 +198,18 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
             return Task.FromResult(folder == null ? (int?)null : folder.FolderId);
         }
 
+        public Task<int?> GetPhotoFolderIdByGrowerAsync(int growerId, string mentorUsername = null)
+        {
+            var grower = _growerRepository.GetGrower(growerId);
+            if (grower == null || (mentorUsername != null && grower.MentorUsername != mentorUsername))
+            {
+                return Task.FromResult<int?>(null);
+            }
+
+            var folder = ResolveGrowerFolder(grower);
+            return Task.FromResult(folder == null ? (int?)null : folder.FolderId);
+        }
+
         public Task<List<AssessmentPhotoDto>> GetPhotosByAssessmentAsync(int assessmentId, string mentorUsername = null)
         {
             if (!CanAccessAssessment(assessmentId, mentorUsername))
@@ -229,20 +244,44 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
                 return Task.FromResult<AssessmentPhotoDto>(null);
             }
 
+            // Rename the upload to a human-readable name such as 2026-Sep_A.jpg, unique within the
+            // grower's folder. Oqtane's IFileRepository.UpdateFile only touches the database row, so
+            // the physical move has to happen here (mirrors FileController.Put).
+            var folderPath = _folderRepository.GetFolderPath(folder);
+            var sourcePath = _fileRepository.GetFilePath(file);
+            if (!System.IO.File.Exists(sourcePath))
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Create, "Uploaded assessment photo missing on disk {FileId} {Path}", file.FileId, sourcePath);
+                DeleteOqtaneFile(file.FileId);
+                return Task.FromResult<AssessmentPhotoDto>(null);
+            }
+
+            var assessment = _assessmentRepository.GetAssessment(photo.AssessmentId, tracking: false);
+            var photoDate = assessment?.AssessmentDate ?? DateTime.UtcNow;
+            var storageName = AssessmentPhotoRules.NextStorageFileName(photoDate, file.Extension, candidate =>
+                string.Equals(candidate, file.Name, StringComparison.OrdinalIgnoreCase) ? false :
+                _fileRepository.GetFile(folder.FolderId, candidate) != null || System.IO.File.Exists(Path.Combine(folderPath, candidate)));
+
+            var targetPath = Path.Combine(folderPath, storageName);
+            if (!string.Equals(sourcePath, targetPath, StringComparison.OrdinalIgnoreCase))
+            {
+                Directory.CreateDirectory(folderPath);
+                System.IO.File.Move(sourcePath, targetPath);
+                file.Name = storageName;
+                file = _fileRepository.UpdateFile(file);
+            }
+
             photo.AssessmentPhotoId = 0;
-            photo.Url = file.Url;
-            var created = _assessmentPhotoRepository.AddPhoto(photo);
+            // The app addresses photos by Oqtane FileId, never by name, so a later rename or move
+            // of the file cannot break the stored link.
+            photo.Url = Utilities.FileUrl(_tenantManager.GetAlias(), file.FileId);
             try
             {
-                file.Name = AssessmentPhotoRules.CreateStorageFileName(created.AssessmentId, created.AssessmentPhotoId, file.Extension);
-                file = _fileRepository.UpdateFile(file);
-                created.Url = file.Url;
-                created = _assessmentPhotoRepository.UpdatePhoto(created);
+                var created = _assessmentPhotoRepository.AddPhoto(photo);
                 return Task.FromResult(ToDto(created));
             }
             catch
             {
-                _assessmentPhotoRepository.DeletePhoto(created.AssessmentPhotoId);
                 DeleteOqtaneFile(file.FileId);
                 throw;
             }
@@ -270,58 +309,52 @@ namespace OpenEug.TenTrees.Module.Assessment.Services
 
             var assessment = _assessmentRepository.GetAssessment(assessmentId, tracking: false);
             var grower = assessment == null ? null : _growerRepository.GetGrower(assessment.GrowerId);
-            var mentor = string.IsNullOrEmpty(grower?.MentorUsername) ? null : _userRepository.GetUser(grower.MentorUsername);
-            if (mentor == null || mentor.SiteId <= 0)
+            if (grower == null)
             {
                 return null;
             }
 
-            var root = _folderRepository.GetFolder(mentor.SiteId, AssessmentPhotoRules.FolderPath);
-            if (root == null)
-            {
-                var siteRoot = _folderRepository.GetFolder(mentor.SiteId, string.Empty);
-                if (siteRoot == null)
-                {
-                    return null;
-                }
-
-                root = _folderRepository.AddFolder(new Folder
-                {
-                    SiteId = mentor.SiteId,
-                    ParentId = siteRoot.FolderId,
-                    Name = "AssessmentPhotos",
-                    Type = FolderTypes.Private,
-                    Path = AssessmentPhotoRules.FolderPath,
-                    Order = 1,
-                    ImageSizes = string.Empty,
-                    Capacity = 0,
-                    CacheControl = "no-store",
-                    IsSystem = true,
-                    PermissionList = AssessmentPhotoFolderPermissions()
-                });
-            }
-
-            return root;
+            return ResolveGrowerFolder(grower);
         }
 
-        private static List<Permission> AssessmentPhotoFolderPermissions()
+        /// <summary>
+        /// Folder lives on the active site and is scoped per grower; the folder service re-syncs the
+        /// assigned mentor's user-level permission every time it is resolved. Resolving is also when
+        /// abandoned uploads (files with no association row) get cleaned out of that folder.
+        /// </summary>
+        private Folder ResolveGrowerFolder(Models.Grower grower)
         {
-            return new List<Permission>
+            var folder = _photoFolders.GetOrCreateGrowerFolder(grower);
+            if (folder != null)
             {
-                new Permission(PermissionNames.Browse, AppRoleNames.Admin, true),
-                new Permission(PermissionNames.View, AppRoleNames.Admin, true),
-                new Permission(PermissionNames.Edit, AppRoleNames.Admin, true),
-                new Permission(PermissionNames.Browse, AppRoleNames.TenTreesAdmin, true),
-                new Permission(PermissionNames.View, AppRoleNames.TenTreesAdmin, true),
-                new Permission(PermissionNames.Edit, AppRoleNames.TenTreesAdmin, true),
-                new Permission(PermissionNames.Browse, AppRoleNames.Educator, true),
-                new Permission(PermissionNames.View, AppRoleNames.Educator, true),
-                new Permission(PermissionNames.Browse, AppRoleNames.ProjectManager, true),
-                new Permission(PermissionNames.View, AppRoleNames.ProjectManager, true),
-                new Permission(PermissionNames.Browse, AppRoleNames.Mentor, true),
-                new Permission(PermissionNames.View, AppRoleNames.Mentor, true),
-                new Permission(PermissionNames.Edit, AppRoleNames.Mentor, true)
-            };
+                SweepOrphanedFiles(folder);
+            }
+
+            return folder;
+        }
+
+        /// <summary>
+        /// Photos can be uploaded before the assessment is saved, so a file may legitimately have no
+        /// association row for a while. Anything still unlinked after a day was abandoned.
+        /// </summary>
+        private void SweepOrphanedFiles(Folder folder)
+        {
+            try
+            {
+                var cutoff = DateTime.UtcNow.AddDays(-1);
+                var files = _fileRepository.GetFiles(folder.FolderId, false).ToList();
+                var inUse = _assessmentPhotoRepository.GetFileIdsInUse(files.Select(f => f.FileId));
+                foreach (var file in files.Where(f => !inUse.Contains(f.FileId) && f.CreatedOn < cutoff))
+                {
+                    DeleteOqtaneFile(file.FileId);
+                    _logger.Log(LogLevel.Information, this, LogFunction.Delete, "Removed abandoned assessment photo {FileId} {Name} from {Path}", file.FileId, file.Name, folder.Path);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Never let housekeeping block the folder lookup the user is waiting on.
+                _logger.Log(LogLevel.Warning, this, LogFunction.Delete, "Assessment photo orphan sweep failed for {Path} {Error}", folder.Path, ex.ToString());
+            }
         }
 
         private AssessmentPhotoDto ToDto(Models.AssessmentPhoto photo)

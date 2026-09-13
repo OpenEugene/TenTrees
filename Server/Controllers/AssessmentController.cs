@@ -316,6 +316,28 @@ namespace OpenEug.TenTrees.Module.Assessment.Controllers
             }
         }
 
+        // Used by the Add screen so photos can be uploaded before the assessment exists.
+        [HttpGet("grower/{growerId}/photo-folder")]
+        [Authorize]
+        public async Task<ActionResult<int>> GetPhotoFolderByGrower(int growerId)
+        {
+            try
+            {
+                var folderId = await _assessmentService.GetPhotoFolderIdByGrowerAsync(growerId, MentorUsername());
+                if (!folderId.HasValue)
+                {
+                    return NotFound();
+                }
+
+                return Ok(folderId.Value);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Read, "AssessmentPhoto Folder Get By Grower Failed {GrowerId} {Error}", growerId, ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
         [HttpGet("{id}/photos")]
         [Authorize]
         public async Task<ActionResult<IEnumerable<AssessmentPhotoDto>>> GetPhotos(int id)

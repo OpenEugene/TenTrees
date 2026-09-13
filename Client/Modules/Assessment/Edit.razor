@@ -235,7 +235,7 @@
                             <p class="text-muted small mb-2">
                                 @string.Format(Localizer["Photo.Help"], AssessmentPhotoRules.MaxPhotosPerAssessment, AssessmentPhotoRules.MaxPhotoMegabytes)
                             </p>
-                            @if (_id > 0 && _photoFolderId > 0)
+                            @if (_photoFolderId > 0)
                             {
                                 <FileManager Id="assessmentProblemPhotos"
                                              FolderId="@_photoFolderId"
@@ -249,18 +249,45 @@
                                              ShowSuccess="true"
                                              OnUpload="OnPhotoUploadedAsync" />
                             }
-                            else if (_id == 0)
+                            else if (_growerId == 0)
                             {
-                                <div class="alert alert-info small mb-0" role="status">@Localizer["Photo.SaveFirst"]</div>
+                                <div class="alert alert-info small mb-0" role="status">@Localizer["Photo.SelectGrowerFirst"]</div>
                             }
 
                             <div class="d-flex justify-content-between align-items-center mt-2 small" role="status" aria-live="polite">
-                                <span>@string.Format(Localizer["Photo.Count"], _existingPhotos.Count, AssessmentPhotoRules.MaxPhotosPerAssessment)</span>
+                                <span>@string.Format(Localizer["Photo.Count"], _existingPhotos.Count + _pendingPhotos.Count, AssessmentPhotoRules.MaxPhotosPerAssessment)</span>
                                 @if (_isPhotoBusy)
                                 {
                                     <span><span class="spinner-border spinner-border-sm me-1" aria-hidden="true"></span>@Localizer["Photo.Processing"]</span>
                                 }
                             </div>
+
+                            @if (_pendingPhotos.Count > 0)
+                            {
+                                <div class="row g-2 mt-1">
+                                    @foreach (var pending in _pendingPhotos)
+                                    {
+                                        <div class="col-6 col-sm-4">
+                                            <div class="card h-100 border-warning">
+                                                <img src="@pending.Url"
+                                                     class="card-img-top"
+                                                     style="height: 140px; object-fit: cover;"
+                                                     alt="@Localizer["Photo.PendingAlt"]" />
+                                                <div class="card-body p-2">
+                                                    <div class="small text-muted text-truncate" title="@pending.Name">@pending.Name</div>
+                                                    <span class="badge bg-warning text-dark">@Localizer["Photo.Pending"]</span>
+                                                    <button type="button"
+                                                            class="btn btn-outline-danger w-100 mt-1"
+                                                            @onclick="@(() => RemovePendingPhotoAsync(pending))"
+                                                            disabled="@_isPhotoBusy">
+                                                        <span class="oi oi-trash me-1" aria-hidden="true"></span>@Localizer["Photo.Remove"]
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            }
 
                             @if (_existingPhotos.Count > 0)
                             {
@@ -503,7 +530,7 @@
     {
         <button type="button" class="btn btn-outline-info" @onclick="LoadDraft">@Localizer["LoadDraft"]</button>
     }
-    <NavLink class="btn btn-secondary" href="@_backUrl">@Localizer["Cancel"]</NavLink>
+    <NavLink class="btn btn-secondary" href="@_backUrl" @onclick="DiscardPendingPhotosAsync">@Localizer["Cancel"]</NavLink>
     @if (PageState.Action == "Edit")
     {
         <ActionDialog Header="@Localizer["Dialog.Delete.Header"]"
@@ -579,6 +606,18 @@
     private List<AssessmentPhotoDto> _existingPhotos = new();
     private int _photoFolderId;
     private bool _isPhotoBusy;
+
+    // Photos uploaded on the Add screen before the assessment exists. They already live in the
+    // grower's Oqtane folder; Save links them to the new assessment, Cancel deletes them.
+    private List<PendingPhoto> _pendingPhotos = new();
+    private int _photoFolderGrowerId;
+
+    private class PendingPhoto
+    {
+        public int FileId { get; set; }
+        public string Name { get; set; }
+        public string Url { get; set; }
+    }
 
     // Permaculture Practices
     private bool _treesLookHealthy;
@@ -845,6 +884,9 @@
 
                     _pendingNotes = draft.PendingNotes ?? new List<Models.AssessmentNote>();
 
+                    // Drafts hold fields only, never photos, but the restored grower still needs its upload folder.
+                    await SyncPhotoFolderToGrowerAsync();
+
                     AddModuleMessage(Localizer["Message.DraftLoaded"], MessageType.Success);
                 }
             }
@@ -914,11 +956,19 @@
                     assessment = await AssessmentService.AddAssessmentAsync(assessment);
                     await logger.LogInformation("Assessment Added {Assessment}", assessment);
                     await AssessmentService.ReplaceProblemsAsync(assessment.AssessmentId, _problems);
+                    var photosLinked = await AttachPendingPhotosAsync(assessment.AssessmentId);
 
-                    if (await PersistPendingNotesAsync(assessment.AssessmentId))
+                    if (await PersistPendingNotesAsync(assessment.AssessmentId) && photosLinked)
                     {
                         await JSRuntime.InvokeVoidAsync("localStorage.removeItem", DraftKey);
                         AddModuleMessage(Localizer["Message.SaveSuccess"], MessageType.Success);
+                        NavigationManager.NavigateTo(_backUrl, forceLoad: true);
+                    }
+                    else if (!photosLinked)
+                    {
+                        // The assessment and any photos that did link are saved; reopen it so the
+                        // mentor can see what is attached and retry the rest.
+                        await JSRuntime.InvokeVoidAsync("localStorage.removeItem", DraftKey);
                         NavigationManager.NavigateTo(EditUrl("Edit", $"id={assessment.AssessmentId}&returnurl={Uri.EscapeDataString(_backUrl)}"), forceLoad: true);
                     }
                 }
@@ -1103,6 +1153,8 @@
             ResetProblemsForGrowerChange();
         }
 
+        await SyncPhotoFolderToGrowerAsync();
+
         if (_growerId == 0)
         {
             _trees = new();
@@ -1211,11 +1263,140 @@
         _existingPhotos = await AssessmentService.GetPhotosByAssessmentAsync(_id) ?? new List<AssessmentPhotoDto>();
     }
 
+    /// <summary>
+    /// Keeps the upload folder in step with the selected grower on the Add screen. Edit keeps the
+    /// folder resolved from the saved assessment. Changing grower discards pending uploads because
+    /// they were stored in the previous grower's folder.
+    /// </summary>
+    private async Task SyncPhotoFolderToGrowerAsync()
+    {
+        if (_id > 0 || _growerId == _photoFolderGrowerId)
+        {
+            return;
+        }
+
+        if (_pendingPhotos.Count > 0)
+        {
+            await DiscardPendingPhotosAsync();
+        }
+
+        _photoFolderGrowerId = _growerId;
+        _photoFolderId = _growerId > 0
+            ? await AssessmentService.GetPhotoFolderIdByGrowerAsync(_growerId) ?? 0
+            : 0;
+    }
+
+    private async Task AddPendingPhotoAsync(int fileId)
+    {
+        if (_pendingPhotos.Count >= AssessmentPhotoRules.MaxPhotosPerAssessment)
+        {
+            await FileService.DeleteFileAsync(fileId);
+            AddModuleMessage(string.Format(Localizer["Message.PhotoLimit"], AssessmentPhotoRules.MaxPhotosPerAssessment), MessageType.Warning);
+            return;
+        }
+
+        var file = await FileService.GetFileAsync(fileId);
+        if (file == null || !AssessmentPhotoRules.IsAllowedExtension(file.Extension))
+        {
+            await FileService.DeleteFileAsync(fileId);
+            AddModuleMessage(string.Format(Localizer["Message.PhotoInvalidType"], file?.Name ?? fileId.ToString()), MessageType.Warning);
+            return;
+        }
+
+        _pendingPhotos.Add(new PendingPhoto
+        {
+            FileId = fileId,
+            Name = file.Name,
+            Url = Oqtane.Shared.Utilities.FileUrl(PageState.Alias, fileId)
+        });
+        AddModuleMessage(Localizer["Message.PhotoPendingAdded"], MessageType.Success);
+    }
+
+    private async Task RemovePendingPhotoAsync(PendingPhoto pending)
+    {
+        _isPhotoBusy = true;
+        try
+        {
+            await FileService.DeleteFileAsync(pending.FileId);
+            _pendingPhotos.Remove(pending);
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Removing Pending Assessment Photo {FileId} {Error}", pending.FileId, ex.Message);
+            AddModuleMessage(Localizer["Message.PhotoDeleteError"], MessageType.Error);
+        }
+        finally
+        {
+            _isPhotoBusy = false;
+        }
+    }
+
+    /// <summary>Deletes every pending upload. Best effort: the server sweeps anything left behind after a day.</summary>
+    private async Task DiscardPendingPhotosAsync()
+    {
+        foreach (var pending in _pendingPhotos.ToList())
+        {
+            try
+            {
+                await FileService.DeleteFileAsync(pending.FileId);
+            }
+            catch (Exception ex)
+            {
+                await logger.LogWarning("Could not remove pending assessment photo {FileId} {Error}", pending.FileId, ex.Message);
+            }
+        }
+
+        _pendingPhotos.Clear();
+    }
+
+    /// <summary>Links pending uploads to the newly saved assessment. Returns false if any failed.</summary>
+    private async Task<bool> AttachPendingPhotosAsync(int assessmentId)
+    {
+        var allLinked = true;
+        foreach (var pending in _pendingPhotos.ToList())
+        {
+            try
+            {
+                var created = await AssessmentService.AddPhotoAsync(new Models.AssessmentPhoto
+                {
+                    AssessmentId = assessmentId,
+                    FileId = pending.FileId
+                });
+                if (created == null)
+                {
+                    allLinked = false;
+                    await logger.LogError("Assessment Photo {FileId} Could Not Be Linked To Assessment {AssessmentId}", pending.FileId, assessmentId);
+                    continue;
+                }
+
+                _pendingPhotos.Remove(pending);
+            }
+            catch (Exception ex)
+            {
+                allLinked = false;
+                await logger.LogError(ex, "Error Linking Assessment Photo {FileId} To Assessment {AssessmentId} {Error}", pending.FileId, assessmentId, ex.Message);
+            }
+        }
+
+        if (!allLinked)
+        {
+            AddModuleMessage(Localizer["Message.PhotoSaveError"], MessageType.Error);
+        }
+
+        return allLinked;
+    }
+
     private async Task OnPhotoUploadedAsync(int fileId)
     {
         _isPhotoBusy = true;
         try
         {
+            if (_id == 0)
+            {
+                await AddPendingPhotoAsync(fileId);
+                return;
+            }
+
             if (_existingPhotos.Count >= AssessmentPhotoRules.MaxPhotosPerAssessment)
             {
                 await FileService.DeleteFileAsync(fileId);
