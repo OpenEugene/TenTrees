@@ -54,6 +54,9 @@
   <data name="Message.Loading" xml:space="preserve">
     <value>Loading...</value>
   </data>
+  <data name="Message.LoginToStart" xml:space="preserve">
+    <value>Login to get started (upper right)</value>
+  </data>
   <data name="Description.Grower" xml:space="preserve">
     <value>Grower management for 10 Trees program - track active status and program exits</value>
   </data>

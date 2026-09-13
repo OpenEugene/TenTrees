@@ -54,6 +54,9 @@
   <data name="Message.Loading" xml:space="preserve">
     <value>Yi laviseka...</value>
   </data>
+  <data name="Message.LoginToStart" xml:space="preserve">
+    <value>Nghena (Login) ku sungula (ehenhla ka xinene)</value>
+  </data>
   <data name="Description.Grower" xml:space="preserve">
     <value>Vulawuri bya valimi eka nongonoko wa Mirhi ya 10 - languta xiyimo lexi tirhaka na loku huma enongonokweni</value>
   </data>

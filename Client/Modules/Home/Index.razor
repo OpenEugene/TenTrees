@@ -27,7 +27,12 @@
         <hr class="app-rule" />
         @RenderTiles(_adminTiles)
     }
-  
+
+}
+else if (PageState.User == null || !PageState.User.IsAuthenticated)
+{
+    @* anonymous visitors can view no pages, so there are never tiles to show - point them at the Login button instead of a loading state that never ends *@
+    <p role="status">@Localizer["Message.LoginToStart"]</p>
 }
 else
 {
