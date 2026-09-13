@@ -11,4 +11,4 @@ Documentation wiki for the **10 Trees** system — an Oqtane-based platform supp
 
 ## History
 
-This wiki replaced the repository's `Specs/` folder (retired 2026-07-30). The behaviour pages under Specifications were translated from the Gherkin feature files that lived in `Specs/Features/`; each page preserves its original Gherkin scenarios verbatim in a "Scenarios" section. The original files and documents also remain in git history.
+This wiki replaced the repository's `Specs/` folder of feature files (retired 2026-07-30); the original files remain in git history. The Specifications pages are the plain-language description of what the application is meant to do. They are written for people — centre staff, mentors and future developers — and are kept in step with the code as it changes.

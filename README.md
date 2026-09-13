@@ -74,7 +74,7 @@ Comprehensive bilingual implementation:
 - **Platform**: Oqtane Framework (Blazor WebAssembly)
 - **Language**: C# 14.0
 - **Database**: SQL Server with Entity Framework Core
-- **Testing**: Reqnroll (BDD) with xUnit
+- **Testing**: xUnit (`Tests/` project) plus manual bilingual acceptance testing
 - **Localization**: .NET resource files (.resx)
 
 ## Architecture
@@ -133,11 +133,11 @@ docs/
 
 ## Development Approach
 
-The project follows **Behavior-Driven Development (BDD)** practices:
-- All features defined in Gherkin syntax (`.feature` files)
-- Scenarios drive implementation
-- Test framework: Reqnroll with xUnit
-- Tags for organization: `@workflow-*`, `@priority-*`, `@mobile`
+The project is **specification-driven**, with the specifications kept as plain markdown in the wiki under `docs/Specifications/`:
+- Each page describes what a part of the application is meant to do and why, written for people rather than tools
+- Pages focus on intention, not on mechanics that can be read from the code, and contain no Gherkin
+- Any change that alters behaviour updates the relevant page in the same piece of work, so the wiki always matches the code
+- Automated tests: xUnit in the `Tests/` project
 
 ## Getting Started
 
@@ -161,7 +161,7 @@ This project serves rural South African communities with limited resources and c
 - Prioritize mobile optimization
 - Include bilingual localization (en-ZA and ts-ZA)
 - Follow Oqtane framework patterns
-- Write BDD scenarios for new features
+- Update the wiki specification for any behaviour you add or change
 - Test on small/low-end smartphones
 
 ## Project Context

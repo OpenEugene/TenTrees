@@ -33,5 +33,10 @@ See #Claude Instructions for project context, coding conventions, and workflow g
   repo. Use them for ANY read/write of `/docs/*.md`.
 - Never edit `/docs/*.md` directly with `Write`/`Edit`. Use the `wiki_*` MCP
   tools so `.order` files stay consistent.
-- When you ship a feature that changes user-visible behavior, ask whether the
-  wiki should be updated, and (if yes) delegate to `wikidown-editor`.
+- The wiki is the specification. `docs/Specifications/` pages describe what the
+  application is meant to do and why, in plain language for people. They do not
+  restate mechanics that can be read from the code (routes, class names, column
+  types) and they contain no Gherkin or other test syntax.
+- Keep the wiki in step with the intention of the code. When a change alters
+  what the application does, update the relevant page as part of the same work
+  by delegating to `wikidown-editor`. Do not leave it for a later pass.

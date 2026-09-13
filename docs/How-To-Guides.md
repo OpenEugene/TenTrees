@@ -41,10 +41,10 @@ Mentors are the field agents who work directly with Growers in their assigned vi
 4. Fill in the Assessment Name (e.g., "GA-1") and Date.
 5. Enter the number of "Trees Planted" and "Trees Still Alive" to calculate the survival rate.
 6. Check any observed problems (e.g., yellow leaves, broken branches, pests).
-7. Add any additional notes and click **Save**. The assessment opens in Edit mode after it is saved.
-8. Under **Problem Photos**, use the Oqtane upload control to add one JPG, JPEG, PNG, or WebP image at a time. Add up to five photos, review the displayed photos, and remove an incorrect photo if necessary. Each photo must be 5 MB or smaller.
-9. If working without a reliable connection, click **Save Draft**. Assessment fields are stored locally, but photos must be uploaded after the assessment is saved and a connection is available.
-10. Answer the Permaculture Practices questions (e.g., fertilizer use, mulching, water collection), then click **Save** after any later changes.
+7. Once a grower is chosen, the **Problem Photos** section is available. Add up to five JPG, JPEG, PNG or WebP photos (each 5 MB or smaller), before or after saving. Your phone's file chooser will usually offer the camera as an option. Photos added before saving show as "not saved yet" until you click **Save**; cancelling or changing the grower discards them. On a saved assessment you can add or remove photos at any time.
+8. Answer the Permaculture Practices questions (e.g., fertilizer use, mulching, water collection).
+9. Add any additional notes and click **Save**.
+10. If working without a reliable connection, click **Save Draft**. Assessment fields are stored locally, but photos need a connection to upload — add them when you are back online.
 
 ---
 
