@@ -524,11 +524,21 @@
         </div>
     </div>
     
-    <button type="button" class="btn btn-success" @onclick="Save">@Localizer["Save"]</button>
-    <button type="button" class="btn btn-outline-secondary" @onclick="SaveDraft">@Localizer["SaveDraft"]</button>
+    <button type="button" class="btn btn-success" @onclick="Save" disabled="@_isSaving">
+        @if (_isSaving)
+        {
+            <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+            <span>@Localizer["Action.Saving"]</span>
+        }
+        else
+        {
+            <span>@Localizer["Save"]</span>
+        }
+    </button>
+    <button type="button" class="btn btn-outline-secondary" @onclick="SaveDraft" disabled="@_isSaving">@Localizer["SaveDraft"]</button>
     @if (_hasDraft)
     {
-        <button type="button" class="btn btn-outline-info" @onclick="LoadDraft">@Localizer["LoadDraft"]</button>
+        <button type="button" class="btn btn-outline-info" @onclick="LoadDraft" disabled="@_isSaving">@Localizer["LoadDraft"]</button>
     }
     <NavLink class="btn btn-secondary" href="@_backUrl" @onclick="DiscardPendingPhotosAsync">@Localizer["Cancel"]</NavLink>
     @if (PageState.Action == "Edit")
@@ -606,6 +616,10 @@
     private List<AssessmentPhotoDto> _existingPhotos = new();
     private int _photoFolderId;
     private bool _isPhotoBusy;
+
+    // Save runs several requests (assessment, problems, photos, notes) and the form is long, so the
+    // button shows progress and stays disabled to stop a second click creating a duplicate.
+    private bool _isSaving;
 
     // Photos uploaded on the Add screen before the assessment exists. They already live in the
     // grower's Oqtane folder; Save links them to the new assessment, Cancel deletes them.
@@ -900,6 +914,12 @@
 
     private async Task Save()
     {
+        if (_isSaving)
+        {
+            return;
+        }
+
+        _isSaving = true;
         try
         {
             validated = true;
@@ -909,6 +929,7 @@
                 if (_growerId == 0)
                 {
                     AddModuleMessage(Localizer["Message.SelectGrower"], MessageType.Warning);
+                    await ScrollToPageTop();
                     return;
                 }
 
@@ -926,6 +947,7 @@
                     if (!growerEligible)
                     {
                         AddModuleMessage(Localizer["Message.GrowerNotEligibleError"], MessageType.Warning);
+                        await ScrollToPageTop();
                         return;
                     }
 
@@ -1009,12 +1031,18 @@
             else
             {
                 AddModuleMessage(Localizer["Message.SaveValidation"], MessageType.Warning);
+                await ScrollToPageTop();
             }
         }
         catch (Exception ex)
         {
             await logger.LogError(ex, "Error Saving Assessment {Error}", ex.Message);
             AddModuleMessage(Localizer["Message.SaveError"], MessageType.Error);
+            await ScrollToPageTop();
+        }
+        finally
+        {
+            _isSaving = false;
         }
     }
 

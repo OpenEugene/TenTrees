@@ -213,6 +213,9 @@
   <data name="Save" xml:space="preserve">
     <value>Hlayisa</value>
   </data>
+  <data name="Action.Saving" xml:space="preserve">
+    <value>Yi hlayisiwa…</value>
+  </data>
   <data name="Cancel" xml:space="preserve">
     <value>Khansela</value>
   </data>

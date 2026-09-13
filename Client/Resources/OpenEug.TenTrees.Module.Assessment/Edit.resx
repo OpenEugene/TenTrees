@@ -210,6 +210,9 @@
   <data name="Save" xml:space="preserve">
     <value>Save</value>
   </data>
+  <data name="Action.Saving" xml:space="preserve">
+    <value>Saving…</value>
+  </data>
   <data name="Back" xml:space="preserve">
     <value>Back</value>
   </data>
