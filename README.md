@@ -92,7 +92,6 @@ Server/
   ?? Services/               # Business logic
   ?? Repository/             # Data access layer
   ?? Manager/                # Entity management
-  ?? Migrations/             # Database migrations
 Shared/
   ?? Models/                 # Data models shared between client and server
 docs/

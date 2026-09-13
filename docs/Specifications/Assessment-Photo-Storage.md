@@ -35,7 +35,7 @@ Removing a photo, or deleting an assessment, removes the file as well. An upload
 
 ## Deployment prerequisites
 
-Before deploying an application update that includes this feature, apply the photo table migration script in the Sql folder. The site's allowed upload file types must include jpg, jpeg, png and webp, otherwise uploads are rejected before they reach the assessment form.
+Publish the SQL project schema to the target database before deploying an application update that includes this feature, so the photo table exists. The site's allowed upload file types must include jpg, jpeg, png and webp, otherwise uploads are rejected before they reach the assessment form.
 
 ## Related pages
 

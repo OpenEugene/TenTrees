@@ -118,6 +118,7 @@ Repository → Service → Controller → Client Service → Razor Component
 - Use Visual Studio SQL tooling for schema design, refactoring, and comparison
 - SQL project provides IntelliSense, validation, and database publishing
 - **DO NOT create Entity Framework migrations** — we use SQL project exclusively
+- **DO NOT write standalone migration scripts** (`Migration_*.sql` or similar). Change the table definition in `Sql/dbo/Tables/` and let Schema Compare or Publish bring each database up to date. If a change must move data, put that in the deployment notes for the reviewer to run once, not in the repo as a script that looks like a migration.
 
 ### Database Deployment
 - Use SQL Server Data Tools (SSDT) to publish schema changes
