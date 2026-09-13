@@ -422,3 +422,6 @@ FodyWeavers.xsd
 Server/appsettings.Production.json
 
 .oqtane-ref
+
+# Oqtane runtime content (uploaded files, per-site data)
+Server/Content/
