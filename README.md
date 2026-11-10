@@ -142,17 +142,63 @@ The project is **specification-driven**, with the specifications kept as plain m
 
 ### Prerequisites
 - .NET 10 SDK
-- SQL Server
+- SQL Server Express LocalDB (installed with Visual Studio's "Data storage and processing" workload)
 - Compatible IDE (Visual Studio 2022+ recommended)
 
+### How the Solution Is Laid Out
+The `Server` project is a complete Oqtane host: it references the `Oqtane.Server` NuGet package (currently 10.2.1), so running it starts the whole site with the TenTrees modules and theme loaded. You don't need a separate Oqtane framework checkout to run the app.
+
+| Project | Contents |
+|---|---|
+| `Client` | Module UI (`Client/Modules/<Module>`), client HTTP services, theme |
+| `Server` | Oqtane host, controllers, repositories, and the dev database in `Server/Data` |
+| `Shared` | Models shared by client and server |
+| `Sql` | SQL project with the module table definitions and seed scripts |
+| `Tests` | xUnit tests |
+
+### Dev Database
+A ready-to-use development database is in the repo at `Server/Data/TenTrees.mdf` (with `TenTrees_log.ldf`). It is a shared development copy of the Oqtane database, so you can run the site without going through the Oqtane install wizard.
+
+`Server/appsettings.json` attaches it through LocalDB:
+
+```
+Data Source=(LocalDb)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\TenTrees.mdf;Initial Catalog=TenTrees;...
+```
+
+- Ask a maintainer for a login to the dev site. Credentials are never kept in the repo.
+- Running the site changes the `.mdf` and `.ldf` files. To keep your local data changes out of commits, run:
+  ```bash
+  git update-index --skip-worktree Server/Data/TenTrees.mdf Server/Data/TenTrees_log.ldf
+  ```
+  Reverse it with `--no-skip-worktree` when you need to pull a newer copy of the dev database.
+- LocalDB registers the database by name (`TenTrees`). If you clone the repo into a second folder, detach the old one first (`sqllocaldb` or SSMS), or LocalDB will refuse to attach the new file.
+
 ### Running the Application
+1. Open `OpenEug.TenTrees.slnx` and set `OpenEug.TenTrees.Server` as the startup project.
+2. Run with the `https` profile (or `dotnet run --project Server`).
+3. Browse to the site and sign in with your dev login.
+
 ```bash
 # Default ports
 http://localhost:5000
 https://localhost:5001
 ```
 
-?? **Important**: Never use dynamic port binding (`:0`) as it causes Blazor WebAssembly errors.
+⚠️ **Important**: Never use dynamic port binding (`:0`) as it causes Blazor WebAssembly errors.
+
+### Oqtane Framework Reference
+Oqtane API shapes (base classes, services, models) are checked against a local shallow clone of the framework, which is git-ignored:
+
+```bash
+git clone --depth 1 https://github.com/oqtane/oqtane.framework.git .oqtane-ref
+```
+
+### Conventions and Workflow
+- **Wiki is the specification.** `docs/` is a Wikidown wiki. `docs/Specifications/` describes what each part of the app is meant to do; update the relevant page in the same PR when behaviour changes.
+- **Project patterns** for Oqtane modules, JS interop, and accessibility/validation are written up in `.github/skills/`. `CLAUDE.md` summarises the coding conventions.
+- **Data access** is raw SQL or Dapper. No EF migrations or navigation properties.
+- **Branches** are named `feature/<issue>-<short-slug>` and merged to `main` through a pull request that references the issue.
+- **Tests:** `dotnet test Tests`
 
 ## Contributing
 
