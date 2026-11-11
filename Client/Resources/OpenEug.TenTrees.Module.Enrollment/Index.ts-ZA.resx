@@ -84,6 +84,18 @@
   <data name="Filter.AllVillages" xml:space="preserve">
     <value>Matiko Hinkwawo</value>
   </data>
+  <data name="Filter.Cohort" xml:space="preserve">
+    <value>Hlawula hi Ntlawa</value>
+  </data>
+  <data name="Filter.AllCohorts" xml:space="preserve">
+    <value>Mintlawa Hinkwayo</value>
+  </data>
+  <data name="Filter.Mentor" xml:space="preserve">
+    <value>Hlawula hi Muleriseri</value>
+  </data>
+  <data name="Filter.AllMentors" xml:space="preserve">
+    <value>Valeriseri Hinkwavo</value>
+  </data>
   <data name="Action.ClearFilters" xml:space="preserve">
     <value>Susa Swihlawulo</value>
   </data>

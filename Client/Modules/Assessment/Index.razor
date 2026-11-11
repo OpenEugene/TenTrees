@@ -244,7 +244,7 @@
     {
         // When a cohort is selected, use the cohort's assigned mentors directly
         // When no cohort is selected, derive from grower assignments
-        if (_cohortMentorUsernames != null)
+        if (_cohortMentorUsernames?.Count > 0)
         {
             _mentorOptions = _cohortMentorUsernames.OrderBy(m => m).ToList();
         }
@@ -263,10 +263,6 @@
             _selectedMentor = "";
         }
 
-        if (string.IsNullOrEmpty(_selectedMentor) && _mentorOptions.Count > 0)
-        {
-            _selectedMentor = _mentorOptions[0];
-        }
     }
 
     private void RebuildGrowerOptions()
@@ -300,48 +296,35 @@
                        ?? new List<AssessmentListDto>();
     }
 
-    private async Task OnVillageChanged()
+    private void OnVillageChanged()
     {
         _selectedCohortId = "";
         _selectedMentor = "";
         _selectedGrowerId = "";
-        await LoadCohortOptions();
-        await LoadGrowersForFilters();
-        await LoadAssessments();
+        NavigateWithFilters();
     }
 
-    private async Task OnCohortChanged()
+    private void OnCohortChanged()
     {
         _selectedMentor = "";
         _selectedGrowerId = "";
-        await LoadCohortMembers();
-        await LoadGrowersForFilters();
-        await LoadAssessments();
+        NavigateWithFilters();
     }
 
-    private async Task OnMentorChanged()
+    private void OnMentorChanged()
     {
         _selectedGrowerId = "";
-        RebuildGrowerOptions();
-        await LoadAssessments();
+        NavigateWithFilters();
     }
 
-    private async Task OnGrowerChanged()
+    private void OnGrowerChanged()
     {
-        await LoadAssessments();
+        NavigateWithFilters();
     }
 
-    private async Task ClearFilters()
+    private void ClearFilters()
     {
-        _selectedVillageId = "";
-        _selectedCohortId = "";
-        _selectedMentor = "";
-        _selectedGrowerId = "";
-        _cohortGrowerIds = null;
-        _cohortMentorUsernames = null;
-        _cohortOptions = await CohortService.GetCohortsAsync();
-        await LoadGrowersForFilters();
-        await LoadAssessments();
+        NavigationManager.NavigateTo(NavigateUrl());
     }
 
     private async Task Delete(AssessmentListDto assessment)
@@ -373,6 +356,11 @@
         if (!string.IsNullOrEmpty(_selectedMentor)) parts.Add($"mentorId={Uri.EscapeDataString(_selectedMentor)}");
         if (!string.IsNullOrEmpty(_selectedGrowerId)) parts.Add($"growerId={_selectedGrowerId}");
         return string.Join("&", parts);
+    }
+
+    private void NavigateWithFilters()
+    {
+        NavigationManager.NavigateTo(NavigateUrl(PageState.Page.Path, BuildFilterQueryString()));
     }
 
     private string BuildAddParameters()
