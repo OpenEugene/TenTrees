@@ -80,7 +80,17 @@ Home visits are recorded separately from regular assessments; funders need a mon
 - Multiple staff can record separate visits on the same grower; all appear in the grower's visit history with each visitor's name.
 - Monthly visit counts per staff member feed the "Home Visits" report — see [Program Reporting](/Specifications/Program-Reporting).
 
+## Finding assessments
+
+The assessment list is narrowed with four filters that cascade: **Village → Cohort → Mentor → Grower**. Each choice limits the options in the filters after it — choosing a village lists only its cohorts, and choosing a cohort lists only its mentors and growers.
+
+- On first opening the page, the first village and its active cohort are selected and every other filter is set to **All**. Choosing a different village selects that village's active cohort.
+- The Mentor filter lists the mentors assigned to the selected cohort. When a cohort has no mentors assigned to it directly — as with the Orpen Gate cohorts — it lists the mentors of the growers in that cohort instead, so any village whose growers have mentors can be filtered by mentor.
+- Choosing **All** in any filter stays selected and shows every assessment that matches the other filters; nothing is picked automatically in its place. **Clear Filters** sets every filter to All.
+- The filters are kept in the page address, so a filtered list survives a refresh, can be bookmarked or shared, and is restored after adding an assessment.
+
 ## Related pages
+
 
 - [Cohort Management](/Specifications/Cohort-Management) — cohort assessment frequency settings.
 - [Grower Status Management](/Specifications/Grower-Status-Management) — the Exited status that blocks assessment.
