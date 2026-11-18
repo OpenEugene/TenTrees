@@ -33,6 +33,12 @@
   <data name="Filter.AllCohorts" xml:space="preserve">
     <value>All Cohorts</value>
   </data>
+  <data name="Filter.Mentor" xml:space="preserve">
+    <value>Filter by Mentor</value>
+  </data>
+  <data name="Filter.AllMentors" xml:space="preserve">
+    <value>All Mentors</value>
+  </data>
   <data name="Action.Filter" xml:space="preserve">
     <value>Filter</value>
   </data>

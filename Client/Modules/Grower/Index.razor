@@ -14,7 +14,7 @@
 <div class="container">
     <!-- Filter Section -->
     <div class="row mb-3">
-        <div class="col-md-4">
+        <div class="col-md-3 col-xl-2">
             <label for="statusFilter">@Localizer["Filter.Status"]</label>
             <select id="statusFilter" class="form-select" @bind="_statusFilter" @bind:after="NavigateWithFilters">
                 <option value="">@Localizer["Filter.AllStatuses"]</option>
@@ -23,9 +23,9 @@
                 <option value="@GrowerStatus.Exited">@Localizer["Status.Exited"]</option>
             </select>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3 col-xl-2">
             <label for="villageFilter">@Localizer["Filter.Village"]</label>
-            <select id="villageFilter" class="form-select" @bind="_villageFilter" @bind:after="NavigateWithFilters">
+            <select id="villageFilter" class="form-select" @bind="_villageFilter" @bind:after="OnVillageChanged">
                 <option value="">@Localizer["Filter.AllVillages"]</option>
                 @if (_villages != null)
                 {
@@ -36,9 +36,9 @@
                 }
             </select>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3 col-xl-2">
             <label for="cohortFilter">@Localizer["Filter.Cohort"]</label>
-            <select id="cohortFilter" class="form-select" @bind="_cohortFilter" @bind:after="NavigateWithFilters">
+            <select id="cohortFilter" class="form-select" @bind="_cohortFilter" @bind:after="OnCohortChanged">
                 <option value="">@Localizer["Filter.AllCohorts"]</option>
                 @foreach (var cohort in _cohorts)
                 {
@@ -46,7 +46,17 @@
                 }
             </select>
         </div>
-        <div class="col-md-2 d-flex align-items-end gap-2">
+        <div class="col-md-3 col-xl-2">
+            <label for="mentorFilter">@Localizer["Filter.Mentor"]</label>
+            <select id="mentorFilter" class="form-select" @bind="_mentorFilter" @bind:after="OnMentorChanged">
+                <option value="">@Localizer["Filter.AllMentors"]</option>
+                @foreach (var mentor in _mentorOptions)
+                {
+                    <option value="@mentor">@mentor</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-12 col-xl-4 d-flex align-items-end gap-2">
             <button class="btn btn-primary w-100" @onclick="ApplyFilters">@Localizer["Action.Filter"]</button>
             <button class="btn btn-secondary w-100" @onclick="ClearFilters">@Localizer["Action.ClearFilters"]</button>
         </div>
@@ -155,11 +165,13 @@
     private List<Models.Grower> _growers;
     private List<Models.Village> _villages;
     private List<Models.Cohort> _cohorts = new();
+    private List<string> _mentorOptions = new();
     private HashSet<int> _cohortGrowerIds;     // null = no cohort filter
     private GrowerStatusSummary _summary;
     private string _statusFilter = "";
     private string _villageFilter = "";
     private string _cohortFilter = "";
+    private string _mentorFilter = "";
     private bool _isLoading = false;
     private int _currentPage = 1;
     private const int _pageSize = 20;
@@ -184,6 +196,8 @@
 
             var cohort = PageState.QueryString.GetValueOrDefault("cohortId", "");
             _cohortFilter = int.TryParse(cohort, out _) ? cohort : "";
+
+            _mentorFilter = Uri.UnescapeDataString(PageState.QueryString.GetValueOrDefault("mentorId", ""));
 
             _currentPage = ParsePage(PageState.QueryString.GetValueOrDefault("page"));
             await LoadVillagesAsync();
@@ -218,6 +232,7 @@
         // leave the user with a fully-unusable screen — see issue #102.
         try
         {
+            _cohortGrowerIds = null;
             bool isMentorOnly = UserSecurity.IsAuthorized(PageState.User, AppRoleNames.Mentor)
                 && !UserSecurity.IsAuthorized(PageState.User, AppRoleNames.TenTreesAdmin);
 
@@ -230,7 +245,7 @@
             }
             else
             {
-                cohorts = await CohortService.GetCohortsByMentorAsync(PageState.User.Username);
+                cohorts = await CohortService.GetCohortsByMentorAsync(PageState.User.Username) ?? new();
                 // Pre-restrict grower IDs to those in the mentor's cohorts
                 if (cohorts.Count > 0)
                 {
@@ -241,6 +256,11 @@
             }
 
             _cohorts = cohorts ?? new List<Models.Cohort>();
+            if (!string.IsNullOrEmpty(_cohortFilter) &&
+                !_cohorts.Any(c => c.CohortId.ToString() == _cohortFilter))
+            {
+                _cohortFilter = "";
+            }
             await logger.LogInformation("Loaded {Count} cohorts for grower screen (mentorOnly={IsMentorOnly})",
                 _cohorts.Count, isMentorOnly);
         }
@@ -284,8 +304,51 @@
             _growers = _growers.Where(g => _cohortGrowerIds.Contains(g.GrowerId)).ToList();
         }
 
+        await RebuildMentorOptionsAsync();
+
+        if (!string.IsNullOrEmpty(_mentorFilter))
+        {
+            _growers = _growers
+                .Where(g => string.Equals(g.MentorUsername, _mentorFilter, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
+
         await LoadSummaryAsync();
         StateHasChanged();
+    }
+
+    private async Task RebuildMentorOptionsAsync()
+    {
+        if (int.TryParse(_cohortFilter, out var cohortId))
+        {
+            var assignedMentors = await CohortService.GetMentorCohortsAsync(cohortId) ?? new();
+            _mentorOptions = assignedMentors
+                .Where(m => !string.IsNullOrWhiteSpace(m.MentorUsername))
+                .Select(m => m.MentorUsername)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .OrderBy(m => m)
+                .ToList();
+        }
+        else
+        {
+            _mentorOptions = new List<string>();
+        }
+
+        if (_mentorOptions.Count == 0)
+        {
+            _mentorOptions = _growers
+                .Where(g => !string.IsNullOrWhiteSpace(g.MentorUsername))
+                .Select(g => g.MentorUsername)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .OrderBy(m => m)
+                .ToList();
+        }
+
+        if (!string.IsNullOrEmpty(_mentorFilter) &&
+            !_mentorOptions.Contains(_mentorFilter, StringComparer.OrdinalIgnoreCase))
+        {
+            _mentorFilter = "";
+        }
     }
 
     private void ClearFilters()
@@ -297,6 +360,24 @@
     {
         _currentPage = 1;
         NavigateWithFilters();
+    }
+
+    private void OnVillageChanged()
+    {
+        _cohortFilter = "";
+        _mentorFilter = "";
+        ApplyFilters();
+    }
+
+    private void OnCohortChanged()
+    {
+        _mentorFilter = "";
+        ApplyFilters();
+    }
+
+    private void OnMentorChanged()
+    {
+        ApplyFilters();
     }
 
     private void ApplyStatusFilter(string status)
@@ -312,6 +393,7 @@
         if (!string.IsNullOrEmpty(_statusFilter))  parts.Add($"status={Uri.EscapeDataString(_statusFilter)}");
         if (!string.IsNullOrEmpty(_villageFilter)) parts.Add($"villageId={Uri.EscapeDataString(_villageFilter)}");
         if (!string.IsNullOrEmpty(_cohortFilter)) parts.Add($"cohortId={Uri.EscapeDataString(_cohortFilter)}");
+        if (!string.IsNullOrEmpty(_mentorFilter)) parts.Add($"mentorId={Uri.EscapeDataString(_mentorFilter)}");
         if (includePage && _currentPage > 1) parts.Add($"page={_currentPage}");
         return string.Join("&", parts);
     }

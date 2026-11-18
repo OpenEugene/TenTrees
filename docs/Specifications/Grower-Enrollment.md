@@ -10,7 +10,7 @@ The enrollments list opens with a status summary dashboard of four cards, each s
 
 Each row in the list carries two badges: an **Enrollment Status** badge (Pending / Approved / Rejected) and a **Grower Status** badge (Active / Inactive / Exited). Rows with Pending enrollments are highlighted yellow; Rejected rows are highlighted red.
 
-The list can be filtered by enrollment status (e.g. choosing "Pending" shows only pending enrollments, then choosing "Approved" shows only approved ones) and — for admins — by village (e.g. choosing "Orpen Gate Village" shows only that village's enrollments). A **Clear Filters** button resets both filters and restores the full list.
+The list can be filtered by enrollment status (e.g. choosing "Pending" shows only pending enrollments, then choosing "Approved" shows only approved ones) and — for admins — by village (e.g. choosing "Orpen Gate Village" shows only that village's enrollments). It can also be filtered by cohort and by mentor. The village, cohort and mentor filters cascade: choosing a village lists only its cohorts and mentors, and choosing a cohort lists only its mentors — those assigned to the cohort, or, when it has none assigned directly, the mentors of the enrollments in that cohort. A **Clear Filters** button resets every filter and restores the full list. The filters are kept in the page address, so a filtered list survives a refresh and can be bookmarked or shared.
 
 ## Creating an enrollment
 

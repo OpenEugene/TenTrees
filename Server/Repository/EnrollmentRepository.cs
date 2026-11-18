@@ -47,9 +47,11 @@ namespace OpenEug.TenTrees.Module.Enrollment.Repository
                                EnrollmentId = e.EnrollmentId,
                                GrowerId = e.GrowerId,
                                GrowerName = e.GrowerName,
+                               MentorUsername = e.MentorUsername,
                                MentorUserName = e.MentorName,
                                VillageId = e.VillageId,
                                VillageName = v != null ? v.VillageName : null,
+                               CohortId = e.CohortId,
                                EnrollmentStatus = e.Status,
                                GrowerStatus = g != null ? g.Status : GrowerStatus.Active,
                                PhotoConsentLevel = e.PhotoConsentLevel

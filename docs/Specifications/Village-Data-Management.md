@@ -14,9 +14,9 @@ Data is organized by village so each village sees only its own data while author
 
 A user with village edit permissions can add a new village (for example, Londelozzi) from village management, set its contact information, and the village becomes available for mentor assignment.
 
-## Cohort filtering in the grower list
+## Cohort and mentor filtering in the grower list
 
-Cohorts are village-scoped groupings of growers. When an authorized user selects a village in the grower list, a cohort filter dropdown appears listing that village's cohorts (for example, "Orpen Gate Village 2023" and "Orpen Gate Village 2024" for Orpen Gate Village); selecting one filters the list to that cohort's members only, and growers from other cohorts do not appear. Full cohort lifecycle, assignment, and tag behaviour is documented in [Cohort Management](/Specifications/Cohort-Management).
+Cohorts are village-scoped groupings of growers. When an authorized user selects a village in the grower list, a cohort filter dropdown appears listing that village's cohorts (for example, "Orpen Gate Village 2023" and "Orpen Gate Village 2024" for Orpen Gate Village); selecting one filters the list to that cohort's members only, and growers from other cohorts do not appear. A mentor filter follows the cohort filter: it lists the mentors assigned to the selected cohort — or, when the cohort has none assigned directly, the mentors of the growers shown — and choosing one shows only that mentor's growers. The village, cohort and mentor choices are kept in the page address, so a filtered list survives a refresh and can be bookmarked or shared. Full cohort lifecycle, assignment, and tag behaviour is documented in [Cohort Management](/Specifications/Cohort-Management).
 
 ## Related pages
 

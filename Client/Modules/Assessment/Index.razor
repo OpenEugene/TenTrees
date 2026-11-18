@@ -130,6 +130,7 @@
     private string _selectedMentor = "";
     private string _selectedGrowerId = "";
     private const int _pageSize = 20;
+    private const string AllValue = "all";
 
     protected override async Task OnParametersSetAsync()
     {
@@ -138,9 +139,15 @@
             _villages = await VillageService.GetActiveVillagesAsync()
                         ?? new List<Models.Village>();
 
-            if (PageState.QueryString.ContainsKey("villageId") &&
-                int.TryParse(PageState.QueryString["villageId"], out var qsVillageId) &&
-                _villages.Any(v => v.VillageId == qsVillageId))
+            // "all" in the querystring is an explicit "All" choice; a missing value means
+            // first visit, which defaults to the first village and its active cohort.
+            var qsVillage = PageState.QueryString.GetValueOrDefault("villageId", "");
+            if (qsVillage == AllValue)
+            {
+                _selectedVillageId = "";
+            }
+            else if (int.TryParse(qsVillage, out var qsVillageId) &&
+                     _villages.Any(v => v.VillageId == qsVillageId))
             {
                 _selectedVillageId = qsVillageId.ToString();
             }
@@ -150,8 +157,13 @@
             }
 
             var hasCohortParam = false;
-            if (PageState.QueryString.ContainsKey("cohortId") &&
-                int.TryParse(PageState.QueryString["cohortId"], out var qsCohortId) && qsCohortId > 0)
+            var qsCohort = PageState.QueryString.GetValueOrDefault("cohortId", "");
+            if (qsCohort == AllValue)
+            {
+                _selectedCohortId = "";
+                hasCohortParam = true;
+            }
+            else if (int.TryParse(qsCohort, out var qsCohortId) && qsCohortId > 0)
             {
                 _selectedCohortId = qsCohortId.ToString();
                 hasCohortParam = true;
@@ -159,15 +171,9 @@
 
             await LoadCohortOptions(preserveSelection: hasCohortParam);
 
-            if (PageState.QueryString.ContainsKey("mentorId"))
-            {
-                _selectedMentor = Uri.UnescapeDataString(PageState.QueryString["mentorId"]);
-            }
-
-            if (PageState.QueryString.ContainsKey("growerId"))
-            {
-                _selectedGrowerId = PageState.QueryString["growerId"];
-            }
+            // Reset when absent so Back navigation doesn't keep a stale selection
+            _selectedMentor = Uri.UnescapeDataString(PageState.QueryString.GetValueOrDefault("mentorId", ""));
+            _selectedGrowerId = PageState.QueryString.GetValueOrDefault("growerId", "");
 
             await LoadGrowersForFilters();
             await LoadAssessments();
@@ -193,7 +199,8 @@
 
         // Preserve an explicitly-requested cohort (e.g. from a returnurl) if it's still valid;
         // otherwise auto-select the current active cohort, or clear if not available.
-        if (preserveSelection && _cohortOptions.Any(c => c.CohortId.ToString() == _selectedCohortId))
+        if (preserveSelection &&
+            (string.IsNullOrEmpty(_selectedCohortId) || _cohortOptions.Any(c => c.CohortId.ToString() == _selectedCohortId)))
         {
             // keep _selectedCohortId as-is
         }
@@ -244,7 +251,7 @@
     {
         // When a cohort is selected, use the cohort's assigned mentors directly
         // When no cohort is selected, derive from grower assignments
-        if (_cohortMentorUsernames != null)
+        if (_cohortMentorUsernames?.Count > 0)
         {
             _mentorOptions = _cohortMentorUsernames.OrderBy(m => m).ToList();
         }
@@ -263,10 +270,6 @@
             _selectedMentor = "";
         }
 
-        if (string.IsNullOrEmpty(_selectedMentor) && _mentorOptions.Count > 0)
-        {
-            _selectedMentor = _mentorOptions[0];
-        }
     }
 
     private void RebuildGrowerOptions()
@@ -300,48 +303,41 @@
                        ?? new List<AssessmentListDto>();
     }
 
-    private async Task OnVillageChanged()
+    private void OnVillageChanged()
     {
         _selectedCohortId = "";
         _selectedMentor = "";
         _selectedGrowerId = "";
-        await LoadCohortOptions();
-        await LoadGrowersForFilters();
-        await LoadAssessments();
+        // Omit cohortId so the new village's active cohort is auto-selected on load
+        var villageQs = $"villageId={(string.IsNullOrEmpty(_selectedVillageId) ? AllValue : _selectedVillageId)}";
+        NavigationManager.NavigateTo(NavigateUrl(PageState.Page.Path, villageQs));
     }
 
-    private async Task OnCohortChanged()
+    private void OnCohortChanged()
     {
         _selectedMentor = "";
         _selectedGrowerId = "";
-        await LoadCohortMembers();
-        await LoadGrowersForFilters();
-        await LoadAssessments();
+        NavigateWithFilters();
     }
 
-    private async Task OnMentorChanged()
+    private void OnMentorChanged()
     {
         _selectedGrowerId = "";
-        RebuildGrowerOptions();
-        await LoadAssessments();
+        NavigateWithFilters();
     }
 
-    private async Task OnGrowerChanged()
+    private void OnGrowerChanged()
     {
-        await LoadAssessments();
+        NavigateWithFilters();
     }
 
-    private async Task ClearFilters()
+    private void ClearFilters()
     {
         _selectedVillageId = "";
         _selectedCohortId = "";
         _selectedMentor = "";
         _selectedGrowerId = "";
-        _cohortGrowerIds = null;
-        _cohortMentorUsernames = null;
-        _cohortOptions = await CohortService.GetCohortsAsync();
-        await LoadGrowersForFilters();
-        await LoadAssessments();
+        NavigateWithFilters();
     }
 
     private async Task Delete(AssessmentListDto assessment)
@@ -368,11 +364,16 @@
     private string BuildFilterQueryString()
     {
         var parts = new List<string>();
-        if (!string.IsNullOrEmpty(_selectedVillageId)) parts.Add($"villageId={_selectedVillageId}");
-        if (!string.IsNullOrEmpty(_selectedCohortId)) parts.Add($"cohortId={_selectedCohortId}");
+        parts.Add($"villageId={(string.IsNullOrEmpty(_selectedVillageId) ? AllValue : _selectedVillageId)}");
+        parts.Add($"cohortId={(string.IsNullOrEmpty(_selectedCohortId) ? AllValue : _selectedCohortId)}");
         if (!string.IsNullOrEmpty(_selectedMentor)) parts.Add($"mentorId={Uri.EscapeDataString(_selectedMentor)}");
         if (!string.IsNullOrEmpty(_selectedGrowerId)) parts.Add($"growerId={_selectedGrowerId}");
         return string.Join("&", parts);
+    }
+
+    private void NavigateWithFilters()
+    {
+        NavigationManager.NavigateTo(NavigateUrl(PageState.Page.Path, BuildFilterQueryString()));
     }
 
     private string BuildAddParameters()

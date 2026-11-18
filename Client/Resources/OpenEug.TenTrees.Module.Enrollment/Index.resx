@@ -171,6 +171,18 @@
   <data name="Filter.AllVillages" xml:space="preserve">
     <value>All Villages</value>
   </data>
+  <data name="Filter.Cohort" xml:space="preserve">
+    <value>Filter by Cohort</value>
+  </data>
+  <data name="Filter.AllCohorts" xml:space="preserve">
+    <value>All Cohorts</value>
+  </data>
+  <data name="Filter.Mentor" xml:space="preserve">
+    <value>Filter by Mentor</value>
+  </data>
+  <data name="Filter.AllMentors" xml:space="preserve">
+    <value>All Mentors</value>
+  </data>
   <data name="Action.ClearFilters" xml:space="preserve">
     <value>Clear Filters</value>
   </data>
