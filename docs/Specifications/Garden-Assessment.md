@@ -74,11 +74,12 @@ Submission is **never blocked** by the entered Assessment Date. Each cohort has 
 
 ## Home visits
 
-Home visits are recorded separately from regular assessments; funders need a monthly count of visits per staff member.
+Home visits are recorded on the assessment rather than on a separate screen; funders need a monthly count of visits per staff member.
 
-- Any staff member (e.g. an Educator) can open a grower record, tap **Record Home Visit**, enter notes, and confirm the date; the visit is saved with the visiting staff member's name.
-- Multiple staff can record separate visits on the same grower; all appear in the grower's visit history with each visitor's name.
-- Monthly visit counts per staff member feed the "Home Visits" report — see [Program Reporting](/Specifications/Program-Reporting).
+- Each assessment has a **Notes** section where staff add notes. Each note is marked as either a **General** note or a **Home Visit** note, and every saved note shows the date and time it was written and who wrote it.
+- Each tree on an assessment can be flagged **Needs help**. When any tree needs help, the form prompts for a note describing the problem.
+- A grower's record lists their assessments with **Needs Help** and **Notes** columns, so the visit history can be seen from the grower.
+- Home Visit notes are the source for the planned monthly "Home Visits" report — see [Program Reporting](Program-Reporting.md).
 
 ## Finding assessments
 
