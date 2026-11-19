@@ -31,8 +31,9 @@ See #Claude Instructions for project context, coding conventions, and workflow g
   navigation files. Page links use title form: `/Getting-Started/Format`.
 - A `wikidown-editor` subagent and a `wikidown` skill are configured for this
   repo. Use them for ANY read/write of `/docs/*.md`.
-- Never edit `/docs/*.md` directly with `Write`/`Edit`. Use the `wiki_*` MCP
-  tools so `.order` files stay consistent.
+- Never edit `/docs/*.md` directly with `Write`/`Edit`. Use the `wikidown` CLI
+  (`wikidown <command> --root docs ...`) so `.order` files stay consistent. Do
+  not use a wikidown MCP server.
 - The wiki is the specification. `docs/Specifications/` pages describe what the
   application is meant to do and why, in plain language for people. They do not
   restate mechanics that can be read from the code (routes, class names, column
