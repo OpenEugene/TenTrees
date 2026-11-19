@@ -6,23 +6,9 @@
     "playwright": {
       "type": "stdio",
       "command": "npx",
-      "args": [ "@playwright/mcp@latest" ]
-    },
-    "wikidown": {
-      "type": "stdio",
-      "command": "wikidown-mcp",
-      "env": {
-        "WIKIDOWN_ROOT": "${workspaceFolder}/docs"
-      }
-    }
-  },
-  "mcpServers": {
-    "wikidown": {
-      "type": "stdio",
-      "command": "wikidown-mcp",
-      "env": {
-        "WIKIDOWN_ROOT": "docs"
-      }
+      "args": [
+        "@playwright/mcp@latest"
+      ]
     }
   }
 }

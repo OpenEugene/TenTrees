@@ -202,6 +202,8 @@ git clone --depth 1 https://github.com/oqtane/oqtane.framework.git .oqtane-ref
 
 ## Contributing
 
+See [CONTRIBUTING.md](CONTRIBUTING.md) for how work is tracked in GitHub issues and how changes reach `main` through pull requests.
+
 This project serves rural South African communities with limited resources and connectivity. When contributing:
 - Prioritize mobile optimization
 - Include bilingual localization (en-ZA and ts-ZA)
