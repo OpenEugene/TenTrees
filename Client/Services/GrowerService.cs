@@ -45,6 +45,14 @@ namespace OpenEug.TenTrees.Module.Grower.Services
             return await PostJsonAsync<ProgramExitRequest, Models.Grower>(CreateAuthorizationPolicyUrl($"{ApiUrl}/exit?moduleId={moduleId}", EntityNames.Module, moduleId), request);
         }
 
+        public async Task<Models.Grower> CaptureGardenLocationAsync(int growerId, GardenLocationCaptureRequest request, int moduleId)
+        {
+            request.GrowerId = growerId;
+            return await PostJsonAsync<GardenLocationCaptureRequest, Models.Grower>(
+                CreateAuthorizationPolicyUrl($"{ApiUrl}/{growerId}/garden-location?moduleId={moduleId}", EntityNames.Module, moduleId),
+                request);
+        }
+
         public async Task<List<Models.Grower>> GetActiveGrowersAsync(int? villageId = null)
         {
             string url = $"{ApiUrl}/active";

@@ -17,6 +17,12 @@ Opening a mapping for a grower (for example, Mary Nkuna) auto-fills their inform
 
 The saved mapping is linked to the grower's enrollment.
 
+### Capturing the GPS location
+
+On a saved grower record, a mentor at the garden taps **Capture location**. The device asks for location permission and, when permission is granted, saves the latitude, longitude, reported accuracy, capture date and time, and the signed-in person who captured it. The location and capture details are shown on the grower record.
+
+Capturing the location again replaces the current pin when the first reading was wrong or needs updating. If permission is denied, the device cannot provide a location, or the request times out, the page explains what happened and leaves the existing location unchanged.
+
 ## Manual GPS entry by staff
 
 Centre staff can open a mapping record that has no GPS coordinates and enter latitude and longitude manually (e.g. `-24.5271`, `31.1367`) to update the location.
