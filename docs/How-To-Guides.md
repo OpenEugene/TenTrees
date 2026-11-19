@@ -19,7 +19,7 @@ All users, regardless of their role, log in through the same portal.
 
 ## 2. Mentor Guide
 
-Mentors are the field agents who work directly with Growers in their assigned villages.
+Mentors are the field agents who work directly with Growers in their assigned villages. A mentor only sees the growers assigned to them: the growers in the mentor's cohorts or, for a mentor with no cohorts, the growers in the mentor's village. Administrators can change a mentor's assignments from the Mentor page (see [Mentor Management](Specifications/Mentor-Management.md)).
 
 ### 2.1 Enrolling a New Grower
 1. Navigate to the Enrollment module: [https://tentrees.org/enrollment](https://tentrees.org/enrollment)
@@ -33,6 +33,11 @@ Mentors are the field agents who work directly with Growers in their assigned vi
 2. Locate the specific Grower in the list. You can use the "Filter by Village" or "Cohort" dropdowns to narrow the list.
 3. Click the **Manage Status** link in the Actions column for that Grower.
 4. Update their status (e.g., Active, Inactive, Exited) and provide an Exit Date if applicable.
+
+What the statuses mean:
+- **Active** — the grower is currently taking part in the programme.
+- **Inactive** — the grower is temporarily paused (for example through illness or travel) but has not left the programme, and can be marked Active again.
+- **Exited** — the grower has permanently left the programme; an exit date and reason are recorded.
 
 ### 2.3 Conducting a Garden Assessment
 1. Navigate to the Assessment module: [https://tentrees.org/assessment](https://tentrees.org/assessment)
@@ -55,8 +60,8 @@ Educators oversee the training programs and manage cohorts across multiple villa
 ### 3.1 Managing Cohorts
 1. Navigate to the Cohort module: [https://tentrees.org/cohort](https://tentrees.org/cohort)
 2. To create a new cohort, click **Add Cohort**.
-3. Enter the Cohort Name, select the Village, and set the Status (Planned, Active, Completed).
-4. To edit an existing cohort, click the **Edit** button next to the cohort name in the list.
+3. Enter the Cohort Name, select the Village, and set the Status. A new cohort can be Planned (the default) or Active.
+4. To edit an existing cohort, click the **Edit** button next to the cohort name in the list. When a cohort has finished, edit it and set its Status to Completed. A completed cohort cannot be reactivated.
 
 ### 3.2 Overseeing Training Sessions
 1. Navigate to the Classes module: [https://tentrees.org/classes](https://tentrees.org/classes)
@@ -66,7 +71,9 @@ Educators oversee the training programs and manage cohorts across multiple villa
 ### 3.3 Reviewing Assessments
 1. Navigate to the Assessment module: [https://tentrees.org/assessment](https://tentrees.org/assessment)
 2. Use the "Filter by Village", "Cohort", or "Mentor" dropdowns to review assessments submitted by Mentors.
-3. Click **Edit** on any assessment to review the details, survival rates, permaculture practices, and problem photos before planning a garden visit.
+3. Open any assessment from the list to review the details, survival rates, permaculture practices, and problem photos before planning a garden visit.
+
+Educators can view assessments but not edit them; changes are made by the mentor or an administrator.
 
 ---
 
@@ -75,9 +82,13 @@ Educators oversee the training programs and manage cohorts across multiple villa
 Project Managers monitor the overall health of the program, track metrics, and manage resources.
 
 ### 4.1 Monitoring Program Metrics
-1. Navigate to the Home dashboard: [https://tentrees.org/](https://tentrees.org/)
-2. Review the high-level metrics and summaries available on the dashboard.
-3. Navigate to the Grower module ([https://tentrees.org/grower](https://tentrees.org/grower)) to view the total number of Active, Inactive, and Exited Growers.
+
+1. Navigate to the Home page: [https://tentrees.org/](https://tentrees.org/). It shows a tile for each workflow page (Enrollment, Classes, Grower, Assessment) and, for administrators, an Admin section (Village, Cohort, Mentor, Tree Type). The Home page itself does not show figures; the counts are on each workflow page.
+2. Open the Grower module ([https://tentrees.org/grower](https://tentrees.org/grower)) to see the number of Active, Inactive and Exited growers, and the total.
+3. Open the Enrollment module ([https://tentrees.org/enrollment](https://tentrees.org/enrollment)) to see the number of Pending, Approved and Rejected enrollments, and the total.
+4. Open the Classes module ([https://tentrees.org/classes](https://tentrees.org/classes)) to see the Eligible, In Progress and Not Started counts, and the total.
+
+Dedicated program reports (such as tree survival and home visit summaries) are planned but not yet available; see [Program Reporting](Specifications/Program-Reporting.md).
 
 ### 4.2 Reviewing Enrollments
 1. Navigate to the Enrollment module: [https://tentrees.org/enrollment](https://tentrees.org/enrollment)

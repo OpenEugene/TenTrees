@@ -6,10 +6,10 @@ Users with edit permissions organise growers and mentors into named, village-sco
 
 ## Cohort lifecycle
 
-A cohort belongs to a village and a year, and moves through three statuses:
+A cohort belongs to a village and a year, and moves through three statuses. A new cohort is created as either Planned or Active (Planned is the default); Completed is only offered when editing an existing cohort.
 
-- **Planned** — the status of every newly created cohort. On creation the system suggests a name of the form "Village Year" (e.g. "Roebuck 2026"), which can be accepted or overwritten with a custom name (e.g. saving a cohort for "Orpen Gate Village" under the name "Orpen Gate Village 2023" creates exactly that cohort for that village).
-- **Active** — set by an authorized user; the cohort then appears in active cohort filters.
+- **Planned** — the default status for a newly created cohort. On creation the system suggests a name of the form "Village Year" (e.g. "Roebuck 2026"), which can be accepted or overwritten with a custom name (e.g. saving a cohort for "Orpen Gate Village" under the name "Orpen Gate Village 2023" creates exactly that cohort for that village).
+- **Active** — chosen when the cohort is created or set later by an authorized user; the cohort then appears in active cohort filters.
 - **Completed** — the cohort leaves active filters by default but is visible when "Show completed cohorts" is enabled. **A completed cohort cannot be reactivated**; attempts to set it back to Active or Planned are rejected with "A completed cohort cannot be reactivated" and the status stays Completed.
 
 When a village already has a cohort for that year, the system increments the number in the suggested name (second cohort → "Roebuck 2 2026") and the existing cohort can be renamed to match (e.g. "Roebuck 1 2026").

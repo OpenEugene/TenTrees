@@ -4,6 +4,12 @@
 
 Administrators manage grower status across Active, Inactive, and Exited states to keep program statistics and participation records accurate. This is a medium-priority feature with a security dimension: status changes affect who is counted in the programme and must be restricted to administrators.
 
+## What the statuses mean
+
+- **Active** — the grower is currently taking part in the programme.
+- **Inactive** — the grower is temporarily paused (for example through illness or travel) but has not left the programme, and can be marked Active again.
+- **Exited** — the grower has permanently left the programme; an exit date and reason are recorded.
+
 ## Status badges
 
 Grower lists colour-code status: **Active** = green, **Inactive** = yellow, **Exited** = grey.
