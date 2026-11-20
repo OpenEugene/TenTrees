@@ -249,4 +249,55 @@
   <data name="Status.Exited" xml:space="preserve">
     <value>U Humile</value>
   </data>
+  <data name="Section.GardenLocation" xml:space="preserve">
+    <value>Ndhawu ya Ntanga</value>
+  </data>
+  <data name="Label.Coordinates" xml:space="preserve">
+    <value>Tikhodinete</value>
+  </data>
+  <data name="Label.Accuracy" xml:space="preserve">
+    <value>Ku Kongoma</value>
+  </data>
+  <data name="Label.CapturedOn" xml:space="preserve">
+    <value>Yi tsariwile hi siku ra</value>
+  </data>
+  <data name="Label.CapturedBy" xml:space="preserve">
+    <value>Yi tsariwile hi</value>
+  </data>
+  <data name="Format.AccuracyMeters" xml:space="preserve">
+    <value>{0} wa timitara</value>
+  </data>
+  <data name="Message.NoGardenLocation" xml:space="preserve">
+    <value>Ndhawu ya ntanga a yi si tsariwa.</value>
+  </data>
+  <data name="Message.LocationPermissionHelp" xml:space="preserve">
+    <value>Tsala ndhawu loko u yimile entangeni. Xitirhisiwa xa wena xi ta kombela mpfumelelo wa ndhawu.</value>
+  </data>
+  <data name="Action.CaptureLocation" xml:space="preserve">
+    <value>Tsala ndhawu</value>
+  </data>
+  <data name="Action.RecaptureLocation" xml:space="preserve">
+    <value>Tsala ndhawu nakambe</value>
+  </data>
+  <data name="Action.CapturingLocation" xml:space="preserve">
+    <value>Ndhawu yi karhi yi kumiwa...</value>
+  </data>
+  <data name="Message.LocationCaptured" xml:space="preserve">
+    <value>Ndhawu ya ntanga yi tsariwile.</value>
+  </data>
+  <data name="Message.LocationPermissionDenied" xml:space="preserve">
+    <value>Mpfumelelo wa ndhawu wu ariwile. Pfumelela ku tirhisiwa ka ndhawu eka browser kutani u ringeta nakambe.</value>
+  </data>
+  <data name="Message.LocationTimeout" xml:space="preserve">
+    <value>Xitirhisiwa xi teke nkarhi wo leha ku kuma ndhawu. Yana endhawini leyi pfulekeke kutani u ringeta nakambe.</value>
+  </data>
+  <data name="Message.LocationUnsupported" xml:space="preserve">
+    <value>Xitirhisiwa kumbe browser leyi a yi swi koti ku tsala ndhawu.</value>
+  </data>
+  <data name="Message.LocationUnavailable" xml:space="preserve">
+    <value>Ndhawu a yi kumeki. Languta leswaku vukorhokeri bya ndhawu byi pfuriwile kutani u ringeta nakambe.</value>
+  </data>
+  <data name="Message.LocationSaveError" xml:space="preserve">
+    <value>Ndhawu ya ntanga a yi hlayisekanga. Kombela u ringeta nakambe.</value>
+  </data>
 </root>

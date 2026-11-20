@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace OpenEug.TenTrees.Models
 {
@@ -13,6 +14,20 @@ namespace OpenEug.TenTrees.Models
         public DateTime ExitDate { get; set; }
         public string ExitReason { get; set; }
         public string Notes { get; set; }
+    }
+
+    public class GardenLocationCaptureRequest
+    {
+        public int GrowerId { get; set; }
+
+        [Range(typeof(decimal), "-90", "90")]
+        public decimal Latitude { get; set; }
+
+        [Range(typeof(decimal), "-180", "180")]
+        public decimal Longitude { get; set; }
+
+        [Range(typeof(decimal), "0", "100000")]
+        public decimal? AccuracyMeters { get; set; }
     }
 
     public class GrowerStatusSummary

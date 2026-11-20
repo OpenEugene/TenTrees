@@ -39,6 +39,9 @@ namespace OpenEug.TenTrees.Repository
             modelBuilder.Entity<Models.Village>().ToTable(ActiveDatabase.RewriteName("Village"));
             modelBuilder.Entity<Models.Enrollment>().ToTable(ActiveDatabase.RewriteName("Enrollment"));
             modelBuilder.Entity<Models.Grower>().ToTable(ActiveDatabase.RewriteName("Grower"));
+            modelBuilder.Entity<Models.Grower>().Property(g => g.GardenLatitude).HasPrecision(9, 6);
+            modelBuilder.Entity<Models.Grower>().Property(g => g.GardenLongitude).HasPrecision(9, 6);
+            modelBuilder.Entity<Models.Grower>().Property(g => g.GardenLocationAccuracyMeters).HasPrecision(10, 2);
             modelBuilder.Entity<Models.TrainingClass>().ToTable(ActiveDatabase.RewriteName("TrainingClass"));
             modelBuilder.Entity<Models.ClassAttendance>().ToTable(ActiveDatabase.RewriteName("ClassAttendance"));
             modelBuilder.Entity<Models.Assessment>().ToTable(ActiveDatabase.RewriteName("Assessment"));

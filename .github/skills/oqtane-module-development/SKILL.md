@@ -278,7 +278,13 @@ Apply this skill whenever:
 - No EF migrations or navigation properties.
 - No Radzen controls unless explicitly requested — default to Bootstrap and
   Oqtane/Blazor built-ins.
-- No Localizer — use plain text strings directly.
+- Use `IStringLocalizer` for all user-facing text — no hard-coded UI strings.
+  Inject it per component (`@inject IStringLocalizer<Edit> Localizer`) and
+  read keys with `@Localizer["Section.Key"]`. Each component has an English
+  `.resx` and a Xitsonga `.ts-ZA.resx` in
+  `Client/Resources/<PackageName>/` (e.g.
+  `Client/Resources/OpenEug.TenTrees.Module.Grower/Edit.resx` and
+  `Edit.ts-ZA.resx`). Add every new key to both files.
 - Settings go in `Settings.razor`; Oqtane loads it automatically from the
   module admin panel.
 
@@ -290,3 +296,4 @@ Apply this skill whenever:
 
 ## Activation History
 - 2026-03-15: Corrected client service file layout — `Client/Services/` flat directory, not per-module `Services/` subfolder, during Mentor module planning
+- 2026-11-19: Replaced the outdated "No Localizer" rule — modules use `IStringLocalizer` with English and ts-ZA `.resx` files (found while reviewing PR #196)

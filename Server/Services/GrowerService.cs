@@ -135,6 +135,45 @@ namespace OpenEug.TenTrees.Module.Grower.Services
             return Task.FromResult(grower);
         }
 
+        public Task<Models.Grower> CaptureGardenLocationAsync(int growerId, GardenLocationCaptureRequest request, int moduleId)
+        {
+            if (!_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.Edit))
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized Garden Location Capture Attempt {GrowerId} {ModuleId}", growerId, moduleId);
+                return Task.FromResult<Models.Grower>(null);
+            }
+
+            var grower = _growerRepository.GetGrower(growerId, false);
+            if (grower == null)
+            {
+                return Task.FromResult<Models.Grower>(null);
+            }
+
+            if (IsMentor() && !string.Equals(grower.MentorUsername, CurrentUsername(), StringComparison.OrdinalIgnoreCase))
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Mentor Garden Location Capture Denied {GrowerId} {Username}", growerId, CurrentUsername());
+                return Task.FromResult<Models.Grower>(null);
+            }
+
+            var capturedBy = _accessor.HttpContext?.User?.Identity?.Name;
+            if (string.IsNullOrWhiteSpace(capturedBy))
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Garden Location Capture Missing User {GrowerId}", growerId);
+                return Task.FromResult<Models.Grower>(null);
+            }
+
+            var updated = _growerRepository.UpdateGardenLocation(
+                growerId,
+                decimal.Round(request.Latitude, 6),
+                decimal.Round(request.Longitude, 6),
+                request.AccuracyMeters.HasValue ? decimal.Round(request.AccuracyMeters.Value, 2) : null,
+                DateTimeOffset.UtcNow,
+                capturedBy);
+
+            _logger.Log(LogLevel.Information, this, LogFunction.Update, "Garden Location Captured {GrowerId} by {Username}", growerId, capturedBy);
+            return Task.FromResult(updated);
+        }
+
         public Task<List<Models.Grower>> GetActiveGrowersAsync(int? villageId = null)
         {
             var growers = _growerRepository.GetActiveGrowers(villageId).ToList();
@@ -175,6 +214,11 @@ namespace OpenEug.TenTrees.Module.Grower.Services
         public Task<Models.Grower> AddGrowerAsync(Models.Grower grower, int moduleId)
         {
             grower.Status = GrowerStatus.Active;
+            grower.GardenLatitude = null;
+            grower.GardenLongitude = null;
+            grower.GardenLocationAccuracyMeters = null;
+            grower.GardenLocationCapturedOn = null;
+            grower.GardenLocationCapturedBy = null;
             grower = _growerRepository.AddGrower(grower);
             _logger.Log(LogLevel.Information, this, LogFunction.Create, "Grower Added {Grower}", grower);
             return Task.FromResult(grower);
@@ -184,6 +228,19 @@ namespace OpenEug.TenTrees.Module.Grower.Services
         {
             if (_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, moduleId, PermissionNames.Edit))
             {
+                // Garden location is updated only through the dedicated capture endpoint.
+                // Preserve it here so a stale edit form cannot clear or replace a captured pin.
+                var existing = _growerRepository.GetGrower(grower.GrowerId, false);
+                if (existing == null)
+                {
+                    return Task.FromResult<Models.Grower>(null);
+                }
+
+                grower.GardenLatitude = existing.GardenLatitude;
+                grower.GardenLongitude = existing.GardenLongitude;
+                grower.GardenLocationAccuracyMeters = existing.GardenLocationAccuracyMeters;
+                grower.GardenLocationCapturedOn = existing.GardenLocationCapturedOn;
+                grower.GardenLocationCapturedBy = existing.GardenLocationCapturedBy;
                 grower = _growerRepository.UpdateGrower(grower);
                 _logger.Log(LogLevel.Information, this, LogFunction.Update, "Grower Updated {Grower}", grower);
 

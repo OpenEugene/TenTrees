@@ -249,4 +249,55 @@
   <data name="Status.Exited" xml:space="preserve">
     <value>Exited</value>
   </data>
+  <data name="Section.GardenLocation" xml:space="preserve">
+    <value>Garden Location</value>
+  </data>
+  <data name="Label.Coordinates" xml:space="preserve">
+    <value>Coordinates</value>
+  </data>
+  <data name="Label.Accuracy" xml:space="preserve">
+    <value>Accuracy</value>
+  </data>
+  <data name="Label.CapturedOn" xml:space="preserve">
+    <value>Captured on</value>
+  </data>
+  <data name="Label.CapturedBy" xml:space="preserve">
+    <value>Captured by</value>
+  </data>
+  <data name="Format.AccuracyMeters" xml:space="preserve">
+    <value>{0} metres</value>
+  </data>
+  <data name="Message.NoGardenLocation" xml:space="preserve">
+    <value>No garden location has been captured.</value>
+  </data>
+  <data name="Message.LocationPermissionHelp" xml:space="preserve">
+    <value>Capture the location while standing at the garden. Your device will ask for location permission.</value>
+  </data>
+  <data name="Action.CaptureLocation" xml:space="preserve">
+    <value>Capture location</value>
+  </data>
+  <data name="Action.RecaptureLocation" xml:space="preserve">
+    <value>Capture location again</value>
+  </data>
+  <data name="Action.CapturingLocation" xml:space="preserve">
+    <value>Getting location...</value>
+  </data>
+  <data name="Message.LocationCaptured" xml:space="preserve">
+    <value>Garden location captured.</value>
+  </data>
+  <data name="Message.LocationPermissionDenied" xml:space="preserve">
+    <value>Location permission was denied. Allow location access in your browser and try again.</value>
+  </data>
+  <data name="Message.LocationTimeout" xml:space="preserve">
+    <value>The device took too long to find its location. Move to an open area and try again.</value>
+  </data>
+  <data name="Message.LocationUnsupported" xml:space="preserve">
+    <value>This device or browser cannot capture a location.</value>
+  </data>
+  <data name="Message.LocationUnavailable" xml:space="preserve">
+    <value>The location is unavailable. Check that location services are on and try again.</value>
+  </data>
+  <data name="Message.LocationSaveError" xml:space="preserve">
+    <value>The garden location could not be saved. Please try again.</value>
+  </data>
 </root>

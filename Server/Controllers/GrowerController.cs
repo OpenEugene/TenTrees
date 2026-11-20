@@ -146,6 +146,37 @@ namespace OpenEug.TenTrees.Module.Grower.Controllers
             }
         }
 
+        [HttpPost("{id}/garden-location")]
+        [Authorize(Policy = PolicyNames.EditModule)]
+        public async Task<ActionResult<Models.Grower>> CaptureGardenLocation(int id, [FromBody] GardenLocationCaptureRequest request, int moduleId)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                if (request == null || request.GrowerId != id)
+                {
+                    return BadRequest();
+                }
+
+                var updated = await _growerService.CaptureGardenLocationAsync(id, request, moduleId);
+                if (updated == null)
+                {
+                    return StatusCode(StatusCodes.Status403Forbidden);
+                }
+
+                return Ok(updated);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, this, LogFunction.Update, "Garden Location Capture Failed {GrowerId} {ModuleId} {Error}", id, moduleId, ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
         [HttpGet("by-status")]
         [Authorize]
         public async Task<ActionResult<List<Models.Grower>>> GetByStatus(GrowerStatus status, int? villageId = null)

@@ -36,6 +36,16 @@ namespace OpenEug.TenTrees.Models
         public string? ExitReason { get; set; }
 
         public string? ExitNotes { get; set; }
+
+        public decimal? GardenLatitude { get; set; }
+
+        public decimal? GardenLongitude { get; set; }
+
+        public decimal? GardenLocationAccuracyMeters { get; set; }
+
+        public DateTimeOffset? GardenLocationCapturedOn { get; set; }
+
+        public string? GardenLocationCapturedBy { get; set; }
     }
 
     public enum GrowerStatus

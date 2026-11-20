@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Collections.Generic;
 using Oqtane.Modules;
@@ -17,6 +18,7 @@ namespace OpenEug.TenTrees.Module.Grower.Repository
         IEnumerable<Models.Grower> GetActiveGrowers(int? villageId = null);
         Models.Grower AddGrower(Models.Grower grower);
         Models.Grower UpdateGrower(Models.Grower grower);
+        Models.Grower UpdateGardenLocation(int growerId, decimal latitude, decimal longitude, decimal? accuracyMeters, DateTimeOffset capturedOn, string capturedBy);
         void DeleteGrower(int growerId);
         GrowerStatusSummary GetStatusSummary(int? villageId = null);
     }
@@ -103,6 +105,24 @@ namespace OpenEug.TenTrees.Module.Grower.Repository
         {
             using var db = _factory.CreateDbContext();
             db.Entry(grower).State = EntityState.Modified;
+            db.SaveChanges();
+            return grower;
+        }
+
+        public Models.Grower UpdateGardenLocation(int growerId, decimal latitude, decimal longitude, decimal? accuracyMeters, DateTimeOffset capturedOn, string capturedBy)
+        {
+            using var db = _factory.CreateDbContext();
+            var grower = db.Grower.Find(growerId);
+            if (grower == null)
+            {
+                return null;
+            }
+
+            grower.GardenLatitude = latitude;
+            grower.GardenLongitude = longitude;
+            grower.GardenLocationAccuracyMeters = accuracyMeters;
+            grower.GardenLocationCapturedOn = capturedOn;
+            grower.GardenLocationCapturedBy = capturedBy;
             db.SaveChanges();
             return grower;
         }

@@ -4,6 +4,7 @@
 @using OpenEug.TenTrees.Module.Assessment.Services
 @using OpenEug.TenTrees.Models
 @using Oqtane.UI
+@using System.Globalization
 
 @namespace OpenEug.TenTrees.Module.Grower
 @inherits ModuleBase
@@ -18,7 +19,7 @@
 
 @if (_isLoading)
 {
-    <p><em>@Localizer["Message.Loading"]</em></p>
+    <p role="status"><em>@Localizer["Message.Loading"]</em></p>
 }
 else
 {
@@ -117,6 +118,67 @@ else
 
         @if (_growerId > 0)
         {
+            <!-- Garden Location -->
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5 class="mb-0"><span class="oi oi-map-marker me-2" aria-hidden="true"></span>@Localizer["Section.GardenLocation"]</h5>
+                </div>
+                <div class="card-body">
+                    @if (_grower.GardenLatitude.HasValue && _grower.GardenLongitude.HasValue)
+                    {
+                        <dl class="row mb-3">
+                            <dt class="col-sm-4">@Localizer["Label.Coordinates"]</dt>
+                            <dd class="col-sm-8 font-monospace">
+                                @_grower.GardenLatitude.Value.ToString("F6", CultureInfo.InvariantCulture),
+                                @_grower.GardenLongitude.Value.ToString("F6", CultureInfo.InvariantCulture)
+                            </dd>
+                            @if (_grower.GardenLocationAccuracyMeters.HasValue)
+                            {
+                                <dt class="col-sm-4">@Localizer["Label.Accuracy"]</dt>
+                                <dd class="col-sm-8">@string.Format(Localizer["Format.AccuracyMeters"], _grower.GardenLocationAccuracyMeters.Value.ToString("F0"))</dd>
+                            }
+                            @if (_grower.GardenLocationCapturedOn.HasValue)
+                            {
+                                <dt class="col-sm-4">@Localizer["Label.CapturedOn"]</dt>
+                                <dd class="col-sm-8">@_grower.GardenLocationCapturedOn.Value.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</dd>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(_grower.GardenLocationCapturedBy))
+                            {
+                                <dt class="col-sm-4">@Localizer["Label.CapturedBy"]</dt>
+                                <dd class="col-sm-8">@_grower.GardenLocationCapturedBy</dd>
+                            }
+                        </dl>
+                    }
+                    else
+                    {
+                        <p class="text-muted">@Localizer["Message.NoGardenLocation"]</p>
+                    }
+
+                    @if (!string.IsNullOrWhiteSpace(_locationError))
+                    {
+                        <div class="alert alert-warning" role="alert">@_locationError</div>
+                    }
+
+                    <p class="small text-muted">@Localizer["Message.LocationPermissionHelp"]</p>
+                    <button type="button"
+                            class="btn btn-primary btn-lg w-100 w-sm-auto"
+                            style="min-height: 44px;"
+                            @onclick="CaptureGardenLocationAsync"
+                            disabled="@_isCapturingLocation">
+                        @if (_isCapturingLocation)
+                        {
+                            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                            <span>@Localizer["Action.CapturingLocation"]</span>
+                        }
+                        else
+                        {
+                            <span class="oi oi-map-marker me-2" aria-hidden="true"></span>
+                            <span>@(_grower.GardenLatitude.HasValue ? Localizer["Action.RecaptureLocation"] : Localizer["Action.CaptureLocation"])</span>
+                        }
+                    </button>
+                </div>
+            </div>
+
             <!-- Trees -->
             <div class="card mb-3">
                 <div class="card-header">@Localizer["Section.Trees"]</div>
@@ -385,7 +447,9 @@ else
     private List<Models.AssessmentNote> _assessmentNotes = new();
     private bool _isLoading = true;
     private bool _isSaving;
+    private bool _isCapturingLocation;
     private string? _saveError;
+    private string? _locationError;
     private int _growerId;
     private int? _assessmentModuleId;
     private string? _assessmentPagePath;
@@ -471,6 +535,75 @@ else
         {
             _isSaving = false;
         }
+    }
+
+    private async Task CaptureGardenLocationAsync()
+    {
+        ClearModuleMessage();
+        _locationError = null;
+        _isCapturingLocation = true;
+
+        try
+        {
+            var location = await JSRuntime.InvokeAsync<BrowserLocationResult>("OpenEug.TenTrees.Grower.captureLocation");
+            if (location == null || !location.Success)
+            {
+                _locationError = GetLocationErrorMessage(location?.ErrorCode);
+                return;
+            }
+
+            var request = new GardenLocationCaptureRequest
+            {
+                GrowerId = _grower.GrowerId,
+                Latitude = Convert.ToDecimal(location.Latitude, CultureInfo.InvariantCulture),
+                Longitude = Convert.ToDecimal(location.Longitude, CultureInfo.InvariantCulture),
+                AccuracyMeters = location.Accuracy.HasValue
+                    ? Convert.ToDecimal(location.Accuracy.Value, CultureInfo.InvariantCulture)
+                    : null
+            };
+
+            var updated = await GrowerService.CaptureGardenLocationAsync(_grower.GrowerId, request, ModuleState.ModuleId);
+            if (updated == null)
+            {
+                _locationError = Localizer["Message.LocationSaveError"];
+                return;
+            }
+
+            _grower = updated;
+            AddModuleMessage(Localizer["Message.LocationCaptured"], MessageType.Success);
+            await logger.LogInformation("Garden Location Captured {GrowerId}", _grower.GrowerId);
+        }
+        catch (JSException ex)
+        {
+            await logger.LogError(ex, "Browser Location Capture Failed {GrowerId} {Error}", _grower.GrowerId, ex.Message);
+            _locationError = Localizer["Message.LocationUnavailable"];
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Garden Location Save Failed {GrowerId} {Error}", _grower.GrowerId, ex.Message);
+            _locationError = Localizer["Message.LocationSaveError"];
+        }
+        finally
+        {
+            _isCapturingLocation = false;
+        }
+    }
+
+    private string GetLocationErrorMessage(string? errorCode) => errorCode switch
+    {
+        "permission-denied" => Localizer["Message.LocationPermissionDenied"],
+        "timeout" => Localizer["Message.LocationTimeout"],
+        "unsupported" => Localizer["Message.LocationUnsupported"],
+        _ => Localizer["Message.LocationUnavailable"]
+    };
+
+    private sealed class BrowserLocationResult
+    {
+        public bool Success { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
+        public double? Accuracy { get; set; }
+        public string? ErrorCode { get; set; }
     }
 
     private async Task ToggleInactive()
